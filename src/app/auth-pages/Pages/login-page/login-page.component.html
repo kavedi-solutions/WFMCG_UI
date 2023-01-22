@@ -1,0 +1,56 @@
+<div class="w-full h-full" fxLayout="row wrap">
+  <mat-card class="mat-elevation-z4 m-auto" style="max-width: 380px">
+    <img src="./assets/defaultImages/logo.png" class="login-logo" alt="logo" />
+    <mat-card-title class="text-center m-b-24">Welcome back</mat-card-title>
+
+    <form class="form-field-full" [formGroup]="loginForm">
+      <mat-form-field appearance="outline">
+        <mat-label>User Name</mat-label>
+        <input
+          matInput
+          placeholder="User Name"
+          formControlName="username"
+          required
+        />
+        <mat-error *ngIf="username.invalid">
+          <span *ngIf="username.errors!['required']">
+            Please enter <strong>user name</strong>
+          </span>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Password</mat-label>
+        <input
+          matInput
+          placeholder="Password"
+          type="password"
+          formControlName="password"
+          required
+        />
+        <mat-error *ngIf="password.invalid">
+          <span *ngIf="password.errors!['required']">
+            Please enter <strong>password</strong>
+          </span>
+        </mat-error>
+      </mat-form-field>
+      <div class="m-b-16 text-right">
+        <a routerLink="/auth/register">forgot password</a>
+      </div>
+      <button
+        class="w-full"
+        mat-raised-button
+        color="primary"
+        [disabled]="!!loginForm.invalid"
+        (click)="login()"
+      >
+        Login
+      </button>
+
+      <div class="m-t-32 m-b-8">
+        Don't have an account?
+        <a routerLink="/auth/register">Click here to create one</a>
+      </div>
+    </form>
+  </mat-card>
+</div>
