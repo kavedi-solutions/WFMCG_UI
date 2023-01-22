@@ -27,9 +27,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
   }
 
   private authenticate(): boolean | UrlTree {
-    let jwtFound = this.storage.has('jwtToken');
-
-    if (jwtFound) {
+    if (this.storage.has('jwtToken')) {
       return true;
     } else {
       return this.router.parseUrl('/auth/login');
