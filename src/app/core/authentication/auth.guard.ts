@@ -27,6 +27,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
   }
 
   private authenticate(): boolean | UrlTree {
+
     if (this.storage.has('jwtToken')) {
       return true;
     } else {
