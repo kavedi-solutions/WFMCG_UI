@@ -1,4 +1,9 @@
-<ng-container [ngTemplateOutlet]="menuListTpl"
+<mat-tab-group>
+  <mat-tab label="Today"> Content 1 </mat-tab>
+  <mat-tab label="Notifications"> Content 2 </mat-tab>
+</mat-tab-group>
+
+<!-- <ng-container [ngTemplateOutlet]="menuListTpl"
               [ngTemplateOutletContext]="{menuList: menu$ | async, parentRoute: [], level: 0}">
 </ng-container>
 
@@ -67,4 +72,4 @@
   <mat-icon class="menu-caret" *ngIf="item.type!=='link'">
     {{item.type==='sub' ? 'arrow_drop_down' : 'launch'}}
   </mat-icon>
-</ng-template>
+</ng-template> -->

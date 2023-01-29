@@ -6,7 +6,7 @@ import {
   ChangeDetectionStrategy,
   ViewEncapsulation,
 } from '@angular/core';
-import screenfull from 'screenfull';
+//import screenfull from 'screenfull';
 
 @Component({
   selector: 'app-header',
@@ -25,9 +25,9 @@ export class HeaderComponent {
   @Output() toggleSidenav = new EventEmitter<void>();
   @Output() toggleSidenavNotice = new EventEmitter<void>();
 
-  toggleFullscreen() {
-    if (screenfull.isEnabled) {
-      screenfull.toggle();
-    }
-  }
+  // toggleFullscreen() {
+  //   if (screenfull.isEnabled) {
+  //     screenfull.toggle();
+  //   }
+  // }
 }

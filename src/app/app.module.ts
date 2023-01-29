@@ -62,10 +62,12 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { NotificationInterceptor } from './shared';
 import { AppConfig } from './app.config';
 import * as fromService from './shared/services/index';
+import * as fromThemes from './theme/index';
 
 @NgModule({
   declarations: [
     AppComponent,
+    fromThemes.ThemesComponent,
     Layouts.Layouts,
     AuthPages.AuthPages,
     Pages.Pages,

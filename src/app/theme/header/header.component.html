@@ -1,8 +1,23 @@
 <mat-toolbar class="matero-toolbar">
-  <button mat-icon-button class="matero-toolbar-button" *ngIf="showToggle"
-          (click)="toggleSidenav.emit()">
+  <button
+    mat-icon-button
+    class="matero-toolbar-button"
+    *ngIf="showToggle"
+    (click)="toggleSidenav.emit()"
+  >
     <mat-icon>menu</mat-icon>
   </button>
+  <span fxFlex></span>
+  <button
+    mat-icon-button
+    class="matero-toolbar-button"
+    fxHide.lt-sm
+    (click)="toggleSidenavNotice.emit()"
+  >
+    <mat-icon>settings</mat-icon>
+  </button>
+  <app-user></app-user>
+  <!--
 
   <app-branding *ngIf="showBranding"></app-branding>
   <span fxFlex></span>
@@ -22,10 +37,7 @@
 
   <app-translate></app-translate>
 
-  <app-user></app-user>
 
-  <button mat-icon-button class="matero-toolbar-button" fxHide.lt-sm
-          (click)="toggleSidenavNotice.emit()">
-    <mat-icon>list</mat-icon>
-  </button>
+
+   -->
 </mat-toolbar>
