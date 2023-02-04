@@ -1,12 +1,25 @@
 <div class="matero-sidebar-header" *ngIf="showHeader">
-  <!-- <app-branding></app-branding> -->
+  <app-branding></app-branding>
   <span fxFlex></span>
 </div>
 
 <div class="matero-sidebar-main scrollbar-none">
-  <div>Jigar</div>
-  <div>Mittal</div>
-  <div>Kavish</div>
-  <div>Vedi</div>
-  <!-- <app-sidemenu [ripple]="showToggle"></app-sidemenu> -->
+  <ng-container>
+    <ul class="matero-quickmenu level-0">
+      <li class="matero-quickmenu-item" *ngFor="let menuItem of QuickmenuList">
+        <a class="matero-quickmenu-link" [routerLink]="menuItem.route">
+          <ng-container
+            [ngTemplateOutlet]="linkTypeTpl"
+            [ngTemplateOutletContext]="{ item: menuItem, level: 0 }"
+          >
+          </ng-container>
+        </a>
+      </li>
+    </ul>
+  </ng-container>
 </div>
+
+<ng-template #linkTypeTpl let-item="item" let-level="level">
+  <mat-icon class="menu-icon" *ngIf="level === 0">{{ item.icon }}</mat-icon>
+  <span class="menu-name">{{ item.name }}</span>
+</ng-template>
