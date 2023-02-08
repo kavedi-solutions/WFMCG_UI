@@ -96,11 +96,6 @@ export class MainLayoutComponent implements OnInit {
     this.layoutChangesSubscription.unsubscribe();
   }
 
-  logOut() {
-    this.sstorage.clear();
-    this.router.navigate(['/auth/login']);
-  }
-
   onSidenavOpenedChange(isOpened: boolean) {
     this.isCollapsedWidthFixed = !this.isOver;
     this.options.sidenavOpened = isOpened;
@@ -113,7 +108,6 @@ export class MainLayoutComponent implements OnInit {
 
   toggleCollapsed() {
     this.isContentWidthFixed = false;
-    debugger;
     //this.options.sidenavCollapsed = !this.options.sidenavCollapsed;
     this.options.sidenavCollapsed = true;
     this.resetCollapsedState();

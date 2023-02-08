@@ -3,6 +3,10 @@
 @use '../../theme/style/transitions';
 @use '../../theme/style/breakpoints';
 
+.mat-drawer-inner-container::-webkit-scrollbar {
+  display: none;
+}
+
 .matero-container-wrap,
 .matero-container {
   height: 100%;

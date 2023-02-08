@@ -3,9 +3,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import * as Layouts from './Layouts';
+import * as Layouts from './layouts';
 import * as AuthPages from './auth-pages';
-import * as Pages from './Pages';
+import * as Pages from './pages';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
 import { MatMenuModule } from '@angular/material/menu';
@@ -63,14 +63,18 @@ import { NotificationInterceptor } from './shared';
 import { AppConfig } from './app.config';
 import * as fromService from './shared/services/index';
 import * as fromThemes from './theme/index';
+import * as fromDirective from './shared/directives/index';
+import { RoleAddEditComponent } from './pages/admin/user-role/role-add-edit/role-add-edit.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     fromThemes.ThemesComponent,
+    fromDirective.Directive,
     Layouts.Layouts,
     AuthPages.AuthPages,
     Pages.Pages,
+    RoleAddEditComponent,
   ],
   imports: [
     BrowserModule,

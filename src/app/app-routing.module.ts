@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './core';
-import * as Layouts from './Layouts/index';
+import * as Layouts from './layouts/index';
 import * as AuthPages from './auth-pages/index';
-import * as CommonPages from './Pages/index';
+import * as CommonPages from './pages/index';
 import { NotificationComponent } from './shared';
 
 const routes: Routes = [
@@ -15,6 +15,31 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: CommonPages.DashboardPageComponent },
+    ],
+  },
+  {
+    path: 'admin',
+    component: Layouts.MainLayoutComponent,
+    canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
+    children: [
+      {
+        path: 'role',
+        component: CommonPages.UserRoleComponent,
+        canActivate: [AuthGuard],
+        children: [
+          {
+            path: 'roleadd',
+            component: CommonPages.RoleAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'roleedit/:roleid',
+            component: CommonPages.RoleAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+        ],
+      },
     ],
   },
   {

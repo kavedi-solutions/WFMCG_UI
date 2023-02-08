@@ -12,7 +12,6 @@ export const ThemesComponent: any[] = [
   UserComponent
 ]
 
-
 export * from "./header/header.component";
 export * from "./quickmenubar/quickmenubar.component";
 export * from "./sidemenu/sidemenu.component";
