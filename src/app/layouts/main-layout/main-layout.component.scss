@@ -1,7 +1,7 @@
-@use '@angular/material' as mat;
-@use '../../theme/style/variables';
-@use '../../theme/style/transitions';
-@use '../../theme/style/breakpoints';
+@use "@angular/material" as mat;
+@use "../../theme/style/variables";
+@use "../../theme/style/transitions";
+@use "../../theme/style/breakpoints";
 
 .mat-drawer-inner-container::-webkit-scrollbar {
   display: none;
@@ -10,6 +10,7 @@
 .matero-container-wrap,
 .matero-container {
   height: 100%;
+  background-color: lightgray;
 }
 
 .matero-content {
@@ -27,7 +28,7 @@
   &.mat-drawer-side {
     border-width: 0;
 
-    [dir='rtl'] & {
+    [dir="rtl"] & {
       border-width: 0;
     }
   }
@@ -61,7 +62,7 @@
     }
 
     .matero-user-panel-avatar {
-      transform: scale(.5);
+      transform: scale(0.5);
     }
 
     &:hover {
@@ -89,13 +90,13 @@
   .matero-content-wrap {
     margin-left: variables.$sidenav-collapsed-width !important;
 
-    [dir='rtl'] & {
+    [dir="rtl"] & {
       margin-right: variables.$sidenav-collapsed-width !important;
       margin-left: auto !important;
     }
   }
 
-  &[dir='rtl'] .matero-content-wrap {
+  &[dir="rtl"] .matero-content-wrap {
     margin-right: variables.$sidenav-collapsed-width !important;
     margin-left: auto !important;
   }
@@ -110,7 +111,7 @@
   .matero-branding {
     margin-left: 16px;
 
-    [dir='rtl'] & {
+    [dir="rtl"] & {
       margin-right: 16px;
       margin-left: auto;
     }
@@ -148,7 +149,7 @@
   .matero-content-wrap {
     margin-left: variables.$sidenav-width !important;
 
-    [dir='rtl'] & {
+    [dir="rtl"] & {
       margin-right: variables.$sidenav-width !important;
       margin-left: auto !important;
     }

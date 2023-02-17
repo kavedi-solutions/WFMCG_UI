@@ -1,8 +1,13 @@
-import { AuthService } from './auth.service';
-import { AppDirectionality } from './directionality.service';
-import { PreloaderService } from './preloader.service';
-import { SettingsService } from './settings.service';
-import { LocalStorageService, MemoryStorageService } from './storage.service';
+import { RoleService } from './admin/role.service';
+import { AuthService } from './common/auth.service';
+import { AppDirectionality } from './common/directionality.service';
+import { PreloaderService } from './common/preloader.service';
+import { SettingsService } from './common/settings.service';
+import { SpinnerService } from './common/spinner.service';
+import {
+  LocalStorageService,
+  MemoryStorageService,
+} from './common/storage.service';
 
 export const services: any[] = [
   AuthService,
@@ -10,10 +15,16 @@ export const services: any[] = [
   MemoryStorageService,
   PreloaderService,
   SettingsService,
-  AppDirectionality
+  AppDirectionality,
+  RoleService,
+  SpinnerService,
 ];
-export * from './auth.service';
-export * from './storage.service';
-export * from './preloader.service';
-export * from './settings.service';
-export * from './directionality.service';
+
+export * from './admin/role.service';
+
+export * from './common/auth.service';
+export * from './common/storage.service';
+export * from './common/preloader.service';
+export * from './common/settings.service';
+export * from './common/directionality.service';
+export * from './common/spinner.service';

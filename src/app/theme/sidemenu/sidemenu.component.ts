@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import * as fromService from '../../shared/index';
-import { Menu } from '../../shared/index';
+import { MenuResponse } from '../../shared/index';
 @Component({
   selector: 'app-sidemenu',
   templateUrl: './sidemenu.component.html',
@@ -10,7 +10,7 @@ import { Menu } from '../../shared/index';
 export class SidemenuComponent implements OnInit {
   // NOTE: Ripple effect make page flashing on mobile
   @Input() ripple = false;
-  menu: Menu[] = [];
+  menu: MenuResponse[] = [];
 
   constructor(private authService: fromService.AuthService) {
     this.GetMenus();

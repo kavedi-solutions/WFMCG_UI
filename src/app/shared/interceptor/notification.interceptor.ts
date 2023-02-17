@@ -25,6 +25,16 @@ export class NotificationInterceptor implements HttpInterceptor {
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
+    if (this.storage.has('jwtToken')) {
+      const req = request.clone({
+        headers: request.headers.set(
+          'Authorization',
+          `Bearer ${this.storage.get('jwtToken')}`
+        ),
+      });
+      request = req;
+    }
+
     return next.handle(request).pipe(
       retry(1),
       tap(
@@ -36,7 +46,11 @@ export class NotificationInterceptor implements HttpInterceptor {
         },
         (error) => {
           if (error.status === 401) {
-            this.notification.openSnackBar("Session expired", 'Ok', 'red-snackbar');
+            this.notification.openSnackBar(
+              'Session expired',
+              'Ok',
+              'red-snackbar'
+            );
             this.handleAuthError();
             return of(error);
           } else {

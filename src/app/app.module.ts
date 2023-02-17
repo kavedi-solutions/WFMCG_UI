@@ -53,18 +53,35 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTreeModule } from '@angular/material/tree';
+import { MtxAlertModule } from '@ng-matero/extensions/alert';
+import { MtxButtonModule } from '@ng-matero/extensions/button';
+import { MtxCheckboxGroupModule } from '@ng-matero/extensions/checkbox-group';
+import { MtxColorpickerModule } from '@ng-matero/extensions/colorpicker';
+import { MtxDatetimepickerModule } from '@ng-matero/extensions/datetimepicker';
+import { MtxDialogModule } from '@ng-matero/extensions/dialog';
+import { MtxDrawerModule } from '@ng-matero/extensions/drawer';
+import { MtxGridModule } from '@ng-matero/extensions/grid';
+import { MtxLoaderModule } from '@ng-matero/extensions/loader';
+import { MtxPopoverModule } from '@ng-matero/extensions/popover';
+import { MtxProgressModule } from '@ng-matero/extensions/progress';
+import { MtxSelectModule } from '@ng-matero/extensions/select';
+import { MtxSliderModule } from '@ng-matero/extensions/slider';
+import { MtxSplitModule } from '@ng-matero/extensions/split';
+import { MtxTooltipModule } from '@ng-matero/extensions/tooltip';
 import {
   MatMomentDateModule,
   MomentDateAdapter,
 } from '@angular/material-moment-adapter';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { NotificationInterceptor } from './shared';
+import { NotificationInterceptor, SpinnerInterceptor } from './shared';
 import { AppConfig } from './app.config';
 import * as fromService from './shared/services/index';
 import * as fromThemes from './theme/index';
 import * as fromDirective from './shared/directives/index';
+import * as SharedComponent from './shared/index';
 import { RoleAddEditComponent } from './pages/admin/user-role/role-add-edit/role-add-edit.component';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -74,9 +91,11 @@ import { RoleAddEditComponent } from './pages/admin/user-role/role-add-edit/role
     Layouts.Layouts,
     AuthPages.AuthPages,
     Pages.Pages,
+    SharedComponent.SharedComponent,
     RoleAddEditComponent,
   ],
   imports: [
+    CommonModule,
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
@@ -122,6 +141,21 @@ import { RoleAddEditComponent } from './pages/admin/user-role/role-add-edit/role
     MatTooltipModule,
     MatTreeModule,
     FlexLayoutModule,
+    MtxAlertModule,
+    MtxButtonModule,
+    MtxCheckboxGroupModule,
+    MtxColorpickerModule,
+    MtxDatetimepickerModule,
+    MtxDialogModule,
+    MtxDrawerModule,
+    MtxGridModule,
+    MtxLoaderModule,
+    MtxPopoverModule,
+    MtxProgressModule,
+    MtxSelectModule,
+    MtxSliderModule,
+    MtxSplitModule,
+    MtxTooltipModule,
   ],
   providers: [
     ...fromService.services,
@@ -129,6 +163,11 @@ import { RoleAddEditComponent } from './pages/admin/user-role/role-add-edit/role
     {
       provide: HTTP_INTERCEPTORS,
       useClass: NotificationInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: SpinnerInterceptor,
       multi: true,
     },
     {

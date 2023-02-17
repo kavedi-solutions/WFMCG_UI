@@ -1,1 +1,209 @@
-<p>role-add-edit works!</p>
+<page-header
+  class="bg-blue-600"
+  [title]="PageTitle"
+  [addButtonToolTip]="buttonText"
+  [showBack]="true"
+  [showAdd]="false"
+  (onBackClick)="BacktoList()"
+></page-header>
+<!--  class="roleForm" id="form-role-add-edit" -->
+<form class="form-field-full" [formGroup]="roleForm">
+  <mat-card>
+    <h4>Basic Detail</h4>
+    <div
+      class="matero-row"
+      fxLayout.lt-sm="column"
+      fxLayout="row"
+      fxLayoutGap="20px"
+      fxLayoutGap.lt-sm="5px"
+    >
+      <div fxFlex="30%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Role Name</mat-label>
+          <input
+            id="mat-input-role-name"
+            matInput
+            formControlName="name"
+            type="text"
+            placeholder="Role Name"
+            maxlength="20"
+            required
+          />
+          <mat-hint>Role name must be unique.</mat-hint>
+          <!-- <mat-error id="mat-error-role-name-required" *ngIf="nameControlRequired"
+          >Role name is required.</mat-error
+        >
+        <mat-error id="mat-error-role-name-invalid" *ngIf="nameControlInvalid"
+          >Role name is Invalid.</mat-error
+        >
+        <mat-error
+          id="mat-error-role-name-exist"
+          *ngIf="getRoleNameValidation()"
+          >This role name is already exist.</mat-error
+        > -->
+        </mat-form-field>
+      </div>
+      <div fxFlex="70%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Description</mat-label>
+          <input
+            id="mat-input-text-description"
+            matInput
+            formControlName="description"
+            type="text"
+            placeholder="Description"
+            maxlength="30"
+          />
+        </mat-form-field>
+      </div>
+    </div>
+    <br />
+    <h4>Permissions</h4>
+    <div
+      class="matero-row"
+      fxLayout.lt-sm="column"
+      fxLayout="row"
+      fxLayoutGap="20px"
+      fxLayoutGap.lt-sm="5px"
+    >
+      <div fxFlex="100%" fxFlex.lt-sm="100" class="matero-col">
+        <table mat-table class="mat-table" [dataSource]="defaultPermission">
+          <ng-container
+            *ngFor="let column of displayedColumns; let columnIndex = index"
+            [matColumnDef]="column"
+          >
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              [ngClass]="{
+                'role-slide-toggle-cell': column !== 'name'
+              }"
+            >
+              {{ getColumName(column) }}
+            </th>
+            <td
+              mat-cell
+              *matCellDef="let permission; let i = index"
+              [ngClass]="{
+                'role-slide-toggle-cell': column !== 'name'
+              }"
+            >
+              <span *ngIf="column === 'name'">
+                {{ permission[column] }}
+              </span>
+              <span *ngIf="column === 'all'">
+                <mat-slide-toggle
+                  color="primary"
+                  [checked]="
+                    permission.canAdd &&
+                    permission.canView &&
+                    permission.canEdit &&
+                    permission.canDelete
+                  "
+                  (change)="onCheckAll($event, i)"
+                >
+                </mat-slide-toggle>
+                <!-- <mat-checkbox
+                  color="primary"
+
+                ></mat-checkbox> -->
+              </span>
+              <span
+                class="module-align-icon"
+                *ngIf="column !== 'name' && column !== 'all'"
+              >
+                <mat-slide-toggle
+                  *ngIf="column !== 'canView'"
+                  color="primary"
+                  [checked]="permission[column]"
+                  (change)="onOtherSelection($event, column, i)"
+                >
+                </mat-slide-toggle>
+                <mat-slide-toggle
+                  *ngIf="column === 'canView'"
+                  [disabled]="
+                    permission['canAdd'] === true ||
+                    permission['canEdit'] === true ||
+                    permission['canDelete'] === true
+                  "
+                  color="primary"
+                  [checked]="permission[column]"
+                  (change)="onOtherSelection($event, column, i)"
+                >
+                </mat-slide-toggle>
+                <!-- <mat-checkbox
+                  *ngIf="column !== 'canView'"
+                  color="primary"
+                  [checked]="permission[column]"
+                ></mat-checkbox> -->
+                <!-- <mat-checkbox
+                  *ngIf="column === 'canView'"
+                  [disabled]="
+                    permission['canAdd'] === true ||
+                    permission['canEdit'] === true ||
+                    permission['canDelete'] === true
+                  "
+                  color="primary"
+                  [checked]="permission[column]"
+                ></mat-checkbox> -->
+              </span>
+            </td>
+          </ng-container>
+          <tr
+            mat-header-row
+            *matHeaderRowDef="displayedColumns; sticky: true"
+          ></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+      </div>
+    </div>
+    <br />
+    <mat-card-actions align="end" class="role-mat-card-actions">
+      <button mat-raised-button mat-dialog-close>Close</button>
+      <button
+        mat-raised-button
+        color="primary"
+        mat-dialog-close
+        cdkFocusInitial
+      >
+        Submit
+      </button></mat-card-actions
+    >
+  </mat-card>
+
+  <div>
+    <!-- <button
+      id="button-role-add-edit-cancel"
+      mat-flat-button
+      class="btn-lg"
+      type="button"
+      [routerLink]="['/user/user-role-list']"
+    >
+      Cancel
+    </button>
+    <button
+      id="button-role-save"
+      mat-flat-button
+      color="primary"
+      class="btn-lg"
+      [disabled]="!roleForm.valid"
+      type="button"
+    >
+      Save
+    </button> -->
+    <!-- <button
+      id="button-role-update"
+      mat-flat-button
+      color="primary"
+      class="btn-lg"
+      *ngIf="!resourcesDetails"
+      [disabled]="!roleForm.valid || isReadOnly"
+      (click)="onClickUpdate(roleForm)"
+      type="button"
+      [disableIfUnauthorized]="moduleName.Role"
+      [permissionType]="permissions.update"
+    >
+      Update
+    </button> -->
+  </div>
+</form>

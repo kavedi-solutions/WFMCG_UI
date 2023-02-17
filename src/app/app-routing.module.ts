@@ -11,7 +11,6 @@ const routes: Routes = [
     path: '',
     component: Layouts.MainLayoutComponent,
     canActivate: [AuthGuard],
-    canActivateChild: [AuthGuard],
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: CommonPages.DashboardPageComponent },
@@ -27,18 +26,16 @@ const routes: Routes = [
         path: 'role',
         component: CommonPages.UserRoleComponent,
         canActivate: [AuthGuard],
-        children: [
-          {
-            path: 'roleadd',
-            component: CommonPages.RoleAddEditComponent,
-            canActivate: [AuthGuard],
-          },
-          {
-            path: 'roleedit/:roleid',
-            component: CommonPages.RoleAddEditComponent,
-            canActivate: [AuthGuard],
-          },
-        ],
+      },
+      {
+        path: 'role-add',
+        component: CommonPages.RoleAddEditComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'role-edit/:roleid',
+        component: CommonPages.RoleAddEditComponent,
+        canActivate: [AuthGuard],
       },
     ],
   },

@@ -1,0 +1,26 @@
+<div class="matero-page-header-inner">
+  <button
+    mat-icon-button
+    style="margin-top: -5px"
+    *ngIf="showBack"
+    [matTooltip]="backButtonToolTip"
+    matTooltipPosition="below"
+    (click)="onBackClick.emit()"
+  >
+    <mat-icon>keyboard_arrow_left</mat-icon>
+  </button>
+  <h1 class="matero-page-title">
+    {{ title }}
+  </h1>
+  <span fxFlex></span>
+  <button
+    mat-mini-fab
+    color="accent"
+    *ngIf="showAdd"
+    [matTooltip]="addButtonToolTip"
+    matTooltipPosition="left"
+    (click)="onAddClick.emit()"
+  >
+    <mat-icon>add</mat-icon>
+  </button>
+</div>

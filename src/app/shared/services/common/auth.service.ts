@@ -36,12 +36,6 @@ export class AuthService {
     'Access-Control-Allow-Origin': '*',
   });
 
-  headerWithToken = new HttpHeaders({
-    'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*',
-    Authorization: 'bearer ' + this.storage.get('jwtToken'),
-  });
-
   constructor(
     private http: HttpClient,
     private storage: LocalStorageService,
@@ -75,7 +69,7 @@ export class AuthService {
     const url = `${this.APIURL}/common/menu`;
     return this.http
       .get<any>(encodeURI(url), {
-        headers: this.headerWithToken,
+        headers: this.headers,
         observe: 'response',
       })
       .pipe(
