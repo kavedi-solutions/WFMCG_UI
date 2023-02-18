@@ -100,16 +100,36 @@ export class UserRoleComponent implements OnInit {
             click: (record) => this.edit(record),
           },
           {
-            color: 'warn',
-            icon: 'delete',
-            text: 'Delete',
-            tooltip: 'Delete Record',
+            class: 'red',
+            icon: 'swap_horiz',
+            text: 'Deactive',
+            tooltip: 'Deactive Record',
             pop: {
-              title: 'Are you sure you want to delete this record.',
+              title: 'Confirm Deactive',
+              description: 'Are you sure you want to Deactive this record.',
               closeText: 'No',
               okText: 'Yes',
+              okColor: 'primary',
+              closeColor: 'warn',
             },
-            click: (record) => this.delete(record),
+            click: (record) => this.DeactiveRole(record),
+            iif: (record) => record.isActive,
+          },
+          {
+            class: 'green',
+            icon: 'swap_horiz',
+            text: 'Active',
+            tooltip: 'Active Record',
+            pop: {
+              title: 'Confirm Active',
+              description: 'Are you sure you want to Active this record?',
+              closeText: 'No',
+              okText: 'Yes',
+              okColor: 'primary',
+              closeColor: 'warn',
+            },
+            click: (record) => this.ActiveRole(record),
+            iif: (record) => !record.isActive,
           },
         ],
       },
@@ -132,7 +152,17 @@ export class UserRoleComponent implements OnInit {
     this.router.navigate(['/admin/role-edit/', value.roleID]);
   }
 
-  delete(value: any) {}
+  DeactiveRole(value: any) {
+    this.roleService.DeactivateRole(value.roleID).subscribe((response) => {
+      this.getRoleList();
+    });
+  }
+
+  ActiveRole(value: any) {
+    this.roleService.ActivateRole(value.roleID).subscribe((response) => {
+      this.getRoleList();
+    });
+  }
 
   changeSelect(e: any) {
     console.log(e);

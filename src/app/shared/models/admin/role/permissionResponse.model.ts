@@ -1,8 +1,8 @@
 export interface DefaultPermissionResponse {
-  MenuID: number;
-  Name: string;
-  CanView: boolean;
-  CanAdd: boolean;
-  CanEdit: boolean;
-  CanDelete: boolean;
+  menuID: number;
+  name: string;
+  canView: boolean;
+  canAdd: boolean;
+  canEdit: boolean;
+  canDelete: boolean;
 }

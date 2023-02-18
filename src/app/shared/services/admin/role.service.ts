@@ -2,7 +2,15 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, catchError, of, Observable, filter } from 'rxjs';
 import { AppConfig } from 'src/app/app.config';
-import { FilterValues, PaginationHeaders, Permission, RoleResponse } from '../../models';
+import {
+  FilterValues,
+  PaginationHeaders,
+  Permission,
+  Role,
+  RoleResponse,
+  RolePostRequest,
+  RolePutRequest,
+} from '../../models';
 import { LocalStorageService } from '../common/storage.service';
 
 @Injectable({
@@ -12,6 +20,7 @@ export class RoleService {
   APIURL?: string = '';
   version: string = '1';
   CompanyID: string = this.storage.get('companyID');
+  UserID: string = this.storage.get('userID');
 
   headers = new HttpHeaders({
     'Content-Type': 'application/json',
@@ -81,12 +90,73 @@ export class RoleService {
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headerWithToken,
-        observe: 'response'
+        observe: 'response',
       })
       .pipe(
         map((response) => {
           return response.body;
         })
       );
+  }
+
+  GetRolebyID(RoleID: number) {
+    const url = `${this.APIURL}/company/${this.CompanyID}/role/${RoleID}/getbyid`;
+    return this.http
+      .get<any>(encodeURI(url), {
+        headers: this.headerWithToken,
+        observe: 'response',
+      })
+      .pipe(
+        map((response) => {
+          return response.body;
+        })
+      );
+  }
+
+  CheckRoleNameExists(RoleID: number, RoleName: string) {
+    const url = `${this.APIURL}/company/${this.CompanyID}/role/${RoleID}/${RoleName}/rolename-exists`;
+    return this.http
+      .get<any>(encodeURI(url), {
+        headers: this.headerWithToken,
+        observe: 'response',
+      })
+      .pipe(
+        map((response) => {
+          return response.body;
+        })
+      );
+  }
+
+  createRole(resourcesDetails: RolePostRequest): Observable<Role> {
+    resourcesDetails.createdBy = this.UserID;
+    const url = `${this.APIURL}/company/${this.CompanyID}/role/create`;
+    return this.http.post<Role>(encodeURI(url), resourcesDetails, {
+      headers: this.headerWithToken,
+    });
+  }
+
+  updateRole(
+    roleID: number,
+    resourcesDetails: RolePutRequest
+  ): Observable<Role> {
+    resourcesDetails.ModifiedBy = this.UserID;
+    const url = `${this.APIURL}/company/${this.CompanyID}/role/update/${roleID}`;
+    return this.http.put<Role>(encodeURI(url), resourcesDetails, {
+      headers: this.headerWithToken,
+    });
+  }
+
+  DeactivateRole(RoleID: number) {
+    const url = `${this.APIURL}/company/${this.CompanyID}/role/${RoleID}/deactivate/${this.UserID}`;
+    return this.http.put<Role>(encodeURI(url), null, {
+      headers: this.headerWithToken,
+    });
+  }
+
+  ActivateRole(RoleID: number) {
+    const url = `${this.APIURL}/company/${this.CompanyID}/role/${RoleID}/activate/${this.UserID}`;
+    return this.http.put<Role>(encodeURI(url), null, {
+      headers: this.headerWithToken,
+    });
   }
 }

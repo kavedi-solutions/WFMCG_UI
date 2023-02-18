@@ -25,7 +25,6 @@
   [columnSortable]="true"
   [columnPinnable]="true"
   [expandable]="false"
-  [expansionTemplate]="expansionTpl"
   [pageOnFront]="true"
   [showPaginator]="true"
   [pageSizeOptions]="[10, 20, 50, 100]"
@@ -34,6 +33,3 @@
   (page)="getNextPage($event)"
 >
 </mtx-grid>
-<ng-template #expansionTpl let-row>
-  {{ row.name }}
-</ng-template>

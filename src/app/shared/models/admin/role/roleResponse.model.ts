@@ -10,27 +10,27 @@ export interface RoleResponse {
 }
 
 export interface Role {
-  CompanyID: string;
-  RoleID: number;
-  Name: string;
-  Description: string;
-  Permission: Permission[];
-  IsActive: boolean;
-  IsAdminRole: boolean;
-  CreatedBy: string;
-  CreatedDate: string;
-  ModifiedBy: string;
-  ModifiedDate: string;
+  companyID: string;
+  roleID: number;
+  name: string;
+  description: string;
+  permission: Permission[];
+  isActive: boolean;
+  isAdminRole: boolean;
+  createdBy: string;
+  createdDate: string;
+  modifiedBy: string;
+  modifiedDate: string;
 }
 
 export interface Permission {
-  CompanyID: string;
-  PermissionsId: number;
-  RoleID: number;
-  MenuID: number;
-  Name: string;
-  CanView: boolean;
-  CanAdd: boolean;
-  CanEdit: boolean;
-  CanDelete: boolean;
+  companyID: string;
+  permissionsId: number;
+  roleID: number;
+  menuID: number;
+  name: string;
+  canView: boolean;
+  canAdd: boolean;
+  canEdit: boolean;
+  canDelete: boolean;
 }

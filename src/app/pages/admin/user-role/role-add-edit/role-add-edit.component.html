@@ -28,22 +28,25 @@
             placeholder="Role Name"
             maxlength="20"
             required
+            (keyup)="onRoleNameKeyUp($event)"
           />
           <mat-hint>Role name must be unique.</mat-hint>
-          <!-- <mat-error id="mat-error-role-name-required" *ngIf="nameControlRequired"
-          >Role name is required.</mat-error
-        >
-        <mat-error id="mat-error-role-name-invalid" *ngIf="nameControlInvalid"
-          >Role name is Invalid.</mat-error
-        >
-        <mat-error
-          id="mat-error-role-name-exist"
-          *ngIf="getRoleNameValidation()"
-          >This role name is already exist.</mat-error
-        > -->
+          <mat-error
+            id="mat-error-role-name-required"
+            *ngIf="nameControlRequired"
+            >Role name is required.</mat-error
+          >
+          <mat-error id="mat-error-role-name-invalid" *ngIf="nameControlInvalid"
+            >Role name is Invalid.</mat-error
+          >
+          <mat-error
+            id="mat-error-role-name-exist"
+            *ngIf="getRoleNameValidation()"
+            >This role name is already exist.</mat-error
+          >
         </mat-form-field>
       </div>
-      <div fxFlex="70%" fxFlex.lt-sm="100" class="matero-col">
+      <div fxFlex="60%" fxFlex.lt-sm="100" class="matero-col">
         <mat-form-field appearance="legacy" color="primary">
           <mat-label>Description</mat-label>
           <input
@@ -56,6 +59,15 @@
           />
         </mat-form-field>
       </div>
+      <div fxFlex="10%" fxFlex.lt-sm="100" class="matero-col m-12">
+        <mat-slide-toggle
+          color="primary"
+          class="slide_toggle_style"
+          formControlName="isActive"
+        >
+          Active
+        </mat-slide-toggle>
+      </div>
     </div>
     <br />
     <h4>Permissions</h4>
@@ -67,7 +79,11 @@
       fxLayoutGap.lt-sm="5px"
     >
       <div fxFlex="100%" fxFlex.lt-sm="100" class="matero-col">
-        <table mat-table class="mat-table" [dataSource]="defaultPermission">
+        <table
+          mat-table
+          class="mat-table"
+          [dataSource]="editRole ? editRole!.permission : defaultPermission"
+        >
           <ng-container
             *ngFor="let column of displayedColumns; let columnIndex = index"
             [matColumnDef]="column"
@@ -103,10 +119,6 @@
                   (change)="onCheckAll($event, i)"
                 >
                 </mat-slide-toggle>
-                <!-- <mat-checkbox
-                  color="primary"
-
-                ></mat-checkbox> -->
               </span>
               <span
                 class="module-align-icon"
@@ -131,21 +143,6 @@
                   (change)="onOtherSelection($event, column, i)"
                 >
                 </mat-slide-toggle>
-                <!-- <mat-checkbox
-                  *ngIf="column !== 'canView'"
-                  color="primary"
-                  [checked]="permission[column]"
-                ></mat-checkbox> -->
-                <!-- <mat-checkbox
-                  *ngIf="column === 'canView'"
-                  [disabled]="
-                    permission['canAdd'] === true ||
-                    permission['canEdit'] === true ||
-                    permission['canDelete'] === true
-                  "
-                  color="primary"
-                  [checked]="permission[column]"
-                ></mat-checkbox> -->
               </span>
             </td>
           </ng-container>
@@ -159,51 +156,27 @@
     </div>
     <br />
     <mat-card-actions align="end" class="role-mat-card-actions">
-      <button mat-raised-button mat-dialog-close>Close</button>
+      <button mat-raised-button (click)="BacktoList()" color="accent">
+        Cancel
+      </button>
       <button
+        *ngIf="isEditMode == false"
+        [disabled]="!roleForm.valid"
         mat-raised-button
         color="primary"
-        mat-dialog-close
-        cdkFocusInitial
+        (click)="SaveUpdateRole(roleForm)"
       >
-        Submit
-      </button></mat-card-actions
-    >
+        Save
+      </button>
+      <button
+        *ngIf="isEditMode == true"
+        [disabled]="!roleForm.valid"
+        mat-raised-button
+        color="primary"
+        (click)="SaveUpdateRole(roleForm)"
+      >
+        Update
+      </button>
+    </mat-card-actions>
   </mat-card>
-
-  <div>
-    <!-- <button
-      id="button-role-add-edit-cancel"
-      mat-flat-button
-      class="btn-lg"
-      type="button"
-      [routerLink]="['/user/user-role-list']"
-    >
-      Cancel
-    </button>
-    <button
-      id="button-role-save"
-      mat-flat-button
-      color="primary"
-      class="btn-lg"
-      [disabled]="!roleForm.valid"
-      type="button"
-    >
-      Save
-    </button> -->
-    <!-- <button
-      id="button-role-update"
-      mat-flat-button
-      color="primary"
-      class="btn-lg"
-      *ngIf="!resourcesDetails"
-      [disabled]="!roleForm.valid || isReadOnly"
-      (click)="onClickUpdate(roleForm)"
-      type="button"
-      [disableIfUnauthorized]="moduleName.Role"
-      [permissionType]="permissions.update"
-    >
-      Update
-    </button> -->
-  </div>
 </form>

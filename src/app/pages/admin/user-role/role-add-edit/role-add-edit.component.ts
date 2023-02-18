@@ -1,10 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { tap } from 'rxjs/operators';
-import { DefaultPermissionResponse } from 'src/app/shared/models/admin/role/permissionResponse.model';
+import { Subject } from 'rxjs';
+import { tap, debounceTime } from 'rxjs/operators';
 import * as fromService from '../../../../shared/index';
-
+import {
+  Role,
+  RolePostRequest,
+  DefaultPermissionResponse,
+  RolePutRequest,
+  PermissionPutRequest,
+} from '../../../../shared/index';
 @Component({
   selector: 'app-role-add-edit',
   templateUrl: './role-add-edit.component.html',
@@ -13,8 +24,15 @@ import * as fromService from '../../../../shared/index';
 export class RoleAddEditComponent implements OnInit {
   PageTitle: string = 'Create Role';
   buttonText: string = 'Add New Role';
+  isEditMode: boolean = false;
   selectedRoleId: number;
   defaultPermission: DefaultPermissionResponse[];
+  rolePostRequest?: RolePostRequest;
+  rolePutRequest?: RolePutRequest;
+  editRole?: Role;
+  isRoleNameValid: boolean = false;
+  RoleName: string = '';
+  RoleNameExists: Subject<any> = new Subject();
   displayedColumns: string[] = [
     'name',
     'all',
@@ -35,9 +53,11 @@ export class RoleAddEditComponent implements OnInit {
     private router: Router,
     public route: ActivatedRoute,
     private roleService: fromService.RoleService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private sessionService: fromService.LocalStorageService
   ) {
     this.defaultPermission = [];
+    this.isEditMode = false;
     this.selectedRoleId = 0;
   }
 
@@ -51,10 +71,51 @@ export class RoleAddEditComponent implements OnInit {
       )
       .subscribe();
     if (this.selectedRoleId != 0) {
+      this.isEditMode = true;
       this.PageTitle = 'Update Role';
-      //GetRolebyID
+      this.getRoleByID();
     } else {
+      this.isEditMode = false;
       this.getDefaultPermission();
+    }
+    this.RoleNameExists.pipe(debounceTime(1000)).subscribe(() => {
+      this.CheckRoleNameExists(this.RoleName);
+    });
+  }
+
+  get nameControl() {
+    return this.roleForm.get('name') as FormControl;
+  }
+
+  get nameControlRequired() {
+    return this.nameControl.hasError('required') && this.nameControl.touched;
+  }
+
+  get nameControlInvalid() {
+    return this.nameControl.hasError('pattern') && this.nameControl.touched;
+  }
+
+  getRoleNameValidation() {
+    if (this.isRoleNameValid) {
+      this.roleForm.controls.name.setErrors({ isRoleNameValid: true });
+    } else {
+      this.roleForm.controls.name.updateValueAndValidity();
+    }
+    return this.isRoleNameValid;
+  }
+
+  onRoleNameKeyUp($event: any) {
+    this.RoleName = $event.target.value.trim();
+    this.RoleNameExists.next(this.RoleName);
+  }
+
+  CheckRoleNameExists(RoleName: string) {
+    if (RoleName != '') {
+      this.roleService
+        .CheckRoleNameExists(this.selectedRoleId, RoleName)
+        .subscribe((response) => {
+          this.isRoleNameValid = response;
+        });
     }
   }
 
@@ -65,6 +126,17 @@ export class RoleAddEditComponent implements OnInit {
   getDefaultPermission() {
     this.roleService.GetDefaultPermission(false).subscribe((response) => {
       this.defaultPermission = response;
+    });
+  }
+
+  getRoleByID() {
+    this.roleService.GetRolebyID(this.selectedRoleId).subscribe((response) => {
+      this.editRole = response;
+      this.roleForm.patchValue({
+        name: this.editRole!.name,
+        description: this.editRole!.description,
+        isActive: this.editRole!.isActive,
+      });
     });
   }
 
@@ -82,8 +154,17 @@ export class RoleAddEditComponent implements OnInit {
   }
 
   onCheckAll(event: any, index: number) {
-    if (this.defaultPermission) {
+    if (this.defaultPermission && this.defaultPermission.length > 0) {
       this.defaultPermission.forEach((Permission: any, i) => {
+        if (index === i) {
+          Permission.canAdd = event.checked;
+          Permission.canView = event.checked;
+          Permission.canEdit = event.checked;
+          Permission.canDelete = event.checked;
+        }
+      });
+    } else if (this.editRole!.permission) {
+      this.editRole!.permission.forEach((Permission: any, i) => {
         if (index === i) {
           Permission.canAdd = event.checked;
           Permission.canView = event.checked;
@@ -95,7 +176,7 @@ export class RoleAddEditComponent implements OnInit {
   }
 
   onOtherSelection(event: any, columnName: any, index: number) {
-    if (this.defaultPermission) {
+    if (this.defaultPermission && this.defaultPermission.length > 0) {
       this.defaultPermission.forEach((Permission: any, i) => {
         if (index === i) {
           if (columnName !== 'canView' && Permission['canView'] === false) {
@@ -104,13 +185,74 @@ export class RoleAddEditComponent implements OnInit {
               : Permission['canView'];
           }
           Permission[columnName] = event.checked;
-          // }
-          // Permission.canAdd = event.checked;
-          // Permission.canView = event.checked;
-          // Permission.canEdit = event.checked;
-          // Permission.canDelete = event.checked;
+        }
+      });
+    } else if (this.editRole!.permission) {
+      this.editRole!.permission.forEach((Permission: any, i) => {
+        if (index === i) {
+          if (columnName !== 'canView' && Permission['canView'] === false) {
+            Permission['canView'] = event.checked
+              ? event.checked
+              : Permission['canView'];
+          }
+          Permission[columnName] = event.checked;
         }
       });
     }
+  }
+
+  SaveUpdateRole(roleForm: FormGroup) {
+    if (this.isEditMode == true) {
+      this.UpdateRole(roleForm);
+    } else {
+      this.SaveRole(roleForm);
+    }
+  }
+
+  SaveRole(roleForm: FormGroup) {
+    this.rolePostRequest = {
+      name: roleForm.value.name.toString(),
+      description: roleForm.value.description,
+      isActive: roleForm.value.isActive,
+      isAdminRole: false,
+      permission: this.defaultPermission,
+    };
+
+    this.roleService.createRole(this.rolePostRequest).subscribe((response) => {
+      this.BacktoList();
+    });
+  }
+
+  UpdateRole(roleForm: FormGroup) {
+    let UpdatePermission: PermissionPutRequest[] = [];
+
+    if (this.editRole!.permission && this.editRole!.permission.length > 0) {
+      this.editRole!.permission.forEach((element) => {
+        let permission: PermissionPutRequest = {
+          PermissionsId: element.permissionsId,
+          RoleID: element.roleID,
+          menuID: element.menuID,
+          canView: element.canView,
+          canAdd: element.canAdd,
+          canEdit: element.canEdit,
+          canDelete: element.canDelete,
+        };
+        UpdatePermission.push(permission);
+      });
+    }
+
+    this.rolePutRequest = {
+      name: roleForm.value.name.toString(),
+      description: roleForm.value.description,
+      isActive: roleForm.value.isActive,
+      isAdminRole: false,
+      permission: UpdatePermission,
+    };
+
+    this.roleService
+      .updateRole(this.selectedRoleId, this.rolePutRequest!)
+      .subscribe((response) => {
+        this.BacktoList();
+      });
   }
 }
