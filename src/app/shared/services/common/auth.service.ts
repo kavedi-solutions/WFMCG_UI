@@ -84,7 +84,6 @@ export class AuthService {
   }
 
   getUserAccessRights(MenuID: string): AccessRights {
-    debugger;
     const decode = this.jwtHelperService.decodeToken(
       this.storage.get('jwtToken')
     );

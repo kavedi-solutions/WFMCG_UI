@@ -21,7 +21,7 @@ import {
   templateUrl: './role-add-edit.component.html',
   styleUrls: ['./role-add-edit.component.scss'],
 })
-export class RoleAddEditComponent implements OnInit {
+export class UserRoleAddEditComponent implements OnInit {
   PageTitle: string = 'Create Role';
   buttonText: string = 'Add New Role';
   isEditMode: boolean = false;

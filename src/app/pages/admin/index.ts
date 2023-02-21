@@ -1,7 +1,16 @@
-import { UserRoleComponent } from '../admin/user-role/user-role.component';
-import { RoleAddEditComponent } from '../admin/user-role/role-add-edit/role-add-edit.component';
+import { UsersComponent } from './users/users.component';
+import { UserAddEditComponent } from './users/user-add-edit/user-add-edit.component';
+import { UserRoleComponent } from './user-role/user-role.component';
+import { UserRoleAddEditComponent } from './user-role/role-add-edit/role-add-edit.component';
 
-export const AdminPages: any[] = [UserRoleComponent, RoleAddEditComponent];
+export const AdminPages: any[] = [
+  UserRoleComponent,
+  UserRoleAddEditComponent,
+  UsersComponent,
+  UserAddEditComponent,
+];
 
-export * from '../admin/user-role/user-role.component';
-export * from '../admin/user-role/role-add-edit/role-add-edit.component';
+export * from './user-role/user-role.component';
+export * from './user-role/role-add-edit/role-add-edit.component';
+export * from './users/users.component';
+export * from './users/user-add-edit/user-add-edit.component';

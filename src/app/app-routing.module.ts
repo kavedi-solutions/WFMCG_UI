@@ -29,12 +29,12 @@ const routes: Routes = [
       },
       {
         path: 'role-add',
-        component: CommonPages.RoleAddEditComponent,
+        component: CommonPages.UserRoleAddEditComponent,
         canActivate: [AuthGuard],
       },
       {
         path: 'role-edit/:roleid',
-        component: CommonPages.RoleAddEditComponent,
+        component: CommonPages.UserRoleAddEditComponent,
         canActivate: [AuthGuard],
       },
     ],

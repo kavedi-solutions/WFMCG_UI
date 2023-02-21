@@ -80,7 +80,6 @@ import * as fromService from './shared/services/index';
 import * as fromThemes from './theme/index';
 import * as fromDirective from './shared/directives/index';
 import * as SharedComponent from './shared/index';
-import { RoleAddEditComponent } from './pages/admin/user-role/role-add-edit/role-add-edit.component';
 import { CommonModule } from '@angular/common';
 import { JwtHelperService, JwtModule } from '@auth0/angular-jwt';
 
@@ -97,7 +96,6 @@ export function tokenGetter() {
     AuthPages.AuthPages,
     Pages.Pages,
     SharedComponent.SharedComponent,
-    RoleAddEditComponent,
   ],
   imports: [
     CommonModule,
