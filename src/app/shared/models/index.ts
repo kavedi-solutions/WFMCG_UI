@@ -3,6 +3,7 @@ export * from './common/loginResponse.model';
 export * from './common/menuResponse.model';
 export * from './common/PaginationHeaders.model';
 export * from './common/FilterValues.model';
+export * from './common/accessRights.model';
 //Admin
 export * from './admin/role/roleResponse.model';
 export * from './admin/role/rolePostRequest.model';

@@ -5,8 +5,10 @@ import {
   HttpParams,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { JwtHelperService } from '@auth0/angular-jwt';
 import { catchError, map, of } from 'rxjs';
 import { AppConfig } from 'src/app/app.config';
+import { AccessRights } from '../../models';
 import { LocalStorageService } from './storage.service';
 
 const httpOptions = {
@@ -39,7 +41,8 @@ export class AuthService {
   constructor(
     private http: HttpClient,
     private storage: LocalStorageService,
-    private appconfig: AppConfig
+    private appconfig: AppConfig,
+    private jwtHelperService: JwtHelperService
   ) {
     this.APIURL = this.appconfig.GetCoreAPIURL() + `api/v${this.version}`;
   }
@@ -78,5 +81,38 @@ export class AuthService {
         }),
         catchError((error) => of(console.log(error)))
       );
+  }
+
+  getUserAccessRights(MenuID: string): AccessRights {
+    debugger;
+    const decode = this.jwtHelperService.decodeToken(
+      this.storage.get('jwtToken')
+    );
+    let Rights: string[] = decode['Role_' + MenuID].split(',');
+    var accRights: AccessRights = {
+      canView: false,
+      canAdd: false,
+      canEdit: false,
+      canDelete: false,
+    };
+
+    Rights.forEach((element) => {
+      switch (element) {
+        case 'RY':
+          accRights.canView = true;
+          break;
+        case 'CY':
+          accRights.canAdd = true;
+          break;
+        case 'UY':
+          accRights.canEdit = true;
+          break;
+        case 'DY':
+          accRights.canDelete = true;
+          break;
+      }
+    });
+
+    return accRights;
   }
 }

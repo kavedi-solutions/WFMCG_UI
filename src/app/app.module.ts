@@ -82,6 +82,11 @@ import * as fromDirective from './shared/directives/index';
 import * as SharedComponent from './shared/index';
 import { RoleAddEditComponent } from './pages/admin/user-role/role-add-edit/role-add-edit.component';
 import { CommonModule } from '@angular/common';
+import { JwtHelperService, JwtModule } from '@auth0/angular-jwt';
+
+export function tokenGetter() {
+  return localStorage.getItem('jwtToken');
+}
 
 @NgModule({
   declarations: [
@@ -156,9 +161,15 @@ import { CommonModule } from '@angular/common';
     MtxSliderModule,
     MtxSplitModule,
     MtxTooltipModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+      },
+    }),
   ],
   providers: [
     ...fromService.services,
+    JwtHelperService,
     AppConfig,
     {
       provide: HTTP_INTERCEPTORS,

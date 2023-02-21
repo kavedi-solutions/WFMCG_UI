@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FilterValues, PaginationHeaders, Role } from 'src/app/shared';
+import {
+  AccessRights,
+  FilterValues,
+  PaginationHeaders,
+  Role,
+} from 'src/app/shared';
 import * as fromService from '../../../shared/index';
 import * as defaultData from '../../../data/default.data';
 import { MtxGridColumn } from '@ng-matero/extensions/grid';
@@ -18,13 +23,21 @@ export class UserRoleComponent implements OnInit {
   filterValues?: FilterValues[];
   Sort?: string;
   SearchText?: string;
-
+  accRights: AccessRights;
   columns: MtxGridColumn[] = [];
 
   constructor(
     private roleService: fromService.RoleService,
+    private authService: fromService.AuthService,
     private router: Router
   ) {
+    this.accRights = {
+      canView: false,
+      canAdd: false,
+      canEdit: false,
+      canDelete: false,
+    };
+    this.GetRights();
     this.setColumns();
     this.pagination!.page = 1;
     this.pagination!.pageSize = 20;
@@ -34,6 +47,10 @@ export class UserRoleComponent implements OnInit {
   }
 
   ngOnInit(): void {}
+
+  GetRights() {
+    this.accRights = this.authService.getUserAccessRights('701');
+  }
 
   setColumns() {
     this.columns = [
@@ -97,6 +114,10 @@ export class UserRoleComponent implements OnInit {
             type: 'icon',
             icon: 'edit',
             tooltip: 'Edit Record',
+            iif: (record) => {
+              if (record.isAdminRole) return false;
+              else return this.accRights.canEdit;
+            },
             click: (record) => this.edit(record),
           },
           {
@@ -113,7 +134,11 @@ export class UserRoleComponent implements OnInit {
               closeColor: 'warn',
             },
             click: (record) => this.DeactiveRole(record),
-            iif: (record) => record.isActive,
+            iif: (record) => {
+              if (record.isAdminRole) return false;
+              else if (this.accRights.canDelete) return record.isActive;
+              else return false;
+            },
           },
           {
             class: 'green',
@@ -129,7 +154,11 @@ export class UserRoleComponent implements OnInit {
               closeColor: 'warn',
             },
             click: (record) => this.ActiveRole(record),
-            iif: (record) => !record.isActive,
+            iif: (record) => {
+              if (record.isAdminRole) return false;
+              else if (this.accRights.canDelete) return !record.isActive;
+              else return false;
+            },
           },
         ],
       },
