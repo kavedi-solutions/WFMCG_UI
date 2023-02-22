@@ -10,6 +10,7 @@ import * as defaultData from '../../../data/default.data';
 import { MtxGridColumn } from '@ng-matero/extensions/grid';
 import { PageEvent } from '@angular/material/paginator';
 import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-user-role',
   templateUrl: './user-role.component.html',
@@ -23,7 +24,7 @@ export class UserRoleComponent implements OnInit {
   filterValues?: FilterValues[];
   Sort?: string;
   SearchText?: string;
-  accRights: AccessRights;
+  accRights?: AccessRights;
   columns: MtxGridColumn[] = [];
 
   constructor(
@@ -31,12 +32,7 @@ export class UserRoleComponent implements OnInit {
     private authService: fromService.AuthService,
     private router: Router
   ) {
-    this.accRights = {
-      canView: false,
-      canAdd: false,
-      canEdit: false,
-      canDelete: false,
-    };
+    //this.accRights = defaultUserRights;
     this.GetRights();
     this.setColumns();
     this.pagination!.page = 1;
@@ -116,7 +112,7 @@ export class UserRoleComponent implements OnInit {
             tooltip: 'Edit Record',
             iif: (record) => {
               if (record.isAdminRole) return false;
-              else return this.accRights.canEdit;
+              else return this.accRights!.canEdit;
             },
             click: (record) => this.edit(record),
           },
@@ -136,7 +132,7 @@ export class UserRoleComponent implements OnInit {
             click: (record) => this.DeactiveRole(record),
             iif: (record) => {
               if (record.isAdminRole) return false;
-              else if (this.accRights.canDelete) return record.isActive;
+              else if (this.accRights!.canDelete) return record.isActive;
               else return false;
             },
           },
@@ -156,7 +152,7 @@ export class UserRoleComponent implements OnInit {
             click: (record) => this.ActiveRole(record),
             iif: (record) => {
               if (record.isAdminRole) return false;
-              else if (this.accRights.canDelete) return !record.isActive;
+              else if (this.accRights!.canDelete) return !record.isActive;
               else return false;
             },
           },

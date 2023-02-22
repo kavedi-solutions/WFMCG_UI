@@ -1,8 +1,9 @@
-import { PaginationHeaders } from "../shared";
+import { AccessRights, PaginationHeaders } from '../shared';
 
-export const defaultPaginationHeaders:PaginationHeaders = {
+export const defaultPaginationHeaders: PaginationHeaders = {
   page: 1,
   pageSize: 20,
   pageCount: 0,
-  recordCount: 0
-}
+  recordCount: 0,
+};
+
