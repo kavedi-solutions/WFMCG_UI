@@ -27,12 +27,6 @@ export class RoleService {
     'Access-Control-Allow-Origin': '*',
   });
 
-  headerWithToken = new HttpHeaders({
-    'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*',
-    Authorization: 'bearer ' + this.storage.get('jwtToken'),
-  });
-
   constructor(
     private http: HttpClient,
     private storage: LocalStorageService,
@@ -67,7 +61,7 @@ export class RoleService {
     const url = `${this.APIURL}/company/${this.CompanyID}/role/paged`;
     return this.http
       .get<any>(encodeURI(url), {
-        headers: this.headerWithToken,
+        headers: this.headers,
         observe: 'response',
         params,
       })
@@ -89,7 +83,7 @@ export class RoleService {
     const url = `${this.APIURL}/company/permission/default/${Permissiontype}`;
     return this.http
       .get<any>(encodeURI(url), {
-        headers: this.headerWithToken,
+        headers: this.headers,
         observe: 'response',
       })
       .pipe(
@@ -103,7 +97,7 @@ export class RoleService {
     const url = `${this.APIURL}/company/${this.CompanyID}/role/${RoleID}/getbyid`;
     return this.http
       .get<any>(encodeURI(url), {
-        headers: this.headerWithToken,
+        headers: this.headers,
         observe: 'response',
       })
       .pipe(
@@ -117,7 +111,7 @@ export class RoleService {
     const url = `${this.APIURL}/company/${this.CompanyID}/role/${RoleID}/${RoleName}/rolename-exists`;
     return this.http
       .get<any>(encodeURI(url), {
-        headers: this.headerWithToken,
+        headers: this.headers,
         observe: 'response',
       })
       .pipe(
@@ -131,7 +125,7 @@ export class RoleService {
     resourcesDetails.createdBy = this.UserID;
     const url = `${this.APIURL}/company/${this.CompanyID}/role/create`;
     return this.http.post<Role>(encodeURI(url), resourcesDetails, {
-      headers: this.headerWithToken,
+      headers: this.headers,
     });
   }
 
@@ -142,21 +136,36 @@ export class RoleService {
     resourcesDetails.ModifiedBy = this.UserID;
     const url = `${this.APIURL}/company/${this.CompanyID}/role/update/${roleID}`;
     return this.http.put<Role>(encodeURI(url), resourcesDetails, {
-      headers: this.headerWithToken,
+      headers: this.headers,
     });
   }
 
   DeactivateRole(RoleID: number) {
     const url = `${this.APIURL}/company/${this.CompanyID}/role/${RoleID}/deactivate/${this.UserID}`;
     return this.http.put<Role>(encodeURI(url), null, {
-      headers: this.headerWithToken,
+      headers: this.headers,
     });
   }
 
   ActivateRole(RoleID: number) {
     const url = `${this.APIURL}/company/${this.CompanyID}/role/${RoleID}/activate/${this.UserID}`;
     return this.http.put<Role>(encodeURI(url), null, {
-      headers: this.headerWithToken,
+      headers: this.headers,
     });
+  }
+
+  RoleDropDown()
+  {
+    const url = `${this.APIURL}/company/${this.CompanyID}/role/dropdown`;
+    return this.http
+      .get<any>(encodeURI(url), {
+        headers: this.headers,
+        observe: 'response',
+      })
+      .pipe(
+        map((response) => {
+          return response.body;
+        })
+      );
   }
 }

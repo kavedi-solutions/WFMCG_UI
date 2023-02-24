@@ -24,18 +24,43 @@ const routes: Routes = [
     children: [
       {
         path: 'role',
-        component: CommonPages.UserRoleComponent,
-        canActivate: [AuthGuard],
+        children: [
+          {
+            path: 'list',
+            component: CommonPages.UserRoleComponent,
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'add',
+            component: CommonPages.UserRoleAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'edit/:roleid',
+            component: CommonPages.UserRoleAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+        ],
       },
       {
-        path: 'role-add',
-        component: CommonPages.UserRoleAddEditComponent,
-        canActivate: [AuthGuard],
-      },
-      {
-        path: 'role-edit/:roleid',
-        component: CommonPages.UserRoleAddEditComponent,
-        canActivate: [AuthGuard],
+        path: 'user',
+        children: [
+          {
+            path: 'list',
+            component: CommonPages.UsersComponent,
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'add',
+            component: CommonPages.UserAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'edit/:userid',
+            component: CommonPages.UserAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+        ],
       },
     ],
   },

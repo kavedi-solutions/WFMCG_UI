@@ -1,4 +1,5 @@
 import { RoleService } from './admin/role.service';
+import { UserService } from './admin/user.service';
 import { AuthService } from './common/auth.service';
 import { AppDirectionality } from './common/directionality.service';
 import { PreloaderService } from './common/preloader.service';
@@ -18,9 +19,11 @@ export const services: any[] = [
   AppDirectionality,
   RoleService,
   SpinnerService,
+  UserService
 ];
 
 export * from './admin/role.service';
+export * from './admin/user.service';
 
 export * from './common/auth.service';
 export * from './common/storage.service';

@@ -120,7 +120,7 @@ export class UserRoleAddEditComponent implements OnInit {
   }
 
   BacktoList() {
-    this.router.navigate(['/admin/role']);
+    this.router.navigate(['/admin/role/list']);
   }
 
   getDefaultPermission() {

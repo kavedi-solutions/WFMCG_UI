@@ -10,6 +10,7 @@ import * as defaultData from '../../../data/default.data';
 import { MtxGridColumn } from '@ng-matero/extensions/grid';
 import { PageEvent } from '@angular/material/paginator';
 import { Router } from '@angular/router';
+import { funSortingOrder } from 'src/app/shared/functions';
 
 @Component({
   selector: 'app-user-role',
@@ -26,15 +27,16 @@ export class UserRoleComponent implements OnInit {
   SearchText?: string;
   accRights?: AccessRights;
   columns: MtxGridColumn[] = [];
+  latestSortingOrder?: string;
 
   constructor(
     private roleService: fromService.RoleService,
     private authService: fromService.AuthService,
     private router: Router
   ) {
-    //this.accRights = defaultUserRights;
     this.GetRights();
     this.setColumns();
+    this.latestSortingOrder = 'name';
     this.pagination!.page = 1;
     this.pagination!.pageSize = 20;
     this.pagination!.pageCount = 0;
@@ -163,7 +165,7 @@ export class UserRoleComponent implements OnInit {
 
   getRoleList() {
     this.roleService
-      .GetRoleList(this.pagination!, 'name', '')
+      .GetRoleList(this.pagination!, this.latestSortingOrder!, '')
       .subscribe((response) => {
         this.roleListData = response.body;
         this.pagination = response.headers;
@@ -174,7 +176,7 @@ export class UserRoleComponent implements OnInit {
   }
 
   edit(value: any) {
-    this.router.navigate(['/admin/role-edit/', value.roleID]);
+    this.router.navigate(['/admin/role/edit/', value.roleID]);
   }
 
   DeactiveRole(value: any) {
@@ -193,17 +195,24 @@ export class UserRoleComponent implements OnInit {
     console.log(e);
   }
 
-  changeSort(e: any) {
-    console.log(e);
+  changeSort(event: any) {
+    this.latestSortingOrder = '';
+    this.pagination!.page = 1;
+    this.pagination!.pageSize = 20;
+    this.pagination!.pageCount = 0;
+    this.pagination!.recordCount = 0;
+    this.latestSortingOrder = funSortingOrder(event, this.latestSortingOrder);
+    this.getRoleList();
   }
 
   getNextPage(e: PageEvent) {
-    this.pagination!.page = e.pageIndex;
+    this.pagination!.page = e.pageIndex + 1;
     this.pagination!.pageSize = e.pageSize;
+    this.pagination!.recordCount = e.length;
     this.getRoleList();
   }
 
   AddnewRecord() {
-    this.router.navigate(['/admin/role-add']);
+    this.router.navigate(['/admin/role/add']);
   }
 }
