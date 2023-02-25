@@ -1,18 +1,16 @@
-// export interface RolePutRequest {
-//   name?: string;
-//   description?: string;
-//   isAdminRole: boolean;
-//   permission: PermissionPutRequest[];
-//   isActive: boolean;
-//   ModifiedBy?: string;
-// }
-
-// export interface PermissionPutRequest {
-//   PermissionsId: number;
-//   RoleID: number;
-//   menuID: number;
-//   canView: boolean;
-//   canAdd: boolean;
-//   canEdit: boolean;
-//   canDelete: boolean;
-// }
+export interface UserPutRequest {
+  firstName?: string;
+  lastName?: string;
+  userName?: string;
+  email?: string;
+  address?: string;
+  city?: string;
+  stateID: number;
+  pinCode?: string;
+  mobile_Work?: string;
+  mobile_Personal?: string;
+  isCompanyOwner: boolean;
+  roleID: number;
+  isActive: boolean;
+  ModifiedBy?: string;
+}

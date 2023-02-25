@@ -2,11 +2,17 @@ import { HttpHeaders, HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { AppConfig } from 'src/app/app.config';
-import { PaginationHeaders, UserResponse } from '../../models';
+import {
+  PaginationHeaders,
+  User,
+  UserPostRequest,
+  UserPutRequest,
+  UserResponse,
+} from '../../models';
 import { LocalStorageService } from '../common/storage.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserService {
   APIURL?: string = '';
@@ -67,5 +73,80 @@ export class UserService {
           return payload;
         })
       );
+  }
+
+  GetUserbyID(UserID: string) {
+    const url = `${this.APIURL}/company/${this.CompanyID}/users/${UserID}/getbyid`;
+    return this.http
+      .get<any>(encodeURI(url), {
+        headers: this.headers,
+        observe: 'response',
+      })
+      .pipe(
+        map((response) => {
+          return response.body;
+        })
+      );
+  }
+
+  CheckUserNameExists(UserID: string, UserName: string) {
+    if (UserID != '') {
+      const url = `${this.APIURL}/company/${this.CompanyID}/users/${UserName}/username-exists/${UserID}`;
+      return this.http
+        .get<any>(encodeURI(url), {
+          headers: this.headers,
+          observe: 'response',
+        })
+        .pipe(
+          map((response) => {
+            return response.body;
+          })
+        );
+    } else {
+      const url = `${this.APIURL}/company/${this.CompanyID}/users/${UserName}/username-exists`;
+      return this.http
+        .get<any>(encodeURI(url), {
+          headers: this.headers,
+          observe: 'response',
+        })
+        .pipe(
+          map((response) => {
+            return response.body;
+          })
+        );
+    }
+  }
+
+  createUser(resourcesDetails: UserPostRequest): Observable<User> {
+    resourcesDetails.createdBy = this.UserID;
+    const url = `${this.APIURL}/company/${this.CompanyID}/users/create`;
+    return this.http.post<User>(encodeURI(url), resourcesDetails, {
+      headers: this.headers,
+    });
+  }
+
+  updateUser(
+    UserID: string,
+    resourcesDetails: UserPutRequest
+  ): Observable<User> {
+    resourcesDetails.ModifiedBy = this.UserID;
+    const url = `${this.APIURL}/company/${this.CompanyID}/users/update/${UserID}`;
+    return this.http.put<User>(encodeURI(url), resourcesDetails, {
+      headers: this.headers,
+    });
+  }
+
+  DeactivateUser(UserID: number) {
+    const url = `${this.APIURL}/company/${this.CompanyID}/users/${UserID}/deactivate/${this.UserID}`;
+    return this.http.put<User>(encodeURI(url), null, {
+      headers: this.headers,
+    });
+  }
+
+  ActivateUser(UserID: number) {
+    const url = `${this.APIURL}/company/${this.CompanyID}/users/${UserID}/activate/${this.UserID}`;
+    return this.http.put<User>(encodeURI(url), null, {
+      headers: this.headers,
+    });
   }
 }

@@ -12,7 +12,7 @@ import * as fromService from '../../shared/index';
       [matMenuTriggerFor]="menu"
     >
       <!-- <img class="matero-avatar" [src]="user.avatar" width="32" alt="avatar" /> -->
-      <span class="matero-username" fxHide.lt-sm>Jigar</span>
+      <span class="matero-username" fxHide.lt-sm>{{userName}}</span>
     </button>
 
     <mat-menu #menu="matMenu">
@@ -32,6 +32,7 @@ import * as fromService from '../../shared/index';
   `,
 })
 export class UserComponent implements OnInit {
+  userName: string = '';
   constructor(
     private router: Router,
     private auth: fromService.AuthService,
@@ -40,18 +41,11 @@ export class UserComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // this.auth
-    //   .user()
-    //   .pipe(
-    //     tap(user => (this.user = user)),
-    //     debounceTime(10)
-    //   )
-    //   .subscribe(() => this.cdr.detectChanges());
+    this.userName = this.sstorage.get("firstName");
   }
 
   logout() {
     this.sstorage.clear();
     this.router.navigate(['/auth/login']);
-    //this.auth.logout().subscribe(() => this.router.navigateByUrl('/auth/login'));
   }
 }

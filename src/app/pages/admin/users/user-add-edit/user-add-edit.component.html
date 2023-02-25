@@ -6,9 +6,9 @@
   [showAdd]="false"
   (onBackClick)="BacktoList()"
 ></page-header>
-<!-- <form class="form-field-full" [formGroup]="roleForm">
+<form class="form-field-full" [formGroup]="userForm">
   <mat-card>
-    <h4>Basic Detail</h4>
+    <h2><u>Basic Detail</u></h2>
     <div
       class="matero-row"
       fxLayout.lt-sm="column"
@@ -16,60 +16,157 @@
       fxLayoutGap="20px"
       fxLayoutGap.lt-sm="5px"
     >
-      <div fxFlex="30%" fxFlex.lt-sm="100" class="matero-col">
+      <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
         <mat-form-field appearance="legacy" color="primary">
-          <mat-label>Role Name</mat-label>
+          <mat-label>First Name</mat-label>
           <input
-            id="mat-input-role-name"
             matInput
-            formControlName="name"
+            formControlName="firstName"
             type="text"
-            placeholder="Role Name"
-            maxlength="20"
+            placeholder="First Name"
+            maxlength="50"
             required
-            (keyup)="onRoleNameKeyUp($event)"
           />
-          <mat-hint>Role name must be unique.</mat-hint>
-          <mat-error
-            id="mat-error-role-name-required"
-            *ngIf="nameControlRequired"
-            >Role name is required.</mat-error
+          <mat-error *ngIf="firstNameControlRequired"
+            >First Name is required.</mat-error
           >
-          <mat-error id="mat-error-role-name-invalid" *ngIf="nameControlInvalid"
-            >Role name is Invalid.</mat-error
-          >
-          <mat-error
-            id="mat-error-role-name-exist"
-            *ngIf="getRoleNameValidation()"
-            >This role name is already exist.</mat-error
+          <mat-error *ngIf="firstNameControlInvalid"
+            >First Name is Invalid.</mat-error
           >
         </mat-form-field>
       </div>
-      <div fxFlex="60%" fxFlex.lt-sm="100" class="matero-col">
+      <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
         <mat-form-field appearance="legacy" color="primary">
-          <mat-label>Description</mat-label>
+          <mat-label>Last Name</mat-label>
           <input
-            id="mat-input-text-description"
             matInput
-            formControlName="description"
+            formControlName="lastName"
             type="text"
-            placeholder="Description"
-            maxlength="30"
+            placeholder="Last Name"
+            maxlength="50"
+            required
+          />
+          <mat-error *ngIf="lastNameControlRequired"
+            >Last Name is required.</mat-error
+          >
+          <mat-error *ngIf="lastNameControlInvalid"
+            >Last Name is Invalid.</mat-error
+          >
+        </mat-form-field>
+      </div>
+    </div>
+    <div
+      class="matero-row"
+      fxLayout.lt-sm="column"
+      fxLayout="row"
+      fxLayoutGap="20px"
+      fxLayoutGap.lt-sm="5px"
+    >
+      <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>User Name</mat-label>
+          <input
+            matInput
+            formControlName="userName"
+            type="email"
+            placeholder="User Name"
+            maxlength="100"
+            required
+            (keyup)="onUserNameKeyUp($event)"
+          />
+          <mat-error *ngIf="userNameControlRequired"
+            >User Name is required.</mat-error
+          >
+          <mat-error *ngIf="userNameControlInvalid"
+            >User name is Invalid.</mat-error
+          >
+          <mat-error *ngIf="getUserNameValidation()"
+            >This user name is already exist.</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>eMail Address</mat-label>
+          <input
+            matInput
+            formControlName="email"
+            type="text"
+            placeholder="eMail Address"
+            maxlength="100"
+            required
+            [readonly]="isReadonly"
           />
         </mat-form-field>
       </div>
-      <div fxFlex="10%" fxFlex.lt-sm="100" class="matero-col m-12">
+    </div>
+    <div
+      class="matero-row"
+      fxLayout.lt-sm="column"
+      fxLayout="row"
+      fxLayoutGap="20px"
+      fxLayoutGap.lt-sm="5px"
+    >
+      <div
+        fxFlex="50%"
+        fxFlex.lt-sm="100"
+        class="matero-col"
+        *ngIf="isEditMode == false"
+      >
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Password</mat-label>
+          <input
+            matInput
+            formControlName="password"
+            type="password"
+            placeholder="Password"
+            maxlength="100"
+            required
+          />
+          <mat-error *ngIf="passwordControlRequired"
+            >Password is required.</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Role</mat-label>
+          <mat-select
+            formControlName="roleID"
+            required
+            [disabled]="editUser ? editUser!.isCompanyOwner : false"
+          >
+            <mat-option
+              *ngFor="let role of RoleDownDown"
+              [value]="role.role_Id"
+              [disabled]="role.isAdminRole === true"
+            >
+              {{ role.role_Name }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="roleControlRequired">Role is required.</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <div
+      class="matero-row m-t-12"
+      fxLayout.lt-sm="column"
+      fxLayout="row"
+      fxLayoutGap="20px"
+      fxLayoutGap.lt-sm="5px"
+    >
+      <div fxFlex="50" fxFlex.lt-sm="100" class="matero-col">
         <mat-slide-toggle
           color="primary"
           class="slide_toggle_style"
           formControlName="isActive"
+          [disabled]="true"
         >
-          Active
+          Active User
         </mat-slide-toggle>
       </div>
     </div>
-    <br />
-    <h4>Permissions</h4>
+    <h2><u>Contact Details</u></h2>
     <div
       class="matero-row"
       fxLayout.lt-sm="column"
@@ -78,104 +175,142 @@
       fxLayoutGap.lt-sm="5px"
     >
       <div fxFlex="100%" fxFlex.lt-sm="100" class="matero-col">
-        <table
-          mat-table
-          class="mat-table"
-          [dataSource]="editRole ? editRole!.permission : defaultPermission"
-        >
-          <ng-container
-            *ngFor="let column of displayedColumns; let columnIndex = index"
-            [matColumnDef]="column"
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Address</mat-label>
+          <textarea
+            matInput
+            formControlName="address"
+            type="text"
+            placeholder="Address"
+            maxlength="500"
+            rows="3"
+          ></textarea>
+          <mat-error *ngIf="addressControlInvalid"
+            >Address is Invalid.</mat-error
           >
-            <th
-              mat-header-cell
-              *matHeaderCellDef
-              [ngClass]="{
-                'role-slide-toggle-cell': column !== 'name'
-              }"
-            >
-              {{ getColumName(column) }}
-            </th>
-            <td
-              mat-cell
-              *matCellDef="let permission; let i = index"
-              [ngClass]="{
-                'role-slide-toggle-cell': column !== 'name'
-              }"
-            >
-              <span *ngIf="column === 'name'">
-                {{ permission[column] }}
-              </span>
-              <span *ngIf="column === 'all'">
-                <mat-slide-toggle
-                  color="primary"
-                  [checked]="
-                    permission.canAdd &&
-                    permission.canView &&
-                    permission.canEdit &&
-                    permission.canDelete
-                  "
-                  (change)="onCheckAll($event, i)"
-                >
-                </mat-slide-toggle>
-              </span>
-              <span
-                class="module-align-icon"
-                *ngIf="column !== 'name' && column !== 'all'"
-              >
-                <mat-slide-toggle
-                  *ngIf="column !== 'canView'"
-                  color="primary"
-                  [checked]="permission[column]"
-                  (change)="onOtherSelection($event, column, i)"
-                >
-                </mat-slide-toggle>
-                <mat-slide-toggle
-                  *ngIf="column === 'canView'"
-                  [disabled]="
-                    permission['canAdd'] === true ||
-                    permission['canEdit'] === true ||
-                    permission['canDelete'] === true
-                  "
-                  color="primary"
-                  [checked]="permission[column]"
-                  (change)="onOtherSelection($event, column, i)"
-                >
-                </mat-slide-toggle>
-              </span>
-            </td>
-          </ng-container>
-          <tr
-            mat-header-row
-            *matHeaderRowDef="displayedColumns; sticky: true"
-          ></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-        </table>
+        </mat-form-field>
       </div>
     </div>
-    <br />
-    <mat-card-actions align="end" class="role-mat-card-actions">
+    <div
+      class="matero-row"
+      fxLayout.lt-sm="column"
+      fxLayout="row"
+      fxLayoutGap="20px"
+      fxLayoutGap.lt-sm="5px"
+    >
+      <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>City</mat-label>
+          <input
+            matInput
+            formControlName="city"
+            type="text"
+            placeholder="City"
+            maxlength="50"
+          />
+          <mat-error *ngIf="cityControlInvalid">City is Invalid.</mat-error>
+        </mat-form-field>
+      </div>
+      <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>State</mat-label>
+          <mat-select formControlName="stateID">
+            <mat-option
+              *ngFor="let role of StateDropDown"
+              [value]="role.state_Id"
+            >
+              {{ role.state_Name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <div
+      class="matero-row"
+      fxLayout.lt-sm="column"
+      fxLayout="row"
+      fxLayoutGap="20px"
+      fxLayoutGap.lt-sm="5px"
+    >
+      <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Pincode</mat-label>
+          <input
+            matInput
+            formControlName="pinCode"
+            type="text"
+            placeholder="Pincode"
+            maxlength="6"
+          />
+          <mat-error *ngIf="pinCodeControlInvalid"
+            >Pincode is Invalid.</mat-error
+          >
+        </mat-form-field>
+      </div>
+    </div>
+    <div
+      class="matero-row"
+      fxLayout.lt-sm="column"
+      fxLayout="row"
+      fxLayoutGap="20px"
+      fxLayoutGap.lt-sm="5px"
+    >
+      <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Mobile (Work)</mat-label>
+          <input
+            matInput
+            formControlName="mobile_Work"
+            type="text"
+            placeholder="Mobile (Work)"
+            maxlength="15"
+          />
+          <mat-error *ngIf="mobile_WorkControlRequired"
+            >Mobile (Work) is required.</mat-error
+          >
+          <mat-error *ngIf="mobile_WorkControlInvalid"
+            >Mobile (Work) is Invalid.</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Mobile (Personal)</mat-label>
+          <input
+            matInput
+            formControlName="mobile_Personal"
+            type="text"
+            placeholder="Mobile (Personal)"
+            maxlength="15"
+          />
+          <mat-error *ngIf="mobile_PersonalControlInvalid"
+            >Mobile (Personal) is Invalid.</mat-error
+          >
+        </mat-form-field>
+      </div>
+    </div>
+    <mat-card-actions align="end" class="user-mat-card-actions">
       <button mat-raised-button (click)="BacktoList()" color="accent">
         Cancel
       </button>
       <button
         *ngIf="isEditMode == false"
-        [disabled]="!roleForm.valid"
+        [disabled]="!userForm.valid"
         mat-raised-button
         color="primary"
-        (click)="SaveUpdateRole(roleForm)"
+        (click)="SaveUpdateRole(userForm)"
       >
         Save
       </button>
       <button
         *ngIf="isEditMode == true"
-        [disabled]="!roleForm.valid"
+        [disabled]="!userForm.valid"
         mat-raised-button
         color="primary"
-        (click)="SaveUpdateRole(roleForm)"
+        (click)="SaveUpdateRole(userForm)"
       >
         Update
       </button>
     </mat-card-actions>
   </mat-card>
-</form> -->
+</form>

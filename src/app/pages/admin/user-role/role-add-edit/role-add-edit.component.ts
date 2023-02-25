@@ -53,8 +53,7 @@ export class UserRoleAddEditComponent implements OnInit {
     private router: Router,
     public route: ActivatedRoute,
     private roleService: fromService.RoleService,
-    private fb: FormBuilder,
-    private sessionService: fromService.LocalStorageService
+    private fb: FormBuilder
   ) {
     this.defaultPermission = [];
     this.isEditMode = false;

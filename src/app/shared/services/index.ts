@@ -31,3 +31,4 @@ export * from './common/preloader.service';
 export * from './common/settings.service';
 export * from './common/directionality.service';
 export * from './common/spinner.service';
+export * from './common/common.service';

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './core';
 import * as Layouts from './layouts/index';
+import * as fromResolvers from './shared/resolver/index';
 import * as AuthPages from './auth-pages/index';
 import * as CommonPages from './pages/index';
 import { NotificationComponent } from './shared';
@@ -24,10 +25,13 @@ const routes: Routes = [
     children: [
       {
         path: 'role',
+
         children: [
           {
             path: 'list',
             component: CommonPages.UserRoleComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '701' },
             canActivate: [AuthGuard],
           },
           {
@@ -48,6 +52,8 @@ const routes: Routes = [
           {
             path: 'list',
             component: CommonPages.UsersComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '702' },
             canActivate: [AuthGuard],
           },
           {

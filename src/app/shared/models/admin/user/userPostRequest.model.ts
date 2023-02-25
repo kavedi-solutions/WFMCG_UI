@@ -1,16 +1,17 @@
-// export interface RolePostRequest {
-//   name?: string;
-//   description?: string;
-//   isAdminRole: boolean;
-//   permission: PermissionPostRequest[];
-//   isActive: boolean;
-//   createdBy?: string;
-// }
-
-// export interface PermissionPostRequest {
-//   menuID: number;
-//   canView: boolean;
-//   canAdd: boolean;
-//   canEdit: boolean;
-//   canDelete: boolean;
-// }
+export interface UserPostRequest {
+  firstName?: string;
+  lastName?: string;
+  userName?: string;
+  password?: string;
+  email?: string;
+  address?: string;
+  city?: string;
+  stateID: number;
+  pinCode?: string;
+  mobile_Work?: string;
+  mobile_Personal?: string;
+  isCompanyOwner: boolean;
+  roleID: number;
+  isActive: boolean;
+  createdBy?: string;
+}

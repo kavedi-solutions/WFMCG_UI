@@ -13,8 +13,8 @@ export class LoginPageComponent implements OnInit {
   isSubmitting = false;
 
   loginForm = this.fb.nonNullable.group({
-    username: ['jigar2284.patel@gmail.com', [Validators.required]],
-    password: ['Kavedi@1116', [Validators.required]],
+    username: ['', [Validators.required]],
+    password: ['', [Validators.required]],
   });
   //
   constructor(
@@ -36,7 +36,6 @@ export class LoginPageComponent implements OnInit {
 
   login() {
     this.isSubmitting = true;
-
     this.authService
       .Login(this.username.value, this.password.value)
       .subscribe((response: loginResponse) => {
@@ -49,7 +48,6 @@ export class LoginPageComponent implements OnInit {
           this.sstorage.set('lastName', response.lastName);
           this.sstorage.set('isCompanyOwner', response.isCompanyOwner);
           this.sstorage.set('jwtToken', response.jwtToken);
-
           this.router.navigate(['/dashboard']);
         }
       });

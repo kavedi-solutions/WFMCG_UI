@@ -77,6 +77,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { NotificationInterceptor, SpinnerInterceptor } from './shared';
 import { AppConfig } from './app.config';
 import * as fromService from './shared/services/index';
+import * as fromResolvers from './shared/resolver/index';
 import * as fromThemes from './theme/index';
 import * as fromDirective from './shared/directives/index';
 import * as SharedComponent from './shared/index';
@@ -167,6 +168,7 @@ export function tokenGetter() {
   ],
   providers: [
     ...fromService.services,
+    ...fromResolvers.resolvers,
     JwtHelperService,
     AppConfig,
     {
