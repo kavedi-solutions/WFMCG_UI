@@ -166,6 +166,7 @@ export function tokenGetter() {
       },
     }),
   ],
+  entryComponents: [Pages.AreaAddEditComponent],
   providers: [
     ...fromService.services,
     ...fromResolvers.resolvers,

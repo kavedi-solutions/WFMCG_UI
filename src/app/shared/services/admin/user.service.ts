@@ -149,4 +149,19 @@ export class UserService {
       headers: this.headers,
     });
   }
+
+  UserDropDown()
+  {
+    const url = `${this.APIURL}/company/${this.CompanyID}/users/dropdown`;
+    return this.http
+      .get<any>(encodeURI(url), {
+        headers: this.headers,
+        observe: 'response',
+      })
+      .pipe(
+        map((response) => {
+          return response.body;
+        })
+      );
+  }
 }

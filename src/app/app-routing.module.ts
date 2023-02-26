@@ -25,7 +25,6 @@ const routes: Routes = [
     children: [
       {
         path: 'role',
-
         children: [
           {
             path: 'list',
@@ -64,6 +63,36 @@ const routes: Routes = [
           {
             path: 'edit/:userid',
             component: CommonPages.UserAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    path: 'master',
+    component: Layouts.MainLayoutComponent,
+    canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
+    children: [
+      {
+        path: 'area',
+        children: [
+          {
+            path: 'list',
+            component: CommonPages.AreaComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '102' },
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'add',
+            component: CommonPages.AreaAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'edit/:areaid',
+            component: CommonPages.AreaAddEditComponent,
             canActivate: [AuthGuard],
           },
         ],
