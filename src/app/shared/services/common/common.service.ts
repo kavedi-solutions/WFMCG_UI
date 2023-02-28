@@ -28,7 +28,7 @@ export class CommonService {
 
   StateDropDown()
   {
-    const url = `${this.APIURL}/main/states/getdropdown`;
+    const url = `${this.APIURL}/dropdown/states`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
