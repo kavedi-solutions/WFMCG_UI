@@ -76,6 +76,28 @@ const routes: Routes = [
     canActivateChild: [AuthGuard],
     children: [
       {
+        path: 'group',
+        children: [
+          {
+            path: 'list',
+            component: CommonPages.GroupComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '101' },
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'add',
+            component: CommonPages.GroupAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'edit/:groupid',
+            component: CommonPages.GroupAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+        ],
+      },
+      {
         path: 'area',
         children: [
           {

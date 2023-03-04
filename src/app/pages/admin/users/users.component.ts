@@ -37,10 +37,6 @@ export class UsersComponent implements OnInit {
     this.accRights = this.route.snapshot.data['userRights'];
     this.setColumns();
     this.latestSortingOrder = 'firstName';
-    this.pagination!.page = 1;
-    this.pagination!.pageSize = 20;
-    this.pagination!.pageCount = 0;
-    this.pagination!.recordCount = 0;
     this.getUserList();
   }
 
@@ -140,16 +136,13 @@ export class UsersComponent implements OnInit {
 
   changeSort(event: any) {
     this.latestSortingOrder = '';
-    this.pagination!.page = 1;
-    this.pagination!.pageSize = 20;
-    this.pagination!.pageCount = 0;
-    this.pagination!.recordCount = 0;
+    this.pagination!.page = 0;
     this.latestSortingOrder = funSortingOrder(event, this.latestSortingOrder);
     this.getUserList();
   }
 
   getNextPage(e: PageEvent) {
-    this.pagination!.page = e.pageIndex + 1;
+    this.pagination!.page = e.pageIndex;
     this.pagination!.pageSize = e.pageSize;
     this.pagination!.recordCount = e.length;
     this.getUserList();

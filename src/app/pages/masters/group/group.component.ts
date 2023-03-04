@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {
   AccessRights,
-  Area,
+  Group,
   FilterValues,
   PaginationHeaders,
 } from 'src/app/shared';
@@ -13,14 +13,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { funSortingOrder } from 'src/app/shared/functions';
 
 @Component({
-  selector: 'app-area',
-  templateUrl: './area.component.html',
-  styleUrls: ['./area.component.scss'],
+  selector: 'app-group',
+  templateUrl: './group.component.html',
+  styleUrls: ['./group.component.scss'],
 })
-export class AreaComponent implements OnInit {
-  PageTitle: string = 'Area';
-  buttonText: string = 'Add New Area';
-  areaListData: Area[] = [];
+export class GroupComponent implements OnInit {
+  PageTitle: string = 'Group';
+  buttonText: string = 'Add New Group';
+  groupListData: Group[] = [];
   pagination?: PaginationHeaders = defaultData.defaultPaginationHeaders;
   filterValues?: FilterValues[];
   Sort?: string;
@@ -28,21 +28,22 @@ export class AreaComponent implements OnInit {
   accRights?: AccessRights;
   columns: MtxGridColumn[] = [];
   latestSortingOrder?: string;
+
   constructor(
-    private areaService: fromService.AreaService,
+    private groupService: fromService.GroupService,
     private router: Router,
-    private route: ActivatedRoute,
+    private route: ActivatedRoute
   ) {
     this.accRights = this.route.snapshot.data['userRights'];
     this.setColumns();
-    this.latestSortingOrder = 'name';
-    this.getAreaList();
+    this.latestSortingOrder = 'GroupName';
+    this.getGroupList();
   }
 
   ngOnInit(): void {}
 
   setColumns() {
-    this.columns = defaultData.GetAreaColumns();
+    this.columns = defaultData.GetGroupColumns();
     this.columns.push({
       header: 'Action',
       field: 'action',
@@ -73,7 +74,7 @@ export class AreaComponent implements OnInit {
             okColor: 'primary',
             closeColor: 'warn',
           },
-          click: (record) => this.DeactiveArea(record),
+          click: (record) => this.DeactiveGroup(record),
           iif: (record) => {
             if (this.accRights!.canDelete) return record.isActive;
             else return false;
@@ -92,7 +93,7 @@ export class AreaComponent implements OnInit {
             okColor: 'primary',
             closeColor: 'warn',
           },
-          click: (record) => this.ActiveArea(record),
+          click: (record) => this.ActiveGroup(record),
           iif: (record) => {
             if (this.accRights!.canDelete) return !record.isActive;
             else return false;
@@ -102,11 +103,12 @@ export class AreaComponent implements OnInit {
     });
   }
 
-  getAreaList() {
-    this.areaService
-      .GetAreaList(this.pagination!, this.latestSortingOrder!, '')
+  getGroupList() {
+    this.groupService
+      .GetGroupList(this.pagination!, this.latestSortingOrder!, '')
       .subscribe((response) => {
-        this.areaListData = response.body;
+        debugger;
+        this.groupListData = response.body;
         this.pagination = response.headers;
         this.Sort = response.sort;
         this.SearchText = response.searchText;
@@ -115,19 +117,19 @@ export class AreaComponent implements OnInit {
   }
 
   edit(value: any) {
-    this.router.navigate(['/master/area/edit/', value.areaID]);
+    this.router.navigate(['/master/group/edit/', value.groupID]);
     //this.router.navigate([route, { outlets: { dialog: ['reset-password'] } }]);
   }
 
-  DeactiveArea(value: any) {
-    this.areaService.DeactivateArea(value.areaID).subscribe((response) => {
-      this.getAreaList();
+  DeactiveGroup(value: any) {
+    this.groupService.DeactivateGroup(value.groupID).subscribe((response) => {
+      this.getGroupList();
     });
   }
 
-  ActiveArea(value: any) {
-    this.areaService.ActivateArea(value.areaID).subscribe((response) => {
-      this.getAreaList();
+  ActiveGroup(value: any) {
+    this.groupService.ActivateGroup(value.groupID).subscribe((response) => {
+      this.getGroupList();
     });
   }
 
@@ -139,19 +141,18 @@ export class AreaComponent implements OnInit {
     this.latestSortingOrder = '';
     this.pagination!.page = 0;
     this.latestSortingOrder = funSortingOrder(event, this.latestSortingOrder);
-    this.getAreaList();
+    this.getGroupList();
   }
 
   getNextPage(e: PageEvent) {
     this.pagination!.page = e.pageIndex;
     this.pagination!.pageSize = e.pageSize;
     this.pagination!.recordCount = e.length;
-    this.getAreaList();
+    this.getGroupList();
   }
 
   AddnewRecord() {
-    this.router.navigate(['/master/area/add']);
+    this.router.navigate(['/master/group/add']);
     //this.router.navigate(['/master/area', { outlets: { dialog: ['add'] } }]);
   }
-
 }

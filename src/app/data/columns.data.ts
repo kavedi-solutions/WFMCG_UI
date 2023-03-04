@@ -14,6 +14,7 @@ export function GetRoleColumns() {
       disabled: true,
       minWidth: 200,
       width: '200px',
+      pinned: 'left',
     },
     {
       header: 'Description',
@@ -69,6 +70,7 @@ export function GetUserColumns() {
       disabled: true,
       minWidth: 150,
       width: '150px',
+      pinned: 'left',
     },
     {
       header: 'Last Name',
@@ -77,6 +79,7 @@ export function GetUserColumns() {
       disabled: true,
       minWidth: 150,
       width: '150px',
+      pinned: 'left',
     },
     {
       header: 'User Name',
@@ -156,8 +159,9 @@ export function GetAreaColumns(){
       field: 'name',
       sortable: true,
       disabled: true,
-      minWidth: 200,
-      width: '200px',
+      minWidth: 300,
+      width: '300px',
+      pinned: 'left',
     },
     {
       header: 'Is Active',
@@ -189,4 +193,68 @@ export function GetAreaColumns(){
   ];
 
   return AreaColumns;
+}
+
+export function GetGroupColumns(){
+  let GroupColumns: MtxGridColumn[] = [
+    {
+      header: 'GroupID',
+      field: 'GroupID',
+      hide: true,
+    },
+    {
+      header: 'Group Name',
+      field: 'groupName',
+      sortable: true,
+      disabled: true,
+      minWidth: 300,
+      width: '300px',
+      pinned: 'left',
+    },
+    {
+      header: 'Balance Transfer To',
+      field: 'balanceTransferToName',
+      sortable: true,
+      disabled: true,
+      minWidth: 250,
+      width: '250px',
+    },
+    {
+      header: 'Schedule Name',
+      field: 'scheduleName',
+      sortable: true,
+      disabled: true,
+      minWidth: 250,
+      width: '250px',
+    },
+    {
+      header: 'Is Active',
+      field: 'isActive',
+      sortable: true,
+      disabled: true,
+      type: 'tag',
+      tag: {
+        true: { text: 'Active', color: 'green-100' },
+        false: { text: 'In Active', color: 'red-100' },
+      },
+    },
+    {
+      header: 'Created Date',
+      field: 'createdDate',
+      sortable: true,
+      disabled: true,
+      type: 'date',
+      typeParameter: { format: 'dd-MM-yyyy HH:mm:ss' },
+    },
+    {
+      header: 'Updated Date',
+      field: 'modifiedDate',
+      sortable: true,
+      disabled: true,
+      type: 'date',
+      typeParameter: { format: 'dd-MM-yyyy HH:mm:ss' },
+    },
+  ];
+
+  return GroupColumns;
 }

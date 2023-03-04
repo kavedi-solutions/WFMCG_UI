@@ -5,17 +5,17 @@ import { AppConfig } from 'src/app/app.config';
 import {
   FilterValues,
   PaginationHeaders,
-  Area,
-  AreaResponse,
-  AreaPostRequest,
-  AreaPutRequest,
+  Group,
+  GroupResponse,
+  GroupPostRequest,
+  GroupPutRequest,
 } from '../../models';
 import { LocalStorageService } from '../common/storage.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class AreaService {
+export class GroupService {
   APIURL?: string = '';
   version: string = '1';
   CompanyID: string = this.storage.get('companyID');
@@ -34,11 +34,11 @@ export class AreaService {
     this.APIURL = this.appconfig.GetCoreAPIURL() + `api/v${this.version}`;
   }
 
-  GetAreaList(
+  GetGroupList(
     paginationHeaders: PaginationHeaders,
     sort: string,
     searchText: string
-  ): Observable<AreaResponse> {
+  ): Observable<GroupResponse> {
     let params = new HttpParams()
       .set('Page', `${paginationHeaders.page}`)
       .set('PageSize', `${paginationHeaders.pageSize}`)
@@ -55,7 +55,7 @@ export class AreaService {
     //   });
     // }
 
-    const url = `${this.APIURL}/company/${this.CompanyID}/area/paged`;
+    const url = `${this.APIURL}/company/${this.CompanyID}/group/paged`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -64,7 +64,7 @@ export class AreaService {
       })
       .pipe(
         map((response) => {
-          const payload: AreaResponse = {
+          const payload: GroupResponse = {
             headers: JSON.parse(response.headers.get('x-pagination')!),
             body: response.body,
             sort,
@@ -76,8 +76,8 @@ export class AreaService {
       );
   }
 
-  GetAreabyID(AreaID: number) {
-    const url = `${this.APIURL}/company/${this.CompanyID}/area/${AreaID}/getbyid`;
+  GetGroupbyID(GroupID: number) {
+    const url = `${this.APIURL}/company/${this.CompanyID}/group/${GroupID}/getbyid`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -90,8 +90,8 @@ export class AreaService {
       );
   }
 
-  CheckAreaNameExists(AreaID: number, AreaName: string) {
-    const url = `${this.APIURL}/company/${this.CompanyID}/area/${AreaID}/${AreaName}/areaname-exists`;
+  CheckGroupNameExists(GroupID: number, GroupName: string) {
+    const url = `${this.APIURL}/company/${this.CompanyID}/group/${GroupID}/${GroupName}/groupname-exists`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -104,41 +104,41 @@ export class AreaService {
       );
   }
 
-  createArea(resourcesDetails: AreaPostRequest): Observable<Area> {
+  createGroup(resourcesDetails: GroupPostRequest): Observable<Group> {
     resourcesDetails.createdBy = this.UserID;
-    const url = `${this.APIURL}/company/${this.CompanyID}/area/create`;
-    return this.http.post<Area>(encodeURI(url), resourcesDetails, {
+    const url = `${this.APIURL}/company/${this.CompanyID}/group/create`;
+    return this.http.post<Group>(encodeURI(url), resourcesDetails, {
       headers: this.headers,
     });
   }
 
-  updateArea(
-    areaID: number,
-    resourcesDetails: AreaPutRequest
-  ): Observable<Area> {
+  updateGroup(
+    GroupID: number,
+    resourcesDetails: GroupPutRequest
+  ): Observable<Group> {
     resourcesDetails.ModifiedBy = this.UserID;
-    const url = `${this.APIURL}/company/${this.CompanyID}/area/update/${areaID}`;
-    return this.http.put<Area>(encodeURI(url), resourcesDetails, {
+    const url = `${this.APIURL}/company/${this.CompanyID}/group/update/${GroupID}`;
+    return this.http.put<Group>(encodeURI(url), resourcesDetails, {
       headers: this.headers,
     });
   }
 
-  DeactivateArea(AreaID: number) {
-    const url = `${this.APIURL}/company/${this.CompanyID}/area/${AreaID}/deactivate/${this.UserID}`;
-    return this.http.put<Area>(encodeURI(url), null, {
+  DeactivateGroup(GroupID: number) {
+    const url = `${this.APIURL}/company/${this.CompanyID}/group/${GroupID}/deactivate/${this.UserID}`;
+    return this.http.put<Group>(encodeURI(url), null, {
       headers: this.headers,
     });
   }
 
-  ActivateArea(AreaID: number) {
-    const url = `${this.APIURL}/company/${this.CompanyID}/area/${AreaID}/activate/${this.UserID}`;
-    return this.http.put<Area>(encodeURI(url), null, {
+  ActivateGroup(GroupID: number) {
+    const url = `${this.APIURL}/company/${this.CompanyID}/group/${GroupID}/activate/${this.UserID}`;
+    return this.http.put<Group>(encodeURI(url), null, {
       headers: this.headers,
     });
   }
 
-  AreaDropDown() {
-    const url = `${this.APIURL}/company/${this.CompanyID}/area/dropdown`;
+  GroupDropDown() {
+    const url = `${this.APIURL}/company/${this.CompanyID}/group/dropdown`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -150,4 +150,5 @@ export class AreaService {
         })
       );
   }
+
 }

@@ -1,0 +1,47 @@
+<page-header
+  class="bg-blue-600"
+  [title]="PageTitle"
+  [addButtonToolTip]="buttonText"
+  [showBack]="false"
+  [showAdd]="accRights!.canAdd"
+  (onAddClick)="AddnewRecord()"
+></page-header>
+
+<mtx-grid
+  [data]="groupListData"
+  [columns]="columns"
+  [length]="pagination!.recordCount"
+  [pageIndex]="pagination!.page"
+  [pageSize]="pagination!.pageSize"
+  [columnResizable]="false"
+  [multiSelectable]="false"
+  [rowSelectable]="true"
+  [hideRowSelectionCheckbox]="true"
+  [rowHover]="true"
+  [rowStriped]="false"
+  [showToolbar]="false"
+  [toolbarTitle]="'Role List'"
+  [columnHideable]="false"
+  [columnSortable]="true"
+  [columnPinnable]="true"
+  [expandable]="false"
+  [pageOnFront]="false"
+  [showPaginator]="true"
+  [pageSizeOptions]="[10, 20, 50, 100]"
+  (sortChange)="changeSort($event)"
+  (selectionChange)="changeSelect($event)"
+  (page)="getNextPage($event)"
+>
+</mtx-grid>
+
+<!-- <mtx-grid [data]="groupListData"
+          [columns]="columns"
+          [length]="pagination!.recordCount"
+          [pageOnFront]="false"
+          [pageIndex]="pagination!.page"
+          [pageSize]="pagination!.pageSize"
+          [pageSizeOptions]="[10, 20, 50, 100]"
+          (page)="getNextPage($event)">
+</mtx-grid> -->
+
+<router-outlet name="dialog"></router-outlet>

@@ -22,3 +22,6 @@ export * from './admin/user/userPutRequest.model';
 export * from './master/area/areaResponse.model';
 export * from './master/area/areaPostRequest.model';
 export * from './master/area/areaPutRequest.model';
+export * from './master/group/groupPostRequest.model';
+export * from './master/group/groupPutRequest.model';
+export * from './master/group/groupResponse.model';
