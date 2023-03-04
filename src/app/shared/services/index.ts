@@ -9,6 +9,7 @@ import {
   LocalStorageService,
   MemoryStorageService,
 } from './common/storage.service';
+import { AreaService } from './master/area.service';
 
 export const services: any[] = [
   AuthService,
@@ -19,7 +20,8 @@ export const services: any[] = [
   AppDirectionality,
   RoleService,
   SpinnerService,
-  UserService
+  UserService,
+  AreaService
 ];
 
 export * from './admin/role.service';
@@ -32,3 +34,5 @@ export * from './common/settings.service';
 export * from './common/directionality.service';
 export * from './common/spinner.service';
 export * from './common/common.service';
+
+export * from './master/area.service';

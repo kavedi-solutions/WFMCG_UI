@@ -77,7 +77,7 @@ export class UserRoleAddEditComponent implements OnInit {
       this.isEditMode = false;
       this.getDefaultPermission();
     }
-    this.RoleNameExists.pipe(debounceTime(1000)).subscribe(() => {
+    this.RoleNameExists.pipe(debounceTime(300)).subscribe(() => {
       this.CheckRoleNameExists(this.RoleName);
     });
   }

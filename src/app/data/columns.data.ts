@@ -143,3 +143,50 @@ export function GetUserColumns() {
   ];
   return UserColumns;
 }
+
+export function GetAreaColumns(){
+  let AreaColumns: MtxGridColumn[] = [
+    {
+      header: 'AreaID',
+      field: 'AreaID',
+      hide: true,
+    },
+    {
+      header: 'Area Name',
+      field: 'name',
+      sortable: true,
+      disabled: true,
+      minWidth: 200,
+      width: '200px',
+    },
+    {
+      header: 'Is Active',
+      field: 'isActive',
+      sortable: true,
+      disabled: true,
+      type: 'tag',
+      tag: {
+        true: { text: 'Active', color: 'green-100' },
+        false: { text: 'In Active', color: 'red-100' },
+      },
+    },
+    {
+      header: 'Created Date',
+      field: 'createdDate',
+      sortable: true,
+      disabled: true,
+      type: 'date',
+      typeParameter: { format: 'dd-MM-yyyy HH:mm:ss' },
+    },
+    {
+      header: 'Updated Date',
+      field: 'modifiedDate',
+      sortable: true,
+      disabled: true,
+      type: 'date',
+      typeParameter: { format: 'dd-MM-yyyy HH:mm:ss' },
+    },
+  ];
+
+  return AreaColumns;
+}

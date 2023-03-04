@@ -103,7 +103,7 @@ export class UserAddEditComponent implements OnInit {
       this.passwordControl.setValidators([Validators.required]);
       this.passwordControl.updateValueAndValidity();
     }
-    this.UserNameExists.pipe(debounceTime(1000)).subscribe(() => {
+    this.UserNameExists.pipe(debounceTime(300)).subscribe(() => {
       this.CheckUserNameExists(this.UserName);
     });
   }

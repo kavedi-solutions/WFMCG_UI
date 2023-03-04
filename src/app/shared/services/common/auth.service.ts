@@ -69,7 +69,8 @@ export class AuthService {
   }
 
   GetMenu() {
-    const url = `${this.APIURL}/common/menu`;
+    let UserID: string = this.storage.get('userID');
+    const url = `${this.APIURL}/common/menu/${UserID}`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,

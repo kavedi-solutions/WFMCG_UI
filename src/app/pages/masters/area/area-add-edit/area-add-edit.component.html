@@ -1,1 +1,80 @@
-<p>area-add-edit works!</p>
+<page-header
+  class="bg-blue-600"
+  [title]="PageTitle"
+  [addButtonToolTip]="buttonText"
+  [showBack]="true"
+  [showAdd]="false"
+  (onBackClick)="BacktoList()"
+></page-header>
+<form class="form-field-full" [formGroup]="areaForm">
+  <mat-card>
+    <div
+      class="matero-row"
+      fxLayout.lt-sm="column"
+      fxLayout="row"
+      fxLayoutGap="20px"
+      fxLayoutGap.lt-sm="5px"
+    >
+      <div fxFlex="30%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Area Name</mat-label>
+          <input
+            matInput
+            formControlName="name"
+            type="text"
+            placeholder="Area Name"
+            maxlength="20"
+            required
+            (keyup)="onAreaNameKeyUp($event)"
+          />
+          <mat-hint>Area name must be unique.</mat-hint>
+          <mat-error
+            *ngIf="nameControlRequired"
+            >Area name is required.</mat-error
+          >
+          <mat-error *ngIf="nameControlInvalid"
+            >Area name is Invalid.</mat-error
+          >
+          <mat-error
+            *ngIf="getAreaNameValidation()"
+            >This area name is already exist.</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div fxFlex="10%" fxFlex.lt-sm="100" class="matero-col m-12">
+        <mat-slide-toggle
+          color="primary"
+          class="slide_toggle_style"
+          formControlName="isActive"
+          [disabled]="true"
+        >
+          Active
+        </mat-slide-toggle>
+      </div>
+    </div>
+    <br />
+    <mat-card-actions align="end" class="area-mat-card-actions">
+      <button mat-raised-button (click)="BacktoList()" color="accent">
+        Cancel
+      </button>
+      <button
+        *ngIf="isEditMode == false"
+        [disabled]="!areaForm.valid"
+        mat-raised-button
+        color="primary"
+        (click)="SaveUpdateArea(areaForm)"
+      >
+        Save
+      </button>
+      <button
+        *ngIf="isEditMode == true"
+        [disabled]="!areaForm.valid"
+        mat-raised-button
+        color="primary"
+        (click)="SaveUpdateArea(areaForm)"
+      >
+        Update
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</form>

@@ -31,7 +31,6 @@ export class UserRoleComponent implements OnInit {
 
   constructor(
     private roleService: fromService.RoleService,
-    private authService: fromService.AuthService,
     private router: Router,
     private route: ActivatedRoute
   ) {
@@ -48,7 +47,6 @@ export class UserRoleComponent implements OnInit {
   ngOnInit(): void {}
 
   setColumns() {
-    debugger;
     this.columns = defaultData.GetRoleColumns();
     this.columns.push({
       header: 'Action',
