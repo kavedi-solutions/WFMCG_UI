@@ -8,6 +8,7 @@
 ></page-header>
 
 <mtx-grid
+  class="table-main-wrapper"
   [data]="groupListData"
   [columns]="columns"
   [length]="pagination!.recordCount"
@@ -28,20 +29,20 @@
   [pageOnFront]="false"
   [showPaginator]="true"
   [pageSizeOptions]="[10, 20, 50, 100]"
+  [showToolbar]="true"
+  [showColumnMenuButton]="false"
+  [toolbarTemplate]="toolbarTpl"
   (sortChange)="changeSort($event)"
   (selectionChange)="changeSelect($event)"
   (page)="getNextPage($event)"
 >
 </mtx-grid>
 
-<!-- <mtx-grid [data]="groupListData"
-          [columns]="columns"
-          [length]="pagination!.recordCount"
-          [pageOnFront]="false"
-          [pageIndex]="pagination!.page"
-          [pageSize]="pagination!.pageSize"
-          [pageSizeOptions]="[10, 20, 50, 100]"
-          (page)="getNextPage($event)">
-</mtx-grid> -->
-
-<router-outlet name="dialog"></router-outlet>
+<ng-template #toolbarTpl>
+  <app-list-common-filters
+    (onUserSearch)="onSearch($event)"
+    (onRefreshEvent)="onRefresh()"
+    (onStatusFilter)="onStatusFilter($event)"
+    [latestSearchText]="latestSearchText"
+  ></app-list-common-filters>
+</ng-template>

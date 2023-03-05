@@ -228,7 +228,7 @@ export function GetGroupColumns(){
       width: '250px',
     },
     {
-      header: 'Is Active',
+      header: 'Status',
       field: 'isActive',
       sortable: true,
       disabled: true,

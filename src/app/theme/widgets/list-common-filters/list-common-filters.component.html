@@ -1,0 +1,40 @@
+<div class="filter-main">
+  <ul class="filter-ul">
+    <li class="filter-li">
+      <!--  -->
+      <a href="javascript:void(0)" (click)="onRefresh()"
+        ><i class="material-icons material-icons-li">refresh</i></a
+      >
+    </li>
+    <!-- <li>
+      <button
+        mat-stroked-button
+        color="accent"
+        class="btn btn-sm filter-button"
+        [matMenuTriggerFor]="status"
+      >
+      {{ SelectedFilter ? SelectedFilter : 'Status' }}
+      </button>
+      <mat-menu #status="matMenu">
+        <button mat-menu-item (click)="onSelectFilter('active')">Active</button>
+        <button mat-menu-item (click)="onSelectFilter('inactive')">In Active</button>
+        <button mat-menu-item (click)="onSelectFilter('clear')">Clear</button>
+      </mat-menu>
+    </li> -->
+  </ul>
+  <div class="search-filter">
+    <mat-form-field
+      appearance="legacy"
+      color="primary"
+      class="search-filter__input"
+    >
+      <input
+        matInput
+        type="text"
+        placeholder="Search"
+        value="{{ latestSearchText }}"
+        (keyup)="onUserKeyUp($event)"
+      />
+    </mat-form-field>
+  </div>
+</div>

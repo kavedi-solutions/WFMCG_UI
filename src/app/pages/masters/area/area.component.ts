@@ -28,11 +28,14 @@ export class AreaComponent implements OnInit {
   accRights?: AccessRights;
   columns: MtxGridColumn[] = [];
   latestSortingOrder?: string;
+  latestSearchText?: string;
+
   constructor(
     private areaService: fromService.AreaService,
     private router: Router,
-    private route: ActivatedRoute,
+    private route: ActivatedRoute
   ) {
+    this.latestSearchText = "";
     this.accRights = this.route.snapshot.data['userRights'];
     this.setColumns();
     this.latestSortingOrder = 'name';
@@ -104,7 +107,7 @@ export class AreaComponent implements OnInit {
 
   getAreaList() {
     this.areaService
-      .GetAreaList(this.pagination!, this.latestSortingOrder!, '')
+      .GetAreaList(this.pagination!, this.latestSortingOrder!, this.latestSearchText!)
       .subscribe((response) => {
         this.areaListData = response.body;
         this.pagination = response.headers;
@@ -154,4 +157,18 @@ export class AreaComponent implements OnInit {
     //this.router.navigate(['/master/area', { outlets: { dialog: ['add'] } }]);
   }
 
+  onSearch($event: any) {
+    this.latestSearchText = '';
+    if (this.pagination) {
+      this.pagination.page = 0;
+    }
+    this.latestSearchText = $event.searchText;
+    this.getAreaList();
+  }
+
+  onRefresh() {
+    this.getAreaList();
+  }
+
+  onStatusFilter($event: any) {}
 }

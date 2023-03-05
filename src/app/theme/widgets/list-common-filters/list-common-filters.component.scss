@@ -1,0 +1,44 @@
+.filter-main {
+  display: flex;
+}
+
+::ng-deep {
+  .mtx-grid-toolbar-content {
+    width: 100%;
+  }
+}
+
+.filter-ul {
+  list-style: none;
+  margin: 5px;
+  padding: 5px;
+  display: flex;
+  flex: 1;
+}
+
+.filter-li {
+  margin-top: 5px;
+  padding-right: 10px;
+}
+
+.material-icons-li {
+  color: black;
+}
+
+.search-filter {
+  position: relative;
+  min-width: 20%;
+  margin-right: 10px;
+}
+
+.search-filter__input {
+  width: 100%;
+}
+
+.filter-button {
+  color: #999;
+  font-weight: 400;
+  min-width: 0;
+  border-color: #ccc;
+  background-color: #fff;
+}

@@ -28,12 +28,14 @@ export class GroupComponent implements OnInit {
   accRights?: AccessRights;
   columns: MtxGridColumn[] = [];
   latestSortingOrder?: string;
+  latestSearchText?: string;
 
   constructor(
     private groupService: fromService.GroupService,
     private router: Router,
     private route: ActivatedRoute
   ) {
+    this.latestSearchText = '';
     this.accRights = this.route.snapshot.data['userRights'];
     this.setColumns();
     this.latestSortingOrder = 'GroupName';
@@ -105,9 +107,12 @@ export class GroupComponent implements OnInit {
 
   getGroupList() {
     this.groupService
-      .GetGroupList(this.pagination!, this.latestSortingOrder!, '')
+      .GetGroupList(
+        this.pagination!,
+        this.latestSortingOrder!,
+        this.latestSearchText!
+      )
       .subscribe((response) => {
-        debugger;
         this.groupListData = response.body;
         this.pagination = response.headers;
         this.Sort = response.sort;
@@ -154,5 +159,22 @@ export class GroupComponent implements OnInit {
   AddnewRecord() {
     this.router.navigate(['/master/group/add']);
     //this.router.navigate(['/master/area', { outlets: { dialog: ['add'] } }]);
+  }
+
+  onSearch($event: any) {
+    this.latestSearchText = '';
+    if (this.pagination) {
+      this.pagination.page = 0;
+    }
+    this.latestSearchText = $event.searchText;
+    this.getGroupList();
+  }
+
+  onRefresh() {
+    this.getGroupList();
+  }
+
+  onStatusFilter($event: any) {
+
   }
 }
