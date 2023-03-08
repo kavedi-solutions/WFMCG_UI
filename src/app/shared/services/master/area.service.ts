@@ -37,23 +37,24 @@ export class AreaService {
   GetAreaList(
     paginationHeaders: PaginationHeaders,
     sort: string,
-    searchText: string
+    searchText: string,
+    filter: FilterValues[],
   ): Observable<AreaResponse> {
     let params = new HttpParams()
       .set('Page', `${paginationHeaders.page}`)
       .set('PageSize', `${paginationHeaders.pageSize}`)
       .set('Sort', `${sort}`)
       .set('Query', `${searchText}`);
-    // if (filter) {
-    //   filter.forEach((filterValues) => {
-    //     params = filterValues.title
-    //       ? params.append(
-    //           filterValues.title,
-    //           filterValues.value!.value.toString()
-    //         )
-    //       : params;
-    //   });
-    // }
+    if (filter) {
+      filter.forEach((filterValues) => {
+        params = filterValues.title
+          ? params.append(
+              filterValues.title,
+              filterValues.value!.toString()
+            )
+          : params;
+      });
+    }
 
     const url = `${this.APIURL}/company/${this.CompanyID}/area/paged`;
     return this.http

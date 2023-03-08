@@ -26,6 +26,7 @@ const MONITOR_MEDIAQUERY = 'screen and (min-width: 960px)';
 })
 export class MainLayoutComponent implements OnInit {
   @ViewChild('quickmenusidenav', { static: true }) sidenav!: MatSidenav;
+  @ViewChild('sidenavMenu', { static: true }) sidenavmenu!: MatSidenav;
   @ViewChild('content', { static: true }) content!: MatSidenavContent;
 
   options = this.settings.getOptions();
@@ -84,6 +85,8 @@ export class MainLayoutComponent implements OnInit {
         if (this.isOver) {
           this.sidenav.close();
         }
+        this.sidenavmenu.close();
+
         this.content.scrollTo({ top: 0 });
       });
     this.options.sidenavCollapsed = true;

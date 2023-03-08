@@ -8,7 +8,7 @@ import { PreloaderService, SpinnerService } from './shared';
 })
 export class AppComponent implements OnInit, AfterViewInit {
   title = 'FMCG-Kavedi Solutions';
-
+  displayProgressSpinner?: boolean;
   constructor(
     private preloader: PreloaderService,
     private spinnerService: SpinnerService,
@@ -20,11 +20,9 @@ export class AppComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.preloader.hide();
     this.spinnerService.httpProgress().subscribe((status: boolean) => {
-      if (status) {
-        this.renderer.addClass(document.body, 'cursor-loader');
-      } else {
-        this.renderer.removeClass(document.body, 'cursor-loader');
-      }
+      setTimeout(() => {
+        this.displayProgressSpinner = status;
+      }, 100);
     });
   }
 }

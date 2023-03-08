@@ -1,4 +1,4 @@
-<div class="matero-page-header-inner">
+<div class="matero-page-header-inner page-header">
   <button
     mat-icon-button
     style="margin-top: -5px"
@@ -9,11 +9,12 @@
   >
     <mat-icon>keyboard_arrow_left</mat-icon>
   </button>
-  <h1 class="matero-page-title">
+  <h1 class="matero-page-title m-l-16">
     {{ title }}
   </h1>
   <span fxFlex></span>
   <button
+    class="m-r-16"
     mat-mini-fab
     color="accent"
     *ngIf="showAdd"

@@ -36,6 +36,7 @@ export class GroupComponent implements OnInit {
     private route: ActivatedRoute
   ) {
     this.latestSearchText = '';
+    this.filterValues = [];
     this.accRights = this.route.snapshot.data['userRights'];
     this.setColumns();
     this.latestSortingOrder = 'GroupName';
@@ -110,14 +111,12 @@ export class GroupComponent implements OnInit {
       .GetGroupList(
         this.pagination!,
         this.latestSortingOrder!,
-        this.latestSearchText!
+        this.latestSearchText!,
+        this.filterValues!
       )
       .subscribe((response) => {
         this.groupListData = response.body;
         this.pagination = response.headers;
-        this.Sort = response.sort;
-        this.SearchText = response.searchText;
-        this.filterValues = response.filter;
       });
   }
 
@@ -175,6 +174,13 @@ export class GroupComponent implements OnInit {
   }
 
   onStatusFilter($event: any) {
-
+    this.filterValues = [];
+    if ($event.title == 'IsActive' && $event.selectedValue != '') {
+      this.filterValues!.push({
+        title: $event.title,
+        value: $event.selectedValue,
+      });
+    }
+    this.getGroupList();
   }
 }

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { AppConfig } from 'src/app/app.config';
 import {
+  FilterValues,
   PaginationHeaders,
   User,
   UserPostRequest,
@@ -36,23 +37,24 @@ export class UserService {
   GetUserList(
     paginationHeaders: PaginationHeaders,
     sort: string,
-    searchText: string
+    searchText: string,
+    filter: FilterValues[]
   ): Observable<UserResponse> {
     let params = new HttpParams()
       .set('Page', `${paginationHeaders.page}`)
       .set('PageSize', `${paginationHeaders.pageSize}`)
       .set('Sort', `${sort}`)
       .set('Query', `${searchText}`);
-    // if (filter) {
-    //   filter.forEach((filterValues) => {
-    //     params = filterValues.title
-    //       ? params.append(
-    //           filterValues.title,
-    //           filterValues.value!.value.toString()
-    //         )
-    //       : params;
-    //   });
-    // }
+    if (filter) {
+      filter.forEach((filterValues) => {
+        params = filterValues.title
+          ? params.append(
+              filterValues.title,
+              filterValues.value!.toString()
+            )
+          : params;
+      });
+    }
 
     const url = `${this.APIURL}/company/${this.CompanyID}/users/paged`;
     return this.http

@@ -14,7 +14,10 @@ export class ListCommonFiltersComponent implements OnInit {
 
   @Output() onUserSearch = new EventEmitter<{ searchText: string }>();
   @Output() onRefreshEvent = new EventEmitter<{ event: any }>();
-  @Output() onStatusFilter = new EventEmitter<{ selectedValue: string }>();
+  @Output() onStatusFilter = new EventEmitter<{
+    title: string;
+    selectedValue: string;
+  }>();
   @Input() latestSearchText?: string;
   constructor() {}
 
@@ -33,10 +36,16 @@ export class ListCommonFiltersComponent implements OnInit {
     this.onRefreshEvent.emit();
   }
 
-  onSelectFilter(value: string) {
-    if (value === 'clear') this.SelectedFilter = '';
-    else if (value === 'active') this.SelectedFilter = 'Active';
-    else if (value === 'inactive') this.SelectedFilter = 'In Active';
-    this.onStatusFilter.emit({ selectedValue: value });
+  onActiveSelectFilter(value: string) {
+    let SelectedValue: string = '';
+    if (value === 'All') this.SelectedFilter = '';
+    else if (value === 'active') {
+      this.SelectedFilter = 'Active';
+      SelectedValue = 'true';
+    } else if (value === 'inactive') {
+      this.SelectedFilter = 'In Active';
+      SelectedValue = 'false';
+    }
+    this.onStatusFilter.emit({ title: 'IsActive', selectedValue: SelectedValue });
   }
 }

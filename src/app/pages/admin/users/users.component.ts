@@ -27,6 +27,7 @@ export class UsersComponent implements OnInit {
   accRights?: AccessRights;
   columns: MtxGridColumn[] = [];
   latestSortingOrder?: string;
+  latestSearchText?: string;
 
   constructor(
     private userService: fromService.UserService,
@@ -34,6 +35,7 @@ export class UsersComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute
   ) {
+    this.latestSearchText = '';
     this.accRights = this.route.snapshot.data['userRights'];
     this.setColumns();
     this.latestSortingOrder = 'firstName';
@@ -120,7 +122,12 @@ export class UsersComponent implements OnInit {
 
   getUserList() {
     this.userService
-      .GetUserList(this.pagination!, this.latestSortingOrder!, '')
+      .GetUserList(
+        this.pagination!,
+        this.latestSortingOrder!,
+        this.latestSearchText!,
+        this.filterValues!
+      )
       .subscribe((response) => {
         this.userListData = response.body;
         this.pagination = response.headers;
@@ -154,5 +161,29 @@ export class UsersComponent implements OnInit {
 
   edit(value: any) {
     this.router.navigate(['/admin/user/edit/', value.userID]);
+  }
+
+  onSearch($event: any) {
+    this.latestSearchText = '';
+    if (this.pagination) {
+      this.pagination.page = 0;
+    }
+    this.latestSearchText = $event.searchText;
+    this.getUserList();
+  }
+
+  onRefresh() {
+    this.getUserList();
+  }
+
+  onStatusFilter($event: any) {
+    this.filterValues = [];
+    if ($event.title == 'IsActive' && $event.selectedValue != '') {
+      this.filterValues!.push({
+        title: $event.title,
+        value: $event.selectedValue,
+      });
+    }
+    this.getUserList();
   }
 }

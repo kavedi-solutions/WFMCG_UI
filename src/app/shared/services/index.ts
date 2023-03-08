@@ -1,5 +1,6 @@
 import { RoleService } from './admin/role.service';
 import { UserService } from './admin/user.service';
+import { AppOverlayService } from './common/app-overlay.service';
 import { AuthService } from './common/auth.service';
 import { AppDirectionality } from './common/directionality.service';
 import { PreloaderService } from './common/preloader.service';
@@ -19,6 +20,7 @@ export const services: any[] = [
   PreloaderService,
   SettingsService,
   AppDirectionality,
+  AppOverlayService,
   RoleService,
   SpinnerService,
   UserService,
@@ -36,6 +38,7 @@ export * from './common/settings.service';
 export * from './common/directionality.service';
 export * from './common/spinner.service';
 export * from './common/common.service';
+export * from './common/app-overlay.service';
 
 export * from './master/area.service';
 export * from './master/group.service';

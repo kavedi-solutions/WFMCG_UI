@@ -6,9 +6,9 @@
   [showAdd]="accRights!.canAdd"
   (onAddClick)="AddnewRecord()"
 ></page-header>
-<!--  -->
 
 <mtx-grid
+  class="table-main-wrapper page-detail"
   [data]="userListData"
   [columns]="columns"
   [length]="pagination!.recordCount"
@@ -32,5 +32,17 @@
   (sortChange)="changeSort($event)"
   (selectionChange)="changeSelect($event)"
   (page)="getNextPage($event)"
+  [showToolbar]="true"
+  [showColumnMenuButton]="false"
+  [toolbarTemplate]="toolbarTpl"
 >
 </mtx-grid>
+
+<ng-template #toolbarTpl>
+  <app-list-common-filters
+    (onUserSearch)="onSearch($event)"
+    (onRefreshEvent)="onRefresh()"
+    (onStatusFilter)="onStatusFilter($event)"
+    [latestSearchText]="latestSearchText"
+  ></app-list-common-filters>
+</ng-template>

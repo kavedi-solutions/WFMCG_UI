@@ -6,21 +6,29 @@
         ><i class="material-icons material-icons-li">refresh</i></a
       >
     </li>
-    <!-- <li>
+    <li>
       <button
         mat-stroked-button
         color="accent"
         class="btn btn-sm filter-button"
         [matMenuTriggerFor]="status"
+        [ngClass]="{
+          'bg-green-100': SelectedFilter == 'Active',
+          'bg-red-100': SelectedFilter == 'In Active'
+        }"
       >
-      {{ SelectedFilter ? SelectedFilter : 'Status' }}
+        {{ SelectedFilter ? SelectedFilter : "Status" }}
       </button>
       <mat-menu #status="matMenu">
-        <button mat-menu-item (click)="onSelectFilter('active')">Active</button>
-        <button mat-menu-item (click)="onSelectFilter('inactive')">In Active</button>
-        <button mat-menu-item (click)="onSelectFilter('clear')">Clear</button>
+        <button mat-menu-item (click)="onActiveSelectFilter('active')">
+          Active
+        </button>
+        <button mat-menu-item (click)="onActiveSelectFilter('inactive')">
+          In Active
+        </button>
+        <button mat-menu-item (click)="onActiveSelectFilter('All')">All</button>
       </mat-menu>
-    </li> -->
+    </li>
   </ul>
   <div class="search-filter">
     <mat-form-field

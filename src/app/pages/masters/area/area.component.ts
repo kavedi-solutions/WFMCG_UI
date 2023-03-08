@@ -35,7 +35,7 @@ export class AreaComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute
   ) {
-    this.latestSearchText = "";
+    this.latestSearchText = '';
     this.accRights = this.route.snapshot.data['userRights'];
     this.setColumns();
     this.latestSortingOrder = 'name';
@@ -107,13 +107,15 @@ export class AreaComponent implements OnInit {
 
   getAreaList() {
     this.areaService
-      .GetAreaList(this.pagination!, this.latestSortingOrder!, this.latestSearchText!)
+      .GetAreaList(
+        this.pagination!,
+        this.latestSortingOrder!,
+        this.latestSearchText!,
+        this.filterValues!
+      )
       .subscribe((response) => {
         this.areaListData = response.body;
         this.pagination = response.headers;
-        this.Sort = response.sort;
-        this.SearchText = response.searchText;
-        this.filterValues = response.filter;
       });
   }
 
@@ -170,5 +172,14 @@ export class AreaComponent implements OnInit {
     this.getAreaList();
   }
 
-  onStatusFilter($event: any) {}
+  onStatusFilter($event: any) {
+    this.filterValues = [];
+    if ($event.title == 'IsActive' && $event.selectedValue != '') {
+      this.filterValues!.push({
+        title: $event.title,
+        value: $event.selectedValue,
+      });
+    }
+    this.getAreaList();
+  }
 }

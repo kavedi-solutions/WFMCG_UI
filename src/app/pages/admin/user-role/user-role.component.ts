@@ -28,12 +28,14 @@ export class UserRoleComponent implements OnInit {
   accRights?: AccessRights;
   columns: MtxGridColumn[] = [];
   latestSortingOrder?: string;
+  latestSearchText?: string;
 
   constructor(
     private roleService: fromService.RoleService,
     private router: Router,
     private route: ActivatedRoute
   ) {
+    this.latestSearchText = '';
     this.accRights = this.route.snapshot.data['userRights'];
     this.setColumns();
     this.latestSortingOrder = 'name';
@@ -108,13 +110,15 @@ export class UserRoleComponent implements OnInit {
 
   getRoleList() {
     this.roleService
-      .GetRoleList(this.pagination!, this.latestSortingOrder!, '')
+      .GetRoleList(
+        this.pagination!,
+        this.latestSortingOrder!,
+        this.latestSearchText!,
+        this.filterValues!
+      )
       .subscribe((response) => {
         this.roleListData = response.body;
         this.pagination = response.headers;
-        this.Sort = response.sort;
-        this.SearchText = response.searchText;
-        this.filterValues = response.filter;
       });
   }
 
@@ -154,5 +158,29 @@ export class UserRoleComponent implements OnInit {
 
   AddnewRecord() {
     this.router.navigate(['/admin/role/add']);
+  }
+
+  onSearch($event: any) {
+    this.latestSearchText = '';
+    if (this.pagination) {
+      this.pagination.page = 0;
+    }
+    this.latestSearchText = $event.searchText;
+    this.getRoleList();
+  }
+
+  onRefresh() {
+    this.getRoleList();
+  }
+
+  onStatusFilter($event: any) {
+    this.filterValues = [];
+    if ($event.title == 'IsActive' && $event.selectedValue != '') {
+      this.filterValues!.push({
+        title: $event.title,
+        value: $event.selectedValue,
+      });
+    }
+    this.getRoleList();
   }
 }

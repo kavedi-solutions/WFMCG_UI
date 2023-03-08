@@ -40,23 +40,24 @@ export class RoleService {
   GetRoleList(
     paginationHeaders: PaginationHeaders,
     sort: string,
-    searchText: string
+    searchText: string,
+    filter: FilterValues[]
   ): Observable<RoleResponse> {
     let params = new HttpParams()
       .set('Page', `${paginationHeaders.page}`)
       .set('PageSize', `${paginationHeaders.pageSize}`)
       .set('Sort', `${sort}`)
       .set('Query', `${searchText}`);
-    // if (filter) {
-    //   filter.forEach((filterValues) => {
-    //     params = filterValues.title
-    //       ? params.append(
-    //           filterValues.title,
-    //           filterValues.value!.value.toString()
-    //         )
-    //       : params;
-    //   });
-    // }
+    if (filter) {
+      filter.forEach((filterValues) => {
+        params = filterValues.title
+          ? params.append(
+              filterValues.title,
+              filterValues.value!.toString()
+            )
+          : params;
+      });
+    }
 
     const url = `${this.APIURL}/company/${this.CompanyID}/role/paged`;
     return this.http
@@ -154,8 +155,7 @@ export class RoleService {
     });
   }
 
-  RoleDropDown()
-  {
+  RoleDropDown() {
     const url = `${this.APIURL}/company/${this.CompanyID}/role/dropdown`;
     return this.http
       .get<any>(encodeURI(url), {
