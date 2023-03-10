@@ -68,9 +68,6 @@ export class GroupService {
           const payload: GroupResponse = {
             headers: JSON.parse(response.headers.get('x-pagination')!),
             body: response.body,
-            sort,
-            filter: [],
-            searchText,
           };
           return payload;
         })

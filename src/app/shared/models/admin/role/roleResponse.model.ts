@@ -4,9 +4,6 @@ import { PaginationHeaders } from '../../common/PaginationHeaders.model';
 export interface RoleResponse {
   headers?: PaginationHeaders;
   body: Role[];
-  sort?: string;
-  filter?: FilterValues[];
-  searchText?: string;
 }
 
 export interface Role {

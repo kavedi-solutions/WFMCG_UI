@@ -4,9 +4,6 @@ import { PaginationHeaders } from '../../common/PaginationHeaders.model';
 export interface UserResponse {
   headers?: PaginationHeaders;
   body: User[];
-  sort?: string;
-  filter?: FilterValues[];
-  searchText?: string;
 }
 
 export interface User {

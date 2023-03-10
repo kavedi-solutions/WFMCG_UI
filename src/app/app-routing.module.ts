@@ -119,6 +119,28 @@ const routes: Routes = [
           },
         ],
       },
+      {
+        path: 'accounts',
+        children: [
+          {
+            path: 'list',
+            component: CommonPages.AccountsComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '103' },
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'add',
+            component: CommonPages.AccountsAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'edit/:accountid',
+            component: CommonPages.AccountsAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+        ],
+      },
     ],
   },
   {

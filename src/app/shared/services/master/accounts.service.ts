@@ -5,17 +5,17 @@ import { AppConfig } from 'src/app/app.config';
 import {
   FilterValues,
   PaginationHeaders,
-  Area,
-  AreaResponse,
-  AreaPostRequest,
-  AreaPutRequest,
+  Accounts,
+  AccountsResponse,
+  AccountsPostRequest,
+  AccountsPutRequest,
 } from '../../models';
 import { LocalStorageService } from '../common/storage.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class AreaService {
+export class AccountsService {
   APIURL?: string = '';
   version: string = '1';
   CompanyID: string = this.storage.get('companyID');
@@ -34,12 +34,12 @@ export class AreaService {
     this.APIURL = this.appconfig.GetCoreAPIURL() + `api/v${this.version}`;
   }
 
-  GetAreaList(
+  GetAccountsList(
     paginationHeaders: PaginationHeaders,
     sort: string,
     searchText: string,
-    filter: FilterValues[],
-  ): Observable<AreaResponse> {
+    filter: FilterValues[]
+  ): Observable<AccountsResponse> {
     let params = new HttpParams()
       .set('Page', `${paginationHeaders.page}`)
       .set('PageSize', `${paginationHeaders.pageSize}`)
@@ -48,15 +48,12 @@ export class AreaService {
     if (filter) {
       filter.forEach((filterValues) => {
         params = filterValues.title
-          ? params.append(
-              filterValues.title,
-              filterValues.value!.toString()
-            )
+          ? params.append(filterValues.title, filterValues.value!.toString())
           : params;
       });
     }
 
-    const url = `${this.APIURL}/company/${this.CompanyID}/area/paged`;
+    const url = `${this.APIURL}/company/${this.CompanyID}/accounts/paged`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -65,7 +62,7 @@ export class AreaService {
       })
       .pipe(
         map((response) => {
-          const payload: AreaResponse = {
+          const payload: AccountsResponse = {
             headers: JSON.parse(response.headers.get('x-pagination')!),
             body: response.body,
           };
@@ -74,8 +71,8 @@ export class AreaService {
       );
   }
 
-  GetAreabyID(AreaID: number) {
-    const url = `${this.APIURL}/company/${this.CompanyID}/area/${AreaID}/getbyid`;
+  GetAccountsbyID(AccountsID: number) {
+    const url = `${this.APIURL}/company/${this.CompanyID}/accounts/${AccountsID}/getbyid`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -88,8 +85,8 @@ export class AreaService {
       );
   }
 
-  CheckAreaNameExists(AreaID: number, AreaName: string) {
-    const url = `${this.APIURL}/company/${this.CompanyID}/area/${AreaID}/${AreaName}/areaname-exists`;
+  CheckAccountsNameExists(AccountsID: number, AccountsName: string) {
+    const url = `${this.APIURL}/company/${this.CompanyID}/accounts/${AccountsID}/${AccountsName}/accountsname-exists`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -102,41 +99,41 @@ export class AreaService {
       );
   }
 
-  createArea(resourcesDetails: AreaPostRequest): Observable<Area> {
+  createAccounts(resourcesDetails: AccountsPostRequest): Observable<Accounts> {
     resourcesDetails.createdBy = this.UserID;
-    const url = `${this.APIURL}/company/${this.CompanyID}/area/create`;
-    return this.http.post<Area>(encodeURI(url), resourcesDetails, {
+    const url = `${this.APIURL}/company/${this.CompanyID}/accounts/create`;
+    return this.http.post<Accounts>(encodeURI(url), resourcesDetails, {
       headers: this.headers,
     });
   }
 
-  updateArea(
-    areaID: number,
-    resourcesDetails: AreaPutRequest
-  ): Observable<Area> {
+  updateAccounts(
+    AccountsID: number,
+    resourcesDetails: AccountsPutRequest
+  ): Observable<Accounts> {
     resourcesDetails.ModifiedBy = this.UserID;
-    const url = `${this.APIURL}/company/${this.CompanyID}/area/update/${areaID}`;
-    return this.http.put<Area>(encodeURI(url), resourcesDetails, {
+    const url = `${this.APIURL}/company/${this.CompanyID}/accounts/update/${AccountsID}`;
+    return this.http.put<Accounts>(encodeURI(url), resourcesDetails, {
       headers: this.headers,
     });
   }
 
-  DeactivateArea(AreaID: number) {
-    const url = `${this.APIURL}/company/${this.CompanyID}/area/${AreaID}/deactivate/${this.UserID}`;
-    return this.http.put<Area>(encodeURI(url), null, {
+  DeactivateAccounts(AccountsID: number) {
+    const url = `${this.APIURL}/company/${this.CompanyID}/accounts/${AccountsID}/deactivate/${this.UserID}`;
+    return this.http.put<Accounts>(encodeURI(url), null, {
       headers: this.headers,
     });
   }
 
-  ActivateArea(AreaID: number) {
-    const url = `${this.APIURL}/company/${this.CompanyID}/area/${AreaID}/activate/${this.UserID}`;
-    return this.http.put<Area>(encodeURI(url), null, {
+  ActivateAccounts(AccountsID: number) {
+    const url = `${this.APIURL}/company/${this.CompanyID}/accounts/${AccountsID}/activate/${this.UserID}`;
+    return this.http.put<Accounts>(encodeURI(url), null, {
       headers: this.headers,
     });
   }
 
-  AreaDropDown() {
-    const url = `${this.APIURL}/company/${this.CompanyID}/area/dropdown`;
+  AccountsDropDown(AccountTypeID: string) {
+    const url = `${this.APIURL}/company/${this.CompanyID}/accounts/dropdown/${AccountTypeID}`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,

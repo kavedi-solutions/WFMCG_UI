@@ -4,9 +4,6 @@ import { PaginationHeaders } from '../../common/PaginationHeaders.model';
 export interface GroupResponse {
   headers?: PaginationHeaders;
   body: Group[];
-  sort?: string;
-  filter?: FilterValues[];
-  searchText?: string;
 }
 
 export interface Group {

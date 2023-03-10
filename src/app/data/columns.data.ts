@@ -147,7 +147,7 @@ export function GetUserColumns() {
   return UserColumns;
 }
 
-export function GetAreaColumns(){
+export function GetAreaColumns() {
   let AreaColumns: MtxGridColumn[] = [
     {
       header: 'AreaID',
@@ -195,7 +195,7 @@ export function GetAreaColumns(){
   return AreaColumns;
 }
 
-export function GetGroupColumns(){
+export function GetGroupColumns() {
   let GroupColumns: MtxGridColumn[] = [
     {
       header: 'GroupID',
@@ -257,4 +257,92 @@ export function GetGroupColumns(){
   ];
 
   return GroupColumns;
+}
+
+export function GetAccountColumns() {
+  let AccountsColumns: MtxGridColumn[] = [
+    {
+      header: 'AccountID',
+      field: 'AccountID',
+      hide: true,
+    },
+    {
+      header: 'Account Name',
+      field: 'accountName',
+      sortable: true,
+      disabled: true,
+      minWidth: 300,
+      width: '300px',
+      pinned: 'left',
+    },
+    {
+      header: 'Group Name',
+      field: 'groupName',
+      sortable: true,
+      disabled: true,
+      minWidth: 300,
+      width: '300px',
+    },
+    {
+      header: 'Area Name',
+      field: 'areaName',
+      sortable: true,
+      disabled: true,
+      minWidth: 300,
+      width: '300px',
+    },
+    {
+      header: 'GST No',
+      field: 'GSTNo',
+      sortable: true,
+      disabled: true,
+      minWidth: 300,
+      width: '300px',
+    },
+    {
+      header: 'Contact Person',
+      field: 'contactPerson',
+      sortable: true,
+      disabled: true,
+      minWidth: 300,
+      width: '300px',
+    },
+    {
+      header: 'Contact No',
+      field: 'contactNo',
+      sortable: true,
+      disabled: true,
+      minWidth: 300,
+      width: '300px',
+    },
+    {
+      header: 'Status',
+      field: 'isActive',
+      sortable: true,
+      disabled: true,
+      type: 'tag',
+      tag: {
+        true: { text: 'Active', color: 'green-100' },
+        false: { text: 'In Active', color: 'red-100' },
+      },
+    },
+    {
+      header: 'Created Date',
+      field: 'createdDate',
+      sortable: true,
+      disabled: true,
+      type: 'date',
+      typeParameter: { format: 'dd-MM-yyyy HH:mm:ss' },
+    },
+    {
+      header: 'Updated Date',
+      field: 'modifiedDate',
+      sortable: true,
+      disabled: true,
+      type: 'date',
+      typeParameter: { format: 'dd-MM-yyyy HH:mm:ss' },
+    },
+  ];
+
+  return AccountsColumns;
 }

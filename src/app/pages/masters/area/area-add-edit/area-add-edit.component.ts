@@ -60,7 +60,7 @@ export class AreaAddEditComponent implements OnInit {
       .subscribe();
     if (this.selectedAreaId != 0) {
       this.isEditMode = true;
-      this.PageTitle = 'Update Role';
+      this.PageTitle = 'Update Area';
       this.getAreaByID();
     } else {
       this.isEditMode = false;

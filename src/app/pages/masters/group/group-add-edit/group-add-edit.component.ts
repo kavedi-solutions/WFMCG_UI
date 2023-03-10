@@ -72,7 +72,7 @@ export class GroupAddEditComponent implements OnInit {
       .subscribe();
     if (this.selectedGroupId != 0) {
       this.isEditMode = true;
-      this.PageTitle = 'Update Role';
+      this.PageTitle = 'Update Group';
       this.getGroupByID();
     } else {
       this.isEditMode = false;

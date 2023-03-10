@@ -6,7 +6,7 @@
   [showAdd]="false"
   (onBackClick)="BacktoList()"
 ></page-header>
-<form class="form-field-full" [formGroup]="groupForm">
+<form class="form-field-full page-detail" [formGroup]="groupForm">
   <mat-card>
     <div
       class="matero-row"
@@ -27,7 +27,7 @@
             required
             (keyup)="onGroupNameKeyUp($event)"
           />
-          <mat-hint>Area name must be unique.</mat-hint>
+          <mat-hint>Group name must be unique.</mat-hint>
           <mat-error *ngIf="groupNameControlRequired"
             >Group name is required.</mat-error
           >

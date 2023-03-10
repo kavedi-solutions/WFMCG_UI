@@ -71,9 +71,6 @@ export class RoleService {
           const payload: RoleResponse = {
             headers: JSON.parse(response.headers.get('x-pagination')!),
             body: response.body,
-            sort,
-            filter: [],
-            searchText,
           };
           return payload;
         })

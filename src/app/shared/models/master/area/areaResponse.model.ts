@@ -4,9 +4,6 @@ import { PaginationHeaders } from '../../common/PaginationHeaders.model';
 export interface AreaResponse {
   headers?: PaginationHeaders;
   body: Area[];
-  sort?: string;
-  filter?: FilterValues[];
-  searchText?: string;
 }
 
 export interface Area {

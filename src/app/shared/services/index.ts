@@ -10,6 +10,7 @@ import {
   LocalStorageService,
   MemoryStorageService,
 } from './common/storage.service';
+import { AccountsService } from './master/accounts.service';
 import { AreaService } from './master/area.service';
 import { GroupService } from './master/group.service';
 
@@ -26,6 +27,7 @@ export const services: any[] = [
   UserService,
   AreaService,
   GroupService,
+  AccountsService,
 ];
 
 export * from './admin/role.service';
@@ -42,3 +44,4 @@ export * from './common/app-overlay.service';
 
 export * from './master/area.service';
 export * from './master/group.service';
+export * from './master/accounts.service';

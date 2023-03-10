@@ -1,25 +1,26 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MtxGridColumn } from '@ng-matero/extensions/grid';
 import {
   AccessRights,
+  Accounts,
   FilterValues,
   PaginationHeaders,
-  User,
 } from 'src/app/shared';
-import * as fromService from '../../../shared/index';
 import * as defaultData from '../../../data/index';
-import { PageEvent } from '@angular/material/paginator';
-import { ActivatedRoute, Router } from '@angular/router';
+import * as fromService from '../../../shared/index';
 import { funSortingOrder } from 'src/app/shared/functions';
+import { PageEvent } from '@angular/material/paginator';
+
 @Component({
-  selector: 'app-users',
-  templateUrl: './users.component.html',
-  styleUrls: ['./users.component.scss'],
+  selector: 'app-accounts',
+  templateUrl: './accounts.component.html',
+  styleUrls: ['./accounts.component.scss'],
 })
-export class UsersComponent implements OnInit {
-  PageTitle: string = 'User';
-  buttonText: string = 'Add New User';
-  userListData: User[] = [];
+export class AccountsComponent implements OnInit {
+  PageTitle: string = 'Account';
+  buttonText: string = 'Add New Account';
+  accountListData: Accounts[] = [];
   pagination?: PaginationHeaders = defaultData.defaultPaginationHeaders;
   filterValues?: FilterValues[];
   Sort?: string;
@@ -30,22 +31,21 @@ export class UsersComponent implements OnInit {
   latestSearchText?: string;
 
   constructor(
-    private userService: fromService.UserService,
-    private authService: fromService.AuthService,
+    private accountService: fromService.AccountsService,
     private router: Router,
     private route: ActivatedRoute
   ) {
     this.latestSearchText = '';
     this.accRights = this.route.snapshot.data['userRights'];
     this.setColumns();
-    this.latestSortingOrder = 'firstName';
-    this.getUserList();
+    this.latestSortingOrder = 'name';
+    this.getAccountsList();
   }
 
   ngOnInit(): void {}
 
   setColumns() {
-    this.columns = defaultData.GetUserColumns();
+    this.columns = defaultData.GetAccountColumns();
     this.columns.push({
       header: 'Action',
       field: 'action',
@@ -59,8 +59,7 @@ export class UsersComponent implements OnInit {
           icon: 'edit',
           tooltip: 'Edit Record',
           iif: (record) => {
-            if (record.isAdminRole) return false;
-            else return this.accRights!.canEdit;
+            return this.accRights!.canEdit;
           },
           click: (record) => this.edit(record),
         },
@@ -77,10 +76,9 @@ export class UsersComponent implements OnInit {
             okColor: 'primary',
             closeColor: 'warn',
           },
-          click: (record) => this.DeactiveUser(record),
+          click: (record) => this.DeactiveAccount(record),
           iif: (record) => {
-            if (record.isCompanyOwner) return false;
-            else if (this.accRights!.canDelete) return record.isActive;
+            if (this.accRights!.canDelete) return record.isActive;
             else return false;
           },
         },
@@ -97,10 +95,9 @@ export class UsersComponent implements OnInit {
             okColor: 'primary',
             closeColor: 'warn',
           },
-          click: (record) => this.ActiveUser(record),
+          click: (record) => this.ActiveAccount(record),
           iif: (record) => {
-            if (record.isCompanyOwner) return false;
-            else if (this.accRights!.canDelete) return !record.isActive;
+            if (this.accRights!.canDelete) return !record.isActive;
             else return false;
           },
         },
@@ -108,30 +105,36 @@ export class UsersComponent implements OnInit {
     });
   }
 
-  DeactiveUser(value: any) {
-    this.userService.DeactivateUser(value.userID).subscribe((response) => {
-      this.getUserList();
-    });
-  }
-
-  ActiveUser(value: any) {
-    this.userService.ActivateUser(value.userID).subscribe((response) => {
-      this.getUserList();
-    });
-  }
-
-  getUserList() {
-    this.userService
-      .GetUserList(
+  getAccountsList() {
+    this.accountService
+      .GetAccountsList(
         this.pagination!,
         this.latestSortingOrder!,
         this.latestSearchText!,
         this.filterValues!
       )
       .subscribe((response) => {
-        this.userListData = response.body;
+        this.accountListData = response.body;
         this.pagination = response.headers;
       });
+  }
+
+  edit(value: any) {
+    this.router.navigate(['/master/accounts/edit/', value.accountID]);
+  }
+
+  DeactiveAccount(value: any) {
+    this.accountService
+      .DeactivateAccounts(value.accountID)
+      .subscribe((response) => {
+        this.getAccountsList();
+      });
+  }
+
+  ActiveAccount(value: any) {
+    this.accountService.ActivateAccounts(value.accountID).subscribe((response) => {
+      this.getAccountsList();
+    });
   }
 
   changeSelect(e: any) {
@@ -142,22 +145,18 @@ export class UsersComponent implements OnInit {
     this.latestSortingOrder = '';
     this.pagination!.page = 0;
     this.latestSortingOrder = funSortingOrder(event, this.latestSortingOrder);
-    this.getUserList();
+    this.getAccountsList();
   }
 
   getNextPage(e: PageEvent) {
     this.pagination!.page = e.pageIndex;
     this.pagination!.pageSize = e.pageSize;
     this.pagination!.recordCount = e.length;
-    this.getUserList();
+    this.getAccountsList();
   }
 
   AddnewRecord() {
-    this.router.navigate(['/admin/user/add']);
-  }
-
-  edit(value: any) {
-    this.router.navigate(['/admin/user/edit/', value.userID]);
+    this.router.navigate(['/master/accounts/add']);
   }
 
   onSearch($event: any) {
@@ -166,11 +165,11 @@ export class UsersComponent implements OnInit {
       this.pagination.page = 0;
     }
     this.latestSearchText = $event.searchText;
-    this.getUserList();
+    this.getAccountsList();
   }
 
   onRefresh() {
-    this.getUserList();
+    this.getAccountsList();
   }
 
   onStatusFilter($event: any) {
@@ -181,6 +180,6 @@ export class UsersComponent implements OnInit {
         value: $event.selectedValue,
       });
     }
-    this.getUserList();
+    this.getAccountsList();
   }
 }
