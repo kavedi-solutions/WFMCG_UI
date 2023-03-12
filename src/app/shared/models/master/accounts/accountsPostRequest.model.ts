@@ -7,7 +7,7 @@ export interface AccountsPostRequest {
   transactionTypeID: number;
   salesTypeID: number;
   accountTradeTypeID: number;
-  headAccountID: number;
+  headAccountID?: number;
   bookInit?: string;
   address?: string;
   cityName?: string;

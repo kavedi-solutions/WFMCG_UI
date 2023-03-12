@@ -1,4 +1,4 @@
 export interface accountsDownDownResponse {
-  Account_Id: string;
-  Account_Name: string;
+  account_Id: string;
+  account_Name: string;
 }

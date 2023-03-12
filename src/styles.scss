@@ -20,3 +20,17 @@
 .page-detail {
   margin-top: -50px;
 }
+
+
+.input-right-align {
+  text-align: right !important;
+}
+
+input.input-right-align::-webkit-outer-spin-button,
+input.input-right-align::-webkit-inner-spin-button {
+  display: none;
+}
+
+input.input-right-align {
+  -moz-appearance: textfield;
+}

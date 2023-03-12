@@ -90,7 +90,7 @@ export class UserService {
 
   CheckUserNameExists(UserID: string, UserName: string) {
     if (UserID != '') {
-      const url = `${this.APIURL}/company/${this.CompanyID}/users/${UserName}/username-exists/${UserID}`;
+      const url = `${this.APIURL}/company/${this.CompanyID}/users/${encodeURIComponent(UserName)}/username-exists/${UserID}`;
       return this.http
         .get<any>(encodeURI(url), {
           headers: this.headers,

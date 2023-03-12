@@ -29,6 +29,7 @@ export * from './master/group/groupPostRequest.model';
 export * from './master/group/groupPutRequest.model';
 export * from './master/group/groupResponse.model';
 
+export * from './master/accounts/accountsDropDownFilter.model';
 export * from './master/accounts/accountsDropDown.model';
 export * from './master/accounts/accountsPostRequest.model';
 export * from './master/accounts/accountsPutRequest.model';

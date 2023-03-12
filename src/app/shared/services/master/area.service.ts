@@ -89,7 +89,7 @@ export class AreaService {
   }
 
   CheckAreaNameExists(AreaID: number, AreaName: string) {
-    const url = `${this.APIURL}/company/${this.CompanyID}/area/${AreaID}/${AreaName}/areaname-exists`;
+    const url = `${this.APIURL}/company/${this.CompanyID}/area/${AreaID}/${encodeURIComponent(AreaName)}/areaname-exists`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,

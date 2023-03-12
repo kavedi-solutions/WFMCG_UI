@@ -89,7 +89,7 @@ export class GroupService {
   }
 
   CheckGroupNameExists(GroupID: number, GroupName: string) {
-    const url = `${this.APIURL}/company/${this.CompanyID}/group/${GroupID}/${GroupName}/groupname-exists`;
+    const url = `${this.APIURL}/company/${this.CompanyID}/group/${GroupID}/${encodeURIComponent(GroupName)}/groupname-exists`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,

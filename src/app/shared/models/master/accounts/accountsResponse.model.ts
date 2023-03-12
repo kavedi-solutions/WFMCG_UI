@@ -23,8 +23,8 @@ export interface Accounts {
   pinCode: string | null;
   stateID: number;
   areaID: number;
-  gSTNo: string | null;
-  pAN: string | null;
+  gstNo: string | null;
+  pan: string | null;
   contactPerson: string | null;
   contactNo: string | null;
   openingBalance: number;

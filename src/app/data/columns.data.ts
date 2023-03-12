@@ -293,7 +293,7 @@ export function GetAccountColumns() {
     },
     {
       header: 'GST No',
-      field: 'GSTNo',
+      field: 'gstNo',
       sortable: true,
       disabled: true,
       minWidth: 300,

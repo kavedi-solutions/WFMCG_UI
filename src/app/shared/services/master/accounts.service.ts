@@ -9,6 +9,7 @@ import {
   AccountsResponse,
   AccountsPostRequest,
   AccountsPutRequest,
+  AccountFilter_DropDown,
 } from '../../models';
 import { LocalStorageService } from '../common/storage.service';
 
@@ -86,7 +87,27 @@ export class AccountsService {
   }
 
   CheckAccountsNameExists(AccountsID: number, AccountsName: string) {
-    const url = `${this.APIURL}/company/${this.CompanyID}/accounts/${AccountsID}/${AccountsName}/accountsname-exists`;
+    const url = `${this.APIURL}/company/${
+      this.CompanyID
+    }/accounts/${AccountsID}/${encodeURIComponent(
+      AccountsName
+    )}/accountsname-exists`;
+    return this.http
+      .get<any>(encodeURI(url), {
+        headers: this.headers,
+        observe: 'response',
+      })
+      .pipe(
+        map((response) => {
+          return response.body;
+        })
+      );
+  }
+
+  CheckBookInitExists(AccountsID: number, BookInit: string) {
+    const url = `${this.APIURL}/company/${
+      this.CompanyID
+    }/accounts/${AccountsID}/${encodeURIComponent(BookInit)}/bookinit-exists`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -132,12 +153,22 @@ export class AccountsService {
     });
   }
 
-  AccountsDropDown(AccountTypeID: string) {
-    const url = `${this.APIURL}/company/${this.CompanyID}/accounts/dropdown/${AccountTypeID}`;
+  AccountsDropDown(filters: AccountFilter_DropDown) {
+    const url = `${this.APIURL}/company/${this.CompanyID}/accounts/dropdown`;
+    let params = new HttpParams()
+      .set('GroupID', `${filters.GroupID}`)
+      .set('BalanceTransferToID', `${filters.BalanceTransferToID}`)
+      .set('AccountTypeID', `${filters.AccountTypeID}`)
+      .set('TransactionTypeID', `${filters.TransactionTypeID}`)
+      .set('SalesTypeID', `${filters.SalesTypeID}`)
+      .set('AccountTradeTypeID', `${filters.AccountTradeTypeID}`)
+      .set('AreaID', `${filters.AreaID}`);
+
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
         observe: 'response',
+        params,
       })
       .pipe(
         map((response) => {

@@ -1,4 +1,4 @@
 export interface areaDownDownResponse {
-  Area_Id: string;
-  Area_Name: string;
+  area_Id: string;
+  area_Name: string;
 }
