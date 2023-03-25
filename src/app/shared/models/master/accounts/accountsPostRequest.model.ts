@@ -18,7 +18,6 @@ export interface AccountsPostRequest {
   pAN?: string;
   contactPerson?: string;
   contactNo?: string;
-  openingBalance: number;
   isActive: boolean;
   createdBy?: string;
 }

@@ -137,4 +137,18 @@ export class CommonService {
         })
       );
   }
+
+  UnitDropDown() {
+    const url = `${this.APIURL}/dropdown/units`;
+    return this.http
+      .get<any>(encodeURI(url), {
+        headers: this.headers,
+        observe: 'response',
+      })
+      .pipe(
+        map((response) => {
+          return response.body;
+        })
+      );
+  }
 }

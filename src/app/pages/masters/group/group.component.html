@@ -20,8 +20,7 @@
   [hideRowSelectionCheckbox]="true"
   [rowHover]="true"
   [rowStriped]="false"
-  [showToolbar]="false"
-  [toolbarTitle]="'Role List'"
+  [toolbarTitle]="'Group List'"
   [columnHideable]="false"
   [columnSortable]="true"
   [columnPinnable]="true"
@@ -40,7 +39,7 @@
 
 <ng-template #toolbarTpl>
   <app-list-common-filters
-    (onUserSearch)="onSearch($event)"
+    (onSearch)="onSearch($event)"
     (onRefreshEvent)="onRefresh()"
     (onStatusFilter)="onStatusFilter($event)"
     [latestSearchText]="latestSearchText"

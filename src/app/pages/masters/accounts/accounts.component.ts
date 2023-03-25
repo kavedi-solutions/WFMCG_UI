@@ -38,7 +38,7 @@ export class AccountsComponent implements OnInit {
     this.latestSearchText = '';
     this.accRights = this.route.snapshot.data['userRights'];
     this.setColumns();
-    this.latestSortingOrder = 'name';
+    this.latestSortingOrder = 'accountname';
     this.getAccountsList();
   }
 

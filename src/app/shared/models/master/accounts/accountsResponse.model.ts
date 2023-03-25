@@ -27,10 +27,17 @@ export interface Accounts {
   pan: string | null;
   contactPerson: string | null;
   contactNo: string | null;
-  openingBalance: number;
   isActive: boolean;
   createdBy: string;
   createdDate: string;
   modifiedBy: string;
   modifiedDate: string;
+}
+
+export interface AccountBalanceResponse {
+  companyID: string;
+  accountID: number;
+  accountName: string | null;
+  creditBalance: number;
+  debitBalance: number;
 }

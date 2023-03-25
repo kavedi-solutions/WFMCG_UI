@@ -139,6 +139,108 @@ const routes: Routes = [
             component: CommonPages.AccountsAddEditComponent,
             canActivate: [AuthGuard],
           },
+          {
+            path: 'openingbalance',
+            component: CommonPages.OpeningBalanceComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '104' },
+            canActivate: [AuthGuard],
+          },
+        ],
+      },
+      {
+        path: 'tax',
+        children: [
+          {
+            path: 'list',
+            component: CommonPages.TaxComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '105' },
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'add',
+            component: CommonPages.TaxAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'edit/:taxid',
+            component: CommonPages.TaxAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+        ],
+      },
+      {
+        path: 'manufacture',
+        children: [
+          {
+            path: 'list',
+            component: CommonPages.ManufactureComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '106' },
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'add',
+            component: CommonPages.ManufactureAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'edit/:manufactureid',
+            component: CommonPages.ManufactureAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+        ],
+      },
+      {
+        path: 'itemgroup',
+        children: [
+          {
+            path: 'list',
+            component: CommonPages.ItemgroupComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '107' },
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'add',
+            component: CommonPages.ItemgroupAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'edit/:itemgroupid',
+            component: CommonPages.ItemgroupAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+        ],
+      },
+      {
+        path: 'item',
+        children: [
+          {
+            path: 'list',
+            component: CommonPages.ItemComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '108' },
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'add',
+            component: CommonPages.ItemAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'edit/:itemid',
+            component: CommonPages.ItemAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'opening',
+            component: CommonPages.ItemOpeningComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '109' },
+            canActivate: [AuthGuard],
+          },
         ],
       },
     ],

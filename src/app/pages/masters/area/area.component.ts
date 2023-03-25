@@ -120,8 +120,7 @@ export class AreaComponent implements OnInit {
   }
 
   edit(value: any) {
-    this.router.navigate(['/master/area/edit/', value.areaID]);
-    //this.router.navigate([route, { outlets: { dialog: ['reset-password'] } }]);
+    this.router.navigate(['/master/area/edit/', value.areaID]);    
   }
 
   DeactiveArea(value: any) {
@@ -156,7 +155,6 @@ export class AreaComponent implements OnInit {
 
   AddnewRecord() {
     this.router.navigate(['/master/area/add']);
-    //this.router.navigate(['/master/area', { outlets: { dialog: ['add'] } }]);
   }
 
   onSearch($event: any) {

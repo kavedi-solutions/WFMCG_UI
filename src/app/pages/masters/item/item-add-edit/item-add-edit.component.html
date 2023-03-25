@@ -1,0 +1,345 @@
+<page-header
+  class="bg-blue-600"
+  [title]="PageTitle"
+  [addButtonToolTip]="buttonText"
+  [showBack]="true"
+  [showAdd]="false"
+  (onBackClick)="BacktoList()"
+></page-header>
+<form class="form-field-full page-detail" [formGroup]="itemForm">
+  <mat-card>
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Item Name</mat-label>
+          <input
+            matInput
+            formControlName="ItemName"
+            type="text"
+            placeholder="Item Name"
+            maxlength="50"
+            required
+            (keyup)="onItemNameKeyUp($event)"
+          />
+          <mat-hint>Item name must be unique.</mat-hint>
+          <mat-error *ngIf="ItemNameControlRequired"
+            >Item name is required.</mat-error
+          >
+          <mat-error *ngIf="ItemNameControlInvalid"
+            >Item name is Invalid.</mat-error
+          >
+          <mat-error *ngIf="getItemNameValidation()"
+            >This group name is already exist.</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-slide-toggle
+          color="primary"
+          class="slide_toggle_style m-l-16 m-t-16"
+          formControlName="IsServiceItem"
+          (change)="ChangeServiceItem($event)"
+        >
+          Is Service</mat-slide-toggle
+        >
+      </div>
+      <div fxFlex="20%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>HSN Code/SAC Code</mat-label>
+          <input
+            matInput
+            formControlName="HSNCode"
+            type="text"
+            placeholder="HSN Code/SAC Code"
+            maxlength="11"
+            required
+          />
+          <mat-error *ngIf="HSNCodeControlRequired"
+            >HSN Code/SAC Code is required.</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Trade Type</mat-label>
+          <mat-select formControlName="AccountTradeTypeID" required>
+            <mat-option
+              *ngFor="let attdd of accountTradeTypeDropDown"
+              [value]="attdd.accountTradeTypeID"
+            >
+              {{ attdd.accountTradeTypeName }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="AccountTradeTypeIDControlRequired"
+            >Trade Type is required.</mat-error
+          >
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="matero-row m-t-16" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Item Group</mat-label>
+          <mat-select formControlName="ItemGroupID" required>
+            <mat-option
+              *ngFor="let igdd of itemGroupDropDown"
+              [value]="igdd.itemGroup_Id"
+            >
+              {{ igdd.itemGroup_Name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Manufacture</mat-label>
+          <mat-select formControlName="ManufactureID" required>
+            <mat-option
+              *ngFor="let mdd of manufactureDropDown"
+              [value]="mdd.manufacture_Id"
+            >
+              {{ mdd.manufacture_Name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="matero-row m-t-16" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Packing</mat-label>
+          <input
+            matInput
+            class="input-right-align"
+            formControlName="Packing"
+            type="text"
+            placeholder="Packing"
+            maxlength="9"
+            required
+          />
+          <mat-error *ngIf="PackingControlRequired"
+            >Packing is required.</mat-error
+          >
+          <mat-error *ngIf="PackingControlInvalid"
+            >Packing is Invalid.</mat-error
+          >
+          <mat-error *ngIf="PackingControlMin"
+            >Minimum value of packing is 1.</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Weight</mat-label>
+          <input
+            matInput
+            class="input-right-align"
+            formControlName="Weight"
+            type="text"
+            placeholder="Weight"
+            maxlength="9"
+            (blur)="onBlurWeight()"
+            (focus)="onFocusWeight()"
+            required
+          />
+          <mat-error *ngIf="WeightControlRequired"
+            >Weight is required.</mat-error
+          >
+          <mat-error *ngIf="WeightControlInvalid">Weight is Invalid.</mat-error>
+          <mat-error *ngIf="WeightControlMin"
+            >Minimum value of Weight is 0.01</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div fxFlex="20%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Main Unit</mat-label>
+          <mat-select formControlName="MainUnit" required>
+            <mat-option *ngFor="let udd of unitDropDown" [value]="udd.unitID">
+              {{ udd.unitName }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="MainUnitControlRequired"
+            >Main unit is required.</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div fxFlex="20%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Sub Unit</mat-label>
+          <mat-select formControlName="SubUnit" required>
+            <mat-option *ngFor="let udd of unitDropDown" [value]="udd.unitID">
+              {{ udd.unitName }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="SubUnitControlRequired"
+            >Sub Unit is required.</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div fxFlex="30%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>GST Tax</mat-label>
+          <mat-select
+            formControlName="GSTTaxID"
+            required
+            (valueChange)="GSTTaxIDSelectionChange($event);"
+          >
+            <mat-option *ngFor="let tdd of taxDropDown" [value]="tdd.tax_Id">
+              {{ tdd.tax_Name }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="GSTTaxIDControlRequired"
+            >GST Tax is required.</mat-error
+          >
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="matero-row m-t-16" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="16.67%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>MRP</mat-label>
+          <input
+            matInput
+            class="input-right-align"
+            formControlName="MRP"
+            type="text"
+            placeholder="MRP"
+            maxlength="9"
+            (blur)="onBlurMRP()"
+            (focus)="onFocusMRP()"
+            required
+          />
+          <mat-error *ngIf="MRPControlRequired">MRP is required.</mat-error>
+          <mat-error *ngIf="MRPControlInvalid">MRP is Invalid.</mat-error>
+          <mat-error *ngIf="MRPControlMin"
+            >Minimum value of MRP is 0.01</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div fxFlex="16.67%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Purchase Rate</mat-label>
+          <input
+            matInput
+            class="input-right-align"
+            formControlName="PurchaseRate"
+            type="text"
+            placeholder="PurchaseRate"
+            maxlength="9"
+            (blur)="onBlurPurchaseRate()"
+            (focus)="onFocusPurchaseRate()"
+            (change)="CalculateRates()"
+            required
+          />
+          <mat-error *ngIf="PurchaseRateControlRequired"
+            >Purchase Rate is required.</mat-error
+          >
+          <mat-error *ngIf="PurchaseRateControlInvalid"
+            >Purchase Rate is Invalid.</mat-error
+          >
+          <mat-error *ngIf="PurchaseRateControlMin"
+            >Minimum value of Purchase Rate is 0.01</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div fxFlex="16.67%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Purchase Rate With Tax</mat-label>
+          <input
+            matInput
+            class="input-right-align"
+            formControlName="PurchaseRateWT"
+            type="text"
+            placeholder="PurchaseRateWT"
+            maxlength="9"
+            readonly
+          />
+        </mat-form-field>
+      </div>
+      <div fxFlex="16.67%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Sales Rate</mat-label>
+          <input
+            matInput
+            class="input-right-align"
+            formControlName="SalesRate"
+            type="text"
+            placeholder="SalesRate"
+            maxlength="9"
+            required
+            (blur)="onBlurSalesRate()"
+            (focus)="onFocusSalesRate()"
+            (change)="CalculateRates()"
+          />
+          <mat-error *ngIf="SalesRateControlRequired"
+            >Sales Rate is required.</mat-error
+          >
+          <mat-error *ngIf="SalesRateControlInvalid"
+            >Sales Rate is Invalid.</mat-error
+          >
+          <mat-error *ngIf="SalesRateControlMin"
+            >Minimum value of Sales Rate Rate is 0.01</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div fxFlex="16.67%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Sales Rate With Tax</mat-label>
+          <input
+            matInput
+            class="input-right-align"
+            formControlName="SalesRateWT"
+            type="text"
+            placeholder="SalesRateWT"
+            maxlength="9"
+            readonly
+          />
+        </mat-form-field>
+      </div>
+      <div fxFlex="16.65%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Margin</mat-label>
+          <input
+            matInput
+            class="input-right-align"
+            formControlName="Margin"
+            type="text"
+            placeholder="Margin"
+            maxlength="9"
+            required
+            readonly
+          />
+          <mat-error *ngIf="MarginControlRequired"
+            >Margin is required.</mat-error
+          >
+          <mat-error *ngIf="MarginControlInvalid">Margin is Invalid.</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <br />
+    <mat-card-actions align="end" class="area-mat-card-actions">
+      <button mat-raised-button (click)="BacktoList()" color="accent">
+        Cancel
+      </button>
+      <button
+        *ngIf="isEditMode == false"
+        [disabled]="!itemForm.valid"
+        mat-raised-button
+        color="primary"
+        (click)="SaveUpdateItem(itemForm)"
+      >
+        Save
+      </button>
+      <button
+        *ngIf="isEditMode == true"
+        [disabled]="!itemForm.valid"
+        mat-raised-button
+        color="primary"
+        (click)="SaveUpdateItem(itemForm)"
+      >
+        Update
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</form>

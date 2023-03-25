@@ -13,6 +13,9 @@ import {
 import { AccountsService } from './master/accounts.service';
 import { AreaService } from './master/area.service';
 import { GroupService } from './master/group.service';
+import { ItemgroupService } from './master/itemgroup.service';
+import { ManufactureService } from './master/manufacture.service';
+import { TaxService } from './master/tax.service';
 
 export const services: any[] = [
   AuthService,
@@ -28,6 +31,9 @@ export const services: any[] = [
   AreaService,
   GroupService,
   AccountsService,
+  TaxService,
+  ManufactureService,
+  ItemgroupService
 ];
 
 export * from './admin/role.service';
@@ -45,3 +51,7 @@ export * from './common/app-overlay.service';
 export * from './master/area.service';
 export * from './master/group.service';
 export * from './master/accounts.service';
+export * from './master/tax.service';
+export * from './master/manufacture.service';
+export * from './master/itemgroup.service';
+export * from './master/item.service';

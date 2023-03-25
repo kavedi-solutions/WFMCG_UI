@@ -10,6 +10,8 @@ import {
   AccountsPostRequest,
   AccountsPutRequest,
   AccountFilter_DropDown,
+  AccountBalancePutRequest,
+  AccountBalanceResponse,
 } from '../../models';
 import { LocalStorageService } from '../common/storage.service';
 
@@ -175,5 +177,33 @@ export class AccountsService {
           return response.body;
         })
       );
+  }
+
+  GetAccountBalance() {
+    const url = `${this.APIURL}/company/${this.CompanyID}/accounts/balance`;
+    return this.http
+      .get<any>(encodeURI(url), {
+        headers: this.headers,
+        observe: 'response',
+      })
+      .pipe(
+        map((response) => {
+          return response;
+        })
+      );
+  }
+
+  UpdateBalance(
+    AccountsID: number,
+    resourcesDetails: AccountBalancePutRequest
+  ): Observable<AccountBalanceResponse> {
+    const url = `${this.APIURL}/company/${this.CompanyID}/accounts/updatebalance/${AccountsID}`;
+    return this.http.put<AccountBalanceResponse>(
+      encodeURI(url),
+      resourcesDetails,
+      {
+        headers: this.headers,
+      }
+    );
   }
 }

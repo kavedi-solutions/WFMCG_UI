@@ -9,7 +9,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import {
   Accounts,
-  accountsDownDownResponse,
+  accountsDropDownResponse,
   AccountsPostRequest,
   AccountsPutRequest,
   accountTradeTypeResponse,
@@ -51,7 +51,7 @@ export class AccountsAddEditComponent implements OnInit {
   accountTradeTypeDropDown: accountTradeTypeResponse[] = [];
   stateDropDown: stateDownDownResponse[] = [];
   areaDropDown: areaDownDownResponse[] = [];
-  salesBookDropDown: accountsDownDownResponse[] = [];
+  salesBookDropDown: accountsDropDownResponse[] = [];
 
   disableBookType: boolean = true;
   disableSaleBookType: boolean = true;
@@ -98,15 +98,7 @@ export class AccountsAddEditComponent implements OnInit {
     PAN: ['', [Validators.pattern(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/i)]],
     ContactPerson: ['', [Validators.pattern(/^([\s]*[a-zA-Z0-9]+[\s]*)+$/i)]],
     ContactNo: ['', [Validators.pattern(/^([0-9,-/+])+$/i)]],
-    OpeningBalance: [
-      0,
-      [
-        Validators.required,
-        Validators.min(0),
-        Validators.pattern(/^([0-9.])+$/i),
-      ],
-    ],
-    OpeningBalanceType: ['Cr'],
+
     isActive: [true],
   });
 
@@ -176,24 +168,6 @@ export class AccountsAddEditComponent implements OnInit {
 
   get BalanceTransferToIDControl() {
     return this.accountForm.get('BalanceTransferToID') as FormControl;
-  }
-
-  get openingBalanceControl() {
-    return this.accountForm.get('OpeningBalance') as FormControl;
-  }
-
-  get openingBalanceControlRequired() {
-    return (
-      this.openingBalanceControl.hasError('required') &&
-      this.openingBalanceControl.touched
-    );
-  }
-
-  get openingBalanceControlInvalid() {
-    return (
-      this.openingBalanceControl.hasError('pattern') &&
-      this.openingBalanceControl.touched
-    );
   }
 
   get accountTypeIDControl() {
@@ -453,7 +427,6 @@ export class AccountsAddEditComponent implements OnInit {
     this.accountService
       .GetAccountsbyID(this.selectedAccountId)
       .subscribe((response) => {
-        debugger;
         this.editAccount = response;
         this.accountTypeIDSelectionChange(
           this.editAccount!.accountTypeID.toString()
@@ -481,12 +454,6 @@ export class AccountsAddEditComponent implements OnInit {
           PAN: this.editAccount!.pan,
           ContactPerson: this.editAccount!.contactPerson,
           ContactNo: this.editAccount!.contactNo,
-          OpeningBalance:
-            this.editAccount!.openingBalance < 0
-              ? Number(this.editAccount!.openingBalance) * -1
-              : Number(this.editAccount!.openingBalance),
-          OpeningBalanceType:
-            this.editAccount!.openingBalance < 0 ? 'Cr' : 'Dr',
           isActive: this.editAccount!.isActive,
         });
       });
@@ -521,10 +488,6 @@ export class AccountsAddEditComponent implements OnInit {
       pAN: accountForm.value.PAN,
       contactPerson: accountForm.value.ContactPerson,
       contactNo: accountForm.value.ContactNo,
-      openingBalance:
-        accountForm.value.OpeningBalanceType == 'Cr'
-          ? Number(accountForm.value.OpeningBalance) * -1
-          : Number(accountForm.value.OpeningBalance),
       isActive: accountForm.value.isActive,
     };
     this.accountService
@@ -535,15 +498,33 @@ export class AccountsAddEditComponent implements OnInit {
   }
 
   UpdateAccount(accountForm: FormGroup) {
-    // this.accountPostRequest = {
-    //   name: accountForm.value.name.toString(),
-    //   isActive: accountForm.value.isActive,
-    // };
-    // this.accountService
-    //   .updateAccounts(this..selectedAccountId, this.accountPostRequest!)
-    //   .subscribe((response) => {
-    //     this.BacktoList();
-    //   });
+    this.accountPutRequest = {
+      accountName: accountForm.value.AccountName,
+      legalName: accountForm.value.LegalName,
+      groupID: Number(accountForm.value.GroupID),
+      balanceTransferToID: Number(accountForm.value.BalanceTransferToID),
+      accountTypeID: Number(accountForm.value.AccountTypeID),
+      transactionTypeID: Number(accountForm.value.TransactionTypeID),
+      salesTypeID: Number(accountForm.value.SalesTypeID),
+      accountTradeTypeID: Number(accountForm.value.AccountTradeTypeID),
+      headAccountID: Number(accountForm.value.HeadAccountID),
+      bookInit: accountForm.value.BookInit,
+      address: accountForm.value.Address,
+      cityName: accountForm.value.CityName,
+      pinCode: accountForm.value.PinCode,
+      stateID: Number(accountForm.value.StateID),
+      areaID: Number(accountForm.value.AreaID),
+      gSTNo: accountForm.value.GSTNo,
+      pAN: accountForm.value.PAN,
+      contactPerson: accountForm.value.ContactPerson,
+      contactNo: accountForm.value.ContactNo,
+      isActive: accountForm.value.isActive,
+    };
+    this.accountService
+      .updateAccounts(this.selectedAccountId, this.accountPutRequest!)
+      .subscribe((response) => {
+        this.BacktoList();
+      });
   }
 
   //Fill DropDown

@@ -12,7 +12,6 @@ export interface accountTradeTypeResponse {
 export interface accountTypeResponse {
   accountTypeID: string;
   accountTypeName: string;
-
 }
 
 export interface balanceTransferToResponse {
@@ -41,4 +40,9 @@ export interface voucherTypeResponse {
 export interface scheduleResponse {
   scheduleID: string;
   scheduleName: string;
+}
+
+export interface DD_UnitResponse {
+  unitID: string;
+  unitName: string;
 }

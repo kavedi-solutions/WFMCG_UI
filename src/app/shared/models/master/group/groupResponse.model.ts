@@ -1,4 +1,3 @@
-import { FilterValues } from '../../common/FilterValues.model';
 import { PaginationHeaders } from '../../common/PaginationHeaders.model';
 
 export interface GroupResponse {

@@ -83,6 +83,10 @@ import * as fromDirective from './shared/directives/index';
 import * as SharedComponent from './shared/index';
 import { CommonModule } from '@angular/common';
 import { JwtHelperService, JwtModule } from '@auth0/angular-jwt';
+import { registerLocaleData } from '@angular/common';
+import localeIn from '@angular/common/locales/en-IN';
+
+registerLocaleData(localeIn);
 
 export function tokenGetter() {
   return localStorage.getItem('jwtToken');

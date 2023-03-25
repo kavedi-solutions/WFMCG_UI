@@ -12,7 +12,7 @@ export class ListCommonFiltersComponent implements OnInit {
   searchText: string = '';
   SelectedFilter: string = '';
 
-  @Output() onUserSearch = new EventEmitter<{ searchText: string }>();
+  @Output() onSearch = new EventEmitter<{ searchText: string }>();
   @Output() onRefreshEvent = new EventEmitter<{ event: any }>();
   @Output() onStatusFilter = new EventEmitter<{
     title: string;
@@ -23,7 +23,7 @@ export class ListCommonFiltersComponent implements OnInit {
 
   ngOnInit(): void {
     this.subject.pipe(debounceTime(500)).subscribe(() => {
-      this.onUserSearch.emit({ searchText: this.searchText });
+      this.onSearch.emit({ searchText: this.searchText });
     });
   }
 

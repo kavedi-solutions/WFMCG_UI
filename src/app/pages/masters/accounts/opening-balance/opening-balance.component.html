@@ -1,0 +1,98 @@
+<page-header
+  class="bg-blue-600"
+  [title]="PageTitle"
+  [showBack]="false"
+  [showAdd]="false"
+></page-header>
+
+<mtx-grid
+  class="table-main-wrapper page-detail"
+  [data]="balanceListData"
+  [columns]="columns"
+  [pageOnFront]="false"
+  [showPaginator]="false"
+  [showToolbar]="true"
+  [showSummary]="true"
+  [showColumnMenuButton]="false"
+  [toolbarTemplate]="toolbarTpl"
+  [summaryTemplate]="{ creditBalance: footerTpl, debitBalance: footerTpl }"
+  [showStatusbar]="!isSameBalance"
+  [statusbarTemplate]="statusbarTpl"
+>
+</mtx-grid>
+
+<ng-template #toolbarTpl>
+  <div class="balance-form">
+    <form class="form-field-full" [formGroup]="balanceForm">
+      <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+        <div fxFlex="60%" fxFlex.lt-sm="100" class="matero-col">
+          <mat-form-field appearance="legacy" color="primary">
+            <mat-label>Accounts</mat-label>
+            <mat-select formControlName="AccountID" required>
+              <mat-option
+                *ngFor="let sbdd of accountsDropDown"
+                [value]="sbdd.account_Id"
+              >
+                {{ sbdd.account_Name }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="accountIDControlRequired"
+              >Account is required.</mat-error
+            >
+          </mat-form-field>
+        </div>
+        <div fxFlex="20%" fxFlex.lt-sm="100" class="matero-col">
+          <mat-form-field appearance="legacy" color="primary">
+            <mat-label>Opening Balance</mat-label>
+            <input
+              matInput
+              formControlName="Balance"
+              type="text"
+              placeholder="Opening Balance"
+              maxlength="20"
+              class="input-right-align"
+            />
+          </mat-form-field>
+          <mat-error *ngIf="balanceControlRequired"
+            >Balance is required.</mat-error
+          >
+          <mat-error *ngIf="balanceControlInvalid"
+            >Balance is Invalid.</mat-error
+          >
+        </div>
+        <div fxFlex="10%" fxFlex.lt-sm="100" class="matero-col">
+          <mat-form-field appearance="legacy" color="primary">
+            <mat-label>Balance Type</mat-label>
+            <mat-select formControlName="BalanceType">
+              <mat-option value="Cr">Credit</mat-option>
+              <mat-option value="Dr">Debit</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div fxFlex="10%" fxFlex.lt-sm="100" class="matero-col form-button">
+          <button
+            [disabled]="!balanceForm.valid"
+            mat-raised-button
+            color="primary"
+            (click)="UpdateBalance(balanceForm)"
+          >
+            Update
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<ng-template #footerTpl let-data>
+  <div class="right-mat-cell-summary">
+    {{ getTotalCost(data) | number : "0.2-2" : "en-IN" }}
+  </div>
+</ng-template>
+
+<ng-template #statusbarTpl>
+  <div class="grid-statusbar">
+    The difference in opening balance. This may lead to errors in the Balance
+    sheet.
+  </div>
+</ng-template>

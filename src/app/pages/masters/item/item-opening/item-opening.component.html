@@ -1,0 +1,122 @@
+<page-header
+  class="bg-blue-600"
+  [title]="PageTitle"
+  [showBack]="false"
+  [showAdd]="false"
+></page-header>
+
+<mtx-grid
+  class="table-main-wrapper page-detail"
+  [data]="balanceListData"
+  [columns]="columns"
+  [length]="pagination!.recordCount"
+  [pageIndex]="pagination!.page"
+  [pageSize]="pagination!.pageSize"
+  [pageOnFront]="false"
+  [showPaginator]="true"
+  [pageSizeOptions]="[10, 20, 50, 100]"
+  [showToolbar]="true"
+  [toolbarTemplate]="toolbarTpl"
+  [showColumnMenuButton]="false"
+>
+</mtx-grid>
+
+<ng-template #toolbarTpl>
+  <div class="balance-form">
+    <form class="form-field-full" [formGroup]="balanceForm">
+      <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+        <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
+          <mat-form-field appearance="legacy" color="primary">
+            <mat-label>Item</mat-label>
+            <mat-select
+              formControlName="ItemID"
+              required
+              (valueChange)="ItemIDSelectionChange($event)"
+            >
+              <mat-option
+                *ngFor="let sbdd of itemsDropDown"
+                [value]="sbdd.item_Id"
+              >
+                {{ sbdd.item_Name }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="ItemIDControlRequired"
+              >Account is required.</mat-error
+            >
+          </mat-form-field>
+        </div>
+        <div fxFlex="10%" fxFlex.lt-sm="100" class="matero-col">
+          <mat-form-field appearance="legacy" color="primary">
+            <mat-label>Trade Type</mat-label>
+            <input
+              matInput
+              formControlName="AccountTradeTypeName"
+              type="text"
+              placeholder="Trade Type"
+              maxlength="20"
+              readonly
+            />
+          </mat-form-field>
+        </div>
+        <div fxFlex="10%" fxFlex.lt-sm="100" class="matero-col">
+          <mat-form-field appearance="legacy" color="primary">
+            <mat-label>Packing</mat-label>
+            <input
+              matInput
+              formControlName="Packing"
+              type="text"
+              placeholder="Packing"
+              maxlength="20"
+              readonly
+              class="input-right-align"
+            />
+          </mat-form-field>
+        </div>
+        <div fxFlex="10%" fxFlex.lt-sm="100" class="matero-col">
+          <mat-form-field appearance="legacy" color="primary">
+            <mat-label>Crt</mat-label>
+            <input
+              matInput
+              formControlName="OpeningCrt"
+              type="text"
+              placeholder="Crt"
+              maxlength="10"
+              class="input-right-align"
+              (change)="CalculateOpening()"
+            />
+            <mat-error *ngIf="OpeningCrtControlInvalid"
+              >Crt is invalid.</mat-error
+            >
+          </mat-form-field>
+        </div>
+        <div fxFlex="10%" fxFlex.lt-sm="100" class="matero-col">
+          <mat-form-field appearance="legacy" color="primary">
+            <mat-label>Pcs</mat-label>
+            <input
+              matInput
+              formControlName="OpeningPcs"
+              type="text"
+              placeholder="Pcs"
+              maxlength="10"
+              class="input-right-align"
+              (change)="CalculateOpening()"
+            />
+            <mat-error *ngIf="OpeningPcsControlInvalid"
+              >Pcs is invalid.</mat-error
+            >
+          </mat-form-field>
+        </div>
+        <div fxFlex="10%" fxFlex.lt-sm="100" class="matero-col form-button">
+          <button
+            [disabled]="!balanceForm.valid"
+            mat-raised-button
+            color="primary"
+            (click)="UpdateBalance(balanceForm)"
+          >
+            Update
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-template>

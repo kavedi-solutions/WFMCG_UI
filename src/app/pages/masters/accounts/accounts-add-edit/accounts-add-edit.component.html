@@ -64,7 +64,7 @@
           </mat-select>
         </mat-form-field>
       </div>
-      <div fxFlex="20%" fxFlex.lt-sm="100" class="matero-col">
+      <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
         <mat-form-field appearance="legacy" color="primary">
           <mat-label>Balance Transfer to</mat-label>
           <mat-select formControlName="BalanceTransferToID" [disabled]="true">
@@ -74,36 +74,6 @@
             >
               {{ bttdd.balanceTransferToName }}
             </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-      <div fxFlex="20%" fxFlex.lt-sm="100" class="matero-col">
-        <mat-form-field appearance="legacy" color="primary">
-          <mat-label>Opening Balance</mat-label>
-          <input
-            matInput
-            class="input-right-align"
-            formControlName="OpeningBalance"
-            type="number"
-            placeholder="Opening Balance"
-            maxlength="21"
-            required
-          />
-          <span matPrefix>₹</span>
-          <mat-error *ngIf="openingBalanceControlRequired"
-            >Opening Balance is required.</mat-error
-          >
-          <mat-error *ngIf="openingBalanceControlInvalid"
-            >Opening Balance is Invalid.</mat-error
-          >
-        </mat-form-field>
-      </div>
-      <div fxFlex="10%" fxFlex.lt-sm="100" class="matero-col">
-        <mat-form-field appearance="legacy" color="primary">
-          <mat-label>Balance Type</mat-label>
-          <mat-select formControlName="OpeningBalanceType" required>
-            <mat-option value="Cr">Credit</mat-option>
-            <mat-option value="Dr">Debit</mat-option>
           </mat-select>
         </mat-form-field>
       </div>

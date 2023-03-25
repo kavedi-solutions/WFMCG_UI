@@ -21,7 +21,6 @@
   margin-top: -50px;
 }
 
-
 .input-right-align {
   text-align: right !important;
 }
@@ -33,4 +32,26 @@ input.input-right-align::-webkit-inner-spin-button {
 
 input.input-right-align {
   -moz-appearance: textfield;
+}
+
+.right-mat-cell {
+  text-align: right !important;
+}
+
+.right-mat-header-cell .mat-header-cell-inner {
+  justify-content: flex-end;
+}
+
+.right-mat-cell-summary {
+  text-align: right !important;
+  //font-size: large;
+  font-weight: 600;
+}
+
+.mat-footer-row .mat-footer-cell {
+  font-weight: 600;
+}
+
+.grid-statusbar {
+  color: red;
 }
