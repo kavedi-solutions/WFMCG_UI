@@ -5,6 +5,7 @@ import {
   HttpParams,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { catchError, map, of } from 'rxjs';
 import { AppConfig } from 'src/app/app.config';
@@ -42,7 +43,8 @@ export class AuthService {
     private http: HttpClient,
     private storage: LocalStorageService,
     private appconfig: AppConfig,
-    private jwtHelperService: JwtHelperService
+    private jwtHelperService: JwtHelperService,
+    private router: Router
   ) {
     this.APIURL = this.appconfig.GetCoreAPIURL() + `api/v${this.version}`;
   }
@@ -84,35 +86,56 @@ export class AuthService {
       );
   }
 
+  VerifyTokenExpired(): Boolean {
+    if (this.jwtHelperService.isTokenExpired(this.storage.get('jwtToken'))) {
+      this.storage.clear();
+      this.router.navigate(['/auth/login']);
+      return true;
+    }
+    return false;
+  }
+
   getUserAccessRights(MenuID: string): AccessRights {
-    const decode = this.jwtHelperService.decodeToken(
-      this.storage.get('jwtToken')
-    );
-    let Rights: string[] = decode['Role_' + MenuID].split(',');
-    var accRights: AccessRights = {
-      canView: false,
-      canAdd: false,
-      canEdit: false,
-      canDelete: false,
-    };
+    if (this.jwtHelperService.isTokenExpired(this.storage.get('jwtToken'))) {
+      this.storage.clear();
+      this.router.navigate(['/auth/login']);
+      var accRights: AccessRights = {
+        canView: false,
+        canAdd: false,
+        canEdit: false,
+        canDelete: false,
+      };
+      return accRights;
+    } else {
+      const decode = this.jwtHelperService.decodeToken(
+        this.storage.get('jwtToken')
+      );
+      let Rights: string[] = decode['Role_' + MenuID].split(',');
+      var accRights: AccessRights = {
+        canView: false,
+        canAdd: false,
+        canEdit: false,
+        canDelete: false,
+      };
 
-    Rights.forEach((element) => {
-      switch (element) {
-        case 'RY':
-          accRights.canView = true;
-          break;
-        case 'CY':
-          accRights.canAdd = true;
-          break;
-        case 'UY':
-          accRights.canEdit = true;
-          break;
-        case 'DY':
-          accRights.canDelete = true;
-          break;
-      }
-    });
+      Rights.forEach((element) => {
+        switch (element) {
+          case 'RY':
+            accRights.canView = true;
+            break;
+          case 'CY':
+            accRights.canAdd = true;
+            break;
+          case 'UY':
+            accRights.canEdit = true;
+            break;
+          case 'DY':
+            accRights.canDelete = true;
+            break;
+        }
+      });
 
-    return accRights;
+      return accRights;
+    }
   }
 }

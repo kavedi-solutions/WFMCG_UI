@@ -246,6 +246,36 @@ const routes: Routes = [
     ],
   },
   {
+    path: 'transaction',
+    component: Layouts.MainLayoutComponent,
+    canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
+    children: [
+      {
+        path: 'purchase',
+        children: [
+          {
+            path: 'list',
+            component: CommonPages.PurchaseComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '201' },
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'add',
+            component: CommonPages.PurchaseAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'edit/:purhcaseid',
+            component: CommonPages.PurchaseAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+        ],
+      },
+    ],
+  },
+  {
     path: 'auth',
     component: Layouts.AuthLayoutComponent,
     children: [{ path: 'login', component: AuthPages.LoginPageComponent }],

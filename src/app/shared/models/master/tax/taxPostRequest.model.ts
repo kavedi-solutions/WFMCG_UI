@@ -1,11 +1,18 @@
 export interface TaxPostRequest {
-    taxName?: string;
-    igstRate: number;
-    cgstRate: number;
-    sgstRate: number;
-    cessRate: number;
-    totalTaxRate: number;
-    postingACID: number;
-    isActive: boolean;
-    createdBy?: string;
-  }
+  taxName?: string;
+  igstRate: number;
+  igstInputPostingAc: number;
+  igstOutputPostingAc: number;
+  cgstRate: number;
+  cgstInputPostingAc: number;
+  cgstOutputPostingAc: number;
+  sgstRate: number;
+  sgstInputPostingAc: number;
+  sgstOutputPostingAc: number;
+  cessRate: number;
+  cessInputPostingAc: number;
+  cessOutputPostingAc: number;
+  totalTaxRate: number;
+  isActive: boolean;
+  createdBy?: string;
+}

@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit, Renderer2 } from '@angular/core';
-import { PreloaderService, SpinnerService } from './shared';
+import { AuthService, PreloaderService, SpinnerService } from './shared';
 
 @Component({
   selector: 'app-root',
@@ -12,10 +12,12 @@ export class AppComponent implements OnInit, AfterViewInit {
   constructor(
     private preloader: PreloaderService,
     private spinnerService: SpinnerService,
-    private renderer: Renderer2
+    private authService: AuthService
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.authService.VerifyTokenExpired();
+  }
 
   ngAfterViewInit() {
     this.preloader.hide();
