@@ -48,6 +48,7 @@ export class LoginPageComponent implements OnInit {
           this.sstorage.set('lastName', response.lastName);
           this.sstorage.set('isCompanyOwner', response.isCompanyOwner);
           this.sstorage.set('jwtToken', response.jwtToken);
+          this.sstorage.set('CompanyStateID', response.stateID);          
           this.router.navigate(['/dashboard']);
         }
       });

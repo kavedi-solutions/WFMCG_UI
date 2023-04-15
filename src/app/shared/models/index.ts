@@ -55,3 +55,6 @@ export * from './master/item/itemDropDown.model';
 export * from './master/item/itemPostRequest.model';
 export * from './master/item/itemPutRequest.model';
 export * from './master/item/itemResponse.model';
+
+export * from './transaction/purchase/purchaseResponse.model';
+export * from './transaction/purchase/purchaseitemdetail.model';

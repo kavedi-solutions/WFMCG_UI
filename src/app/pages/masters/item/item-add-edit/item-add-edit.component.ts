@@ -44,6 +44,7 @@ export class ItemAddEditComponent implements OnInit {
   ItemName: string = '';
   ItemNameExists: Subject<any> = new Subject();
   TaxDetails?: Tax;
+  isFromQuickMenu: boolean = false;
   itemForm = this.fb.group({
     ItemName: [
       '',
@@ -139,19 +140,24 @@ export class ItemAddEditComponent implements OnInit {
 
   ngOnInit(): void {
     this.PageTitle = 'Create Item';
-    this.route.params
-      .pipe(
-        tap((params) => {
-          this.selectedItemId = params['itemid'] || 0;
-        })
-      )
-      .subscribe();
-    if (this.selectedItemId != 0) {
-      this.isEditMode = true;
-      this.PageTitle = 'Update Item';
-      this.getItemByID();
+    this.isFromQuickMenu = false;
+    if (!this.router.url.includes('quickmenu')) {
+      this.route.params
+        .pipe(
+          tap((params) => {
+            this.selectedItemId = params['itemid'] || 0;
+          })
+        )
+        .subscribe();
+      if (this.selectedItemId != 0) {
+        this.isEditMode = true;
+        this.PageTitle = 'Update Item';
+        this.getItemByID();
+      } else {
+        this.isEditMode = false;
+      }
     } else {
-      this.isEditMode = false;
+      this.isFromQuickMenu = true;
     }
     this.ItemNameExists.pipe(debounceTime(300)).subscribe(() => {
       this.CheckItemNameExists(this.ItemName);
@@ -431,7 +437,9 @@ export class ItemAddEditComponent implements OnInit {
   }
 
   BacktoList() {
-    this.router.navigate(['/master/item/list']);
+    if (this.isFromQuickMenu == false) {
+      this.router.navigate(['/master/item/list']);
+    }
   }
 
   SaveUpdateItem(itemForm: FormGroup) {

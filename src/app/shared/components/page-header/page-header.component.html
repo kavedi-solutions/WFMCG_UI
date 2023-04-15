@@ -9,7 +9,7 @@
   >
     <mat-icon>keyboard_arrow_left</mat-icon>
   </button>
-  <h1 class="matero-page-title m-l-16">
+  <h1 class="matero-page-title" [ngClass]="{ 'm-l-16': showBack == false }">
     {{ title }}
   </h1>
   <span fxFlex></span>

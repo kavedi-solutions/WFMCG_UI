@@ -1,7 +1,7 @@
-@use '../style/variables';
-@use '../style/breakpoints';
-@use '../style/transitions';
-@use '../style/badge' as *;
+@use "../style/variables";
+@use "../style/breakpoints";
+@use "../style/transitions";
+@use "../style/badge" as *;
 
 .matero-sidebar-header {
   position: relative;
@@ -88,7 +88,7 @@
     font-size: 18px;
     line-height: 18px;
 
-    [dir='rtl'] & {
+    [dir="rtl"] & {
       margin-right: auto;
       margin-left: 16px;
     }
@@ -118,7 +118,7 @@
   &.level-0 > li > a > .menu-name {
     margin-right: 5px;
 
-    [dir='rtl'] & {
+    [dir="rtl"] & {
       margin-right: auto;
       margin-left: 5px;
     }
@@ -127,7 +127,7 @@
   &.level-1 > li > a {
     padding-left: 50px;
 
-    [dir='rtl'] & {
+    [dir="rtl"] & {
       padding-right: 50px;
       padding-left: 16px;
     }
@@ -136,19 +136,26 @@
   &.level-2 > li > a {
     padding-left: 64px;
 
-    [dir='rtl'] & {
+    [dir="rtl"] & {
       padding-right: 64px;
       padding-left: 16px;
     }
   }
 
-  &.level-2 [class^='level-'] > li > a {
+  &.level-2 [class^="level-"] > li > a {
     padding-left: 80px;
 
-    [dir='rtl'] & {
+    [dir="rtl"] & {
       padding-right: 80px;
       padding-left: 16px;
     }
   }
 }
 
+.quickMenu {
+  width: 18px;
+  height: 18px;
+  margin-right: 16px;
+  font-size: 18px;
+  line-height: 18px;
+}

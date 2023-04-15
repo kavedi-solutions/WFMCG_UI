@@ -68,15 +68,15 @@ export class PurchaseService {
       );
   }
 
-  GetNextBillNo(BookAccountID: number) {
-    const url = `${this.APIURL}/company/${this.CompanyID}/purchase/inventory/getnextbill/${BookAccountID}`;
+  GetNextBillNo(BookAccountID: number, BillDate: Date) {
+    const url = `${this.APIURL}/company/${this.CompanyID}/purchase/inventory/getnextbill/${BookAccountID}?BillDate=${BillDate}`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
-        observe: 'response'
+        observe: 'response',
       })
       .pipe(
-        map((response) => {          
+        map((response) => {
           return Number(response.body);
         })
       );

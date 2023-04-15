@@ -7,4 +7,5 @@ export interface loginResponse {
   userName: string;
   isCompanyOwner: boolean;
   jwtToken: string;
+  stateID: string;
 }

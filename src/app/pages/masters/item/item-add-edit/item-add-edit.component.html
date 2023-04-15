@@ -2,7 +2,7 @@
   class="bg-blue-600"
   [title]="PageTitle"
   [addButtonToolTip]="buttonText"
-  [showBack]="true"
+  [showBack]="!isFromQuickMenu"
   [showAdd]="false"
   (onBackClick)="BacktoList()"
 ></page-header>

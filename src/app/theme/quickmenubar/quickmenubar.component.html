@@ -7,7 +7,7 @@
   <ng-container>
     <ul class="matero-quickmenu level-0">
       <li class="matero-quickmenu-item" *ngFor="let menuItem of QuickmenuList">
-        <a class="matero-quickmenu-link" [routerLink]="menuItem.route">
+        <a class="matero-quickmenu-link" [routerLink]="menuItem.quickmenuroute">
           <ng-container
             [ngTemplateOutlet]="linkTypeTpl"
             [ngTemplateOutletContext]="{ item: menuItem, level: 0 }"
@@ -20,6 +20,6 @@
 </div>
 
 <ng-template #linkTypeTpl let-item="item" let-level="level">
-  <mat-icon class="menu-icon" *ngIf="level === 0">{{ item.icon }}</mat-icon>
+  <i class="quickMenu" [class]="item.icon"></i>
   <span class="menu-name">{{ item.name }}</span>
 </ng-template>

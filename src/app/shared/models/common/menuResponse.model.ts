@@ -5,3 +5,10 @@ export interface MenuResponse {
   icon: string;
   children?: MenuResponse[];
 }
+
+export interface QuickMenuResponse {
+  name: string;
+  quickmenuroute: string;
+  icon: string;
+  type: 'link' | 'sub' | 'extLink' | 'extTabLink';
+}

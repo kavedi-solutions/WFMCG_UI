@@ -153,7 +153,6 @@ export class ItemOpeningComponent implements OnInit {
   }
 
   edit(value: any) {
-    debugger;
     this.EditRecord(Number(value.itemID));
   }
 

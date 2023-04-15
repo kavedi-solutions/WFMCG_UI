@@ -1,4 +1,6 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import * as fromService from '../../shared/index';
+import { QuickMenuResponse } from '../../shared/index';
 
 @Component({
   selector: 'app-quickmenubar',
@@ -9,38 +11,26 @@ export class QuickmenubarComponent implements OnInit {
   @Input() showToggle = true;
   @Input() showHeader = true;
   @Input() ripple = false;
-  QuickmenuList: any[] = [];
+  QuickmenuList: QuickMenuResponse[] = [];
 
-  constructor() {
+  constructor(private authService: fromService.AuthService) {
     this.FillQuickMenuItems();
   }
 
   ngOnInit(): void {}
 
   FillQuickMenuItems() {
-    this.QuickmenuList.push({
-      route: 'dashboard',
-      name: 'Dashboard',
-      type: 'link',
-      icon: 'dashboard',
-    });
-    this.QuickmenuList.push({
-      route: 'dashboard',
-      name: 'Sales Invoice',
-      type: 'link',
-      icon: 'dashboard',
-    });
-    this.QuickmenuList.push({
-      route: 'dashboard',
-      name: 'Service Invoice',
-      type: 'link',
-      icon: 'dashboard',
-    });
-    this.QuickmenuList.push({
-      route: 'dashboard',
-      name: 'Receipt Voucher',
-      type: 'link',
-      icon: 'dashboard',
+    this.authService.GetQuickMenu().subscribe((response) => {
+      this.QuickmenuList.push({
+        quickmenuroute: 'dashboard',
+        name: 'Dashboard',
+        type: 'link',
+        icon: 'fa-solid fa-chart-line',
+      });
+
+      response.forEach((element: QuickMenuResponse) => {
+        this.QuickmenuList.push(element);
+      });
     });
   }
 }

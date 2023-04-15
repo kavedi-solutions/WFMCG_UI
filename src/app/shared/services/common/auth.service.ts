@@ -86,6 +86,22 @@ export class AuthService {
       );
   }
 
+  GetQuickMenu() {
+    let UserID: string = this.storage.get('userID');
+    const url = `${this.APIURL}/common/quickmenu/${UserID}`;
+    return this.http
+      .get<any>(encodeURI(url), {
+        headers: this.headers,
+        observe: 'response',
+      })
+      .pipe(
+        map((response) => {
+          return response.body;
+        }),
+        catchError((error) => of(console.log(error)))
+      );
+  }
+
   VerifyTokenExpired(): Boolean {
     if (this.jwtHelperService.isTokenExpired(this.storage.get('jwtToken'))) {
       this.storage.clear();

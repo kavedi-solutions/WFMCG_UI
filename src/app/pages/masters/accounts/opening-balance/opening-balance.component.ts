@@ -174,7 +174,7 @@ export class OpeningBalanceComponent implements OnInit {
     this.balanceTypeControl.setValue('Cr');
   }
 
-  getTotalCost(data: any) {
+  getTotalBalance(data: any) {
     return data.reduce((acc: any, value: any) => acc + value, 0);
   }
 }

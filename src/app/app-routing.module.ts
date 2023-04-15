@@ -267,11 +267,34 @@ const routes: Routes = [
             canActivate: [AuthGuard],
           },
           {
-            path: 'edit/:purhcaseid',
+            path: 'edit/:purchaseid',
             component: CommonPages.PurchaseAddEditComponent,
             canActivate: [AuthGuard],
           },
         ],
+      },
+    ],
+  },
+  {
+    path: 'quickmenu',
+    component: Layouts.MainLayoutComponent,
+    canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
+    children: [
+      {
+        path: 'accounts/add',
+        component: CommonPages.AccountsAddEditComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'item/add',
+        component: CommonPages.ItemAddEditComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'purchase/add',
+        component: CommonPages.PurchaseAddEditComponent,
+        canActivate: [AuthGuard],
       },
     ],
   },

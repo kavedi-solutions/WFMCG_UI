@@ -810,3 +810,103 @@ export function GetItemOpeningColumns() {
   ];
   return ItemOpeningColumns;
 }
+
+export function GetPurchaseColumns() {
+  let PurchaseColumns: MtxGridColumn[] = [
+    {
+      header: 'Auto ID',
+      field: 'autoID',
+      hide: true,
+    },
+    {
+      header: 'Ref No',
+      field: 'refNo',
+      sortable: true,
+      disabled: true,
+      minWidth: 200,
+      width: '200px',
+      pinned: 'left',
+    },
+    {
+      header: 'Bill Date',
+      field: 'billDate',
+      sortable: true,
+      disabled: true,
+      type: 'date',
+      typeParameter: { format: 'dd-MM-yyyy' },
+      minWidth: 100,
+      width: '100px',
+      pinned: 'left',
+    },
+    {
+      header: 'Book Name',
+      field: 'bookAccountName',
+      sortable: true,
+      disabled: true,      
+      minWidth: 300,
+      width: '300px',
+    },    
+    {
+      header: 'Trade Type',
+      field: 'accountTradeTypeName',
+      sortable: true,
+      disabled: true,
+      minWidth: 60,
+      width: '60px',
+    },
+    {
+      header: 'Party Name',
+      field: 'accountName',
+      sortable: true,
+      disabled: true,
+      minWidth: 300,
+      width: '300px',
+    },
+    {
+      header: 'Bill Amount',
+      field: 'netAmount',
+      sortable: false,
+      disabled: true,
+      minWidth: 250,
+      width: '250px',
+      type: 'number',
+      typeParameter: { digitsInfo: '0.2-2', locale: 'en-IN' },
+      class: 'right-mat-header-cell right-mat-cell',
+    },
+    {
+      header: 'Is Active',
+      field: 'isActive',
+      sortable: true,
+      disabled: true,
+      type: 'tag',
+      tag: {
+        true: { text: 'Active', color: 'green-100' },
+        false: { text: 'In Active', color: 'red-100' },
+      },
+      minWidth: 75,
+      width: '75px',
+    },
+    {
+      header: 'Created Date',
+      field: 'createdDate',
+      sortable: true,
+      disabled: true,
+      type: 'date',
+      typeParameter: { format: 'dd-MM-yyyy HH:mm:ss' },
+      minWidth: 150,
+      width: '150px',
+    },
+    {
+      header: 'Updated Date',
+      field: 'modifiedDate',
+      sortable: true,
+      disabled: true,
+      type: 'date',
+      typeParameter: { format: 'dd-MM-yyyy HH:mm:ss' },
+      minWidth: 150,
+      width: '150px',
+    },
+  ];
+
+  return PurchaseColumns;
+}

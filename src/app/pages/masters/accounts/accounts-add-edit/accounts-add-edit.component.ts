@@ -61,6 +61,7 @@ export class AccountsAddEditComponent implements OnInit {
   disableaddredd: boolean = true;
   disablearea: boolean = true;
   disableContact: boolean = true;
+  isFromQuickMenu: boolean = false;
 
   accountForm = this.fb.group({
     AccountName: [
@@ -123,19 +124,24 @@ export class AccountsAddEditComponent implements OnInit {
 
   ngOnInit(): void {
     this.PageTitle = 'Create Account';
-    this.route.params
-      .pipe(
-        tap((params) => {
-          this.selectedAccountId = params['accountid'] || 0;
-        })
-      )
-      .subscribe();
-    if (this.selectedAccountId != 0) {
-      this.isEditMode = true;
-      this.PageTitle = 'Update Account';
-      this.getAccountByID();
+    this.isFromQuickMenu = false;
+    if (!this.router.url.includes('quickmenu')) {
+      this.route.params
+        .pipe(
+          tap((params) => {
+            this.selectedAccountId = params['accountid'] || 0;
+          })
+        )
+        .subscribe();
+      if (this.selectedAccountId != 0) {
+        this.isEditMode = true;
+        this.PageTitle = 'Update Account';
+        this.getAccountByID();
+      } else {
+        this.isEditMode = false;
+      }
     } else {
-      this.isEditMode = false;
+      this.isFromQuickMenu = true;
     }
     this.AccountNameExists.pipe(debounceTime(300)).subscribe(() => {
       this.CheckAccountNameExists(this.AccountName);
@@ -368,7 +374,9 @@ export class AccountsAddEditComponent implements OnInit {
   //Controls
 
   BacktoList() {
-    this.router.navigate(['/master/accounts/list']);
+    if (this.isFromQuickMenu == false) {
+      this.router.navigate(['/master/accounts/list']);
+    }
   }
 
   onAccountNameKeyUp($event: any) {
