@@ -1,8 +1,9 @@
-import { SortingProperties } from "../models";
+import { SortingProperties } from '../models';
 
 export function funSortingOrder(event: SortingProperties, selectorValues: any) {
   selectorValues = selectorValues ? selectorValues.split(',') : [];
-  const sortValue = event.direction === 'asc' ? event.active : '-' + event.active;
+  const sortValue =
+    event.direction === 'asc' ? event.active : '-' + event.active;
   selectorValues.push(sortValue);
   selectorValues = [...new Set(selectorValues)];
   selectorValues.filter((columnName: string, index: number) => {
@@ -14,4 +15,12 @@ export function funSortingOrder(event: SortingProperties, selectorValues: any) {
     }
   });
   return [...new Set(selectorValues)].toString();
+}
+
+export function CheckIsNumber(value: any) {
+  if (isNaN(value)) {
+    return Number(value.replace(/,/g, ''));
+  } else {
+    return Number(value);
+  }
 }

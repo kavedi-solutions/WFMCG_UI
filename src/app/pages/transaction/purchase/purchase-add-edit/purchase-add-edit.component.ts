@@ -1,5 +1,5 @@
 import { formatNumber } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -7,20 +7,25 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MtxGridColumn } from '@ng-matero/extensions/grid';
 import * as moment from 'moment';
-import { map, observable, Observable, of, startWith, tap } from 'rxjs';
+import { map, Observable, startWith, tap } from 'rxjs';
 import * as fromService from '../../../../shared/index';
 import {
   accountsDropDownResponse,
   accountTradeTypeResponse,
+  ClosingStockbyItemID,
   Item,
   ItemFilter_DropDown,
   ItemGroupDownDownResponse,
   itemsDropDownResponse,
+  PurchaseItemDetail,
   Tax,
   TaxDownDownResponse,
 } from '../../../../shared/index';
-
+import * as defaultData from '../../../../data/index';
+import { CheckIsNumber } from 'src/app/shared/functions';
+import { MatAutocomplete } from '@angular/material/autocomplete';
 @Component({
   selector: 'app-purchase-add-edit',
   templateUrl: './purchase-add-edit.component.html',
@@ -40,8 +45,10 @@ export class PurchaseAddEditComponent implements OnInit {
   filteredaccountsDropDown?: Observable<accountsDropDownResponse[]>;
   itemsDropDown: itemsDropDownResponse[] = [];
   filtereditemsDropDown?: Observable<itemsDropDownResponse[]>;
+  purchaseItemDetailsList: PurchaseItemDetail[] = [];
   CurrentItem?: Item;
   CurrentTax?: Tax;
+  CurrentStock?: ClosingStockbyItemID;
   BillMinDate?: Date;
   BillMaxDate?: Date;
   DisableAddItemBtn: boolean = true;
@@ -49,10 +56,14 @@ export class PurchaseAddEditComponent implements OnInit {
   AccountStateID: number = 0;
   IsIGSTInvoice: boolean = false;
   InvoiceType: string = '';
+  columns: MtxGridColumn[] = [];
 
   IsDiscPerChange: boolean = false;
   IsSchPerChange: boolean = false;
 
+  IsItemEditMode: boolean = false;
+  ItemEdit?: PurchaseItemDetail;
+  ItemCount: number = 0;
   purchaseForm = this.fb.group({
     BookAccountID: ['', [Validators.required]],
     BillDate: ['', [Validators.required]],
@@ -60,18 +71,39 @@ export class PurchaseAddEditComponent implements OnInit {
     RefNo: ['', [Validators.required]],
     AccountID: ['', [Validators.required]],
     AccountTradeTypeID: ['', [Validators.required]],
+    TotalAmount: [0],
+    TotalDiscAmount: [0],
+    TotalCGSTAmount: [0],
+    TotalSGSTAmount: [0],
+    TotalIGSTAmount: [0],
+    TotalCessAmount: [0],
+    TotalGrossAmount: [0],
+    TotalSchAmount: [0],
+    TotalNetAmount: [0],
+    OtherAddText: [
+      '',
+      Validators.pattern(/^([\s]*[a-zA-Z0-9()&-.,/]+[\s]*)+$/i),
+    ],
+    OtherAddAmount: [0, [Validators.pattern(/^([0-9,-/+])+$/i)]],
+    OtherLessText: [
+      '',
+      Validators.pattern(/^([\s]*[a-zA-Z0-9()&-.,/]+[\s]*)+$/i),
+    ],
+    OtherLessAmount: [0, [Validators.pattern(/^([0-9,-/+])+$/i)]],
+    RoundOffAmount: [0],
+    NetAmount: [0],
     Items: this.fb.group({
       ItemID: [''],
-      Crt: [0],
-      Pcs: [0],
+      Crt: [0, [Validators.pattern(/^([0-9,-/+])+$/i)]],
+      Pcs: [0, [Validators.pattern(/^([0-9,-/+])+$/i)]],
       Qty: [0],
-      FreeCrt: [0],
-      FreePcs: [0],
+      FreeCrt: [0, [Validators.pattern(/^([0-9,-/+])+$/i)]],
+      FreePcs: [0, [Validators.pattern(/^([0-9,-/+])+$/i)]],
       FreeQty: [0],
       TotalQty: [0],
-      Rate: [0],
+      Rate: [0, [Validators.pattern(/^([0-9,-/+])+$/i)]],
       Amount: [0],
-      DiscPer: [0],
+      DiscPer: [0, [Validators.pattern(/^([0-9,-/+])+$/i)]],
       DiscAmount: [0],
       GSTTaxID: [''],
       CGSTAmount: [0],
@@ -80,11 +112,14 @@ export class PurchaseAddEditComponent implements OnInit {
       CessAmount: [0],
       TotalTaxAmount: [0],
       GrossAmount: [0],
-      SchPer: [0],
+      SchPer: [0, [Validators.pattern(/^([0-9,-/+])+$/i)]],
       SchAmount: [0],
       NetAmount: [0],
     }),
   });
+
+  @ViewChild('AutoItemID') AutoItemID?: MatAutocomplete;
+  @ViewChild('AutoAccountID') AutoAccountID?: MatAutocomplete;
 
   constructor(
     private router: Router,
@@ -95,9 +130,13 @@ export class PurchaseAddEditComponent implements OnInit {
     private itemService: fromService.ItemService,
     private commonService: fromService.CommonService,
     private taxService: fromService.TaxService,
-    private fb: FormBuilder
+    private stockService: fromService.StockService,
+    private fb: FormBuilder,
+    private renderer: Renderer2
   ) {
     this.CompanyStateID = this.sstorage.get('CompanyStateID');
+    this.setColumns();
+    //this.AddTempItems();
     this.isEditMode = false;
     this.selectedPurchaseId = 0;
     this.itemGroupDropDown = [];
@@ -108,7 +147,6 @@ export class PurchaseAddEditComponent implements OnInit {
     this.FillBooksDropDown();
     this.FillAccountDropDown();
     this.SetMinMaxBillDate();
-    //this.FillItemDropDown();
   }
 
   ngOnInit(): void {
@@ -150,6 +188,33 @@ export class PurchaseAddEditComponent implements OnInit {
           : this.itemsDropDown.slice();
       })
     );
+  }
+
+  setColumns() {
+    this.columns = defaultData.GetPurchaseItemDetailColumns();
+    this.columns.push({
+      header: 'Action',
+      field: 'action',
+      minWidth: 120,
+      width: '120px',
+      pinned: 'right',
+      type: 'button',
+      class: '',
+      buttons: [
+        {
+          type: 'icon',
+          icon: 'edit',
+          tooltip: 'Edit Record',
+          click: (record) => this.editItem(record),
+        },
+        {
+          type: 'icon',
+          icon: 'delete',
+          tooltip: 'Delete Record',
+          click: (record) => this.deleteItem(record),
+        },
+      ],
+    });
   }
 
   BacktoList() {
@@ -264,16 +329,50 @@ export class PurchaseAddEditComponent implements OnInit {
   }
 
   SelectedItem(event: any) {
+    //check item exitst in item Detail
     this.itemService
       .GetItembyID(event.option.value.item_Id)
       .subscribe((response) => {
         this.CurrentItem = response;
+        this.GetCurrentStock(Number(this.CurrentItem?.itemID));
         this.RateControl.setValue(
           formatNumber(Number(this.CurrentItem?.purchaseRate), 'en-IN', '0.2-2')
         );
         this.GSTTaxIDControl.setValue(this.CurrentItem?.gstTaxID.toString());
         this.GetCurrentTax(Number(this.CurrentItem?.gstTaxID));
       });
+
+    let FoundItem = this.purchaseItemDetailsList.findIndex(
+      (a) => a.ItemID == event.option.value.item_Id
+    );
+    if (FoundItem != -1) {
+      let ItemDetail: PurchaseItemDetail = this.purchaseItemDetailsList.filter(
+        (a) => a.ItemID == event.option.value.item_Id
+      )[0];
+      this.CrtControl.setValue(ItemDetail.Crt);
+      this.PcsControl.setValue(ItemDetail.Pcs);
+      this.QtyControl.setValue(ItemDetail.Qty);
+      this.FreeCrtControl.setValue(ItemDetail.FCrt);
+      this.FreePcsControl.setValue(ItemDetail.FPcs);
+      this.FreeQtyControl.setValue(ItemDetail.FQty);
+      this.TotalQtyControl.setValue(ItemDetail.TQty);
+
+      this.RateControl.setValue(ItemDetail.Rate);
+      this.AmountControl.setValue(ItemDetail.Amount);
+      this.DiscPerControl.setValue(ItemDetail.DiscPer);
+      this.DiscAmountControl.setValue(ItemDetail.DiscAmount);
+      this.GSTTaxIDControl.setValue(ItemDetail.GSTTaxID.toString());
+      this.CGSTAmountControl.setValue(ItemDetail.CGSTAmount);
+      this.SGSTAmountControl.setValue(ItemDetail.SGSTAmount);
+      this.IGSTAmountControl.setValue(ItemDetail.IGSTAmount);
+      this.CessAmountControl.setValue(ItemDetail.CessAmount);
+      this.GrossAmountControl.setValue(ItemDetail.GrossAmount);
+      this.SchPerControl.setValue(ItemDetail.SchPer);
+      this.SchAmountControl.setValue(ItemDetail.SchAmount);
+      this.ItemNetAmountControl.setValue(ItemDetail.NetAmount);
+      this.CalculateTotals();
+      this.IsItemEditMode = true;
+    }
   }
 
   GetCurrentTax(TaxID: number) {
@@ -282,6 +381,193 @@ export class PurchaseAddEditComponent implements OnInit {
     });
   }
 
+  GetCurrentStock(ItemID: number) {
+    //stockService
+    this.stockService.GetClosingByItemID(ItemID).subscribe((response) => {
+      this.CurrentStock = response;
+    });
+  }
+
+  AddItemToList() {
+    if (this.isEditMode == true) {
+      let ItemIndex = this.purchaseItemDetailsList.findIndex(
+        (a) => a.ItemID == Number(this.ItemIDControl.value.item_Id)
+      );
+      this.purchaseItemDetailsList.splice(ItemIndex, 1);
+    }
+    
+      let SrNo: number = this.purchaseItemDetailsList.length + 1;
+      let ItemDetails: PurchaseItemDetail = {
+        AutoID: this.IsItemEditMode ? Number(this.ItemEdit?.AutoID) : 0,
+        SrNo: this.IsItemEditMode ? Number(this.ItemEdit?.SrNo) : SrNo,
+        ItemID: Number(this.ItemIDControl.value.item_Id),
+        ItemName: this.ItemIDControl.value.item_Name,
+        Crt: CheckIsNumber(this.CrtControl.value),
+        Pcs: CheckIsNumber(this.PcsControl.value),
+        Qty: CheckIsNumber(this.QtyControl.value),
+        FCrt: CheckIsNumber(this.FreeCrtControl.value),
+        FPcs: CheckIsNumber(this.FreePcsControl.value),
+        FQty: CheckIsNumber(this.FreeQtyControl.value),
+        TQty: CheckIsNumber(this.TotalQtyControl.value),
+        Rate: CheckIsNumber(this.RateControl.value),
+        Amount: CheckIsNumber(this.AmountControl.value),
+        DiscPer: CheckIsNumber(this.DiscPerControl.value),
+        DiscAmount: CheckIsNumber(this.DiscAmountControl.value),
+        GSTTaxID: CheckIsNumber(this.GSTTaxIDControl.value),
+        GSTTaxName: this.CurrentTax?.taxName?.toString(),
+        CGSTAmount: CheckIsNumber(this.CGSTAmountControl.value),
+        SGSTAmount: CheckIsNumber(this.SGSTAmountControl.value),
+        IGSTAmount: CheckIsNumber(this.IGSTAmountControl.value),
+        CessAmount: CheckIsNumber(this.CessAmountControl.value),
+        TotalTaxAmount: CheckIsNumber(this.TotalTaxAmountControl.value),
+        GrossAmount: CheckIsNumber(this.GrossAmountControl.value),
+        SchPer: CheckIsNumber(this.SchPerControl.value),
+        SchAmount: CheckIsNumber(this.SchAmountControl.value),
+        NetAmount: CheckIsNumber(this.ItemNetAmountControl.value),
+        IsAdd: this.isEditMode ? (this.IsItemEditMode ? false : true) : true,
+        IsModified: this.isEditMode
+          ? this.IsItemEditMode
+            ? true
+            : false
+          : false,
+        IsDeleted: false,
+      };
+      this.purchaseItemDetailsList.push(ItemDetails);
+    // } else {
+    //   this.purchaseItemDetailsList[ItemIndex].ItemID = Number(
+    //     this.ItemIDControl.value.item_Id
+    //   );
+    //   this.purchaseItemDetailsList[ItemIndex].ItemName =
+    //     this.ItemIDControl.value.item_Name;
+    //   this.purchaseItemDetailsList[ItemIndex].Crt = CheckIsNumber(
+    //     this.CrtControl.value
+    //   );
+    //   this.purchaseItemDetailsList[ItemIndex].Pcs = CheckIsNumber(
+    //     this.PcsControl.value
+    //   );
+    //   this.purchaseItemDetailsList[ItemIndex].Qty = CheckIsNumber(
+    //     this.QtyControl.value
+    //   );
+    //   this.purchaseItemDetailsList[ItemIndex].FCrt = CheckIsNumber(
+    //     this.FreeCrtControl.value
+    //   );
+    //   this.purchaseItemDetailsList[ItemIndex].FPcs = CheckIsNumber(
+    //     this.FreePcsControl.value
+    //   );
+    //   (this.purchaseItemDetailsList[ItemIndex].FQty = CheckIsNumber(
+    //     this.FreeQtyControl.value
+    //   )),
+    //     (this.purchaseItemDetailsList[ItemIndex].TQty = CheckIsNumber(
+    //       this.TotalQtyControl.value
+    //     ));
+    //   this.purchaseItemDetailsList[ItemIndex].Rate = CheckIsNumber(
+    //     this.RateControl.value
+    //   );
+    //   this.purchaseItemDetailsList[ItemIndex].Amount = CheckIsNumber(
+    //     this.AmountControl.value
+    //   );
+    //   this.purchaseItemDetailsList[ItemIndex].DiscPer = CheckIsNumber(
+    //     this.DiscPerControl.value
+    //   );
+    //   this.purchaseItemDetailsList[ItemIndex].DiscAmount = CheckIsNumber(
+    //     this.DiscAmountControl.value
+    //   );
+    //   this.purchaseItemDetailsList[ItemIndex].GSTTaxID = CheckIsNumber(
+    //     this.GSTTaxIDControl.value
+    //   );
+    //   (this.purchaseItemDetailsList[ItemIndex].GSTTaxName =
+    //     this.CurrentTax?.taxName?.toString()),
+    //     (this.purchaseItemDetailsList[ItemIndex].CGSTAmount = CheckIsNumber(
+    //       this.CGSTAmountControl.value
+    //     ));
+    //   this.purchaseItemDetailsList[ItemIndex].SGSTAmount = CheckIsNumber(
+    //     this.SGSTAmountControl.value
+    //   );
+    //   this.purchaseItemDetailsList[ItemIndex].IGSTAmount = CheckIsNumber(
+    //     this.IGSTAmountControl.value
+    //   );
+    //   this.purchaseItemDetailsList[ItemIndex].CessAmount = CheckIsNumber(
+    //     this.CessAmountControl.value
+    //   );
+    //   this.purchaseItemDetailsList[ItemIndex].TotalTaxAmount = CheckIsNumber(
+    //     this.TotalTaxAmountControl.value
+    //   );
+    //   this.purchaseItemDetailsList[ItemIndex].GrossAmount = CheckIsNumber(
+    //     this.GrossAmountControl.value
+    //   );
+    //   this.purchaseItemDetailsList[ItemIndex].SchPer = CheckIsNumber(
+    //     this.SchPerControl.value
+    //   );
+    //   this.purchaseItemDetailsList[ItemIndex].SchAmount = CheckIsNumber(
+    //     this.SchAmountControl.value
+    //   );
+    //   this.purchaseItemDetailsList[ItemIndex].NetAmount = CheckIsNumber(
+    //     this.ItemNetAmountControl.value
+    //   );
+    // }
+    this.ItemCount = this.purchaseItemDetailsList.length;
+    this.ResetItems();
+    this.CalculateFinalTotals();
+  }
+
+  editItem(record: any) {}
+
+  deleteItem(record: any) {
+    debugger;
+  }
+
+  ResetItems() {
+    this.ItemsControl.reset();
+    this.ItemsControl.markAsUntouched();
+    this.ItemIDControl.setValue('');
+    this.CrtControl.setValue(0);
+    this.PcsControl.setValue(0);
+    this.QtyControl.setValue(0);
+    this.FreeCrtControl.setValue(0);
+    this.FreePcsControl.setValue(0);
+    this.FreeQtyControl.setValue(0);
+    this.TotalQtyControl.setValue(0);
+    this.RateControl.setValue(0);
+    this.AmountControl.setValue(0);
+    this.DiscPerControl.setValue(0);
+    this.DiscAmountControl.setValue(0);
+    this.GSTTaxIDControl.setValue('');
+    this.CGSTAmountControl.setValue(0);
+    this.SGSTAmountControl.setValue(0);
+    this.IGSTAmountControl.setValue(0);
+    this.CessAmountControl.setValue(0);
+    this.TotalTaxAmountControl.setValue(0);
+    this.GrossAmountControl.setValue(0);
+    this.SchPerControl.setValue(0);
+    this.SchAmountControl.setValue(0);
+    this.ItemNetAmountControl.setValue(0);
+    this.renderer.selectRootElement('#ItemName').focus();
+  }
+
+  OnAccountBlur() {
+    if (
+      this.AutoAccountID?.isOpen == false &&
+      this.AccountIDControl.value == ''
+    ) {
+      this.renderer.selectRootElement('#AccountName').focus();
+    }
+  }
+
+  OnItemblur() {
+    if (this.AutoItemID?.isOpen == false) {
+      if (
+        this.ItemIDControl.value == '' &&
+        this.purchaseItemDetailsList.length == 0
+      ) {
+        this.renderer.selectRootElement('#ItemName').focus();
+      } else if (
+        this.ItemIDControl.value == '' &&
+        this.purchaseItemDetailsList.length > 0
+      ) {
+        this.renderer.selectRootElement('#OtherAddText').focus();
+      }
+    }
+  }
   //Controls
 
   get BookAccountIDControl() {
@@ -308,72 +594,122 @@ export class PurchaseAddEditComponent implements OnInit {
     return this.purchaseForm.get('AccountTradeTypeID') as FormControl;
   }
 
+  get TotalAmountControl() {
+    return this.purchaseForm.get('TotalAmount') as FormControl;
+  }
+  get TotalDiscAmountControl() {
+    return this.purchaseForm.get('TotalDiscAmount') as FormControl;
+  }
+  get TotalCGSTAmountControl() {
+    return this.purchaseForm.get('TotalCGSTAmount') as FormControl;
+  }
+  get TotalSGSTAmountControl() {
+    return this.purchaseForm.get('TotalSGSTAmount') as FormControl;
+  }
+  get TotalIGSTAmountControl() {
+    return this.purchaseForm.get('TotalIGSTAmount') as FormControl;
+  }
+  get TotalCessAmountControl() {
+    return this.purchaseForm.get('TotalCessAmount') as FormControl;
+  }
+  get TotalGrossAmountControl() {
+    return this.purchaseForm.get('TotalGrossAmount') as FormControl;
+  }
+  get TotalSchAmountControl() {
+    return this.purchaseForm.get('TotalSchAmount') as FormControl;
+  }
+  get TotalNetAmountControl() {
+    return this.purchaseForm.get('TotalNetAmount') as FormControl;
+  }
+  get OtherAddTextControl() {
+    return this.purchaseForm.get('OtherAddText') as FormControl;
+  }
+  get OtherAddAmountControl() {
+    return this.purchaseForm.get('OtherAddAmount') as FormControl;
+  }
+  get OtherLessTextControl() {
+    return this.purchaseForm.get('OtherLessText') as FormControl;
+  }
+  get OtherLessAmountControl() {
+    return this.purchaseForm.get('OtherLessAmount') as FormControl;
+  }
+  get RoundOffAmountControl() {
+    return this.purchaseForm.get('RoundOffAmount') as FormControl;
+  }
+  get NetAmountControl() {
+    return this.purchaseForm.get('NetAmount') as FormControl;
+  }
+
+  get ItemsControl() {
+    return this.purchaseForm.get('Items') as FormControl;
+  }
+
   get ItemIDControl() {
-    return this.purchaseForm.get('Items')?.get('ItemID') as FormControl;
+    return this.ItemsControl.get('ItemID') as FormControl;
   }
 
   get CrtControl() {
-    return this.purchaseForm.get('Items')?.get('Crt') as FormControl;
+    return this.ItemsControl.get('Crt') as FormControl;
   }
   get PcsControl() {
-    return this.purchaseForm.get('Items')?.get('Pcs') as FormControl;
+    return this.ItemsControl.get('Pcs') as FormControl;
   }
   get QtyControl() {
-    return this.purchaseForm.get('Items')?.get('Qty') as FormControl;
+    return this.ItemsControl.get('Qty') as FormControl;
   }
   get FreeCrtControl() {
-    return this.purchaseForm.get('Items')?.get('FreeCrt') as FormControl;
+    return this.ItemsControl.get('FreeCrt') as FormControl;
   }
   get FreePcsControl() {
-    return this.purchaseForm.get('Items')?.get('FreePcs') as FormControl;
+    return this.ItemsControl.get('FreePcs') as FormControl;
   }
   get FreeQtyControl() {
-    return this.purchaseForm.get('Items')?.get('FreeQty') as FormControl;
+    return this.ItemsControl.get('FreeQty') as FormControl;
   }
   get TotalQtyControl() {
-    return this.purchaseForm.get('Items')?.get('TotalQty') as FormControl;
+    return this.ItemsControl.get('TotalQty') as FormControl;
   }
   get RateControl() {
-    return this.purchaseForm.get('Items')?.get('Rate') as FormControl;
+    return this.ItemsControl.get('Rate') as FormControl;
   }
   get AmountControl() {
-    return this.purchaseForm.get('Items')?.get('Amount') as FormControl;
+    return this.ItemsControl.get('Amount') as FormControl;
   }
   get DiscPerControl() {
-    return this.purchaseForm.get('Items')?.get('DiscPer') as FormControl;
+    return this.ItemsControl.get('DiscPer') as FormControl;
   }
   get DiscAmountControl() {
-    return this.purchaseForm.get('Items')?.get('DiscAmount') as FormControl;
+    return this.ItemsControl.get('DiscAmount') as FormControl;
   }
   get GSTTaxIDControl() {
-    return this.purchaseForm.get('Items')?.get('GSTTaxID') as FormControl;
+    return this.ItemsControl.get('GSTTaxID') as FormControl;
   }
   get CGSTAmountControl() {
-    return this.purchaseForm.get('Items')?.get('CGSTAmount') as FormControl;
+    return this.ItemsControl.get('CGSTAmount') as FormControl;
   }
   get SGSTAmountControl() {
-    return this.purchaseForm.get('Items')?.get('SGSTAmount') as FormControl;
+    return this.ItemsControl.get('SGSTAmount') as FormControl;
   }
   get IGSTAmountControl() {
-    return this.purchaseForm.get('Items')?.get('IGSTAmount') as FormControl;
+    return this.ItemsControl.get('IGSTAmount') as FormControl;
   }
   get CessAmountControl() {
-    return this.purchaseForm.get('Items')?.get('CessAmount') as FormControl;
+    return this.ItemsControl.get('CessAmount') as FormControl;
   }
   get TotalTaxAmountControl() {
-    return this.purchaseForm.get('Items')?.get('TotalTaxAmount') as FormControl;
+    return this.ItemsControl.get('TotalTaxAmount') as FormControl;
   }
   get GrossAmountControl() {
-    return this.purchaseForm.get('Items')?.get('GrossAmount') as FormControl;
+    return this.ItemsControl.get('GrossAmount') as FormControl;
   }
   get SchPerControl() {
-    return this.purchaseForm.get('Items')?.get('SchPer') as FormControl;
+    return this.ItemsControl.get('SchPer') as FormControl;
   }
   get SchAmountControl() {
-    return this.purchaseForm.get('Items')?.get('SchAmount') as FormControl;
+    return this.ItemsControl.get('SchAmount') as FormControl;
   }
-  get NetAmountControl() {
-    return this.purchaseForm.get('Items')?.get('NetAmount') as FormControl;
+  get ItemNetAmountControl() {
+    return this.ItemsControl.get('NetAmount') as FormControl;
   }
 
   //Others
@@ -421,7 +757,7 @@ export class PurchaseAddEditComponent implements OnInit {
       SchAmount = 0,
       NetAmount = 0;
 
-    Rate = Number(this.RateControl.value.replace(/,/g, ''));
+    Rate = CheckIsNumber(this.RateControl.value);
     RatePerPcs = Rate / Number(this.CurrentItem?.packing);
     Qty =
       Number(this.CrtControl.value) * Number(this.CurrentItem?.packing) +
@@ -497,11 +833,90 @@ export class PurchaseAddEditComponent implements OnInit {
         formatNumber(Number(SchAmount), 'en-IN', '0.2-2')
       );
     }
-    this.NetAmountControl.setValue(
+    this.ItemNetAmountControl.setValue(
       formatNumber(Number(NetAmount), 'en-IN', '0.2-2')
     );
     this.IsDiscPerChange = false;
     this.IsSchPerChange = false;
+  }
+
+  CalculateFinalTotals() {
+    let TotalAmount = 0,
+      TotalDiscAmount = 0,
+      TotalCGSTAmount = 0,
+      TotalSGSTAmount = 0,
+      TotalIGSTAmount = 0,
+      TotalCessAmount = 0,
+      TotalGrossAmount = 0,
+      TotalSchAmount = 0,
+      TotalNetAmount = 0;
+
+    this.purchaseItemDetailsList.forEach((element) => {
+      TotalAmount = Number(TotalAmount) + Number(element.Amount);
+      TotalDiscAmount = Number(TotalDiscAmount) + Number(element.DiscAmount);
+      TotalCGSTAmount = Number(TotalCGSTAmount) + Number(element.CGSTAmount);
+      TotalSGSTAmount = Number(TotalSGSTAmount) + Number(element.SGSTAmount);
+      TotalIGSTAmount = Number(TotalIGSTAmount) + Number(element.IGSTAmount);
+      TotalCessAmount = Number(TotalCessAmount) + Number(element.CessAmount);
+      TotalGrossAmount = Number(TotalGrossAmount) + Number(element.GrossAmount);
+      TotalSchAmount = Number(TotalSchAmount) + Number(element.SchAmount);
+      TotalNetAmount = Number(TotalNetAmount) + Number(element.NetAmount);
+    });
+
+    this.TotalAmountControl.setValue(
+      formatNumber(Number(TotalAmount), 'en-IN', '0.2-2')
+    );
+    this.TotalDiscAmountControl.setValue(
+      formatNumber(Number(TotalDiscAmount), 'en-IN', '0.2-2')
+    );
+    this.TotalCGSTAmountControl.setValue(
+      formatNumber(Number(TotalCGSTAmount), 'en-IN', '0.2-2')
+    );
+    this.TotalSGSTAmountControl.setValue(
+      formatNumber(Number(TotalSGSTAmount), 'en-IN', '0.2-2')
+    );
+    this.TotalIGSTAmountControl.setValue(
+      formatNumber(Number(TotalIGSTAmount), 'en-IN', '0.2-2')
+    );
+    this.TotalCessAmountControl.setValue(
+      formatNumber(Number(TotalCessAmount), 'en-IN', '0.2-2')
+    );
+    this.TotalGrossAmountControl.setValue(
+      formatNumber(Number(TotalGrossAmount), 'en-IN', '0.2-2')
+    );
+    this.TotalSchAmountControl.setValue(
+      formatNumber(Number(TotalSchAmount), 'en-IN', '0.2-2')
+    );
+    this.TotalNetAmountControl.setValue(
+      formatNumber(Number(TotalNetAmount), 'en-IN', '0.2-2')
+    );
+
+    this.CalculateNetAmount();
+  }
+
+  CalculateNetAmount() {
+    let RoundOffAmount = 0,
+      NetAmount = 0,
+      OtherAddAmount = 0,
+      OtherLessAmount = 0,
+      AfterAddLessAmount = 0,
+      TotalNetAmount = 0;
+
+    TotalNetAmount = Number(this.TotalNetAmountControl.value.replace(/,/g, ''));
+    OtherAddAmount = CheckIsNumber(this.OtherAddAmountControl.value);
+    OtherLessAmount = CheckIsNumber(this.OtherLessAmountControl.value);
+
+    AfterAddLessAmount = TotalNetAmount + OtherAddAmount - OtherLessAmount;
+
+    NetAmount = Math.round(Number(AfterAddLessAmount));
+    RoundOffAmount = NetAmount - AfterAddLessAmount;
+
+    this.RoundOffAmountControl.setValue(
+      formatNumber(Number(RoundOffAmount), 'en-IN', '0.2-2')
+    );
+    this.NetAmountControl.setValue(
+      formatNumber(Number(NetAmount), 'en-IN', '0.2-2')
+    );
   }
 
   //Private Methods

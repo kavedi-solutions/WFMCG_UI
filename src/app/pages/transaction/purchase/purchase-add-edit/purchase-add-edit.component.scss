@@ -19,3 +19,37 @@
   }
 }
 
+.stocks {
+  text-align: center;
+  color: red;
+  font-size: larger;
+  font-weight: 500;
+  // -webkit-animation: stock_blink 2s infinite; /* Safari 4+ */
+  // -moz-animation: stock_blink 2s infinite; /* Fx 5+ */
+  // -o-animation: stock_blink 2s infinite; /* Opera 12+ */
+  // animation: stock_blink 2s infinite; /* IE 10+, Fx 29+ */
+}
+
+@keyframes stock_blink {
+  0%,
+  49% {
+    color: red;
+  }
+  50%,
+  100% {
+    color: blue;
+  }
+}
+
+::ng-deep {
+  .mtx-grid {
+    min-height: 250px;
+    max-height: 250px;
+    .mat-table-container {
+      overflow: unset !important;
+    }
+  }
+  .mtx-grid-no-result {
+    min-height: auto !important;
+  }
+}
