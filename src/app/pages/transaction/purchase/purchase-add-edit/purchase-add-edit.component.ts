@@ -24,7 +24,7 @@ import {
   TaxDownDownResponse,
 } from '../../../../shared/index';
 import * as defaultData from '../../../../data/index';
-import { CheckIsNumber } from 'src/app/shared/functions';
+import { CheckIsNumber, SetFormatCurrency } from 'src/app/shared/functions';
 import { MatAutocomplete } from '@angular/material/autocomplete';
 @Component({
   selector: 'app-purchase-add-edit',
@@ -46,6 +46,7 @@ export class PurchaseAddEditComponent implements OnInit {
   itemsDropDown: itemsDropDownResponse[] = [];
   filtereditemsDropDown?: Observable<itemsDropDownResponse[]>;
   purchaseItemDetailsList: PurchaseItemDetail[] = [];
+  purchaseItemDetailsListData: PurchaseItemDetail[] = [];
   CurrentItem?: Item;
   CurrentTax?: Tax;
   CurrentStock?: ClosingStockbyItemID;
@@ -205,12 +206,28 @@ export class PurchaseAddEditComponent implements OnInit {
           type: 'icon',
           icon: 'edit',
           tooltip: 'Edit Record',
+          pop: {
+            title: 'Confirm Edit',
+            description: 'Are you sure you want to Edit this Item.',
+            closeText: 'No',
+            okText: 'Yes',
+            okColor: 'primary',
+            closeColor: 'warn',
+          },
           click: (record) => this.editItem(record),
         },
         {
           type: 'icon',
           icon: 'delete',
           tooltip: 'Delete Record',
+          pop: {
+            title: 'Confirm Delete',
+            description: 'Are you sure you want to Delete this Item.',
+            closeText: 'No',
+            okText: 'Yes',
+            okColor: 'primary',
+            closeColor: 'warn',
+          },
           click: (record) => this.deleteItem(record),
         },
       ],
@@ -330,22 +347,12 @@ export class PurchaseAddEditComponent implements OnInit {
 
   SelectedItem(event: any) {
     //check item exitst in item Detail
-    this.itemService
-      .GetItembyID(event.option.value.item_Id)
-      .subscribe((response) => {
-        this.CurrentItem = response;
-        this.GetCurrentStock(Number(this.CurrentItem?.itemID));
-        this.RateControl.setValue(
-          formatNumber(Number(this.CurrentItem?.purchaseRate), 'en-IN', '0.2-2')
-        );
-        this.GSTTaxIDControl.setValue(this.CurrentItem?.gstTaxID.toString());
-        this.GetCurrentTax(Number(this.CurrentItem?.gstTaxID));
-      });
 
     let FoundItem = this.purchaseItemDetailsList.findIndex(
       (a) => a.ItemID == event.option.value.item_Id
     );
     if (FoundItem != -1) {
+      this.ItemEdit = this.purchaseItemDetailsList[FoundItem];
       let ItemDetail: PurchaseItemDetail = this.purchaseItemDetailsList.filter(
         (a) => a.ItemID == event.option.value.item_Id
       )[0];
@@ -372,6 +379,18 @@ export class PurchaseAddEditComponent implements OnInit {
       this.ItemNetAmountControl.setValue(ItemDetail.NetAmount);
       this.CalculateTotals();
       this.IsItemEditMode = true;
+    } else {
+      this.itemService
+        .GetItembyID(event.option.value.item_Id)
+        .subscribe((response) => {
+          this.CurrentItem = response;
+          this.GetCurrentStock(Number(this.CurrentItem?.itemID));
+          this.RateControl.setValue(
+            SetFormatCurrency(this.CurrentItem?.purchaseRate)
+          );
+          this.GSTTaxIDControl.setValue(this.CurrentItem?.gstTaxID.toString());
+          this.GetCurrentTax(Number(this.CurrentItem?.gstTaxID));
+        });
     }
   }
 
@@ -389,131 +408,124 @@ export class PurchaseAddEditComponent implements OnInit {
   }
 
   AddItemToList() {
-    if (this.isEditMode == true) {
-      let ItemIndex = this.purchaseItemDetailsList.findIndex(
+    let SrNo: number = 0;
+    let ItemIndex: number = 0;
+    if (this.IsItemEditMode == true) {
+      ItemIndex = this.purchaseItemDetailsList.findIndex(
         (a) => a.ItemID == Number(this.ItemIDControl.value.item_Id)
       );
-      this.purchaseItemDetailsList.splice(ItemIndex, 1);
+      SrNo = this.purchaseItemDetailsList[ItemIndex].SrNo;
+    } else {
+      SrNo = this.purchaseItemDetailsList.length + 1;
     }
-    
-      let SrNo: number = this.purchaseItemDetailsList.length + 1;
-      let ItemDetails: PurchaseItemDetail = {
-        AutoID: this.IsItemEditMode ? Number(this.ItemEdit?.AutoID) : 0,
-        SrNo: this.IsItemEditMode ? Number(this.ItemEdit?.SrNo) : SrNo,
-        ItemID: Number(this.ItemIDControl.value.item_Id),
-        ItemName: this.ItemIDControl.value.item_Name,
-        Crt: CheckIsNumber(this.CrtControl.value),
-        Pcs: CheckIsNumber(this.PcsControl.value),
-        Qty: CheckIsNumber(this.QtyControl.value),
-        FCrt: CheckIsNumber(this.FreeCrtControl.value),
-        FPcs: CheckIsNumber(this.FreePcsControl.value),
-        FQty: CheckIsNumber(this.FreeQtyControl.value),
-        TQty: CheckIsNumber(this.TotalQtyControl.value),
-        Rate: CheckIsNumber(this.RateControl.value),
-        Amount: CheckIsNumber(this.AmountControl.value),
-        DiscPer: CheckIsNumber(this.DiscPerControl.value),
-        DiscAmount: CheckIsNumber(this.DiscAmountControl.value),
-        GSTTaxID: CheckIsNumber(this.GSTTaxIDControl.value),
-        GSTTaxName: this.CurrentTax?.taxName?.toString(),
-        CGSTAmount: CheckIsNumber(this.CGSTAmountControl.value),
-        SGSTAmount: CheckIsNumber(this.SGSTAmountControl.value),
-        IGSTAmount: CheckIsNumber(this.IGSTAmountControl.value),
-        CessAmount: CheckIsNumber(this.CessAmountControl.value),
-        TotalTaxAmount: CheckIsNumber(this.TotalTaxAmountControl.value),
-        GrossAmount: CheckIsNumber(this.GrossAmountControl.value),
-        SchPer: CheckIsNumber(this.SchPerControl.value),
-        SchAmount: CheckIsNumber(this.SchAmountControl.value),
-        NetAmount: CheckIsNumber(this.ItemNetAmountControl.value),
-        IsAdd: this.isEditMode ? (this.IsItemEditMode ? false : true) : true,
-        IsModified: this.isEditMode
-          ? this.IsItemEditMode
-            ? true
-            : false
-          : false,
-        IsDeleted: false,
-      };
+
+    let ItemDetails: PurchaseItemDetail = {
+      AutoID: this.IsItemEditMode ? Number(this.ItemEdit?.AutoID) : 0,
+      SrNo: this.IsItemEditMode ? Number(this.ItemEdit?.SrNo) : SrNo,
+      ItemID: Number(this.ItemIDControl.value.item_Id),
+      ItemName: this.ItemIDControl.value.item_Name,
+      Crt: CheckIsNumber(this.CrtControl.value),
+      Pcs: CheckIsNumber(this.PcsControl.value),
+      Qty: CheckIsNumber(this.QtyControl.value),
+      FCrt: CheckIsNumber(this.FreeCrtControl.value),
+      FPcs: CheckIsNumber(this.FreePcsControl.value),
+      FQty: CheckIsNumber(this.FreeQtyControl.value),
+      TQty: CheckIsNumber(this.TotalQtyControl.value),
+      Rate: CheckIsNumber(this.RateControl.value),
+      Amount: CheckIsNumber(this.AmountControl.value),
+      DiscPer: CheckIsNumber(this.DiscPerControl.value),
+      DiscAmount: CheckIsNumber(this.DiscAmountControl.value),
+      GSTTaxID: CheckIsNumber(this.GSTTaxIDControl.value),
+      GSTTaxName: this.CurrentTax?.taxName?.toString(),
+      CGSTAmount: CheckIsNumber(this.CGSTAmountControl.value),
+      SGSTAmount: CheckIsNumber(this.SGSTAmountControl.value),
+      IGSTAmount: CheckIsNumber(this.IGSTAmountControl.value),
+      CessAmount: CheckIsNumber(this.CessAmountControl.value),
+      TotalTaxAmount: CheckIsNumber(this.TotalTaxAmountControl.value),
+      GrossAmount: CheckIsNumber(this.GrossAmountControl.value),
+      SchPer: CheckIsNumber(this.SchPerControl.value),
+      SchAmount: CheckIsNumber(this.SchAmountControl.value),
+      NetAmount: CheckIsNumber(this.ItemNetAmountControl.value),
+      IsAdd: this.isEditMode ? (this.IsItemEditMode ? false : true) : true,
+      IsModified: this.isEditMode
+        ? this.IsItemEditMode
+          ? true
+          : false
+        : false,
+      IsDeleted: false,
+    };
+    if (this.IsItemEditMode == true) {
+      this.purchaseItemDetailsList[ItemIndex] = ItemDetails;
+    } else {
       this.purchaseItemDetailsList.push(ItemDetails);
-    // } else {
-    //   this.purchaseItemDetailsList[ItemIndex].ItemID = Number(
-    //     this.ItemIDControl.value.item_Id
-    //   );
-    //   this.purchaseItemDetailsList[ItemIndex].ItemName =
-    //     this.ItemIDControl.value.item_Name;
-    //   this.purchaseItemDetailsList[ItemIndex].Crt = CheckIsNumber(
-    //     this.CrtControl.value
-    //   );
-    //   this.purchaseItemDetailsList[ItemIndex].Pcs = CheckIsNumber(
-    //     this.PcsControl.value
-    //   );
-    //   this.purchaseItemDetailsList[ItemIndex].Qty = CheckIsNumber(
-    //     this.QtyControl.value
-    //   );
-    //   this.purchaseItemDetailsList[ItemIndex].FCrt = CheckIsNumber(
-    //     this.FreeCrtControl.value
-    //   );
-    //   this.purchaseItemDetailsList[ItemIndex].FPcs = CheckIsNumber(
-    //     this.FreePcsControl.value
-    //   );
-    //   (this.purchaseItemDetailsList[ItemIndex].FQty = CheckIsNumber(
-    //     this.FreeQtyControl.value
-    //   )),
-    //     (this.purchaseItemDetailsList[ItemIndex].TQty = CheckIsNumber(
-    //       this.TotalQtyControl.value
-    //     ));
-    //   this.purchaseItemDetailsList[ItemIndex].Rate = CheckIsNumber(
-    //     this.RateControl.value
-    //   );
-    //   this.purchaseItemDetailsList[ItemIndex].Amount = CheckIsNumber(
-    //     this.AmountControl.value
-    //   );
-    //   this.purchaseItemDetailsList[ItemIndex].DiscPer = CheckIsNumber(
-    //     this.DiscPerControl.value
-    //   );
-    //   this.purchaseItemDetailsList[ItemIndex].DiscAmount = CheckIsNumber(
-    //     this.DiscAmountControl.value
-    //   );
-    //   this.purchaseItemDetailsList[ItemIndex].GSTTaxID = CheckIsNumber(
-    //     this.GSTTaxIDControl.value
-    //   );
-    //   (this.purchaseItemDetailsList[ItemIndex].GSTTaxName =
-    //     this.CurrentTax?.taxName?.toString()),
-    //     (this.purchaseItemDetailsList[ItemIndex].CGSTAmount = CheckIsNumber(
-    //       this.CGSTAmountControl.value
-    //     ));
-    //   this.purchaseItemDetailsList[ItemIndex].SGSTAmount = CheckIsNumber(
-    //     this.SGSTAmountControl.value
-    //   );
-    //   this.purchaseItemDetailsList[ItemIndex].IGSTAmount = CheckIsNumber(
-    //     this.IGSTAmountControl.value
-    //   );
-    //   this.purchaseItemDetailsList[ItemIndex].CessAmount = CheckIsNumber(
-    //     this.CessAmountControl.value
-    //   );
-    //   this.purchaseItemDetailsList[ItemIndex].TotalTaxAmount = CheckIsNumber(
-    //     this.TotalTaxAmountControl.value
-    //   );
-    //   this.purchaseItemDetailsList[ItemIndex].GrossAmount = CheckIsNumber(
-    //     this.GrossAmountControl.value
-    //   );
-    //   this.purchaseItemDetailsList[ItemIndex].SchPer = CheckIsNumber(
-    //     this.SchPerControl.value
-    //   );
-    //   this.purchaseItemDetailsList[ItemIndex].SchAmount = CheckIsNumber(
-    //     this.SchAmountControl.value
-    //   );
-    //   this.purchaseItemDetailsList[ItemIndex].NetAmount = CheckIsNumber(
-    //     this.ItemNetAmountControl.value
-    //   );
-    // }
-    this.ItemCount = this.purchaseItemDetailsList.length;
+    }
+    this.purchaseItemDetailsListData = [...this.purchaseItemDetailsList];
+
+    this.ItemCount = this.purchaseItemDetailsListData.length;
     this.ResetItems();
     this.CalculateFinalTotals();
+    this.IsItemEditMode = false;
   }
 
-  editItem(record: any) {}
+  editItem(record: PurchaseItemDetail) {
+    let SeletedItem: itemsDropDownResponse;
+    SeletedItem = this.itemsDropDown.filter(
+      (a) => a.item_Id == record.ItemID.toString()
+    )[0];
+    this.ItemsControl.patchValue({
+      ItemID: SeletedItem,
+      Crt: record.Crt,
+      Pcs: record.Pcs,
+      Qty: record.Qty,
+      FreeCrt: record.FQty,
+      FreePcs: record.FPcs,
+      FreeQty: record.FQty,
+      TotalQty: record.TQty,
+      Rate: SetFormatCurrency(record.Rate),
+      Amount: SetFormatCurrency(record.Amount),
+      DiscPer: SetFormatCurrency(record.DiscPer),
+      DiscAmount: SetFormatCurrency(record.DiscAmount),
+      GSTTaxID: record.GSTTaxID.toString(),
+      CGSTAmount: SetFormatCurrency(record.CGSTAmount),
+      SGSTAmount: SetFormatCurrency(record.SGSTAmount),
+      IGSTAmount: SetFormatCurrency(record.IGSTAmount),
+      CessAmount: SetFormatCurrency(record.CessAmount),
+      TotalTaxAmount: record.TotalTaxAmount,
+      GrossAmount: SetFormatCurrency(record.GrossAmount),
+      SchPer: SetFormatCurrency(record.SchPer),
+      SchAmount: SetFormatCurrency(record.SchAmount),
+      NetAmount: SetFormatCurrency(record.NetAmount),
+    });
+    this.IsItemEditMode = true;
+    this.renderer.selectRootElement('#ItemName').focus();
+    this.itemService.GetItembyID(record.ItemID).subscribe((response) => {
+      this.CurrentItem = response;
+      this.GetCurrentStock(Number(this.CurrentItem?.itemID));
+      this.RateControl.setValue(
+        SetFormatCurrency(this.CurrentItem?.purchaseRate)
+      );
+      this.GetCurrentTax(Number(record.GSTTaxID));
+    });
+  }
 
-  deleteItem(record: any) {
-    debugger;
+  deleteItem(record: PurchaseItemDetail) {
+    let ItemIndex = this.purchaseItemDetailsList.findIndex(
+      (a) => a.ItemID == Number(record.ItemID)
+    );
+    if (this.purchaseItemDetailsList[ItemIndex].AutoID > 0) {
+      this.purchaseItemDetailsList[ItemIndex].IsDeleted = true;
+    } else {
+      this.purchaseItemDetailsList.splice(ItemIndex, 1);
+    }
+    let SrNo: number = 0;
+    this.purchaseItemDetailsList.forEach((element) => {
+      SrNo = SrNo + 1;
+      element.SrNo = SrNo;
+    });
+
+    this.purchaseItemDetailsListData = [...this.purchaseItemDetailsList];
+    this.ItemCount = this.purchaseItemDetailsListData.length;
+    this.CalculateFinalTotals();
   }
 
   ResetItems() {
@@ -542,6 +554,9 @@ export class PurchaseAddEditComponent implements OnInit {
     this.SchAmountControl.setValue(0);
     this.ItemNetAmountControl.setValue(0);
     this.renderer.selectRootElement('#ItemName').focus();
+    this.CurrentItem = undefined;
+    this.CurrentStock = undefined;
+    this.CurrentTax = undefined;
   }
 
   OnAccountBlur() {
@@ -807,35 +822,19 @@ export class PurchaseAddEditComponent implements OnInit {
     this.QtyControl.setValue(Qty);
     this.FreeQtyControl.setValue(FreeQty);
     this.TotalQtyControl.setValue(TotalQty);
-    this.AmountControl.setValue(formatNumber(Number(Amount), 'en-IN', '0.2-2'));
+    this.AmountControl.setValue(SetFormatCurrency(Amount));
     if (this.IsDiscPerChange == true) {
-      this.DiscAmountControl.setValue(
-        formatNumber(Number(DiscAmount), 'en-IN', '0.2-2')
-      );
+      this.DiscAmountControl.setValue(SetFormatCurrency(DiscAmount));
     }
-    this.CGSTAmountControl.setValue(
-      formatNumber(Number(CGSTAmount), 'en-IN', '0.2-2')
-    );
-    this.SGSTAmountControl.setValue(
-      formatNumber(Number(SGSTAmount), 'en-IN', '0.2-2')
-    );
-    this.IGSTAmountControl.setValue(
-      formatNumber(Number(IGSTAmount), 'en-IN', '0.2-2')
-    );
-    this.CessAmountControl.setValue(
-      formatNumber(Number(CessAmount), 'en-IN', '0.2-2')
-    );
-    this.GrossAmountControl.setValue(
-      formatNumber(Number(GrossAmount), 'en-IN', '0.2-2')
-    );
+    this.CGSTAmountControl.setValue(SetFormatCurrency(CGSTAmount));
+    this.SGSTAmountControl.setValue(SetFormatCurrency(SGSTAmount));
+    this.IGSTAmountControl.setValue(SetFormatCurrency(IGSTAmount));
+    this.CessAmountControl.setValue(SetFormatCurrency(CessAmount));
+    this.GrossAmountControl.setValue(SetFormatCurrency(GrossAmount));
     if (this.IsSchPerChange == true) {
-      this.SchAmountControl.setValue(
-        formatNumber(Number(SchAmount), 'en-IN', '0.2-2')
-      );
+      this.SchAmountControl.setValue(SetFormatCurrency(SchAmount));
     }
-    this.ItemNetAmountControl.setValue(
-      formatNumber(Number(NetAmount), 'en-IN', '0.2-2')
-    );
+    this.ItemNetAmountControl.setValue(SetFormatCurrency(NetAmount));
     this.IsDiscPerChange = false;
     this.IsSchPerChange = false;
   }
@@ -863,33 +862,15 @@ export class PurchaseAddEditComponent implements OnInit {
       TotalNetAmount = Number(TotalNetAmount) + Number(element.NetAmount);
     });
 
-    this.TotalAmountControl.setValue(
-      formatNumber(Number(TotalAmount), 'en-IN', '0.2-2')
-    );
-    this.TotalDiscAmountControl.setValue(
-      formatNumber(Number(TotalDiscAmount), 'en-IN', '0.2-2')
-    );
-    this.TotalCGSTAmountControl.setValue(
-      formatNumber(Number(TotalCGSTAmount), 'en-IN', '0.2-2')
-    );
-    this.TotalSGSTAmountControl.setValue(
-      formatNumber(Number(TotalSGSTAmount), 'en-IN', '0.2-2')
-    );
-    this.TotalIGSTAmountControl.setValue(
-      formatNumber(Number(TotalIGSTAmount), 'en-IN', '0.2-2')
-    );
-    this.TotalCessAmountControl.setValue(
-      formatNumber(Number(TotalCessAmount), 'en-IN', '0.2-2')
-    );
-    this.TotalGrossAmountControl.setValue(
-      formatNumber(Number(TotalGrossAmount), 'en-IN', '0.2-2')
-    );
-    this.TotalSchAmountControl.setValue(
-      formatNumber(Number(TotalSchAmount), 'en-IN', '0.2-2')
-    );
-    this.TotalNetAmountControl.setValue(
-      formatNumber(Number(TotalNetAmount), 'en-IN', '0.2-2')
-    );
+    this.TotalAmountControl.setValue(SetFormatCurrency(TotalAmount));
+    this.TotalDiscAmountControl.setValue(SetFormatCurrency(TotalDiscAmount));
+    this.TotalCGSTAmountControl.setValue(SetFormatCurrency(TotalCGSTAmount));
+    this.TotalSGSTAmountControl.setValue(SetFormatCurrency(TotalSGSTAmount));
+    this.TotalIGSTAmountControl.setValue(SetFormatCurrency(TotalIGSTAmount));
+    this.TotalCessAmountControl.setValue(SetFormatCurrency(TotalCessAmount));
+    this.TotalGrossAmountControl.setValue(SetFormatCurrency(TotalGrossAmount));
+    this.TotalSchAmountControl.setValue(SetFormatCurrency(TotalSchAmount));
+    this.TotalNetAmountControl.setValue(SetFormatCurrency(TotalNetAmount));
 
     this.CalculateNetAmount();
   }
@@ -911,12 +892,8 @@ export class PurchaseAddEditComponent implements OnInit {
     NetAmount = Math.round(Number(AfterAddLessAmount));
     RoundOffAmount = NetAmount - AfterAddLessAmount;
 
-    this.RoundOffAmountControl.setValue(
-      formatNumber(Number(RoundOffAmount), 'en-IN', '0.2-2')
-    );
-    this.NetAmountControl.setValue(
-      formatNumber(Number(NetAmount), 'en-IN', '0.2-2')
-    );
+    this.RoundOffAmountControl.setValue(SetFormatCurrency(RoundOffAmount));
+    this.NetAmountControl.setValue(SetFormatCurrency(NetAmount));
   }
 
   //Private Methods

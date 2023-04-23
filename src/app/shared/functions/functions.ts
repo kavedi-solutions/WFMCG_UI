@@ -1,3 +1,4 @@
+import { formatNumber } from '@angular/common';
 import { SortingProperties } from '../models';
 
 export function funSortingOrder(event: SortingProperties, selectorValues: any) {
@@ -23,4 +24,8 @@ export function CheckIsNumber(value: any) {
   } else {
     return Number(value);
   }
+}
+
+export function SetFormatCurrency(value: any) {
+  return formatNumber(Number(value), 'en-IN', '0.2-2');
 }

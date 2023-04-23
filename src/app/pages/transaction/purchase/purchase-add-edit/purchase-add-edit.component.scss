@@ -41,15 +41,13 @@
   }
 }
 
+//
+.mtx-grid-purchase {
+  min-height: 250px !important;
+  max-height: 250px !important;
+}
 ::ng-deep {
-  .mtx-grid {
-    min-height: 250px;
-    max-height: 250px;
-    .mat-table-container {
-      overflow: unset !important;
-    }
-  }
-  .mtx-grid-no-result {
-    min-height: auto !important;
+  .mtx-grid-purchase .mat-table-container {
+    overflow: unset !important;
   }
 }
