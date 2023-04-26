@@ -14,6 +14,7 @@ export interface PurchaseItemDetail {
   Amount: number;
   DiscPer: number;
   DiscAmount: number;
+  TaxableAmount: number;
   GSTTaxID: number;
   GSTTaxName?: string;
   CGSTAmount: number;

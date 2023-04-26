@@ -53,21 +53,6 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTreeModule } from '@angular/material/tree';
-import { MtxAlertModule } from '@ng-matero/extensions/alert';
-import { MtxButtonModule } from '@ng-matero/extensions/button';
-import { MtxCheckboxGroupModule } from '@ng-matero/extensions/checkbox-group';
-import { MtxColorpickerModule } from '@ng-matero/extensions/colorpicker';
-import { MtxDatetimepickerModule } from '@ng-matero/extensions/datetimepicker';
-import { MtxDialogModule } from '@ng-matero/extensions/dialog';
-import { MtxDrawerModule } from '@ng-matero/extensions/drawer';
-import { MtxGridModule } from '@ng-matero/extensions/grid';
-import { MtxLoaderModule } from '@ng-matero/extensions/loader';
-import { MtxPopoverModule } from '@ng-matero/extensions/popover';
-import { MtxProgressModule } from '@ng-matero/extensions/progress';
-import { MtxSelectModule } from '@ng-matero/extensions/select';
-import { MtxSliderModule } from '@ng-matero/extensions/slider';
-import { MtxSplitModule } from '@ng-matero/extensions/split';
-import { MtxTooltipModule } from '@ng-matero/extensions/tooltip';
 import {
   MatMomentDateModule,
   MomentDateAdapter,
@@ -85,6 +70,7 @@ import { CommonModule } from '@angular/common';
 import { JwtHelperService, JwtModule } from '@auth0/angular-jwt';
 import { registerLocaleData } from '@angular/common';
 import localeIn from '@angular/common/locales/en-IN';
+import { ExtensionsModule } from './extensions/extensions.module';
 
 registerLocaleData(localeIn);
 
@@ -148,22 +134,8 @@ export function tokenGetter() {
     MatToolbarModule,
     MatTooltipModule,
     MatTreeModule,
-    FlexLayoutModule,
-    MtxAlertModule,
-    MtxButtonModule,
-    MtxCheckboxGroupModule,
-    MtxColorpickerModule,
-    MtxDatetimepickerModule,
-    MtxDialogModule,
-    MtxDrawerModule,
-    MtxGridModule,
-    MtxLoaderModule,
-    MtxPopoverModule,
-    MtxProgressModule,
-    MtxSelectModule,
-    MtxSliderModule,
-    MtxSplitModule,
-    MtxTooltipModule,
+    FlexLayoutModule,    
+    ExtensionsModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,

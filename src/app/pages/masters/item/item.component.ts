@@ -7,10 +7,10 @@ import {
 } from 'src/app/shared';
 import * as fromService from '../../../shared/index';
 import * as defaultData from '../../../data/index';
-import { MtxGridColumn } from '@ng-matero/extensions/grid';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
 import { funSortingOrder } from 'src/app/shared/functions';
+import { MtxGridColumn } from 'src/app/extensions/grid/grid.interface';
 
 @Component({
   selector: 'app-item',
@@ -29,7 +29,8 @@ export class ItemComponent implements OnInit {
   columns: MtxGridColumn[] = [];
   latestSortingOrder?: string;
   latestSearchText?: string;
-
+  pageSizeOptions = defaultData.pageSizeOptions;
+  
   constructor(
     private itemService: fromService.ItemService,
     private router: Router,
@@ -59,6 +60,7 @@ export class ItemComponent implements OnInit {
           type: 'icon',
           icon: 'edit',
           tooltip: 'Edit Record',
+          buttontype:'button',
           iif: (record) => {
             return this.accRights!.canEdit;
           },
@@ -69,6 +71,7 @@ export class ItemComponent implements OnInit {
           icon: 'swap_horiz',
           text: 'Deactive',
           tooltip: 'Deactive Record',
+          buttontype:'button',
           pop: {
             title: 'Confirm Deactive',
             description: 'Are you sure you want to Deactive this record.',
@@ -88,6 +91,7 @@ export class ItemComponent implements OnInit {
           icon: 'swap_horiz',
           text: 'Active',
           tooltip: 'Active Record',
+          buttontype:'button',
           pop: {
             title: 'Confirm Active',
             description: 'Are you sure you want to Active this record?',

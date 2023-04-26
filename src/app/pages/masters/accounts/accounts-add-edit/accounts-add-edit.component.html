@@ -392,10 +392,16 @@
     </div>
     <br />
     <mat-card-actions align="end" class="area-mat-card-actions">
-      <button mat-raised-button (click)="BacktoList()" color="accent">
+      <button
+        type="button"
+        mat-raised-button
+        (click)="BacktoList()"
+        color="accent"
+      >
         Cancel
       </button>
       <button
+        type="button"
         *ngIf="isEditMode == false"
         [disabled]="!accountForm.valid"
         mat-raised-button
@@ -405,6 +411,7 @@
         Save
       </button>
       <button
+        type="button"
         *ngIf="isEditMode == true"
         [disabled]="!accountForm.valid"
         mat-raised-button

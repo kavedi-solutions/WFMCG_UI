@@ -7,10 +7,10 @@ import {
 } from 'src/app/shared';
 import * as fromService from '../../../shared/index';
 import * as defaultData from '../../../data/index';
-import { MtxGridColumn } from '@ng-matero/extensions/grid';
 import { ActivatedRoute, Router } from '@angular/router';
 import { funSortingOrder } from 'src/app/shared/functions';
 import { PageEvent } from '@angular/material/paginator';
+import { MtxGridColumn } from 'src/app/extensions/grid/grid.interface';
 
 @Component({
   selector: 'app-purchase',
@@ -29,7 +29,8 @@ export class PurchaseComponent implements OnInit {
   columns: MtxGridColumn[] = [];
   latestSortingOrder?: string;
   latestSearchText?: string;
-
+  pageSizeOptions = defaultData.pageSizeOptions;
+  
   constructor(
     private purchaseService: fromService.PurchaseService,
     private router: Router,
@@ -58,6 +59,7 @@ export class PurchaseComponent implements OnInit {
           type: 'icon',
           icon: 'edit',
           tooltip: 'Edit Record',
+          buttontype:'button',
           iif: () => {
             return this.accRights!.canEdit;
           },

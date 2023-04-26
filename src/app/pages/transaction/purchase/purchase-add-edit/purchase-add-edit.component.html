@@ -14,7 +14,9 @@
         <mat-form-field appearance="legacy" color="primary">
           <mat-label>Select Book</mat-label>
           <mat-select
+            id="BookAccountName"
             formControlName="BookAccountID"
+            autoFocus
             required
             (blur)="BookAccountIDblur()"
           >
@@ -118,7 +120,7 @@
         fxFlex="10%"
         fxFlex.lt-sm="100"
         class="matero-col stocks"
-        *ngIf="ItemIDControl.value != ''"
+        *ngIf="I_ItemIDControl.value != ''"
       >
         <span>Stock</span>
         <br />
@@ -136,7 +138,7 @@
               matInput
               id="ItemName"
               [matAutocomplete]="AutoItemID"
-              formControlName="ItemID"
+              formControlName="I_ItemID"
               (blur)="OnItemblur()"
             />
             <mat-autocomplete
@@ -160,7 +162,7 @@
               matInput
               placeholder="Crt"
               type="text"
-              formControlName="Crt"
+              formControlName="I_Crt"
               maxlength="2"
               class="input-right-align"
               (keyup)="CalculateTotals()"
@@ -174,7 +176,7 @@
               matInput
               placeholder="Pcs"
               type="text"
-              formControlName="Pcs"
+              formControlName="I_Pcs"
               maxlength="5"
               class="input-right-align"
               (keyup)="CalculateTotals()"
@@ -188,7 +190,7 @@
               matInput
               placeholder="Free Crt"
               type="text"
-              formControlName="FreeCrt"
+              formControlName="I_FreeCrt"
               maxlength="3"
               class="input-right-align"
               (keyup)="CalculateTotals()"
@@ -202,7 +204,7 @@
               matInput
               placeholder="Free Pcs"
               type="text"
-              formControlName="FreePcs"
+              formControlName="I_FreePcs"
               maxlength="5"
               class="input-right-align"
               (keyup)="CalculateTotals()"
@@ -216,7 +218,7 @@
               matInput
               placeholder="Rate"
               type="text"
-              formControlName="Rate"
+              formControlName="I_Rate"
               maxlength="15"
               class="input-right-align"
               (keyup)="CalculateTotals()"
@@ -230,7 +232,7 @@
               matInput
               placeholder="Amount"
               type="text"
-              formControlName="Amount"
+              formControlName="I_Amount"
               maxlength="15"
               class="input-right-align"
             />
@@ -243,7 +245,7 @@
               matInput
               placeholder="Disc %"
               type="text"
-              formControlName="DiscPer"
+              formControlName="I_DiscPer"
               maxlength="5"
               class="input-right-align"
               (keyup)="DiscPerChange($event)"
@@ -257,7 +259,7 @@
               matInput
               placeholder="Disc Amount"
               type="text"
-              formControlName="DiscAmount"
+              formControlName="I_DiscAmount"
               maxlength="15"
               class="input-right-align"
               (keyup)="CalculateTotals()"
@@ -269,7 +271,7 @@
         <div fxFlex="17%" fxFlex.lt-sm="100" class="matero-col">
           <mat-form-field appearance="legacy" color="primary">
             <mat-label>Select Tax</mat-label>
-            <mat-select formControlName="GSTTaxID">
+            <mat-select formControlName="I_GSTTaxID">
               <mat-option *ngFor="let tdd of taxDropDown" [value]="tdd.tax_Id">
                 {{ tdd.tax_Name }}
               </mat-option>
@@ -283,7 +285,7 @@
               matInput
               placeholder="CGST Amount"
               type="text"
-              formControlName="CGSTAmount"
+              formControlName="I_CGSTAmount"
               maxlength="15"
               class="input-right-align"
               readonly
@@ -297,7 +299,7 @@
               matInput
               placeholder="SGST Amount"
               type="text"
-              formControlName="SGSTAmount"
+              formControlName="I_SGSTAmount"
               maxlength="15"
               class="input-right-align"
               readonly
@@ -311,7 +313,7 @@
               matInput
               placeholder="IGST Amount"
               type="text"
-              formControlName="IGSTAmount"
+              formControlName="I_IGSTAmount"
               maxlength="15"
               class="input-right-align"
               readonly
@@ -325,7 +327,7 @@
               matInput
               placeholder="Cess Amount"
               type="text"
-              formControlName="CessAmount"
+              formControlName="I_CessAmount"
               maxlength="15"
               class="input-right-align"
               readonly
@@ -339,7 +341,7 @@
               matInput
               placeholder="Gross Amount"
               type="text"
-              formControlName="GrossAmount"
+              formControlName="I_GrossAmount"
               maxlength="15"
               class="input-right-align"
               readonly
@@ -353,7 +355,7 @@
               matInput
               placeholder="Sch %"
               type="text"
-              formControlName="SchPer"
+              formControlName="I_SchPer"
               maxlength="5"
               class="input-right-align"
               (keyup)="SchPerChange($event)"
@@ -367,7 +369,7 @@
               matInput
               placeholder="Sch Amount"
               type="text"
-              formControlName="SchAmount"
+              formControlName="I_SchAmount"
               maxlength="15"
               class="input-right-align"
               (keyup)="CalculateTotals()"
@@ -381,7 +383,7 @@
               matInput
               placeholder="Net Amount"
               type="text"
-              formControlName="NetAmount"
+              formControlName="I_NetAmount"
               maxlength="15"
               class="input-right-align"
               readonly

@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { MtxGridColumn } from '@ng-matero/extensions/grid';
 import {
   AccessRights,
   FilterValues,
@@ -11,6 +10,7 @@ import * as defaultData from '../../../data/index';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
 import { funSortingOrder } from 'src/app/shared/functions';
+import { MtxGridColumn } from 'src/app/extensions/grid/grid.interface';
 @Component({
   selector: 'app-users',
   templateUrl: './users.component.html',
@@ -28,7 +28,8 @@ export class UsersComponent implements OnInit {
   columns: MtxGridColumn[] = [];
   latestSortingOrder?: string;
   latestSearchText?: string;
-
+  pageSizeOptions = defaultData.pageSizeOptions;
+  
   constructor(
     private userService: fromService.UserService,
     private authService: fromService.AuthService,
@@ -58,6 +59,7 @@ export class UsersComponent implements OnInit {
           type: 'icon',
           icon: 'edit',
           tooltip: 'Edit Record',
+          buttontype:'button',
           iif: (record) => {
             if (record.isAdminRole) return false;
             else return this.accRights!.canEdit;
@@ -69,6 +71,7 @@ export class UsersComponent implements OnInit {
           icon: 'swap_horiz',
           text: 'Deactive',
           tooltip: 'Deactive Record',
+          buttontype:'button',
           pop: {
             title: 'Confirm Deactive',
             description: 'Are you sure you want to Deactive this record.',
@@ -89,6 +92,7 @@ export class UsersComponent implements OnInit {
           icon: 'swap_horiz',
           text: 'Active',
           tooltip: 'Active Record',
+          buttontype:'button',
           pop: {
             title: 'Confirm Active',
             description: 'Are you sure you want to Active this record?',

@@ -8,11 +8,7 @@
 ></page-header>
 <form class="form-field-full page-detail" [formGroup]="areaForm">
   <mat-card>
-    <div
-      class="matero-row"
-      fxLayout.lt-sm="column"
-      fxLayout="row"
-    >
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
       <div fxFlex="30%" fxFlex.lt-sm="100" class="matero-col">
         <mat-form-field appearance="legacy" color="primary">
           <mat-label>Area Name</mat-label>
@@ -26,15 +22,13 @@
             (keyup)="onAreaNameKeyUp($event)"
           />
           <mat-hint>Area name must be unique.</mat-hint>
-          <mat-error
-            *ngIf="nameControlRequired"
+          <mat-error *ngIf="nameControlRequired"
             >Area name is required.</mat-error
           >
           <mat-error *ngIf="nameControlInvalid"
             >Area name is Invalid.</mat-error
           >
-          <mat-error
-            *ngIf="getAreaNameValidation()"
+          <mat-error *ngIf="getAreaNameValidation()"
             >This area name is already exist.</mat-error
           >
         </mat-form-field>
@@ -52,10 +46,16 @@
     </div>
     <br />
     <mat-card-actions align="end" class="area-mat-card-actions">
-      <button mat-raised-button (click)="BacktoList()" color="accent">
+      <button
+        type="button"
+        mat-raised-button
+        (click)="BacktoList()"
+        color="accent"
+      >
         Cancel
       </button>
       <button
+        type="button"
         *ngIf="isEditMode == false"
         [disabled]="!areaForm.valid"
         mat-raised-button
@@ -65,6 +65,7 @@
         Save
       </button>
       <button
+        type="button"
         *ngIf="isEditMode == true"
         [disabled]="!areaForm.valid"
         mat-raised-button

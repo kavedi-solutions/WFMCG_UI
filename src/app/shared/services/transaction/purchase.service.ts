@@ -5,6 +5,7 @@ import { AppConfig } from 'src/app/app.config';
 import {
   FilterValues,
   PaginationHeaders,
+  PurchasePostRequest,
   PurchaseResponse,
 } from '../../models';
 import { LocalStorageService } from '../common/storage.service';
@@ -80,5 +81,13 @@ export class PurchaseService {
           return Number(response.body);
         })
       );
+  }
+
+  createPurchase(resourcesDetails: PurchasePostRequest): Observable<any> {
+    resourcesDetails.createdBy = this.UserID;
+    const url = `${this.APIURL}/company/${this.CompanyID}/purchase/inventory/create`;
+    return this.http.post<any>(encodeURI(url), resourcesDetails, {
+      headers: this.headers,
+    });
   }
 }

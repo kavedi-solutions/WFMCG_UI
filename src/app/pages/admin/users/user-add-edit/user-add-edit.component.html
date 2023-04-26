@@ -9,11 +9,7 @@
 <form class="form-field-full page-detail" [formGroup]="userForm">
   <mat-card>
     <h2><u>Basic Detail</u></h2>
-    <div
-      class="matero-row"
-      fxLayout.lt-sm="column"
-      fxLayout="row"
-    >
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
       <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
         <mat-form-field appearance="legacy" color="primary">
           <mat-label>First Name</mat-label>
@@ -53,11 +49,7 @@
         </mat-form-field>
       </div>
     </div>
-    <div
-      class="matero-row"
-      fxLayout.lt-sm="column"
-      fxLayout="row"
-    >
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
       <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
         <mat-form-field appearance="legacy" color="primary">
           <mat-label>User Name</mat-label>
@@ -96,11 +88,7 @@
         </mat-form-field>
       </div>
     </div>
-    <div
-      class="matero-row"
-      fxLayout.lt-sm="column"
-      fxLayout="row"
-    >
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
       <div
         fxFlex="50%"
         fxFlex.lt-sm="100"
@@ -142,11 +130,7 @@
         </mat-form-field>
       </div>
     </div>
-    <div
-      class="matero-row m-t-12"
-      fxLayout.lt-sm="column"
-      fxLayout="row"
-    >
+    <div class="matero-row m-t-12" fxLayout.lt-sm="column" fxLayout="row">
       <div fxFlex="50" fxFlex.lt-sm="100" class="matero-col">
         <mat-slide-toggle
           color="primary"
@@ -159,11 +143,7 @@
       </div>
     </div>
     <h2><u>Contact Details</u></h2>
-    <div
-      class="matero-row"
-      fxLayout.lt-sm="column"
-      fxLayout="row"
-    >
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
       <div fxFlex="100%" fxFlex.lt-sm="100" class="matero-col">
         <mat-form-field appearance="legacy" color="primary">
           <mat-label>Address</mat-label>
@@ -181,11 +161,7 @@
         </mat-form-field>
       </div>
     </div>
-    <div
-      class="matero-row"
-      fxLayout.lt-sm="column"
-      fxLayout="row"
-    >
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
       <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
         <mat-form-field appearance="legacy" color="primary">
           <mat-label>City</mat-label>
@@ -213,11 +189,7 @@
         </mat-form-field>
       </div>
     </div>
-    <div
-      class="matero-row"
-      fxLayout.lt-sm="column"
-      fxLayout="row"
-    >
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
       <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
         <mat-form-field appearance="legacy" color="primary">
           <mat-label>Pincode</mat-label>
@@ -234,11 +206,7 @@
         </mat-form-field>
       </div>
     </div>
-    <div
-      class="matero-row"
-      fxLayout.lt-sm="column"
-      fxLayout="row"
-    >
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
       <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
         <mat-form-field appearance="legacy" color="primary">
           <mat-label>Mobile (Work)</mat-label>
@@ -274,10 +242,16 @@
       </div>
     </div>
     <mat-card-actions align="end" class="user-mat-card-actions">
-      <button mat-raised-button (click)="BacktoList()" color="accent">
+      <button
+        type="button"
+        mat-raised-button
+        (click)="BacktoList()"
+        color="accent"
+      >
         Cancel
       </button>
       <button
+        type="button"
         *ngIf="isEditMode == false"
         [disabled]="!userForm.valid"
         mat-raised-button
@@ -287,6 +261,7 @@
         Save
       </button>
       <button
+        type="button"
         *ngIf="isEditMode == true"
         [disabled]="!userForm.valid"
         mat-raised-button

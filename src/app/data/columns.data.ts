@@ -1,4 +1,4 @@
-import { MtxGridColumn } from '@ng-matero/extensions/grid';
+import { MtxGridColumn } from "../extensions/grid/grid.interface";
 
 export function GetRoleColumns() {
   let RoleColumns: MtxGridColumn[] = [
@@ -819,6 +819,15 @@ export function GetPurchaseColumns() {
       hide: true,
     },
     {
+      header: 'Book Name',
+      field: 'bookAccountName',
+      sortable: true,
+      disabled: true,
+      minWidth: 250,
+      width: '250px',
+      pinned: 'left',
+    },
+    {
       header: 'Ref No',
       field: 'refNo',
       sortable: true,
@@ -838,14 +847,7 @@ export function GetPurchaseColumns() {
       width: '100px',
       pinned: 'left',
     },
-    {
-      header: 'Book Name',
-      field: 'bookAccountName',
-      sortable: true,
-      disabled: true,
-      minWidth: 300,
-      width: '300px',
-    },
+    
     {
       header: 'Trade Type',
       field: 'accountTradeTypeName',
@@ -867,8 +869,8 @@ export function GetPurchaseColumns() {
       field: 'netAmount',
       sortable: false,
       disabled: true,
-      minWidth: 250,
-      width: '250px',
+      minWidth: 200,
+      width: '200px',
       type: 'number',
       typeParameter: { digitsInfo: '0.2-2', locale: 'en-IN' },
       class: 'right-mat-header-cell right-mat-cell',
@@ -1151,6 +1153,7 @@ export function GetPurchaseItemDetailColumns() {
       type: 'number',
       typeParameter: { digitsInfo: '0.2-2', locale: 'en-IN' },
       class: 'right-mat-header-cell right-mat-cell',
+      
     },
     {
       header: 'IsAdd',

@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { MtxGridColumn } from '@ng-matero/extensions/grid';
 import {
   AccessRights,
   OpeningItemPutRequest,
@@ -20,6 +19,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { MtxGridColumn } from 'src/app/extensions/grid/grid.interface';
 
 @Component({
   selector: 'app-item-opening',
@@ -38,7 +38,8 @@ export class ItemOpeningComponent implements OnInit {
   filterValues?: FilterValues[];
   latestSortingOrder?: string;
   latestSearchText?: string;
-
+  pageSizeOptions = defaultData.pageSizeOptions;
+  
   balanceForm = this.fb.group({
     ItemID: ['', [Validators.required]],
     AccountTradeTypeName: [''],
@@ -119,6 +120,7 @@ export class ItemOpeningComponent implements OnInit {
           type: 'icon',
           icon: 'edit',
           tooltip: 'Edit Record',
+          buttontype: 'button',
           iif: (record) => {
             return this.accRights!.canEdit;
           },
@@ -175,6 +177,7 @@ export class ItemOpeningComponent implements OnInit {
     Object.keys(balanceForm.controls).forEach((name) => {
       control = balanceForm.controls[name];
       control.setErrors(null);
+      control.setValue('');
     });
   }
 

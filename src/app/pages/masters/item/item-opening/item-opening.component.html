@@ -14,7 +14,7 @@
   [pageSize]="pagination!.pageSize"
   [pageOnFront]="false"
   [showPaginator]="true"
-  [pageSizeOptions]="[10, 20, 50, 100]"
+  [pageSizeOptions]="pageSizeOptions"
   [showToolbar]="true"
   [toolbarTemplate]="toolbarTpl"
   [showColumnMenuButton]="false"
@@ -108,6 +108,7 @@
         </div>
         <div fxFlex="10%" fxFlex.lt-sm="100" class="matero-col form-button">
           <button
+            type="button"
             [disabled]="!balanceForm.valid"
             mat-raised-button
             color="primary"

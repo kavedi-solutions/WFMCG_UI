@@ -1,13 +1,13 @@
 import { formatNumber } from '@angular/common';
 import { Component, OnInit, Renderer2, ViewChild } from '@angular/core';
 import {
+  AbstractControl,
   FormBuilder,
   FormControl,
   FormGroup,
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MtxGridColumn } from '@ng-matero/extensions/grid';
 import * as moment from 'moment';
 import { map, Observable, startWith, tap } from 'rxjs';
 import * as fromService from '../../../../shared/index';
@@ -20,12 +20,16 @@ import {
   ItemGroupDownDownResponse,
   itemsDropDownResponse,
   PurchaseItemDetail,
+  PurchaseItemPostRequest,
+  PurchasePostRequest,
+  PurchasePutRequest,
   Tax,
   TaxDownDownResponse,
 } from '../../../../shared/index';
 import * as defaultData from '../../../../data/index';
 import { CheckIsNumber, SetFormatCurrency } from 'src/app/shared/functions';
 import { MatAutocomplete } from '@angular/material/autocomplete';
+import { MtxGridColumn } from 'src/app/extensions/grid/grid.interface';
 @Component({
   selector: 'app-purchase-add-edit',
   templateUrl: './purchase-add-edit.component.html',
@@ -37,6 +41,10 @@ export class PurchaseAddEditComponent implements OnInit {
   isEditMode: boolean = false;
   isFromQuickMenu: boolean = false;
   selectedPurchaseId: number;
+
+  purchasePostRequest?: PurchasePostRequest;
+  purchasePutRequest?: PurchasePutRequest;
+
   itemGroupDropDown: ItemGroupDownDownResponse[] = [];
   accountTradeTypeDropDown: accountTradeTypeResponse[] = [];
   taxDropDown: TaxDownDownResponse[] = [];
@@ -74,10 +82,12 @@ export class PurchaseAddEditComponent implements OnInit {
     AccountTradeTypeID: ['', [Validators.required]],
     TotalAmount: [0],
     TotalDiscAmount: [0],
+    TotalTaxableAmount: [0],
     TotalCGSTAmount: [0],
     TotalSGSTAmount: [0],
     TotalIGSTAmount: [0],
     TotalCessAmount: [0],
+    TotalTaxAmount: [0],
     TotalGrossAmount: [0],
     TotalSchAmount: [0],
     TotalNetAmount: [0],
@@ -94,28 +104,29 @@ export class PurchaseAddEditComponent implements OnInit {
     RoundOffAmount: [0],
     NetAmount: [0],
     Items: this.fb.group({
-      ItemID: [''],
-      Crt: [0, [Validators.pattern(/^([0-9,-/+])+$/i)]],
-      Pcs: [0, [Validators.pattern(/^([0-9,-/+])+$/i)]],
-      Qty: [0],
-      FreeCrt: [0, [Validators.pattern(/^([0-9,-/+])+$/i)]],
-      FreePcs: [0, [Validators.pattern(/^([0-9,-/+])+$/i)]],
-      FreeQty: [0],
-      TotalQty: [0],
-      Rate: [0, [Validators.pattern(/^([0-9,-/+])+$/i)]],
-      Amount: [0],
-      DiscPer: [0, [Validators.pattern(/^([0-9,-/+])+$/i)]],
-      DiscAmount: [0],
-      GSTTaxID: [''],
-      CGSTAmount: [0],
-      SGSTAmount: [0],
-      IGSTAmount: [0],
-      CessAmount: [0],
-      TotalTaxAmount: [0],
-      GrossAmount: [0],
-      SchPer: [0, [Validators.pattern(/^([0-9,-/+])+$/i)]],
-      SchAmount: [0],
-      NetAmount: [0],
+      I_ItemID: [''],
+      I_Crt: [0, [Validators.pattern(/^([0-9,-/+])+$/i)]],
+      I_Pcs: [0, [Validators.pattern(/^([0-9,-/+])+$/i)]],
+      I_Qty: [0],
+      I_FreeCrt: [0, [Validators.pattern(/^([0-9,-/+])+$/i)]],
+      I_FreePcs: [0, [Validators.pattern(/^([0-9,-/+])+$/i)]],
+      I_FreeQty: [0],
+      I_TotalQty: [0],
+      I_Rate: [0, [Validators.pattern(/^([0-9,-/+])+$/i)]],
+      I_Amount: [0],
+      I_DiscPer: [0, [Validators.pattern(/^([0-9,-/+])+$/i)]],
+      I_DiscAmount: [0],
+      I_TaxableAmount: [0],
+      I_GSTTaxID: [''],
+      I_CGSTAmount: [0],
+      I_SGSTAmount: [0],
+      I_IGSTAmount: [0],
+      I_CessAmount: [0],
+      I_TotalTaxAmount: [0],
+      I_GrossAmount: [0],
+      I_SchPer: [0, [Validators.pattern(/^([0-9,-/+])+$/i)]],
+      I_SchAmount: [0],
+      I_NetAmount: [0],
     }),
   });
 
@@ -180,7 +191,7 @@ export class PurchaseAddEditComponent implements OnInit {
       })
     );
 
-    this.filtereditemsDropDown = this.ItemIDControl.valueChanges.pipe(
+    this.filtereditemsDropDown = this.I_ItemIDControl.valueChanges.pipe(
       startWith(''),
       map((value) => {
         const name = typeof value === 'string' ? value : value?.item_Name;
@@ -188,7 +199,7 @@ export class PurchaseAddEditComponent implements OnInit {
           ? this._filterItems(name as string)
           : this.itemsDropDown.slice();
       })
-    );
+    );        
   }
 
   setColumns() {
@@ -206,6 +217,7 @@ export class PurchaseAddEditComponent implements OnInit {
           type: 'icon',
           icon: 'edit',
           tooltip: 'Edit Record',
+          buttontype: 'button',
           pop: {
             title: 'Confirm Edit',
             description: 'Are you sure you want to Edit this Item.',
@@ -220,6 +232,7 @@ export class PurchaseAddEditComponent implements OnInit {
           type: 'icon',
           icon: 'delete',
           tooltip: 'Delete Record',
+          buttontype: 'button',
           pop: {
             title: 'Confirm Delete',
             description: 'Are you sure you want to Delete this Item.',
@@ -237,10 +250,84 @@ export class PurchaseAddEditComponent implements OnInit {
   BacktoList() {
     if (this.isFromQuickMenu == false) {
       this.router.navigate(['/transaction/purchase/list']);
+    } else {
+      this.ResetForm(this.purchaseForm);
     }
   }
 
-  SaveUpdatePurchase(purchaseForm: FormGroup) {}
+  SaveUpdatePurchase(purchaseForm: FormGroup) {
+    if (this.isEditMode == true) {
+      this.UpdatePurchase(purchaseForm);
+    } else {
+      this.SavePurchase(purchaseForm);
+    }
+  }
+
+  SavePurchase(purchaseForm: FormGroup) {
+    let PostRequestDetail: PurchaseItemPostRequest[] = [];
+    this.purchaseItemDetailsList.forEach((element) => {
+      PostRequestDetail.push({
+        srNo: element.SrNo,
+        itemID: element.ItemID,
+        quantity: element.Qty,
+        freeQuantity: element.FQty,
+        totalQuantity: element.TQty,
+        rate: element.Rate,
+        amount: element.Amount,
+        discPer: element.DiscPer,
+        discAmount: element.DiscAmount,
+        taxableAmount: element.TaxableAmount,
+        gSTTaxID: element.GSTTaxID,
+        cGSTAmount: element.CGSTAmount,
+        sGSTAmount: element.SGSTAmount,
+        iGSTAmount: element.IGSTAmount,
+        cessAmount: element.CessAmount,
+        totalTaxAmount: element.TotalTaxAmount,
+        grossAmount: element.GrossAmount,
+        schPer: element.SchPer,
+        schAmount: element.SchAmount,
+        netAmount: element.NetAmount,
+        isAdd: element.IsAdd,
+        isModified: element.IsModified,
+        isDeleted: element.IsDeleted,
+      });
+    });
+    this.purchasePostRequest = {
+      bookAccountID: Number(purchaseForm.value.BookAccountID),
+      billNo: Number(purchaseForm.value.BillNo),
+      refNo: purchaseForm.value.RefNo,
+      billDate: purchaseForm.value.BillDate.format('YYYY-MM-DD'),
+      accountID: Number(purchaseForm.value.AccountID.account_Id),
+      accountTradeTypeID: Number(purchaseForm.value.AccountTradeTypeID),
+      totalAmount: CheckIsNumber(purchaseForm.value.TotalAmount),
+      totalDiscAmount: CheckIsNumber(purchaseForm.value.TotalDiscAmount),
+      totalTaxableAmount: CheckIsNumber(purchaseForm.value.TotalTaxableAmount),
+      totalCGSTAmount: CheckIsNumber(purchaseForm.value.TotalCGSTAmount),
+      totalSGSTAmount: CheckIsNumber(purchaseForm.value.TotalSGSTAmount),
+      totalIGSTAmount: CheckIsNumber(purchaseForm.value.TotalIGSTAmount),
+      totalCessAmount: CheckIsNumber(purchaseForm.value.TotalCessAmount),
+      totalTaxAmount: CheckIsNumber(purchaseForm.value.TotalTaxAmount),
+      totalGrossAmount: CheckIsNumber(purchaseForm.value.TotalGrossAmount),
+      totalSchAmount: CheckIsNumber(purchaseForm.value.TotalSchAmount),
+      totalNetAmount: CheckIsNumber(purchaseForm.value.TotalNetAmount),
+      otherAddText: purchaseForm.value.OtherAddText,
+      otherAddAmount: CheckIsNumber(purchaseForm.value.OtherAddAmount),
+      otherLessText: purchaseForm.value.OtherLessText,
+      otherLessAmount: CheckIsNumber(purchaseForm.value.OtherLessAmount),
+      roundOffAmount: CheckIsNumber(purchaseForm.value.RoundOffAmount),
+      netAmount: CheckIsNumber(purchaseForm.value.NetAmount),
+      details: PostRequestDetail,
+      isActive: true,
+    };
+    debugger;
+    this.purchaseService
+      .createPurchase(this.purchasePostRequest)
+      .subscribe((response) => {
+        this.BacktoList();
+      });
+  }
+
+  UpdatePurchase(purchaseForm: FormGroup) {}
 
   SetMinMaxBillDate() {
     const currentYear = new Date().getFullYear();
@@ -305,7 +392,7 @@ export class PurchaseAddEditComponent implements OnInit {
     };
     this.itemService.ItemDropDown(filters).subscribe((response) => {
       this.itemsDropDown = response;
-      this.ItemIDControl.setValue('');
+      this.I_ItemIDControl.setValue('');
     });
   }
 
@@ -356,42 +443,45 @@ export class PurchaseAddEditComponent implements OnInit {
       let ItemDetail: PurchaseItemDetail = this.purchaseItemDetailsList.filter(
         (a) => a.ItemID == event.option.value.item_Id
       )[0];
-      this.CrtControl.setValue(ItemDetail.Crt);
-      this.PcsControl.setValue(ItemDetail.Pcs);
-      this.QtyControl.setValue(ItemDetail.Qty);
-      this.FreeCrtControl.setValue(ItemDetail.FCrt);
-      this.FreePcsControl.setValue(ItemDetail.FPcs);
-      this.FreeQtyControl.setValue(ItemDetail.FQty);
-      this.TotalQtyControl.setValue(ItemDetail.TQty);
+      this.I_CrtControl.setValue(ItemDetail.Crt);
+      this.I_PcsControl.setValue(ItemDetail.Pcs);
+      this.I_QtyControl.setValue(ItemDetail.Qty);
+      this.I_FreeCrtControl.setValue(ItemDetail.FCrt);
+      this.I_FreePcsControl.setValue(ItemDetail.FPcs);
+      this.I_FreeQtyControl.setValue(ItemDetail.FQty);
+      this.I_TotalQtyControl.setValue(ItemDetail.TQty);
+      this.I_RateControl.setValue(ItemDetail.Rate);
+      this.I_AmountControl.setValue(ItemDetail.Amount);
+      this.I_DiscPerControl.setValue(ItemDetail.DiscPer);
+      this.I_DiscAmountControl.setValue(ItemDetail.DiscAmount);
+      this.I_GSTTaxIDControl.setValue(ItemDetail.GSTTaxID.toString());
+      this.I_CGSTAmountControl.setValue(ItemDetail.CGSTAmount);
+      this.I_SGSTAmountControl.setValue(ItemDetail.SGSTAmount);
+      this.I_IGSTAmountControl.setValue(ItemDetail.IGSTAmount);
+      this.I_CessAmountControl.setValue(ItemDetail.CessAmount);
 
-      this.RateControl.setValue(ItemDetail.Rate);
-      this.AmountControl.setValue(ItemDetail.Amount);
-      this.DiscPerControl.setValue(ItemDetail.DiscPer);
-      this.DiscAmountControl.setValue(ItemDetail.DiscAmount);
-      this.GSTTaxIDControl.setValue(ItemDetail.GSTTaxID.toString());
-      this.CGSTAmountControl.setValue(ItemDetail.CGSTAmount);
-      this.SGSTAmountControl.setValue(ItemDetail.SGSTAmount);
-      this.IGSTAmountControl.setValue(ItemDetail.IGSTAmount);
-      this.CessAmountControl.setValue(ItemDetail.CessAmount);
-      this.GrossAmountControl.setValue(ItemDetail.GrossAmount);
-      this.SchPerControl.setValue(ItemDetail.SchPer);
-      this.SchAmountControl.setValue(ItemDetail.SchAmount);
-      this.ItemNetAmountControl.setValue(ItemDetail.NetAmount);
+      this.I_GrossAmountControl.setValue(ItemDetail.GrossAmount);
+      this.I_SchPerControl.setValue(ItemDetail.SchPer);
+      this.I_SchAmountControl.setValue(ItemDetail.SchAmount);
+      this.I_NetAmountControl.setValue(ItemDetail.NetAmount);
       this.CalculateTotals();
       this.IsItemEditMode = true;
-    } else {
-      this.itemService
-        .GetItembyID(event.option.value.item_Id)
-        .subscribe((response) => {
-          this.CurrentItem = response;
-          this.GetCurrentStock(Number(this.CurrentItem?.itemID));
-          this.RateControl.setValue(
+    }
+    this.itemService
+      .GetItembyID(event.option.value.item_Id)
+      .subscribe((response) => {
+        this.CurrentItem = response;
+        this.GetCurrentStock(Number(this.CurrentItem?.itemID));
+        if (FoundItem == -1) {
+          this.I_RateControl.setValue(
             SetFormatCurrency(this.CurrentItem?.purchaseRate)
           );
-          this.GSTTaxIDControl.setValue(this.CurrentItem?.gstTaxID.toString());
-          this.GetCurrentTax(Number(this.CurrentItem?.gstTaxID));
-        });
-    }
+          this.I_GSTTaxIDControl.setValue(
+            this.CurrentItem?.gstTaxID.toString()
+          );
+        }
+        this.GetCurrentTax(Number(this.CurrentItem?.gstTaxID));
+      });
   }
 
   GetCurrentTax(TaxID: number) {
@@ -412,7 +502,7 @@ export class PurchaseAddEditComponent implements OnInit {
     let ItemIndex: number = 0;
     if (this.IsItemEditMode == true) {
       ItemIndex = this.purchaseItemDetailsList.findIndex(
-        (a) => a.ItemID == Number(this.ItemIDControl.value.item_Id)
+        (a) => a.ItemID == Number(this.I_ItemIDControl.value.item_Id)
       );
       SrNo = this.purchaseItemDetailsList[ItemIndex].SrNo;
     } else {
@@ -422,30 +512,31 @@ export class PurchaseAddEditComponent implements OnInit {
     let ItemDetails: PurchaseItemDetail = {
       AutoID: this.IsItemEditMode ? Number(this.ItemEdit?.AutoID) : 0,
       SrNo: this.IsItemEditMode ? Number(this.ItemEdit?.SrNo) : SrNo,
-      ItemID: Number(this.ItemIDControl.value.item_Id),
-      ItemName: this.ItemIDControl.value.item_Name,
-      Crt: CheckIsNumber(this.CrtControl.value),
-      Pcs: CheckIsNumber(this.PcsControl.value),
-      Qty: CheckIsNumber(this.QtyControl.value),
-      FCrt: CheckIsNumber(this.FreeCrtControl.value),
-      FPcs: CheckIsNumber(this.FreePcsControl.value),
-      FQty: CheckIsNumber(this.FreeQtyControl.value),
-      TQty: CheckIsNumber(this.TotalQtyControl.value),
-      Rate: CheckIsNumber(this.RateControl.value),
-      Amount: CheckIsNumber(this.AmountControl.value),
-      DiscPer: CheckIsNumber(this.DiscPerControl.value),
-      DiscAmount: CheckIsNumber(this.DiscAmountControl.value),
-      GSTTaxID: CheckIsNumber(this.GSTTaxIDControl.value),
+      ItemID: Number(this.I_ItemIDControl.value.item_Id),
+      ItemName: this.I_ItemIDControl.value.item_Name,
+      Crt: CheckIsNumber(this.I_CrtControl.value),
+      Pcs: CheckIsNumber(this.I_PcsControl.value),
+      Qty: CheckIsNumber(this.I_QtyControl.value),
+      FCrt: CheckIsNumber(this.I_FreeCrtControl.value),
+      FPcs: CheckIsNumber(this.I_FreePcsControl.value),
+      FQty: CheckIsNumber(this.I_FreeQtyControl.value),
+      TQty: CheckIsNumber(this.I_TotalQtyControl.value),
+      Rate: CheckIsNumber(this.I_RateControl.value),
+      Amount: CheckIsNumber(this.I_AmountControl.value),
+      DiscPer: CheckIsNumber(this.I_DiscPerControl.value),
+      DiscAmount: CheckIsNumber(this.I_DiscAmountControl.value),
+      TaxableAmount: CheckIsNumber(this.I_TaxableAmountControl.value),
+      GSTTaxID: CheckIsNumber(this.I_GSTTaxIDControl.value),
       GSTTaxName: this.CurrentTax?.taxName?.toString(),
-      CGSTAmount: CheckIsNumber(this.CGSTAmountControl.value),
-      SGSTAmount: CheckIsNumber(this.SGSTAmountControl.value),
-      IGSTAmount: CheckIsNumber(this.IGSTAmountControl.value),
-      CessAmount: CheckIsNumber(this.CessAmountControl.value),
-      TotalTaxAmount: CheckIsNumber(this.TotalTaxAmountControl.value),
-      GrossAmount: CheckIsNumber(this.GrossAmountControl.value),
-      SchPer: CheckIsNumber(this.SchPerControl.value),
-      SchAmount: CheckIsNumber(this.SchAmountControl.value),
-      NetAmount: CheckIsNumber(this.ItemNetAmountControl.value),
+      CGSTAmount: CheckIsNumber(this.I_CGSTAmountControl.value),
+      SGSTAmount: CheckIsNumber(this.I_SGSTAmountControl.value),
+      IGSTAmount: CheckIsNumber(this.I_IGSTAmountControl.value),
+      CessAmount: CheckIsNumber(this.I_CessAmountControl.value),
+      TotalTaxAmount: CheckIsNumber(this.I_TotalTaxAmountControl.value),
+      GrossAmount: CheckIsNumber(this.I_GrossAmountControl.value),
+      SchPer: CheckIsNumber(this.I_SchPerControl.value),
+      SchAmount: CheckIsNumber(this.I_SchAmountControl.value),
+      NetAmount: CheckIsNumber(this.I_NetAmountControl.value),
       IsAdd: this.isEditMode ? (this.IsItemEditMode ? false : true) : true,
       IsModified: this.isEditMode
         ? this.IsItemEditMode
@@ -472,36 +563,38 @@ export class PurchaseAddEditComponent implements OnInit {
     SeletedItem = this.itemsDropDown.filter(
       (a) => a.item_Id == record.ItemID.toString()
     )[0];
+    this.ItemEdit = record;
     this.ItemsControl.patchValue({
-      ItemID: SeletedItem,
-      Crt: record.Crt,
-      Pcs: record.Pcs,
-      Qty: record.Qty,
-      FreeCrt: record.FQty,
-      FreePcs: record.FPcs,
-      FreeQty: record.FQty,
-      TotalQty: record.TQty,
-      Rate: SetFormatCurrency(record.Rate),
-      Amount: SetFormatCurrency(record.Amount),
-      DiscPer: SetFormatCurrency(record.DiscPer),
-      DiscAmount: SetFormatCurrency(record.DiscAmount),
-      GSTTaxID: record.GSTTaxID.toString(),
-      CGSTAmount: SetFormatCurrency(record.CGSTAmount),
-      SGSTAmount: SetFormatCurrency(record.SGSTAmount),
-      IGSTAmount: SetFormatCurrency(record.IGSTAmount),
-      CessAmount: SetFormatCurrency(record.CessAmount),
-      TotalTaxAmount: record.TotalTaxAmount,
-      GrossAmount: SetFormatCurrency(record.GrossAmount),
-      SchPer: SetFormatCurrency(record.SchPer),
-      SchAmount: SetFormatCurrency(record.SchAmount),
-      NetAmount: SetFormatCurrency(record.NetAmount),
+      I_ItemID: SeletedItem,
+      I_Crt: record.Crt,
+      I_Pcs: record.Pcs,
+      I_Qty: record.Qty,
+      I_FreeCrt: record.FQty,
+      I_FreePcs: record.FPcs,
+      I_FreeQty: record.FQty,
+      I_TotalQty: record.TQty,
+      I_Rate: SetFormatCurrency(record.Rate),
+      I_Amount: SetFormatCurrency(record.Amount),
+      I_DiscPer: SetFormatCurrency(record.DiscPer),
+      I_DiscAmount: SetFormatCurrency(record.DiscAmount),
+      I_TaxableAmount: SetFormatCurrency(record.TaxableAmount),
+      I_GSTTaxID: record.GSTTaxID.toString(),
+      I_CGSTAmount: SetFormatCurrency(record.CGSTAmount),
+      I_SGSTAmount: SetFormatCurrency(record.SGSTAmount),
+      I_IGSTAmount: SetFormatCurrency(record.IGSTAmount),
+      I_CessAmount: SetFormatCurrency(record.CessAmount),
+      I_TotalTaxAmount: SetFormatCurrency(record.TotalTaxAmount),
+      I_GrossAmount: SetFormatCurrency(record.GrossAmount),
+      I_SchPer: SetFormatCurrency(record.SchPer),
+      I_SchAmount: SetFormatCurrency(record.SchAmount),
+      I_NetAmount: SetFormatCurrency(record.NetAmount),
     });
     this.IsItemEditMode = true;
     this.renderer.selectRootElement('#ItemName').focus();
     this.itemService.GetItembyID(record.ItemID).subscribe((response) => {
       this.CurrentItem = response;
       this.GetCurrentStock(Number(this.CurrentItem?.itemID));
-      this.RateControl.setValue(
+      this.I_RateControl.setValue(
         SetFormatCurrency(this.CurrentItem?.purchaseRate)
       );
       this.GetCurrentTax(Number(record.GSTTaxID));
@@ -528,31 +621,99 @@ export class PurchaseAddEditComponent implements OnInit {
     this.CalculateFinalTotals();
   }
 
+  ResetForm(form: FormGroup) {
+    let control: AbstractControl;
+    form.reset({
+      BookAccountID: '',
+      BillDate: '',
+      BillNo: '',
+      RefNo: '',
+      AccountID: '',
+      AccountTradeTypeID: '',
+      TotalAmount: 0,
+      TotalDiscAmount: 0,
+      TotalTaxableAmount: 0,
+      TotalCGSTAmount: 0,
+      TotalSGSTAmount: 0,
+      TotalIGSTAmount: 0,
+      TotalCessAmount: 0,
+      TotalTaxAmount: 0,
+      TotalGrossAmount: 0,
+      TotalSchAmount: 0,
+      TotalNetAmount: 0,
+      OtherAddText: '',
+      OtherAddAmount: 0,
+      OtherLessText: '',
+      OtherLessAmount: 0,
+      RoundOffAmount: 0,
+      NetAmount: 0,
+      Items: {
+        I_ItemID: '',
+        I_Crt: 0,
+        I_Pcs: 0,
+        I_Qty: 0,
+        I_FreeCrt: 0,
+        I_FreePcs: 0,
+        I_FreeQty: 0,
+        I_TotalQty: 0,
+        I_Rate: 0,
+        I_Amount: 0,
+        I_DiscPer: 0,
+        I_DiscAmount: 0,
+        I_TaxableAmount: 0,
+        I_GSTTaxID: '',
+        I_CGSTAmount: 0,
+        I_SGSTAmount: 0,
+        I_IGSTAmount: 0,
+        I_CessAmount: 0,
+        I_TotalTaxAmount: 0,
+        I_GrossAmount: 0,
+        I_SchPer: 0,
+        I_SchAmount: 0,
+        I_NetAmount: 0,
+      },
+    });
+    form.markAsUntouched();
+    Object.keys(form.controls).forEach((name) => {
+      control = form.controls[name];
+      control.setErrors(null);
+    });
+    this.purchaseItemDetailsList = [];
+    this.purchaseItemDetailsListData = [...this.purchaseItemDetailsList];
+    this.InvoiceType = '';
+    this.I_ItemIDControl.setValue('');
+    this.DisableAddItemBtn = true;
+    this.SetMinMaxBillDate();
+    this.renderer.selectRootElement('#BookAccountName').focus();
+  }
+
   ResetItems() {
-    this.ItemsControl.reset();
+    this.ItemsControl.reset({
+      I_ItemID: '',
+      I_Crt: 0,
+      I_Pcs: 0,
+      I_Qty: 0,
+      I_FreeCrt: 0,
+      I_FreePcs: 0,
+      I_FreeQty: 0,
+      I_TotalQty: 0,
+      I_Rate: 0,
+      I_Amount: 0,
+      I_DiscPer: 0,
+      I_DiscAmount: 0,
+      I_TaxableAmount: 0,
+      I_GSTTaxID: '',
+      I_CGSTAmount: 0,
+      I_SGSTAmount: 0,
+      I_IGSTAmount: 0,
+      I_CessAmount: 0,
+      I_TotalTaxAmount: 0,
+      I_GrossAmount: 0,
+      I_SchPer: 0,
+      I_SchAmount: 0,
+      I_NetAmount: 0,
+    });
     this.ItemsControl.markAsUntouched();
-    this.ItemIDControl.setValue('');
-    this.CrtControl.setValue(0);
-    this.PcsControl.setValue(0);
-    this.QtyControl.setValue(0);
-    this.FreeCrtControl.setValue(0);
-    this.FreePcsControl.setValue(0);
-    this.FreeQtyControl.setValue(0);
-    this.TotalQtyControl.setValue(0);
-    this.RateControl.setValue(0);
-    this.AmountControl.setValue(0);
-    this.DiscPerControl.setValue(0);
-    this.DiscAmountControl.setValue(0);
-    this.GSTTaxIDControl.setValue('');
-    this.CGSTAmountControl.setValue(0);
-    this.SGSTAmountControl.setValue(0);
-    this.IGSTAmountControl.setValue(0);
-    this.CessAmountControl.setValue(0);
-    this.TotalTaxAmountControl.setValue(0);
-    this.GrossAmountControl.setValue(0);
-    this.SchPerControl.setValue(0);
-    this.SchAmountControl.setValue(0);
-    this.ItemNetAmountControl.setValue(0);
     this.renderer.selectRootElement('#ItemName').focus();
     this.CurrentItem = undefined;
     this.CurrentStock = undefined;
@@ -571,12 +732,12 @@ export class PurchaseAddEditComponent implements OnInit {
   OnItemblur() {
     if (this.AutoItemID?.isOpen == false) {
       if (
-        this.ItemIDControl.value == '' &&
+        this.I_ItemIDControl.value == '' &&
         this.purchaseItemDetailsList.length == 0
       ) {
         this.renderer.selectRootElement('#ItemName').focus();
       } else if (
-        this.ItemIDControl.value == '' &&
+        this.I_ItemIDControl.value == '' &&
         this.purchaseItemDetailsList.length > 0
       ) {
         this.renderer.selectRootElement('#OtherAddText').focus();
@@ -615,6 +776,9 @@ export class PurchaseAddEditComponent implements OnInit {
   get TotalDiscAmountControl() {
     return this.purchaseForm.get('TotalDiscAmount') as FormControl;
   }
+  get TotalTaxableAmountControl() {
+    return this.purchaseForm.get('TotalTaxableAmount') as FormControl;
+  }
   get TotalCGSTAmountControl() {
     return this.purchaseForm.get('TotalCGSTAmount') as FormControl;
   }
@@ -626,6 +790,9 @@ export class PurchaseAddEditComponent implements OnInit {
   }
   get TotalCessAmountControl() {
     return this.purchaseForm.get('TotalCessAmount') as FormControl;
+  }
+  get TotalTaxAmountControl() {
+    return this.purchaseForm.get('TotalTaxAmount') as FormControl;
   }
   get TotalGrossAmountControl() {
     return this.purchaseForm.get('TotalGrossAmount') as FormControl;
@@ -659,72 +826,75 @@ export class PurchaseAddEditComponent implements OnInit {
     return this.purchaseForm.get('Items') as FormControl;
   }
 
-  get ItemIDControl() {
-    return this.ItemsControl.get('ItemID') as FormControl;
+  get I_ItemIDControl() {
+    return this.ItemsControl.get('I_ItemID') as FormControl;
   }
 
-  get CrtControl() {
-    return this.ItemsControl.get('Crt') as FormControl;
+  get I_CrtControl() {
+    return this.ItemsControl.get('I_Crt') as FormControl;
   }
-  get PcsControl() {
-    return this.ItemsControl.get('Pcs') as FormControl;
+  get I_PcsControl() {
+    return this.ItemsControl.get('I_Pcs') as FormControl;
   }
-  get QtyControl() {
-    return this.ItemsControl.get('Qty') as FormControl;
+  get I_QtyControl() {
+    return this.ItemsControl.get('I_Qty') as FormControl;
   }
-  get FreeCrtControl() {
-    return this.ItemsControl.get('FreeCrt') as FormControl;
+  get I_FreeCrtControl() {
+    return this.ItemsControl.get('I_FreeCrt') as FormControl;
   }
-  get FreePcsControl() {
-    return this.ItemsControl.get('FreePcs') as FormControl;
+  get I_FreePcsControl() {
+    return this.ItemsControl.get('I_FreePcs') as FormControl;
   }
-  get FreeQtyControl() {
-    return this.ItemsControl.get('FreeQty') as FormControl;
+  get I_FreeQtyControl() {
+    return this.ItemsControl.get('I_FreeQty') as FormControl;
   }
-  get TotalQtyControl() {
-    return this.ItemsControl.get('TotalQty') as FormControl;
+  get I_TotalQtyControl() {
+    return this.ItemsControl.get('I_TotalQty') as FormControl;
   }
-  get RateControl() {
-    return this.ItemsControl.get('Rate') as FormControl;
+  get I_RateControl() {
+    return this.ItemsControl.get('I_Rate') as FormControl;
   }
-  get AmountControl() {
-    return this.ItemsControl.get('Amount') as FormControl;
+  get I_AmountControl() {
+    return this.ItemsControl.get('I_Amount') as FormControl;
   }
-  get DiscPerControl() {
-    return this.ItemsControl.get('DiscPer') as FormControl;
+  get I_DiscPerControl() {
+    return this.ItemsControl.get('I_DiscPer') as FormControl;
   }
-  get DiscAmountControl() {
-    return this.ItemsControl.get('DiscAmount') as FormControl;
+  get I_DiscAmountControl() {
+    return this.ItemsControl.get('I_DiscAmount') as FormControl;
   }
-  get GSTTaxIDControl() {
-    return this.ItemsControl.get('GSTTaxID') as FormControl;
+  get I_TaxableAmountControl() {
+    return this.ItemsControl.get('I_TaxableAmount') as FormControl;
   }
-  get CGSTAmountControl() {
-    return this.ItemsControl.get('CGSTAmount') as FormControl;
+  get I_GSTTaxIDControl() {
+    return this.ItemsControl.get('I_GSTTaxID') as FormControl;
   }
-  get SGSTAmountControl() {
-    return this.ItemsControl.get('SGSTAmount') as FormControl;
+  get I_CGSTAmountControl() {
+    return this.ItemsControl.get('I_CGSTAmount') as FormControl;
   }
-  get IGSTAmountControl() {
-    return this.ItemsControl.get('IGSTAmount') as FormControl;
+  get I_SGSTAmountControl() {
+    return this.ItemsControl.get('I_SGSTAmount') as FormControl;
   }
-  get CessAmountControl() {
-    return this.ItemsControl.get('CessAmount') as FormControl;
+  get I_IGSTAmountControl() {
+    return this.ItemsControl.get('I_IGSTAmount') as FormControl;
   }
-  get TotalTaxAmountControl() {
-    return this.ItemsControl.get('TotalTaxAmount') as FormControl;
+  get I_CessAmountControl() {
+    return this.ItemsControl.get('I_CessAmount') as FormControl;
   }
-  get GrossAmountControl() {
-    return this.ItemsControl.get('GrossAmount') as FormControl;
+  get I_TotalTaxAmountControl() {
+    return this.ItemsControl.get('I_TotalTaxAmount') as FormControl;
   }
-  get SchPerControl() {
-    return this.ItemsControl.get('SchPer') as FormControl;
+  get I_GrossAmountControl() {
+    return this.ItemsControl.get('I_GrossAmount') as FormControl;
   }
-  get SchAmountControl() {
-    return this.ItemsControl.get('SchAmount') as FormControl;
+  get I_SchPerControl() {
+    return this.ItemsControl.get('I_SchPer') as FormControl;
   }
-  get ItemNetAmountControl() {
-    return this.ItemsControl.get('NetAmount') as FormControl;
+  get I_SchAmountControl() {
+    return this.ItemsControl.get('I_SchAmount') as FormControl;
+  }
+  get I_NetAmountControl() {
+    return this.ItemsControl.get('I_NetAmount') as FormControl;
   }
 
   //Others
@@ -768,18 +938,19 @@ export class PurchaseAddEditComponent implements OnInit {
       SGSTAmount = 0,
       IGSTAmount = 0,
       CessAmount = 0,
+      TotalTaxAmount = 0,
       GrossAmount = 0,
       SchAmount = 0,
       NetAmount = 0;
 
-    Rate = CheckIsNumber(this.RateControl.value);
+    Rate = CheckIsNumber(this.I_RateControl.value);
     RatePerPcs = Rate / Number(this.CurrentItem?.packing);
     Qty =
-      Number(this.CrtControl.value) * Number(this.CurrentItem?.packing) +
-      Number(this.PcsControl.value);
+      Number(this.I_CrtControl.value) * Number(this.CurrentItem?.packing) +
+      Number(this.I_PcsControl.value);
     FreeQty =
-      Number(this.FreeCrtControl.value) * Number(this.CurrentItem?.packing) +
-      Number(this.FreePcsControl.value);
+      Number(this.I_FreeCrtControl.value) * Number(this.CurrentItem?.packing) +
+      Number(this.I_FreePcsControl.value);
 
     TotalQty = Qty + FreeQty;
     this.DisableAddItemBtn = true;
@@ -787,13 +958,13 @@ export class PurchaseAddEditComponent implements OnInit {
       this.DisableAddItemBtn = false;
     }
     Amount =
-      Number(this.CrtControl.value) * Rate +
-      Number(this.PcsControl.value) * RatePerPcs;
+      Number(this.I_CrtControl.value) * Rate +
+      Number(this.I_PcsControl.value) * RatePerPcs;
 
     if (this.IsDiscPerChange) {
-      DiscAmount = Amount * (Number(this.DiscPerControl.value) / 100);
+      DiscAmount = Amount * (Number(this.I_DiscPerControl.value) / 100);
     } else {
-      DiscAmount = Number(this.DiscAmountControl.value);
+      DiscAmount = Number(this.I_DiscAmountControl.value);
     }
 
     TaxableAmount = Amount - DiscAmount;
@@ -808,33 +979,36 @@ export class PurchaseAddEditComponent implements OnInit {
       CessAmount = TaxableAmount * (Number(this.CurrentTax?.cessRate) / 100);
     }
 
-    GrossAmount =
-      TaxableAmount + CGSTAmount + SGSTAmount + IGSTAmount + CessAmount;
+    TotalTaxAmount = CGSTAmount + SGSTAmount + IGSTAmount + CessAmount;
+
+    GrossAmount = TaxableAmount + TotalTaxAmount;
 
     if (this.IsSchPerChange) {
-      SchAmount = GrossAmount * (Number(this.SchPerControl.value) / 100);
+      SchAmount = GrossAmount * (Number(this.I_SchPerControl.value) / 100);
     } else {
-      SchAmount = Number(this.SchAmountControl.value);
+      SchAmount = Number(this.I_SchAmountControl.value);
     }
 
     NetAmount = GrossAmount - SchAmount;
 
-    this.QtyControl.setValue(Qty);
-    this.FreeQtyControl.setValue(FreeQty);
-    this.TotalQtyControl.setValue(TotalQty);
-    this.AmountControl.setValue(SetFormatCurrency(Amount));
+    this.I_QtyControl.setValue(Qty);
+    this.I_FreeQtyControl.setValue(FreeQty);
+    this.I_TotalQtyControl.setValue(TotalQty);
+    this.I_AmountControl.setValue(SetFormatCurrency(Amount));
     if (this.IsDiscPerChange == true) {
-      this.DiscAmountControl.setValue(SetFormatCurrency(DiscAmount));
+      this.I_DiscAmountControl.setValue(SetFormatCurrency(DiscAmount));
     }
-    this.CGSTAmountControl.setValue(SetFormatCurrency(CGSTAmount));
-    this.SGSTAmountControl.setValue(SetFormatCurrency(SGSTAmount));
-    this.IGSTAmountControl.setValue(SetFormatCurrency(IGSTAmount));
-    this.CessAmountControl.setValue(SetFormatCurrency(CessAmount));
-    this.GrossAmountControl.setValue(SetFormatCurrency(GrossAmount));
+    this.I_TaxableAmountControl.setValue(SetFormatCurrency(TaxableAmount));
+    this.I_CGSTAmountControl.setValue(SetFormatCurrency(CGSTAmount));
+    this.I_SGSTAmountControl.setValue(SetFormatCurrency(SGSTAmount));
+    this.I_IGSTAmountControl.setValue(SetFormatCurrency(IGSTAmount));
+    this.I_CessAmountControl.setValue(SetFormatCurrency(CessAmount));
+    this.I_TotalTaxAmountControl.setValue(SetFormatCurrency(TotalTaxAmount));
+    this.I_GrossAmountControl.setValue(SetFormatCurrency(GrossAmount));
     if (this.IsSchPerChange == true) {
-      this.SchAmountControl.setValue(SetFormatCurrency(SchAmount));
+      this.I_SchAmountControl.setValue(SetFormatCurrency(SchAmount));
     }
-    this.ItemNetAmountControl.setValue(SetFormatCurrency(NetAmount));
+    this.I_NetAmountControl.setValue(SetFormatCurrency(NetAmount));
     this.IsDiscPerChange = false;
     this.IsSchPerChange = false;
   }
@@ -842,10 +1016,12 @@ export class PurchaseAddEditComponent implements OnInit {
   CalculateFinalTotals() {
     let TotalAmount = 0,
       TotalDiscAmount = 0,
+      TotalTaxableAmount = 0,
       TotalCGSTAmount = 0,
       TotalSGSTAmount = 0,
       TotalIGSTAmount = 0,
       TotalCessAmount = 0,
+      TotalTaxAmount = 0,
       TotalGrossAmount = 0,
       TotalSchAmount = 0,
       TotalNetAmount = 0;
@@ -853,10 +1029,13 @@ export class PurchaseAddEditComponent implements OnInit {
     this.purchaseItemDetailsList.forEach((element) => {
       TotalAmount = Number(TotalAmount) + Number(element.Amount);
       TotalDiscAmount = Number(TotalDiscAmount) + Number(element.DiscAmount);
+      TotalTaxableAmount =
+        Number(TotalTaxableAmount) + Number(element.TaxableAmount);
       TotalCGSTAmount = Number(TotalCGSTAmount) + Number(element.CGSTAmount);
       TotalSGSTAmount = Number(TotalSGSTAmount) + Number(element.SGSTAmount);
       TotalIGSTAmount = Number(TotalIGSTAmount) + Number(element.IGSTAmount);
       TotalCessAmount = Number(TotalCessAmount) + Number(element.CessAmount);
+      TotalTaxAmount = Number(TotalTaxAmount) + Number(element.TotalTaxAmount);
       TotalGrossAmount = Number(TotalGrossAmount) + Number(element.GrossAmount);
       TotalSchAmount = Number(TotalSchAmount) + Number(element.SchAmount);
       TotalNetAmount = Number(TotalNetAmount) + Number(element.NetAmount);
@@ -864,10 +1043,14 @@ export class PurchaseAddEditComponent implements OnInit {
 
     this.TotalAmountControl.setValue(SetFormatCurrency(TotalAmount));
     this.TotalDiscAmountControl.setValue(SetFormatCurrency(TotalDiscAmount));
+    this.TotalTaxableAmountControl.setValue(
+      SetFormatCurrency(TotalTaxableAmount)
+    );
     this.TotalCGSTAmountControl.setValue(SetFormatCurrency(TotalCGSTAmount));
     this.TotalSGSTAmountControl.setValue(SetFormatCurrency(TotalSGSTAmount));
     this.TotalIGSTAmountControl.setValue(SetFormatCurrency(TotalIGSTAmount));
     this.TotalCessAmountControl.setValue(SetFormatCurrency(TotalCessAmount));
+    this.TotalTaxAmountControl.setValue(SetFormatCurrency(TotalTaxAmount));
     this.TotalGrossAmountControl.setValue(SetFormatCurrency(TotalGrossAmount));
     this.TotalSchAmountControl.setValue(SetFormatCurrency(TotalSchAmount));
     this.TotalNetAmountControl.setValue(SetFormatCurrency(TotalNetAmount));

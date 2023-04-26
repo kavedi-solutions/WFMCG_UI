@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { MtxGridColumn } from '@ng-matero/extensions/grid';
 import {
   AccessRights,
   AccountBalancePutRequest,
@@ -16,6 +15,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { MtxGridColumn } from 'src/app/extensions/grid/grid.interface';
 
 @Component({
   selector: 'app-opening-balance',
@@ -65,6 +65,7 @@ export class OpeningBalanceComponent implements OnInit {
           type: 'icon',
           icon: 'edit',
           tooltip: 'Edit Record',
+          buttontype:'button',
           iif: (record) => {
             return this.accRights!.canEdit;
           },
@@ -170,6 +171,7 @@ export class OpeningBalanceComponent implements OnInit {
       control = balanceForm.controls[name];
       control.setErrors(null);
     });
+    this.accountIDControl.setValue('');
     this.balanceControl.setValue(0);
     this.balanceTypeControl.setValue('Cr');
   }

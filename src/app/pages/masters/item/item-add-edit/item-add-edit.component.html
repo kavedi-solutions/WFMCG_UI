@@ -183,7 +183,7 @@
           <mat-select
             formControlName="GSTTaxID"
             required
-            (valueChange)="GSTTaxIDSelectionChange($event);"
+            (valueChange)="GSTTaxIDSelectionChange($event)"
           >
             <mat-option *ngFor="let tdd of taxDropDown" [value]="tdd.tax_Id">
               {{ tdd.tax_Name }}
@@ -319,10 +319,16 @@
     </div>
     <br />
     <mat-card-actions align="end" class="area-mat-card-actions">
-      <button mat-raised-button (click)="BacktoList()" color="accent">
+      <button
+        type="button"
+        mat-raised-button
+        (click)="BacktoList()"
+        color="accent"
+      >
         Cancel
       </button>
       <button
+        type="button"
         *ngIf="isEditMode == false"
         [disabled]="!itemForm.valid"
         mat-raised-button
@@ -332,6 +338,7 @@
         Save
       </button>
       <button
+        type="button"
         *ngIf="isEditMode == true"
         [disabled]="!itemForm.valid"
         mat-raised-button
