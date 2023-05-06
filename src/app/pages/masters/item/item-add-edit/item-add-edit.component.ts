@@ -1,6 +1,7 @@
 import { formatNumber } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import {
+  AbstractControl,
   FormBuilder,
   FormControl,
   FormGroup,
@@ -45,6 +46,7 @@ export class ItemAddEditComponent implements OnInit {
   ItemNameExists: Subject<any> = new Subject();
   TaxDetails?: Tax;
   isFromQuickMenu: boolean = false;
+  IsInventoryDisable: boolean = false;
   itemForm = this.fb.group({
     ItemName: [
       '',
@@ -55,6 +57,7 @@ export class ItemAddEditComponent implements OnInit {
     ],
     HSNCode: ['', [Validators.required]],
     IsServiceItem: [false],
+    IsInventory: [true],
     ItemGroupID: ['', [Validators.required]],
     ManufactureID: ['', [Validators.required]],
     Packing: [
@@ -180,6 +183,14 @@ export class ItemAddEditComponent implements OnInit {
     return (
       this.ItemNameControl.hasError('pattern') && this.ItemNameControl.touched
     );
+  }
+
+  get IsServiceItemControl() {
+    return this.itemForm.get('IsServiceItem') as FormControl;
+  }
+
+  get IsInventoryControl() {
+    return this.itemForm.get('IsInventory') as FormControl;
   }
 
   get HSNCodeControl() {
@@ -418,6 +429,7 @@ export class ItemAddEditComponent implements OnInit {
         ItemName: this.editItem!.itemName,
         HSNCode: this.editItem!.hsnCode,
         IsServiceItem: this.editItem!.isServiceItem,
+        IsInventory: this.editItem!.isInventory,
         ItemGroupID: this.editItem!.itemGroupID.toString(),
         ManufactureID: this.editItem!.manufactureID.toString(),
         Packing: this.editItem!.packing.toString(),
@@ -439,7 +451,39 @@ export class ItemAddEditComponent implements OnInit {
   BacktoList() {
     if (this.isFromQuickMenu == false) {
       this.router.navigate(['/master/item/list']);
+    } else {
+      this.ResetItemForm(this.itemForm);
     }
+  }
+
+  ResetItemForm(form: FormGroup) {
+    form.reset({
+      ItemName: '',
+      HSNCode: '',
+      IsServiceItem: false,
+      IsInventory: true,
+      ItemGroupID: '',
+      ManufactureID: '',
+      Packing: '',
+      Weight: '',
+      MainUnit: '',
+      SubUnit: '',
+      GSTTaxID: '',
+      AccountTradeTypeID: '',
+      MRP: '',
+      PurchaseRate: '',
+      PurchaseRateWT: '',
+      SalesRate: '',
+      SalesRateWT: '',
+      Margin: '',
+      isActive: true,
+    });
+    let control: AbstractControl;
+    form.markAsUntouched();
+    Object.keys(form.controls).forEach((name) => {
+      control = form.controls[name];
+      control.setErrors(null);
+    });
   }
 
   SaveUpdateItem(itemForm: FormGroup) {
@@ -455,6 +499,7 @@ export class ItemAddEditComponent implements OnInit {
       itemName: itemForm.value.ItemName,
       hSNCode: itemForm.value.HSNCode,
       isServiceItem: itemForm.value.IsServiceItem,
+      isInventory: itemForm.value.IsInventory,
       itemGroupID: Number(itemForm.value.ItemGroupID),
       manufactureID: Number(itemForm.value.ManufactureID),
       packing: Number(itemForm.value.Packing),
@@ -479,6 +524,7 @@ export class ItemAddEditComponent implements OnInit {
       itemName: itemForm.value.ItemName,
       hSNCode: itemForm.value.HSNCode,
       isServiceItem: itemForm.value.IsServiceItem,
+      isInventory: itemForm.value.IsInventory,
       itemGroupID: Number(itemForm.value.ItemGroupID),
       manufactureID: Number(itemForm.value.ManufactureID),
       packing: Number(itemForm.value.Packing),
@@ -537,8 +583,12 @@ export class ItemAddEditComponent implements OnInit {
 
   ChangeServiceItem(event: any) {
     if (event.checked == true) {
+      this.IsInventoryDisable = true;
+      this.IsInventoryControl.setValue(false);
       this.FillAccountTradeTypeDropDown('1');
     } else {
+      this.IsInventoryDisable = false;
+      this.IsInventoryControl.setValue(true);
       this.FillAccountTradeTypeDropDown('2');
     }
   }

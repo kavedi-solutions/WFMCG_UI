@@ -2,6 +2,7 @@ export interface ItemPutRequest {
   itemName: string;
   hSNCode: string;
   isServiceItem: boolean;
+  isInventory: boolean;
   itemGroupID: number;
   manufactureID: number;
   packing: number;

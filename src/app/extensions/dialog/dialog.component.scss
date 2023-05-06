@@ -1,19 +1,37 @@
+.mat-dialog-container {
+  padding: 0px !important;
+  overflow: hidden;
+}
+
 .mtx-dialog-title {
+  margin: 0;
+  line-height: 2.500rem;
+  display: -moz-flex;
   display: flex;
-  justify-content: space-between;
+  -moz-align-items: center;
   align-items: center;
-  margin: 0 0 20px;
-  font: 500 20px/32px Roboto, 'Helvetica Neue', sans-serif;
-  letter-spacing: normal;
+  -moz-justify-content: space-between;
+  justify-content: space-between;
+  background: #6a6a6a;
+  padding: 0 1.25rem;
+  font-size: 1.125rem;
+  font-family: Montserrat, sans-serif;
+  font-weight: 600;
+  color: white;
 }
 
 .mtx-dialog-content {
   display: block;
   max-height: 65vh;
-  padding: 0 24px;
-  margin: 0 -24px;
+  min-height: 15vh;
+  padding: 0 1.25rem;
   overflow: auto;
   -webkit-overflow-scrolling: touch;
+  p {
+    font-family: system-ui;
+    font-size: large;
+    font-weight: 500;
+  }
 }
 
 .mtx-dialog-actions {
@@ -23,5 +41,17 @@
   justify-content: flex-end;
   min-height: 52px;
   padding: 8px 0;
-  margin-bottom: -24px;
+  margin: 0px 10px 0px 0px;
+}
+
+.mat-raised-button {
+  margin-left: 5px !important;
+}
+
+.mat-stroked-button {
+  margin-left: 5px !important;
+}
+
+.mat-flat-button {
+  margin-left: 5px !important;
 }

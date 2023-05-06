@@ -141,6 +141,7 @@ export class ItemService {
     const url = `${this.APIURL}/company/${this.CompanyID}/item/dropdown`;
     let params = new HttpParams()
       .set('IsServiceItem', `${filters.IsServiceItem}`)
+      .set('IsInventory', `${filters.IsInventory}`)
       .set('AccountTradeTypeID', `${filters.AccountTradeTypeID}`)
 
     return this.http

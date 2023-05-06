@@ -36,6 +36,7 @@ export class MtxGridColumnMenuComponent {
   @Input() selectableChecked: 'show' | 'hide' = 'show';
   @Input() sortable = true;
   @Input() pinnable = true;
+col: any;
 
   @Input()
   get buttonText() {

@@ -11,6 +11,7 @@ export interface Item {
   itemName: string;
   hsnCode: string;
   isServiceItem: boolean;
+  isInventory: boolean;
   itemGroupID: number;
   manufactureID: number;
   packing: number;

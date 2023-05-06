@@ -42,7 +42,9 @@ export class MtxGridCellComponent implements OnInit, DoCheck {
   /** Placeholder for the empty value (`null`, `''`, `[]`) */
   @Input() placeholder: string = '--';
 
-  @Output() rowDataChange = new EventEmitter<KeyValueChangeRecord<string, any>>();
+  @Output() rowDataChange = new EventEmitter<
+    KeyValueChangeRecord<string, any>
+  >();
 
   private rowDataDiffer?: KeyValueDiffer<string, any>;
 
@@ -69,14 +71,20 @@ export class MtxGridCellComponent implements OnInit, DoCheck {
   }
 
   private _applyChanges(changes: KeyValueChanges<string, any>) {
-    changes.forEachChangedItem(record => {
+    changes.forEachChangedItem((record) => {
       this._changeDetectorRef.markForCheck();
       this.rowDataChange.emit(record);
     });
   }
 
   _getText(value: any) {
-    return value === undefined ? '' : this._gridSrv.isEmpty(value) ? this.placeholder : value;
+    return value === undefined
+      ? ''
+      : this._gridSrv.isEmpty(value)
+      ? this.placeholder
+      : value === '01-01-0001 00:00:00'
+      ? ''
+      : value;
   }
 
   _getTooltip(value: any) {
@@ -84,26 +92,40 @@ export class MtxGridCellComponent implements OnInit, DoCheck {
   }
 
   _getFormatterTooltip(value: any) {
-    return this._gridSrv.isContainHTML(value) || this._gridSrv.isEmpty(value) ? '' : value;
+    return this._gridSrv.isContainHTML(value) || this._gridSrv.isEmpty(value)
+      ? ''
+      : value;
   }
 
-  _onActionClick(event: MouseEvent, btn: MtxGridColumnButton, rowData: Record<string, any>) {
+  _onActionClick(
+    event: MouseEvent,
+    btn: MtxGridColumnButton,
+    rowData: Record<string, any>
+  ) {
     event.preventDefault();
     event.stopPropagation();
 
     if (btn.pop) {
       this._dialog.open({
+        width: '35vw',
         title: btn.pop?.title,
         description: btn.pop?.description,
+        showCloseIcon: btn.pop?.showCloseIcon,
         buttons: [
           {
+            type: btn.pop?.okType || 'raised',
             color: btn.pop?.okColor || 'primary',
             text: btn.pop?.okText || 'OK',
+            class: btn.pop?.okClass || '',
+            focusInitial: btn.pop?.okfocusInitial || false,
             onClick: () => btn.click?.(rowData) || {},
           },
           {
+            type: btn.pop?.closeType || 'raised',
             color: btn.pop?.closeColor,
             text: btn.pop?.closeText || 'CLOSE',
+            class: btn.pop?.closeClass || '',
+            focusInitial: btn.pop?.closefocusInitial || false,
             onClick: () => {},
           },
         ],
@@ -123,7 +145,15 @@ export class MtxGridCellComponent implements OnInit, DoCheck {
 
     const footerToolbar =
       imgs.length > 1
-        ? ['zoomIn', 'zoomOut', 'prev', 'next', 'rotateRight', 'rotateLeft', 'actualSize']
+        ? [
+            'zoomIn',
+            'zoomOut',
+            'prev',
+            'next',
+            'rotateRight',
+            'rotateLeft',
+            'actualSize',
+          ]
         : ['zoomIn', 'zoomOut', 'rotateRight', 'rotateLeft', 'actualSize'];
 
     const options: PhotoViewer.Options = {

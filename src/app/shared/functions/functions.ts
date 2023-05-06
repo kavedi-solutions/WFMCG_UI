@@ -29,3 +29,13 @@ export function CheckIsNumber(value: any) {
 export function SetFormatCurrency(value: any) {
   return formatNumber(Number(value), 'en-IN', '0.2-2');
 }
+
+export function formatDate(date: any) {
+  const d = new Date(date);
+  let month = '' + (d.getMonth() + 1);
+  let day = '' + d.getDate();
+  const year = d.getFullYear();
+  if (month.length < 2) month = '0' + month;
+  if (day.length < 2) day = '0' + day;
+  return [year, month, day].join('-');
+}

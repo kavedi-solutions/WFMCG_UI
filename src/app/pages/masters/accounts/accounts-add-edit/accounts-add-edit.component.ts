@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {
+  AbstractControl,
   FormBuilder,
   FormControl,
   FormGroup,
@@ -376,7 +377,40 @@ export class AccountsAddEditComponent implements OnInit {
   BacktoList() {
     if (this.isFromQuickMenu == false) {
       this.router.navigate(['/master/accounts/list']);
+    } else {
+      this.ResetAccountForm(this.accountForm);
     }
+  }
+
+  ResetAccountForm(form: FormGroup) {
+    form.reset({
+      AccountName: '',
+      LegalName: '',
+      GroupID: '',
+      BalanceTransferToID: '',
+      AccountTypeID: '',
+      TransactionTypeID: '',
+      SalesTypeID: '',
+      AccountTradeTypeID: '',
+      HeadAccountID: '',
+      BookInit: '',
+      Address: '',
+      CityName: '',
+      PinCode: '',
+      StateID: '',
+      AreaID: '',
+      GSTNo: '',
+      PAN: '',
+      ContactPerson: '',
+      ContactNo: '',
+      isActive: true,
+    });
+    let control: AbstractControl;
+    form.markAsUntouched();
+    Object.keys(form.controls).forEach((name) => {
+      control = form.controls[name];
+      control.setErrors(null);
+    });
   }
 
   onAccountNameKeyUp($event: any) {
@@ -633,6 +667,7 @@ export class AccountsAddEditComponent implements OnInit {
     this.disableTradeType = true;
     this.disableBookInit = true;
     this.disabledefaultBook = true;
+    debugger;
     this.disableaddredd = true;
     this.disablearea = true;
     this.disableContact = true;
@@ -650,6 +685,7 @@ export class AccountsAddEditComponent implements OnInit {
         this.transactionTypeIDSelectionChange('1');
         this.disableTradeType = false;
         this.disabledefaultBook = false;
+        debugger;
         this.disableaddredd = false;
         this.disablearea = false;
         this.disableContact = false;
@@ -658,6 +694,7 @@ export class AccountsAddEditComponent implements OnInit {
         this.transactionTypeIDControl.setValue('1');
         this.accountTradeTypeIDControl.setValue('1');
         this.transactionTypeIDSelectionChange('1');
+        debugger;
         this.disableaddredd = false;
         this.disableContact = false;
         break;
@@ -671,6 +708,7 @@ export class AccountsAddEditComponent implements OnInit {
         this.transactionTypeIDControl.setValue('1');
         this.accountTradeTypeIDControl.setValue('1');
         this.transactionTypeIDSelectionChange('1');
+        debugger;
         this.disableaddredd = false;
         break;
     }
@@ -678,16 +716,14 @@ export class AccountsAddEditComponent implements OnInit {
 
   transactionTypeIDSelectionChange(event: any) {
     this.disableSaleBookType = true;
-    this.disableaddredd = true;
     this.FillSalesTypeDropDown(event);
     switch (Number(event)) {
       case 3:
-        this.disableaddredd = false;
+        debugger;
         this.salesTypeIDControl.setValue('1');
         break;
       case 5:
         this.salesTypeIDControl.setValue('');
-        this.disableSaleBookType = false;
         break;
       default:
         this.salesTypeIDControl.setValue('1');

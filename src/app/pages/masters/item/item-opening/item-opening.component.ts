@@ -39,7 +39,7 @@ export class ItemOpeningComponent implements OnInit {
   latestSortingOrder?: string;
   latestSearchText?: string;
   pageSizeOptions = defaultData.pageSizeOptions;
-  
+
   balanceForm = this.fb.group({
     ItemID: ['', [Validators.required]],
     AccountTradeTypeName: [''],
@@ -147,6 +147,7 @@ export class ItemOpeningComponent implements OnInit {
   FillItemDropDown() {
     let filters: ItemFilter_DropDown = {
       IsServiceItem: false,
+      IsInventory: true,
       AccountTradeTypeID: 0,
     };
     this.itemService.ItemDropDown(filters).subscribe((response) => {

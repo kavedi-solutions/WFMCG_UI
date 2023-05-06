@@ -30,7 +30,7 @@ export class PurchaseComponent implements OnInit {
   latestSortingOrder?: string;
   latestSearchText?: string;
   pageSizeOptions = defaultData.pageSizeOptions;
-  
+
   constructor(
     private purchaseService: fromService.PurchaseService,
     private router: Router,
@@ -50,20 +50,52 @@ export class PurchaseComponent implements OnInit {
     this.columns.push({
       header: 'Action',
       field: 'action',
-      minWidth: 70,
-      width: '70px',
+      minWidth: 60,
+      width: '60px',
       pinned: 'right',
       type: 'button',
       buttons: [
         {
           type: 'icon',
-          icon: 'edit',
-          tooltip: 'Edit Record',
-          buttontype:'button',
-          iif: () => {
-            return this.accRights!.canEdit;
-          },
-          click: (record) => this.edit(record),
+          icon: 'more_vert',
+          tooltip: 'Options',
+          buttontype: 'button',
+          children: [
+            {
+              text: 'Edit Record',
+              tooltip: 'Edit Record',
+              buttontype: 'button',
+              pop: {
+                title: 'Confirm Edit',
+                description: 'Are you sure you want to Edit this Item.',
+                closeText: 'No',
+                okText: 'Yes',
+                okColor: 'primary',
+                closeColor: 'warn',
+              },
+              click: (record) => this.edit(record),
+              iif: () => {
+                return this.accRights!.canEdit;
+              },
+            },
+            {
+              text: 'Delete Record',
+              tooltip: 'Delete Record',
+              buttontype: 'button',
+              pop: {
+                title: 'Confirm Delete',
+                description: 'Are you sure you want to Delete this Item.',
+                closeText: 'No',
+                okText: 'Yes',
+                okColor: 'primary',
+                closeColor: 'warn',
+              },
+              click: (record) => this.delete(record),
+              iif: () => {
+                return this.accRights!.canEdit;
+              },
+            },
+          ],
         },
       ],
     });
@@ -71,20 +103,27 @@ export class PurchaseComponent implements OnInit {
 
   getPurchaseList() {
     this.purchaseService
-    .GetPurchaseList(
-      this.pagination!,
-      this.latestSortingOrder!,
-      this.latestSearchText!,
-      this.filterValues!
-    )
-    .subscribe((response) => {
-      this.purchaseListData = response.body;
-      this.pagination = response.headers;
-    });
+      .GetPurchaseList(
+        this.pagination!,
+        this.latestSortingOrder!,
+        this.latestSearchText!,
+        this.filterValues!
+      )
+      .subscribe((response) => {
+        this.purchaseListData = response.body;
+        this.pagination = response.headers;
+      });
   }
 
   edit(value: any) {
-    this.router.navigate(['/transaction/purchase/edit/', value.autoID]);    
+    this.router.navigate(['/transaction/purchase/edit/', value.autoID]);
+  }
+
+  delete(value: any) {
+    debugger;
+    this.purchaseService.deletePurchase(value.autoID).subscribe((response) => {
+      this.getPurchaseList();
+    });
   }
 
   AddnewRecord() {
@@ -132,5 +171,4 @@ export class PurchaseComponent implements OnInit {
     }
     this.getPurchaseList();
   }
-  
 }

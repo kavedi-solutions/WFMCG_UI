@@ -65,14 +65,13 @@ export class NotificationInterceptor implements HttpInterceptor {
   }
 
   getSuccessMessage(event: HttpResponse<any>) {
+    debugger;
     if (event.status === 201) {
       return 'Created Successfully';
     } else if (event.status === 204) {
       return 'Updated Successfully';
-    } else if (event.status === 404) {
-      return 'Upload Successfully';
-    } else if (event.status === 200) {
-      return 'Removed Successfully';
+    } else if (event.status === 202) {
+      return 'Delete Successfully';
     }
     return '';
   }

@@ -100,16 +100,35 @@ export interface MtxGridColumnButton {
   pop?: MtxGridColumnButtonPop;
   tooltip?: string | Observable<string> | MtxGridColumnButtonTooltip;
   buttontype: 'button' | 'menu' | 'reset' | 'submit';
+  children?: MtxGridColumnChildrenButton[];
+}
+
+export interface MtxGridColumnChildrenButton {
+  text?: string | Observable<string>;
+  class?: string;
+  disabled?: boolean | ((rowData: any) => boolean);
+  click?: (rowData: any) => void;
+  iif?: (rowData: any) => boolean;
+  pop?: MtxGridColumnButtonPop;
+  tooltip?: string | Observable<string> | MtxGridColumnButtonTooltip;
+  buttontype: 'button' | 'menu' | 'reset' | 'submit';
 }
 
 /** The properties of column button pop. */
 export interface MtxGridColumnButtonPop {
+  showCloseIcon?: boolean;
   title: string | Observable<string>;
   description?: string | Observable<string>;
   okColor?: ThemePalette;
   okText?: string | Observable<string>;
+  okType?: 'raised' | 'stroked' | 'flat';
+  okClass?: string;
+  okfocusInitial?: boolean;
   closeColor?: ThemePalette;
   closeText?: string | Observable<string>;
+  closeType?: 'raised' | 'stroked' | 'flat';
+  closeClass?: string;
+  closefocusInitial?: boolean;
 }
 
 /** The properties of column button tooltip. */

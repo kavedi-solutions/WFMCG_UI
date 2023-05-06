@@ -2,6 +2,7 @@ export interface ItemPostRequest {
   itemName: string | null;
   hSNCode: string | null;
   isServiceItem: boolean;
+  isInventory: boolean;
   itemGroupID: number;
   manufactureID: number;
   packing: number;
