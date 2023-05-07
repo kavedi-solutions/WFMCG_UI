@@ -273,6 +273,50 @@ const routes: Routes = [
           },
         ],
       },
+      {
+        path: 'purchase-service',
+        children: [
+          {
+            path: 'list',
+            component: CommonPages.PurchaseServiceComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '202' },
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'add',
+            component: CommonPages.PurchaseServiceAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'edit/:purchaseid',
+            component: CommonPages.PurchaseServiceAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+        ],
+      },
+      {
+        path: 'purchase-assets',
+        children: [
+          {
+            path: 'list',
+            component: CommonPages.PurchaseAssetsComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '203' },
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'add',
+            component: CommonPages.PurchaseAssetsAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'edit/:purchaseid',
+            component: CommonPages.PurchaseAssetsAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+        ],
+      },
     ],
   },
   {

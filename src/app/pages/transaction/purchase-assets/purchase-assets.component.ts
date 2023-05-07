@@ -3,7 +3,7 @@ import {
   AccessRights,
   FilterValues,
   PaginationHeaders,
-  Purchase,
+  PurchaseA,
 } from 'src/app/shared';
 import * as fromService from '../../../shared/index';
 import * as defaultData from '../../../data/index';
@@ -13,14 +13,14 @@ import { PageEvent } from '@angular/material/paginator';
 import { MtxGridColumn } from 'src/app/extensions/grid/grid.interface';
 
 @Component({
-  selector: 'app-purchase',
-  templateUrl: './purchase.component.html',
-  styleUrls: ['./purchase.component.scss'],
+  selector: 'app-purchase-assets',
+  templateUrl: './purchase-assets.component.html',
+  styleUrls: ['./purchase-assets.component.scss'],
 })
-export class PurchaseComponent implements OnInit {
-  PageTitle: string = 'Purchase (Inventory)';
+export class PurchaseAssetsComponent implements OnInit {
+  PageTitle: string = 'Purchase (Assets)';
   buttonText: string = 'Add New Purchase';
-  purchaseListData: Purchase[] = [];
+  purchaseListData: PurchaseA[] = [];
   pagination?: PaginationHeaders = defaultData.defaultPaginationHeaders;
   filterValues?: FilterValues[];
   Sort?: string;
@@ -32,7 +32,7 @@ export class PurchaseComponent implements OnInit {
   pageSizeOptions = defaultData.pageSizeOptions;
 
   constructor(
-    private purchaseService: fromService.PurchaseService,
+    private purchaseService: fromService.PurchaseAService,
     private router: Router,
     private route: ActivatedRoute
   ) {
@@ -116,7 +116,7 @@ export class PurchaseComponent implements OnInit {
   }
 
   edit(value: any) {
-    this.router.navigate(['/transaction/purchase/edit/', value.autoID]);
+    this.router.navigate(['/transaction/purchase-assets/edit/', value.autoID]);
   }
 
   delete(value: any) {
@@ -127,7 +127,7 @@ export class PurchaseComponent implements OnInit {
   }
 
   AddnewRecord() {
-    this.router.navigate(['/transaction/purchase/add']);
+    this.router.navigate(['/transaction/purchase-assets/add']);
   }
 
   changeSelect(e: any) {

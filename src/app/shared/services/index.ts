@@ -17,6 +17,7 @@ import { ItemgroupService } from './master/itemgroup.service';
 import { ManufactureService } from './master/manufacture.service';
 import { StockService } from './master/stock.service';
 import { TaxService } from './master/tax.service';
+import { PurchaseAService } from './transaction/purchase-a.service';
 import { PurchaseService } from './transaction/purchase.service';
 
 export const services: any[] = [
@@ -36,6 +37,8 @@ export const services: any[] = [
   TaxService,
   ManufactureService,
   ItemgroupService,
+  PurchaseService,
+  PurchaseAService,
   PurchaseService,
   StockService,
 ];
@@ -61,3 +64,5 @@ export * from './master/itemgroup.service';
 export * from './master/item.service';
 export * from './master/stock.service';
 export * from './transaction/purchase.service';
+export * from './transaction/purchase-a.service';
+export * from './transaction/purchase-s.service';

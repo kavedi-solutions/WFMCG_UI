@@ -1,0 +1,441 @@
+<page-header
+  class="bg-blue-600"
+  [title]="PageTitle"
+  [addButtonToolTip]="buttonText"
+  [showBack]="!isFromQuickMenu"
+  [showAdd]="false"
+  (onBackClick)="BacktoList()"
+></page-header>
+<!-- -->
+<form class="form-field-full page-detail" [formGroup]="purchaseForm">
+  <mat-card>
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="40%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Select Book</mat-label>
+          <mat-select
+            id="BookAccountName"
+            formControlName="BookAccountID"
+            autoFocus
+            required
+            (blur)="BookAccountIDblur()"
+          >
+            <mat-option
+              *ngFor="let sbdd of booksDropDown"
+              [value]="sbdd.account_Id"
+            >
+              {{ sbdd.account_Name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <input
+            matInput
+            [matDatepicker]="BillDatePicker"
+            placeholder="Bill Date"
+            formControlName="BillDate"
+            [min]="BillMinDate"
+            [max]="BillMaxDate"
+            (dateChange)="BillDateChange()"
+            (blur)="BillDateBlur()"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="BillDatePicker"
+            [tabIndex]="-1"
+            ><mat-icon matDatepickerToggleIcon
+              >keyboard_arrow_down</mat-icon
+            ></mat-datepicker-toggle
+          >
+          <mat-datepicker #BillDatePicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Bill No</mat-label>
+          <input
+            matInput
+            placeholder="Bill No"
+            formControlName="BillNo"
+            readonly
+          />
+        </mat-form-field>
+      </div>
+      <div fxFlex="30%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Ref No</mat-label>
+          <input matInput placeholder="Ref No" formControlName="RefNo" />
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="40%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Select Account</mat-label>
+          <input
+            matInput
+            id="AccountName"
+            [matAutocomplete]="AutoAccountID"
+            formControlName="AccountID"
+            (blur)="OnAccountBlur()"
+          />
+          <mat-autocomplete
+            #AutoAccountID="matAutocomplete"
+            [displayWith]="DisplayAccountName"
+            (optionSelected)="SelectedAccount($event)"
+          >
+            <mat-option
+              *ngFor="let add of filteredaccountsDropDown | async"
+              [value]="add"
+            >
+              {{ add.account_Name }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+      <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col invoiceType">
+        <span>{{ InvoiceType }}</span>
+      </div>
+      <div fxFlex="35%" fxFlex.lt-sm="100" class="matero-col"></div>
+    </div>
+    <div formGroupName="Items">
+      <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+        <div fxFlex="60%" fxFlex.lt-sm="100" class="matero-col">
+          <mat-form-field appearance="legacy" color="primary">
+            <mat-label>Select Item</mat-label>
+            <input
+              matInput
+              id="ItemName"
+              [matAutocomplete]="AutoItemID"
+              formControlName="I_ItemID"
+              (blur)="OnItemblur()"
+            />
+            <mat-autocomplete
+              #AutoItemID="matAutocomplete"
+              [displayWith]="DisplayItemName"
+              (optionSelected)="SelectedItem($event)"
+            >
+              <mat-option
+                *ngFor="let add of filtereditemsDropDown | async"
+                [value]="add"
+              >
+                {{ add.item_Name }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+        <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
+          <mat-form-field appearance="legacy" color="primary">
+            <mat-label>Amount</mat-label>
+            <input
+              matInput
+              placeholder="Amount"
+              type="text"
+              formControlName="I_Amount"
+              maxlength="15"
+              class="input-right-align"
+            />
+          </mat-form-field>
+        </div>
+        <div fxFlex="10%" fxFlex.lt-sm="100" class="matero-col">
+          <mat-form-field appearance="legacy" color="primary">
+            <mat-label>DiscPer</mat-label>
+            <input
+              matInput
+              placeholder="Disc %"
+              type="text"
+              formControlName="I_DiscPer"
+              maxlength="5"
+              class="input-right-align"
+              (keyup)="DiscPerChange($event)"
+            />
+          </mat-form-field>
+        </div>
+        <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
+          <mat-form-field appearance="legacy" color="primary">
+            <mat-label>Disc Amount</mat-label>
+            <input
+              matInput
+              placeholder="Disc Amount"
+              type="text"
+              formControlName="I_DiscAmount"
+              maxlength="15"
+              class="input-right-align"
+              (keyup)="CalculateTotals()"
+            />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+        <div fxFlex="41%" fxFlex.lt-sm="100" class="matero-col">
+          <mat-form-field appearance="legacy" color="primary">
+            <mat-label>Select Tax</mat-label>
+            <mat-select formControlName="I_GSTTaxID">
+              <mat-option *ngFor="let tdd of taxDropDown" [value]="tdd.tax_Id">
+                {{ tdd.tax_Name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div fxFlex="10%" fxFlex.lt-sm="100" class="matero-col">
+          <mat-form-field appearance="legacy" color="primary">
+            <mat-label>CGST Amount</mat-label>
+            <input
+              matInput
+              placeholder="CGST Amount"
+              type="text"
+              formControlName="I_CGSTAmount"
+              maxlength="15"
+              class="input-right-align"
+              readonly
+            />
+          </mat-form-field>
+        </div>
+        <div fxFlex="10%" fxFlex.lt-sm="100" class="matero-col">
+          <mat-form-field appearance="legacy" color="primary">
+            <mat-label>SGST Amount</mat-label>
+            <input
+              matInput
+              placeholder="SGST Amount"
+              type="text"
+              formControlName="I_SGSTAmount"
+              maxlength="15"
+              class="input-right-align"
+              readonly
+            />
+          </mat-form-field>
+        </div>
+        <div fxFlex="10%" fxFlex.lt-sm="100" class="matero-col">
+          <mat-form-field appearance="legacy" color="primary">
+            <mat-label>IGST Amount</mat-label>
+            <input
+              matInput
+              placeholder="IGST Amount"
+              type="text"
+              formControlName="I_IGSTAmount"
+              maxlength="15"
+              class="input-right-align"
+              readonly
+            />
+          </mat-form-field>
+        </div>
+        <div fxFlex="10%" fxFlex.lt-sm="100" class="matero-col">
+          <mat-form-field appearance="legacy" color="primary">
+            <mat-label>Cess Amount</mat-label>
+            <input
+              matInput
+              placeholder="Cess Amount"
+              type="text"
+              formControlName="I_CessAmount"
+              maxlength="15"
+              class="input-right-align"
+              readonly
+            />
+          </mat-form-field>
+        </div>
+        <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
+          <mat-form-field appearance="legacy" color="primary">
+            <mat-label>Net Amount</mat-label>
+            <input
+              matInput
+              placeholder="Net Amount"
+              type="text"
+              formControlName="I_NetAmount"
+              maxlength="15"
+              class="input-right-align"
+              readonly
+            />
+          </mat-form-field>
+        </div>
+        <div fxFlex="4%" fxFlex.lt-sm="100" class="matero-col">
+          <button
+            type="button"
+            mat-mini-fab
+            style="margin-top: 5px"
+            color="warn"
+            [disabled]="DisableAddItemBtn"
+            (click)="AddItemToList()"
+          >
+            <i class="fa-solid fa-angles-down"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+      <mtx-grid
+        class="table-main-wrapper mtx-grid-purchase"
+        [data]="purchaseItemDetailsListData"
+        [columns]="columns"
+        [length]="ItemCount"
+        [rowSelectable]="true"
+        [hideRowSelectionCheckbox]="true"
+        [rowHover]="true"
+        [rowStriped]="false"
+        [pageOnFront]="false"
+        [showPaginator]="false"
+      >
+      </mtx-grid>
+    </div>
+    <div class="matero-row m-t-16" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="12%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Total Amount</mat-label>
+          <input
+            matInput
+            placeholder="Total Amount"
+            type="text"
+            formControlName="TotalAmount"
+            maxlength="15"
+            class="input-right-align"
+            readonly
+          />
+        </mat-form-field>
+      </div>
+      <div fxFlex="10%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Total Disc Amount</mat-label>
+          <input
+            matInput
+            placeholder="Total Disc Amount"
+            type="text"
+            formControlName="TotalDiscAmount"
+            maxlength="15"
+            class="input-right-align"
+            readonly
+          />
+        </mat-form-field>
+      </div>
+      <div fxFlex="10%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Total CGST Amount</mat-label>
+          <input
+            matInput
+            placeholder="Total CGST Amount"
+            type="text"
+            formControlName="TotalCGSTAmount"
+            maxlength="15"
+            class="input-right-align"
+            readonly
+          />
+        </mat-form-field>
+      </div>
+      <div fxFlex="10%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Total SGST Amount</mat-label>
+          <input
+            matInput
+            placeholder="Total SGST Amount"
+            type="text"
+            formControlName="TotalSGSTAmount"
+            maxlength="15"
+            class="input-right-align"
+            readonly
+          />
+        </mat-form-field>
+      </div>
+      <div fxFlex="10%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Total IGST Amount</mat-label>
+          <input
+            matInput
+            placeholder="Total IGST Amount"
+            type="text"
+            formControlName="TotalIGSTAmount"
+            maxlength="15"
+            class="input-right-align"
+            readonly
+          />
+        </mat-form-field>
+      </div>
+      <div fxFlex="10%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Total Cess Amount</mat-label>
+          <input
+            matInput
+            placeholder="Total Cess Amount"
+            type="text"
+            formControlName="TotalCessAmount"
+            maxlength="15"
+            class="input-right-align"
+            readonly
+          />
+        </mat-form-field>
+      </div>
+      <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Total Net Amount</mat-label>
+          <input
+            matInput
+            placeholder="Total Net Amount"
+            type="text"
+            formControlName="TotalNetAmount"
+            maxlength="15"
+            class="input-right-align"
+            readonly
+          />
+        </mat-form-field>
+      </div>
+      <div fxFlex="9%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Round Off Amount</mat-label>
+          <input
+            matInput
+            placeholder="Round Off Amount"
+            type="text"
+            formControlName="RoundOffAmount"
+            maxlength="15"
+            class="input-right-align"
+            readonly
+          />
+        </mat-form-field>
+      </div>
+      <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Net Amount</mat-label>
+          <input
+            matInput
+            placeholder="Net Amount"
+            type="text"
+            formControlName="NetAmount"
+            maxlength="15"
+            class="input-right-align"
+            readonly
+          />
+        </mat-form-field>
+      </div>
+    </div>
+    <br />
+    <mat-card-actions align="end" class="area-mat-card-actions">
+      <button
+        type="button"
+        mat-raised-button
+        (click)="BacktoList()"
+        color="accent"
+      >
+        Cancel
+      </button>
+      <button
+        type="button"
+        *ngIf="isEditMode == false"
+        [disabled]="!purchaseForm.valid || ItemCount == 0"
+        mat-raised-button
+        color="primary"
+        (click)="SaveUpdatePurchase(purchaseForm)"
+      >
+        Save
+      </button>
+      <button
+        type="button"
+        *ngIf="isEditMode == true"
+        [disabled]="!purchaseForm.valid || ItemCount == 0"
+        mat-raised-button
+        color="primary"
+        (click)="SaveUpdatePurchase(purchaseForm)"
+      >
+        Update
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</form>

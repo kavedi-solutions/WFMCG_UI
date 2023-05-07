@@ -32,13 +32,14 @@ import * as defaultData from '../../../../data/index';
 import { CheckIsNumber, SetFormatCurrency } from 'src/app/shared/functions';
 import { MatAutocomplete } from '@angular/material/autocomplete';
 import { MtxGridColumn } from 'src/app/extensions/grid/grid.interface';
+
 @Component({
-  selector: 'app-purchase-add-edit',
-  templateUrl: './purchase-add-edit.component.html',
-  styleUrls: ['./purchase-add-edit.component.scss'],
+  selector: 'app-purchase-assets-add-edit',
+  templateUrl: './purchase-assets-add-edit.component.html',
+  styleUrls: ['./purchase-assets-add-edit.component.scss'],
 })
-export class PurchaseAddEditComponent implements OnInit {
-  PageTitle: string = 'Create Purchase (Inventory)';
+export class PurchaseAssetsAddEditComponent implements OnInit {
+  PageTitle: string = 'Create Purchase (Assets)';
   buttonText: string = 'Add New Purchase';
   isEditMode: boolean = false;
   isFromQuickMenu: boolean = false;
@@ -252,7 +253,7 @@ export class PurchaseAddEditComponent implements OnInit {
 
   BacktoList() {
     if (this.isFromQuickMenu == false) {
-      this.router.navigate(['/transaction/purchase/list']);
+      this.router.navigate(['/transaction/purchase-assets/list']);
     } else {
       this.ResetForm(this.purchaseForm);
     }

@@ -3,7 +3,7 @@ import {
   AccessRights,
   FilterValues,
   PaginationHeaders,
-  Purchase,
+  PurchaseS,
 } from 'src/app/shared';
 import * as fromService from '../../../shared/index';
 import * as defaultData from '../../../data/index';
@@ -11,16 +11,15 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { funSortingOrder } from 'src/app/shared/functions';
 import { PageEvent } from '@angular/material/paginator';
 import { MtxGridColumn } from 'src/app/extensions/grid/grid.interface';
-
 @Component({
-  selector: 'app-purchase',
-  templateUrl: './purchase.component.html',
-  styleUrls: ['./purchase.component.scss'],
+  selector: 'app-purchase-service',
+  templateUrl: './purchase-service.component.html',
+  styleUrls: ['./purchase-service.component.scss'],
 })
-export class PurchaseComponent implements OnInit {
-  PageTitle: string = 'Purchase (Inventory)';
+export class PurchaseServiceComponent implements OnInit {
+  PageTitle: string = 'Purchase (Service)';
   buttonText: string = 'Add New Purchase';
-  purchaseListData: Purchase[] = [];
+  purchaseListData: PurchaseS[] = [];
   pagination?: PaginationHeaders = defaultData.defaultPaginationHeaders;
   filterValues?: FilterValues[];
   Sort?: string;
@@ -32,7 +31,7 @@ export class PurchaseComponent implements OnInit {
   pageSizeOptions = defaultData.pageSizeOptions;
 
   constructor(
-    private purchaseService: fromService.PurchaseService,
+    private purchaseService: fromService.PurchaseSService,
     private router: Router,
     private route: ActivatedRoute
   ) {
@@ -116,7 +115,7 @@ export class PurchaseComponent implements OnInit {
   }
 
   edit(value: any) {
-    this.router.navigate(['/transaction/purchase/edit/', value.autoID]);
+    this.router.navigate(['/transaction/purchase-service/edit/', value.autoID]);
   }
 
   delete(value: any) {
@@ -127,7 +126,7 @@ export class PurchaseComponent implements OnInit {
   }
 
   AddnewRecord() {
-    this.router.navigate(['/transaction/purchase/add']);
+    this.router.navigate(['/transaction/purchase-service/add']);
   }
 
   changeSelect(e: any) {

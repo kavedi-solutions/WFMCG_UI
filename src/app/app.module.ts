@@ -134,7 +134,7 @@ export function tokenGetter() {
     MatToolbarModule,
     MatTooltipModule,
     MatTreeModule,
-    FlexLayoutModule,    
+    FlexLayoutModule,
     ExtensionsModule,
     JwtModule.forRoot({
       config: {

@@ -62,3 +62,11 @@ export * from './transaction/purchase/purchaseResponse.model';
 export * from './transaction/purchase/purchaseitemdetail.model';
 export * from './transaction/purchase/purchasePostRequest.model';
 export * from './transaction/purchase/purchasePutRequest.model';
+export * from './transaction/purchase-service/purchaseSPostRequest.model'
+export * from './transaction/purchase-service/purchaseSPutRequest.model';
+export * from './transaction/purchase-service/purchaseSResponse.model';
+export * from './transaction/purchase-service/purchaseSitemdetail.model';
+export * from './transaction/purchase-assets/purchaseAPostRequest.model';
+export * from './transaction/purchase-assets/purchaseAPutRequest.model';
+export * from './transaction/purchase-assets/purchaseAResponse.model';
+export * from './transaction/purchase-assets/purchaseAitemdetail.model';
