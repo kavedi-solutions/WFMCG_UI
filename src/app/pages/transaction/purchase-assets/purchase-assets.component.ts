@@ -120,7 +120,6 @@ export class PurchaseAssetsComponent implements OnInit {
   }
 
   delete(value: any) {
-    debugger;
     this.purchaseService.deletePurchase(value.autoID).subscribe((response) => {
       this.getPurchaseList();
     });

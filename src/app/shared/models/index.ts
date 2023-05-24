@@ -70,3 +70,17 @@ export * from './transaction/purchase-assets/purchaseAPostRequest.model';
 export * from './transaction/purchase-assets/purchaseAPutRequest.model';
 export * from './transaction/purchase-assets/purchaseAResponse.model';
 export * from './transaction/purchase-assets/purchaseAitemdetail.model';
+
+
+export * from './transaction/sales/salesResponse.model';
+export * from './transaction/sales/salesitemdetail.model';
+export * from './transaction/sales/salesPostRequest.model';
+export * from './transaction/sales/salesPutRequest.model';
+export * from './transaction/sales-service/salesSPostRequest.model'
+export * from './transaction/sales-service/salesSPutRequest.model';
+export * from './transaction/sales-service/salesSResponse.model';
+export * from './transaction/sales-service/salesSitemdetail.model';
+export * from './transaction/sales-assets/salesAPostRequest.model';
+export * from './transaction/sales-assets/salesAPutRequest.model';
+export * from './transaction/sales-assets/salesAResponse.model';
+export * from './transaction/sales-assets/salesAitemdetail.model';

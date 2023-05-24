@@ -65,7 +65,6 @@ export class NotificationInterceptor implements HttpInterceptor {
   }
 
   getSuccessMessage(event: HttpResponse<any>) {
-    debugger;
     if (event.status === 201) {
       return 'Created Successfully';
     } else if (event.status === 204) {

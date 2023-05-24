@@ -1,11 +1,11 @@
 import { PaginationHeaders } from '../../common/PaginationHeaders.model';
 
-export interface PurchaseAPagedResponse {
+export interface SalesAPagedResponse {
   headers?: PaginationHeaders;
-  body: PurchaseA[];
+  body: SalesA[];
 }
 
-export interface PurchaseA {
+export interface SalesA {
   companyID: string;
   autoID: number;
   bookAccountID: number;
@@ -25,7 +25,7 @@ export interface PurchaseA {
   modifiedDate: string;
 }
 
-export interface PurchaseAResponse {
+export interface SalesAResponse {
   autoID: number;
   companyID: string;
   bookAccountID: number;
@@ -45,13 +45,13 @@ export interface PurchaseAResponse {
   totalNetAmount: number;
   roundOffAmount: number;
   netAmount: number;
-  details: PurchaseAItemResponse[] | null;
+  details: SalesAItemResponse[] | null;
   isActive: boolean;
   createdDate: string;
   modifiedDate: string;
 }
 
-export interface PurchaseAItemResponse {
+export interface SalesAItemResponse {
   autoID: number;
   parentAutoID: number;
   srNo: number;

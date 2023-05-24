@@ -12,18 +12,17 @@ import { map, Observable, startWith, tap } from 'rxjs';
 import * as fromService from '../../../../shared/index';
 import {
   accountsDropDownResponse,
-  accountTradeTypeResponse,
-  ClosingStockbyItemID,
+  AccountTypeMaster,
   Item,
   ItemFilter_DropDown,
   ItemGroupDownDownResponse,
   itemsDropDownResponse,
-  PurchaseItemDetail,
-  PurchaseItemPostRequest,
-  PurchaseItemPutRequest,
-  PurchasePostRequest,
-  PurchasePutRequest,
-  PurchaseResponse,
+  PurchaseAItemDetail,
+  PurchaseAItemPostRequest,
+  PurchaseAItemPutRequest,
+  PurchaseAPostRequest,
+  PurchaseAPutRequest,
+  PurchaseAResponse,
   Tax,
   TaxDownDownResponse,
   TransactionTypeMaster,
@@ -45,23 +44,21 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
   isFromQuickMenu: boolean = false;
   selectedPurchaseId: number;
 
-  purchasePostRequest?: PurchasePostRequest;
-  purchasePutRequest?: PurchasePutRequest;
-  editPurchase?: PurchaseResponse;
+  purchasePostRequest?: PurchaseAPostRequest;
+  purchasePutRequest?: PurchaseAPutRequest;
+  editPurchase?: PurchaseAResponse;
 
   itemGroupDropDown: ItemGroupDownDownResponse[] = [];
-  accountTradeTypeDropDown: accountTradeTypeResponse[] = [];
   taxDropDown: TaxDownDownResponse[] = [];
   booksDropDown: accountsDropDownResponse[] = [];
   accountsDropDown: accountsDropDownResponse[] = [];
   filteredaccountsDropDown?: Observable<accountsDropDownResponse[]>;
   itemsDropDown: itemsDropDownResponse[] = [];
   filtereditemsDropDown?: Observable<itemsDropDownResponse[]>;
-  purchaseItemDetailsList: PurchaseItemDetail[] = [];
-  purchaseItemDetailsListData: PurchaseItemDetail[] = [];
+  purchaseItemDetailsList: PurchaseAItemDetail[] = [];
+  purchaseItemDetailsListData: PurchaseAItemDetail[] = [];
   CurrentItem?: Item;
   CurrentTax?: Tax;
-  CurrentStock?: ClosingStockbyItemID;
   BillMinDate?: Date;
   BillMaxDate?: Date;
   DisableAddItemBtn: boolean = true;
@@ -72,10 +69,9 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
   columns: MtxGridColumn[] = [];
 
   IsDiscPerChange: boolean = false;
-  IsSchPerChange: boolean = false;
 
   IsItemEditMode: boolean = false;
-  ItemEdit?: PurchaseItemDetail;
+  ItemEdit?: PurchaseAItemDetail;
   ItemCount: number = 0;
   purchaseForm = this.fb.group({
     BookAccountID: ['', [Validators.required]],
@@ -83,7 +79,6 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
     BillNo: ['', [Validators.required]],
     RefNo: ['', [Validators.required]],
     AccountID: ['', [Validators.required]],
-    AccountTradeTypeID: ['', [Validators.required]],
     TotalAmount: ['0'],
     TotalDiscAmount: ['0'],
     TotalTaxableAmount: ['0'],
@@ -92,30 +87,12 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
     TotalIGSTAmount: ['0'],
     TotalCessAmount: ['0'],
     TotalTaxAmount: ['0'],
-    TotalGrossAmount: ['0'],
-    TotalSchAmount: ['0'],
     TotalNetAmount: ['0'],
-    OtherAddText: [
-      '',
-      Validators.pattern(/^([\s]*[a-zA-Z0-9()&-.,/]+[\s]*)+$/i),
-    ],
-    OtherAddAmount: ['0', [Validators.pattern(/^([0-9,-/+])+$/i)]],
-    OtherLessText: [
-      '',
-      Validators.pattern(/^([\s]*[a-zA-Z0-9()&-.,/]+[\s]*)+$/i),
-    ],
-    OtherLessAmount: ['0', [Validators.pattern(/^([0-9,-/+])+$/i)]],
     RoundOffAmount: ['0'],
     NetAmount: ['0'],
     Items: this.fb.group({
       I_ItemID: [''],
-      I_Crt: [0, [Validators.pattern(/^([0-9,-/+])+$/i)]],
-      I_Pcs: [0, [Validators.pattern(/^([0-9,-/+])+$/i)]],
-      I_Qty: [0],
-      I_FreeCrt: [0, [Validators.pattern(/^([0-9,-/+])+$/i)]],
-      I_FreePcs: [0, [Validators.pattern(/^([0-9,-/+])+$/i)]],
-      I_FreeQty: [0],
-      I_TotalQty: [0],
+      I_Quantity: [0, [Validators.pattern(/^([0-9,-/+])+$/i)]],
       I_Rate: [0, [Validators.pattern(/^([0-9,-/+])+$/i)]],
       I_Amount: [0],
       I_DiscPer: [0, [Validators.pattern(/^([0-9,-/+])+$/i)]],
@@ -127,9 +104,6 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
       I_IGSTAmount: [0],
       I_CessAmount: [0],
       I_TotalTaxAmount: [0],
-      I_GrossAmount: [0],
-      I_SchPer: [0, [Validators.pattern(/^([0-9,-/+])+$/i)]],
-      I_SchAmount: [0],
       I_NetAmount: [0],
     }),
   });
@@ -141,12 +115,10 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
     private router: Router,
     public route: ActivatedRoute,
     private sstorage: fromService.LocalStorageService,
-    private purchaseService: fromService.PurchaseService,
+    private purchaseService: fromService.PurchaseAService,
     private accountService: fromService.AccountsService,
     private itemService: fromService.ItemService,
-    private commonService: fromService.CommonService,
     private taxService: fromService.TaxService,
-    private stockService: fromService.StockService,
     private fb: FormBuilder,
     private renderer: Renderer2
   ) {
@@ -156,13 +128,12 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
     this.isEditMode = false;
     this.selectedPurchaseId = 0;
     this.itemGroupDropDown = [];
-    this.accountTradeTypeDropDown = [];
     this.taxDropDown = [];
     this.FillTaxDropDown();
-    this.FillAccountTradeTypeDropDown('2');
     this.FillBooksDropDown();
     this.FillAccountDropDown();
     this.SetMinMaxBillDate();
+    this.FillItemDropDown();
   }
 
   ngOnInit(): void {
@@ -207,7 +178,7 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
   }
 
   setColumns() {
-    this.columns = defaultData.GetPurchaseItemDetailColumns();
+    this.columns = defaultData.GetPurchaseAItemDetailColumns();
     this.columns.push({
       header: 'Action',
       field: 'action',
@@ -273,7 +244,6 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
           BookAccountID: this.editPurchase?.bookAccountID.toString(),
           BillNo: this.editPurchase?.billNo.toString(),
           RefNo: this.editPurchase?.refNo,
-          AccountTradeTypeID: this.editPurchase?.accountTradeTypeID.toString(),
           TotalAmount: SetFormatCurrency(this.editPurchase?.totalAmount),
           TotalDiscAmount: SetFormatCurrency(
             this.editPurchase?.totalDiscAmount
@@ -294,17 +264,7 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
             this.editPurchase?.totalCessAmount
           ),
           TotalTaxAmount: SetFormatCurrency(this.editPurchase?.totalTaxAmount),
-          TotalGrossAmount: SetFormatCurrency(
-            this.editPurchase?.totalGrossAmount
-          ),
-          TotalSchAmount: SetFormatCurrency(this.editPurchase?.totalSchAmount),
           TotalNetAmount: SetFormatCurrency(this.editPurchase?.totalNetAmount),
-          OtherAddText: this.editPurchase?.otherAddText,
-          OtherAddAmount: SetFormatCurrency(this.editPurchase?.otherAddAmount),
-          OtherLessText: this.editPurchase?.otherLessText,
-          OtherLessAmount: SetFormatCurrency(
-            this.editPurchase?.otherLessAmount
-          ),
           RoundOffAmount: SetFormatCurrency(this.editPurchase?.roundOffAmount),
           NetAmount: SetFormatCurrency(this.editPurchase?.netAmount),
         });
@@ -312,23 +272,13 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
         this.BillDateControl.setValue(moment(this.editPurchase?.billDate));
         this.AccountIDControl.setValue(SeletedAccount);
 
-        this.AccountTradeTypeChange(
-          this.editPurchase?.accountTradeTypeID.toString()
-        );
-
         this.editPurchase!.details!.forEach((element) => {
-          let ItemDetails: PurchaseItemDetail = {
+          let ItemDetails: PurchaseAItemDetail = {
             AutoID: element.autoID,
             SrNo: element.srNo,
             ItemID: element.itemID,
             ItemName: element.itemName,
-            Crt: element.crt,
-            Pcs: element.pcs,
             Qty: element.quantity,
-            FCrt: element.fCrt,
-            FPcs: element.fPcs,
-            FQty: element.freeQuantity,
-            TQty: element.totalQuantity,
             Rate: element.rate,
             Amount: element.amount,
             DiscPer: element.discPer,
@@ -341,9 +291,6 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
             IGSTAmount: element.igstAmount,
             CessAmount: element.cessAmount,
             TotalTaxAmount: element.totalTaxAmount,
-            GrossAmount: element.grossAmount,
-            SchPer: element.schPer,
-            SchAmount: element.schAmount,
             NetAmount: element.netAmount,
             IsAdd: false,
             IsModified: false,
@@ -368,14 +315,12 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
   }
 
   SavePurchase(purchaseForm: FormGroup) {
-    let PostRequestDetail: PurchaseItemPostRequest[] = [];
+    let PostRequestDetail: PurchaseAItemPostRequest[] = [];
     this.purchaseItemDetailsList.forEach((element) => {
       PostRequestDetail.push({
         srNo: element.SrNo,
         itemID: element.ItemID,
         quantity: element.Qty,
-        freeQuantity: element.FQty,
-        totalQuantity: element.TQty,
         rate: element.Rate,
         amount: element.Amount,
         discPer: element.DiscPer,
@@ -387,9 +332,6 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
         iGSTAmount: element.IGSTAmount,
         cessAmount: element.CessAmount,
         totalTaxAmount: element.TotalTaxAmount,
-        grossAmount: element.GrossAmount,
-        schPer: element.SchPer,
-        schAmount: element.SchAmount,
         netAmount: element.NetAmount,
         isAdd: element.IsAdd,
         isModified: element.IsModified,
@@ -402,7 +344,7 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
       refNo: purchaseForm.value.RefNo,
       billDate: purchaseForm.value.BillDate.format('YYYY-MM-DD'),
       accountID: Number(purchaseForm.value.AccountID.account_Id),
-      accountTradeTypeID: Number(purchaseForm.value.AccountTradeTypeID),
+      accountTradeTypeID: 1,
       totalAmount: CheckIsNumber(purchaseForm.value.TotalAmount),
       totalDiscAmount: CheckIsNumber(purchaseForm.value.TotalDiscAmount),
       totalTaxableAmount: CheckIsNumber(purchaseForm.value.TotalTaxableAmount),
@@ -411,13 +353,7 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
       totalIGSTAmount: CheckIsNumber(purchaseForm.value.TotalIGSTAmount),
       totalCessAmount: CheckIsNumber(purchaseForm.value.TotalCessAmount),
       totalTaxAmount: CheckIsNumber(purchaseForm.value.TotalTaxAmount),
-      totalGrossAmount: CheckIsNumber(purchaseForm.value.TotalGrossAmount),
-      totalSchAmount: CheckIsNumber(purchaseForm.value.TotalSchAmount),
       totalNetAmount: CheckIsNumber(purchaseForm.value.TotalNetAmount),
-      otherAddText: purchaseForm.value.OtherAddText,
-      otherAddAmount: CheckIsNumber(purchaseForm.value.OtherAddAmount),
-      otherLessText: purchaseForm.value.OtherLessText,
-      otherLessAmount: CheckIsNumber(purchaseForm.value.OtherLessAmount),
       roundOffAmount: CheckIsNumber(purchaseForm.value.RoundOffAmount),
       netAmount: CheckIsNumber(purchaseForm.value.NetAmount),
       details: PostRequestDetail,
@@ -431,15 +367,13 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
   }
 
   UpdatePurchase(purchaseForm: FormGroup) {
-    let PutRequestDetail: PurchaseItemPutRequest[] = [];
+    let PutRequestDetail: PurchaseAItemPutRequest[] = [];
     this.purchaseItemDetailsList.forEach((element) => {
       PutRequestDetail.push({
         autoID: element.AutoID,
         srNo: element.SrNo,
         itemID: element.ItemID,
         quantity: element.Qty,
-        freeQuantity: element.FQty,
-        totalQuantity: element.TQty,
         rate: element.Rate,
         amount: element.Amount,
         discPer: element.DiscPer,
@@ -451,9 +385,6 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
         iGSTAmount: element.IGSTAmount,
         cessAmount: element.CessAmount,
         totalTaxAmount: element.TotalTaxAmount,
-        grossAmount: element.GrossAmount,
-        schPer: element.SchPer,
-        schAmount: element.SchAmount,
         netAmount: element.NetAmount,
         isAdd: element.IsAdd,
         isModified: element.IsModified,
@@ -466,7 +397,7 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
       refNo: purchaseForm.value.RefNo,
       billDate: purchaseForm.value.BillDate.format('YYYY-MM-DD'),
       accountID: Number(purchaseForm.value.AccountID.account_Id),
-      accountTradeTypeID: Number(purchaseForm.value.AccountTradeTypeID),
+      accountTradeTypeID: 1,
       totalAmount: CheckIsNumber(purchaseForm.value.TotalAmount),
       totalDiscAmount: CheckIsNumber(purchaseForm.value.TotalDiscAmount),
       totalTaxableAmount: CheckIsNumber(purchaseForm.value.TotalTaxableAmount),
@@ -475,13 +406,7 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
       totalIGSTAmount: CheckIsNumber(purchaseForm.value.TotalIGSTAmount),
       totalCessAmount: CheckIsNumber(purchaseForm.value.TotalCessAmount),
       totalTaxAmount: CheckIsNumber(purchaseForm.value.TotalTaxAmount),
-      totalGrossAmount: CheckIsNumber(purchaseForm.value.TotalGrossAmount),
-      totalSchAmount: CheckIsNumber(purchaseForm.value.TotalSchAmount),
       totalNetAmount: CheckIsNumber(purchaseForm.value.TotalNetAmount),
-      otherAddText: purchaseForm.value.OtherAddText,
-      otherAddAmount: CheckIsNumber(purchaseForm.value.OtherAddAmount),
-      otherLessText: purchaseForm.value.OtherLessText,
-      otherLessAmount: CheckIsNumber(purchaseForm.value.OtherLessAmount),
       roundOffAmount: CheckIsNumber(purchaseForm.value.RoundOffAmount),
       netAmount: CheckIsNumber(purchaseForm.value.NetAmount),
       details: PutRequestDetail,
@@ -508,23 +433,12 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
     });
   }
 
-  FillAccountTradeTypeDropDown(AccountType: string) {
-    this.accountTradeTypeDropDown = [];
-    this.commonService
-      .AccountTradeTypeDropDown()
-      .subscribe((response: accountTradeTypeResponse[]) => {
-        this.accountTradeTypeDropDown = response.filter((a) =>
-          a.accountTypeID.includes(AccountType)
-        );
-      });
-  }
-
   FillBooksDropDown() {
     let filters = {
       GroupID: 0,
       BalanceTransferToID: 0,
-      AccountTypeID: 4,
-      TransactionTypeID: TransactionTypeMaster.Purchase_Inventory,
+      AccountTypeID: AccountTypeMaster.Head_Books,
+      TransactionTypeID: TransactionTypeMaster.Purchase_Assets,
       SalesTypeID: 0,
       AccountTradeTypeID: 0,
       AreaID: 0,
@@ -538,7 +452,7 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
     let filters = {
       GroupID: 0,
       BalanceTransferToID: 0,
-      AccountTypeID: 3,
+      AccountTypeID: AccountTypeMaster.Supplier,
       TransactionTypeID: 0,
       SalesTypeID: 0,
       AccountTradeTypeID: 0,
@@ -550,11 +464,12 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
     });
   }
 
-  FillItemDropDown(AccountTradeTypeID: number) {
+  FillItemDropDown() {
     let filters: ItemFilter_DropDown = {
       IsServiceItem: false,
-      IsInventory: true,
-      AccountTradeTypeID: AccountTradeTypeID,
+      IsInventory: false,
+      AccountTradeTypeID: 1,
+      OnlyStockItems: false,
     };
     this.itemService.ItemDropDown(filters).subscribe((response) => {
       this.itemsDropDown = response;
@@ -584,10 +499,6 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
     this.GetNewBillNo();
   }
 
-  AccountTradeTypeChange(event: any) {
-    this.FillItemDropDown(Number(event));
-  }
-
   SelectedAccount(event: any) {
     this.AccountStateID = event.option.value.stateID;
     this.InvoiceType =
@@ -606,16 +517,10 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
     );
     if (FoundItem != -1) {
       this.ItemEdit = this.purchaseItemDetailsList[FoundItem];
-      let ItemDetail: PurchaseItemDetail = this.purchaseItemDetailsList.filter(
+      let ItemDetail: PurchaseAItemDetail = this.purchaseItemDetailsList.filter(
         (a) => a.ItemID == event.option.value.item_Id
       )[0];
-      this.I_CrtControl.setValue(ItemDetail.Crt);
-      this.I_PcsControl.setValue(ItemDetail.Pcs);
-      this.I_QtyControl.setValue(ItemDetail.Qty);
-      this.I_FreeCrtControl.setValue(ItemDetail.FCrt);
-      this.I_FreePcsControl.setValue(ItemDetail.FPcs);
-      this.I_FreeQtyControl.setValue(ItemDetail.FQty);
-      this.I_TotalQtyControl.setValue(ItemDetail.TQty);
+      this.I_QuantityControl.setValue(ItemDetail.Qty);
       this.I_RateControl.setValue(ItemDetail.Rate);
       this.I_AmountControl.setValue(ItemDetail.Amount);
       this.I_DiscPerControl.setValue(ItemDetail.DiscPer);
@@ -625,10 +530,6 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
       this.I_SGSTAmountControl.setValue(ItemDetail.SGSTAmount);
       this.I_IGSTAmountControl.setValue(ItemDetail.IGSTAmount);
       this.I_CessAmountControl.setValue(ItemDetail.CessAmount);
-
-      this.I_GrossAmountControl.setValue(ItemDetail.GrossAmount);
-      this.I_SchPerControl.setValue(ItemDetail.SchPer);
-      this.I_SchAmountControl.setValue(ItemDetail.SchAmount);
       this.I_NetAmountControl.setValue(ItemDetail.NetAmount);
       this.CalculateTotals();
       this.IsItemEditMode = true;
@@ -637,7 +538,6 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
       .GetItembyID(event.option.value.item_Id)
       .subscribe((response) => {
         this.CurrentItem = response;
-        this.GetCurrentStock(Number(this.CurrentItem?.itemID));
         if (FoundItem == -1) {
           this.I_RateControl.setValue(
             SetFormatCurrency(this.CurrentItem?.purchaseRate)
@@ -646,20 +546,18 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
             this.CurrentItem?.gstTaxID.toString()
           );
         }
-        this.GetCurrentTax(Number(this.CurrentItem?.gstTaxID));
+        this.GetCurrentTax(Number(this.CurrentItem?.gstTaxID), false);
       });
   }
 
-  GetCurrentTax(TaxID: number) {
-    this.taxService.GetTaxbyID(TaxID).subscribe((response) => {
-      this.CurrentTax = response;
-    });
+  GSTTaxChange(event: any) {
+    this.GetCurrentTax(Number(event.value), true);
   }
 
-  GetCurrentStock(ItemID: number) {
-    //stockService
-    this.stockService.GetClosingByItemID(ItemID).subscribe((response) => {
-      this.CurrentStock = response;
+  GetCurrentTax(TaxID: number, calculateTotal: boolean) {
+    this.taxService.GetTaxbyID(TaxID).subscribe((response) => {
+      this.CurrentTax = response;
+      if (calculateTotal == true) this.CalculateTotals();
     });
   }
 
@@ -675,18 +573,12 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
       SrNo = this.purchaseItemDetailsList.length + 1;
     }
 
-    let ItemDetails: PurchaseItemDetail = {
+    let ItemDetails: PurchaseAItemDetail = {
       AutoID: this.IsItemEditMode ? Number(this.ItemEdit?.AutoID) : 0,
       SrNo: this.IsItemEditMode ? Number(this.ItemEdit?.SrNo) : SrNo,
       ItemID: Number(this.I_ItemIDControl.value.item_Id),
       ItemName: this.I_ItemIDControl.value.item_Name,
-      Crt: CheckIsNumber(this.I_CrtControl.value),
-      Pcs: CheckIsNumber(this.I_PcsControl.value),
-      Qty: CheckIsNumber(this.I_QtyControl.value),
-      FCrt: CheckIsNumber(this.I_FreeCrtControl.value),
-      FPcs: CheckIsNumber(this.I_FreePcsControl.value),
-      FQty: CheckIsNumber(this.I_FreeQtyControl.value),
-      TQty: CheckIsNumber(this.I_TotalQtyControl.value),
+      Qty: CheckIsNumber(this.I_QuantityControl.value),
       Rate: CheckIsNumber(this.I_RateControl.value),
       Amount: CheckIsNumber(this.I_AmountControl.value),
       DiscPer: CheckIsNumber(this.I_DiscPerControl.value),
@@ -699,9 +591,6 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
       IGSTAmount: CheckIsNumber(this.I_IGSTAmountControl.value),
       CessAmount: CheckIsNumber(this.I_CessAmountControl.value),
       TotalTaxAmount: CheckIsNumber(this.I_TotalTaxAmountControl.value),
-      GrossAmount: CheckIsNumber(this.I_GrossAmountControl.value),
-      SchPer: CheckIsNumber(this.I_SchPerControl.value),
-      SchAmount: CheckIsNumber(this.I_SchAmountControl.value),
       NetAmount: CheckIsNumber(this.I_NetAmountControl.value),
       IsAdd: this.isEditMode ? (this.IsItemEditMode ? false : true) : true,
       IsModified: this.isEditMode
@@ -726,7 +615,7 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
     this.IsItemEditMode = false;
   }
 
-  editItem(record: PurchaseItemDetail) {
+  editItem(record: PurchaseAItemDetail) {
     let SeletedItem: itemsDropDownResponse;
     SeletedItem = this.itemsDropDown.filter(
       (a) => a.item_Id == record.ItemID.toString()
@@ -734,13 +623,7 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
     this.ItemEdit = record;
     this.ItemsControl.patchValue({
       I_ItemID: SeletedItem,
-      I_Crt: record.Crt,
-      I_Pcs: record.Pcs,
-      I_Qty: record.Qty,
-      I_FreeCrt: record.FCrt,
-      I_FreePcs: record.FPcs,
-      I_FreeQty: record.FQty,
-      I_TotalQty: record.TQty,
+      I_Quantity: record.Qty,
       I_Rate: SetFormatCurrency(record.Rate),
       I_Amount: SetFormatCurrency(record.Amount),
       I_DiscPer: SetFormatCurrency(record.DiscPer),
@@ -752,24 +635,20 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
       I_IGSTAmount: SetFormatCurrency(record.IGSTAmount),
       I_CessAmount: SetFormatCurrency(record.CessAmount),
       I_TotalTaxAmount: SetFormatCurrency(record.TotalTaxAmount),
-      I_GrossAmount: SetFormatCurrency(record.GrossAmount),
-      I_SchPer: SetFormatCurrency(record.SchPer),
-      I_SchAmount: SetFormatCurrency(record.SchAmount),
       I_NetAmount: SetFormatCurrency(record.NetAmount),
     });
     this.IsItemEditMode = true;
-    this.renderer.selectRootElement('#ItemName').focus();
+    this.renderer.selectRootElement('#ItemName', true).focus();
     this.itemService.GetItembyID(record.ItemID).subscribe((response) => {
       this.CurrentItem = response;
-      this.GetCurrentStock(Number(this.CurrentItem?.itemID));
       this.I_RateControl.setValue(
         SetFormatCurrency(this.CurrentItem?.purchaseRate)
       );
-      this.GetCurrentTax(Number(record.GSTTaxID));
+      this.GetCurrentTax(Number(record.GSTTaxID), false);
     });
   }
 
-  deleteItem(record: PurchaseItemDetail) {
+  deleteItem(record: PurchaseAItemDetail) {
     let ItemIndex = this.purchaseItemDetailsList.findIndex(
       (a) => a.ItemID == Number(record.ItemID)
     );
@@ -808,24 +687,12 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
       TotalIGSTAmount: 0,
       TotalCessAmount: 0,
       TotalTaxAmount: 0,
-      TotalGrossAmount: 0,
-      TotalSchAmount: 0,
       TotalNetAmount: 0,
-      OtherAddText: '',
-      OtherAddAmount: 0,
-      OtherLessText: '',
-      OtherLessAmount: 0,
       RoundOffAmount: 0,
       NetAmount: 0,
       Items: {
         I_ItemID: '',
-        I_Crt: 0,
-        I_Pcs: 0,
-        I_Qty: 0,
-        I_FreeCrt: 0,
-        I_FreePcs: 0,
-        I_FreeQty: 0,
-        I_TotalQty: 0,
+        I_Quantity: 0,
         I_Rate: 0,
         I_Amount: 0,
         I_DiscPer: 0,
@@ -837,9 +704,6 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
         I_IGSTAmount: 0,
         I_CessAmount: 0,
         I_TotalTaxAmount: 0,
-        I_GrossAmount: 0,
-        I_SchPer: 0,
-        I_SchAmount: 0,
         I_NetAmount: 0,
       },
     });
@@ -859,13 +723,7 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
   ResetItems() {
     this.ItemsControl.reset({
       I_ItemID: '',
-      I_Crt: 0,
-      I_Pcs: 0,
-      I_Qty: 0,
-      I_FreeCrt: 0,
-      I_FreePcs: 0,
-      I_FreeQty: 0,
-      I_TotalQty: 0,
+      I_Quantity: 0,
       I_Rate: 0,
       I_Amount: 0,
       I_DiscPer: 0,
@@ -877,15 +735,11 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
       I_IGSTAmount: 0,
       I_CessAmount: 0,
       I_TotalTaxAmount: 0,
-      I_GrossAmount: 0,
-      I_SchPer: 0,
-      I_SchAmount: 0,
       I_NetAmount: 0,
     });
     this.ItemsControl.markAsUntouched();
-    this.renderer.selectRootElement('#ItemName').focus();
+    this.renderer.selectRootElement('#ItemName', true).focus();
     this.CurrentItem = undefined;
-    this.CurrentStock = undefined;
     this.CurrentTax = undefined;
   }
 
@@ -894,7 +748,7 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
       this.AutoAccountID?.isOpen == false &&
       this.AccountIDControl.value == ''
     ) {
-      this.renderer.selectRootElement('#AccountName').focus();
+      this.renderer.selectRootElement('#AccountName', true).focus();
     }
   }
 
@@ -904,12 +758,16 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
         this.I_ItemIDControl.value == '' &&
         this.purchaseItemDetailsList.length == 0
       ) {
-        this.renderer.selectRootElement('#ItemName').focus();
+        this.renderer.selectRootElement('#ItemName', true).focus();
       } else if (
         this.I_ItemIDControl.value == '' &&
         this.purchaseItemDetailsList.length > 0
       ) {
-        this.renderer.selectRootElement('#OtherAddText').focus();
+        if (this.isEditMode == true) {
+          this.renderer.selectRootElement('#UpdatePurchase', true).focus();
+        } else {
+          this.renderer.selectRootElement('#SavePurchase', true).focus();
+        }
       }
     }
   }
@@ -933,10 +791,6 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
 
   get AccountIDControl() {
     return this.purchaseForm.get('AccountID') as FormControl;
-  }
-
-  get AccountTradeTypeIDControl() {
-    return this.purchaseForm.get('AccountTradeTypeID') as FormControl;
   }
 
   get TotalAmountControl() {
@@ -963,26 +817,8 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
   get TotalTaxAmountControl() {
     return this.purchaseForm.get('TotalTaxAmount') as FormControl;
   }
-  get TotalGrossAmountControl() {
-    return this.purchaseForm.get('TotalGrossAmount') as FormControl;
-  }
-  get TotalSchAmountControl() {
-    return this.purchaseForm.get('TotalSchAmount') as FormControl;
-  }
   get TotalNetAmountControl() {
     return this.purchaseForm.get('TotalNetAmount') as FormControl;
-  }
-  get OtherAddTextControl() {
-    return this.purchaseForm.get('OtherAddText') as FormControl;
-  }
-  get OtherAddAmountControl() {
-    return this.purchaseForm.get('OtherAddAmount') as FormControl;
-  }
-  get OtherLessTextControl() {
-    return this.purchaseForm.get('OtherLessText') as FormControl;
-  }
-  get OtherLessAmountControl() {
-    return this.purchaseForm.get('OtherLessAmount') as FormControl;
   }
   get RoundOffAmountControl() {
     return this.purchaseForm.get('RoundOffAmount') as FormControl;
@@ -998,27 +834,8 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
   get I_ItemIDControl() {
     return this.ItemsControl.get('I_ItemID') as FormControl;
   }
-
-  get I_CrtControl() {
-    return this.ItemsControl.get('I_Crt') as FormControl;
-  }
-  get I_PcsControl() {
-    return this.ItemsControl.get('I_Pcs') as FormControl;
-  }
-  get I_QtyControl() {
-    return this.ItemsControl.get('I_Qty') as FormControl;
-  }
-  get I_FreeCrtControl() {
-    return this.ItemsControl.get('I_FreeCrt') as FormControl;
-  }
-  get I_FreePcsControl() {
-    return this.ItemsControl.get('I_FreePcs') as FormControl;
-  }
-  get I_FreeQtyControl() {
-    return this.ItemsControl.get('I_FreeQty') as FormControl;
-  }
-  get I_TotalQtyControl() {
-    return this.ItemsControl.get('I_TotalQty') as FormControl;
+  get I_QuantityControl() {
+    return this.ItemsControl.get('I_Quantity') as FormControl;
   }
   get I_RateControl() {
     return this.ItemsControl.get('I_Rate') as FormControl;
@@ -1053,15 +870,6 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
   get I_TotalTaxAmountControl() {
     return this.ItemsControl.get('I_TotalTaxAmount') as FormControl;
   }
-  get I_GrossAmountControl() {
-    return this.ItemsControl.get('I_GrossAmount') as FormControl;
-  }
-  get I_SchPerControl() {
-    return this.ItemsControl.get('I_SchPer') as FormControl;
-  }
-  get I_SchAmountControl() {
-    return this.ItemsControl.get('I_SchAmount') as FormControl;
-  }
   get I_NetAmountControl() {
     return this.ItemsControl.get('I_NetAmount') as FormControl;
   }
@@ -1089,19 +897,9 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
     }
   }
 
-  SchPerChange(event: any) {
-    if (event.keyCode != 9 && event.keyCode != 13) {
-      this.IsSchPerChange = true;
-      this.CalculateTotals();
-    }
-  }
-
   CalculateTotals() {
     let Rate = 0,
-      RatePerPcs = 0,
       Qty = 0,
-      FreeQty = 0,
-      TotalQty = 0,
       Amount = 0,
       DiscAmount = 0,
       TaxableAmount = 0,
@@ -1110,27 +908,14 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
       IGSTAmount = 0,
       CessAmount = 0,
       TotalTaxAmount = 0,
-      GrossAmount = 0,
-      SchAmount = 0,
       NetAmount = 0;
-
     Rate = CheckIsNumber(this.I_RateControl.value);
-    RatePerPcs = Rate / Number(this.CurrentItem?.packing);
-    Qty =
-      Number(this.I_CrtControl.value) * Number(this.CurrentItem?.packing) +
-      Number(this.I_PcsControl.value);
-    FreeQty =
-      Number(this.I_FreeCrtControl.value) * Number(this.CurrentItem?.packing) +
-      Number(this.I_FreePcsControl.value);
-
-    TotalQty = Qty + FreeQty;
+    Qty = Number(this.I_QuantityControl.value);
     this.DisableAddItemBtn = true;
-    if (TotalQty > 0) {
+    if (Qty > 0) {
       this.DisableAddItemBtn = false;
     }
-    Amount =
-      Number(this.I_CrtControl.value) * Rate +
-      Number(this.I_PcsControl.value) * RatePerPcs;
+    Amount = Qty * Rate;
 
     if (this.IsDiscPerChange) {
       DiscAmount = Amount * (Number(this.I_DiscPerControl.value) / 100);
@@ -1152,19 +937,9 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
 
     TotalTaxAmount = CGSTAmount + SGSTAmount + IGSTAmount + CessAmount;
 
-    GrossAmount = TaxableAmount + TotalTaxAmount;
+    NetAmount = TaxableAmount + TotalTaxAmount;
 
-    if (this.IsSchPerChange) {
-      SchAmount = GrossAmount * (Number(this.I_SchPerControl.value) / 100);
-    } else {
-      SchAmount = Number(this.I_SchAmountControl.value);
-    }
-
-    NetAmount = GrossAmount - SchAmount;
-
-    this.I_QtyControl.setValue(Qty);
-    this.I_FreeQtyControl.setValue(FreeQty);
-    this.I_TotalQtyControl.setValue(TotalQty);
+    this.I_QuantityControl.setValue(Qty);
     this.I_AmountControl.setValue(SetFormatCurrency(Amount));
     if (this.IsDiscPerChange == true) {
       this.I_DiscAmountControl.setValue(SetFormatCurrency(DiscAmount));
@@ -1175,13 +950,8 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
     this.I_IGSTAmountControl.setValue(SetFormatCurrency(IGSTAmount));
     this.I_CessAmountControl.setValue(SetFormatCurrency(CessAmount));
     this.I_TotalTaxAmountControl.setValue(SetFormatCurrency(TotalTaxAmount));
-    this.I_GrossAmountControl.setValue(SetFormatCurrency(GrossAmount));
-    if (this.IsSchPerChange == true) {
-      this.I_SchAmountControl.setValue(SetFormatCurrency(SchAmount));
-    }
     this.I_NetAmountControl.setValue(SetFormatCurrency(NetAmount));
     this.IsDiscPerChange = false;
-    this.IsSchPerChange = false;
   }
 
   CalculateFinalTotals() {
@@ -1193,8 +963,6 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
       TotalIGSTAmount = 0,
       TotalCessAmount = 0,
       TotalTaxAmount = 0,
-      TotalGrossAmount = 0,
-      TotalSchAmount = 0,
       TotalNetAmount = 0;
 
     this.purchaseItemDetailsList.forEach((element) => {
@@ -1209,9 +977,6 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
         TotalCessAmount = Number(TotalCessAmount) + Number(element.CessAmount);
         TotalTaxAmount =
           Number(TotalTaxAmount) + Number(element.TotalTaxAmount);
-        TotalGrossAmount =
-          Number(TotalGrossAmount) + Number(element.GrossAmount);
-        TotalSchAmount = Number(TotalSchAmount) + Number(element.SchAmount);
         TotalNetAmount = Number(TotalNetAmount) + Number(element.NetAmount);
       }
     });
@@ -1226,8 +991,6 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
     this.TotalIGSTAmountControl.setValue(SetFormatCurrency(TotalIGSTAmount));
     this.TotalCessAmountControl.setValue(SetFormatCurrency(TotalCessAmount));
     this.TotalTaxAmountControl.setValue(SetFormatCurrency(TotalTaxAmount));
-    this.TotalGrossAmountControl.setValue(SetFormatCurrency(TotalGrossAmount));
-    this.TotalSchAmountControl.setValue(SetFormatCurrency(TotalSchAmount));
     this.TotalNetAmountControl.setValue(SetFormatCurrency(TotalNetAmount));
 
     this.CalculateNetAmount();
@@ -1238,17 +1001,12 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
       NetAmount = 0,
       OtherAddAmount = 0,
       OtherLessAmount = 0,
-      AfterAddLessAmount = 0,
       TotalNetAmount = 0;
 
     TotalNetAmount = Number(this.TotalNetAmountControl.value.replace(/,/g, ''));
-    OtherAddAmount = CheckIsNumber(this.OtherAddAmountControl.value);
-    OtherLessAmount = CheckIsNumber(this.OtherLessAmountControl.value);
 
-    AfterAddLessAmount = TotalNetAmount + OtherAddAmount - OtherLessAmount;
-
-    NetAmount = Math.round(Number(AfterAddLessAmount));
-    RoundOffAmount = NetAmount - AfterAddLessAmount;
+    NetAmount = Math.round(Number(TotalNetAmount));
+    RoundOffAmount = NetAmount - TotalNetAmount;
 
     this.RoundOffAmountControl.setValue(SetFormatCurrency(RoundOffAmount));
     this.NetAmountControl.setValue(SetFormatCurrency(NetAmount));

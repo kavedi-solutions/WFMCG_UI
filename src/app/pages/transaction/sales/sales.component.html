@@ -1,0 +1,47 @@
+<page-header
+  class="bg-blue-600"
+  [title]="PageTitle"
+  [addButtonToolTip]="buttonText"
+  [showBack]="false"
+  [showAdd]="accRights!.canAdd"
+  (onAddClick)="AddnewRecord()"
+></page-header>
+
+<mtx-grid
+  class="table-main-wrapper page-detail"
+  [data]="salesListData"
+  [columns]="columns"
+  [length]="pagination!.recordCount"
+  [pageIndex]="pagination!.page"
+  [pageSize]="pagination!.pageSize"
+  [columnResizable]="false"
+  [multiSelectable]="false"
+  [rowSelectable]="true"
+  [hideRowSelectionCheckbox]="true"
+  [rowHover]="true"
+  [rowStriped]="false"
+  [toolbarTitle]="'Purchase List'"
+  [columnHideable]="false"
+  [columnSortable]="true"
+  [columnPinnable]="true"
+  [expandable]="false"
+  [pageOnFront]="true"
+  [showPaginator]="true"
+  [pageSizeOptions]="pageSizeOptions"
+  (sortChange)="changeSort($event)"
+  (selectionChange)="changeSelect($event)"
+  (page)="getNextPage($event)"
+  [showToolbar]="true"
+  [showColumnMenuButton]="false"
+  [toolbarTemplate]="toolbarTpl"
+>
+</mtx-grid>
+
+<ng-template #toolbarTpl>
+  <app-list-common-filters
+    (onSearch)="onSearch($event)"
+    (onRefreshEvent)="onRefresh()"
+    (onStatusFilter)="onStatusFilter($event)"
+    [latestSearchText]="latestSearchText"
+  ></app-list-common-filters>
+</ng-template>

@@ -667,7 +667,6 @@ export class AccountsAddEditComponent implements OnInit {
     this.disableTradeType = true;
     this.disableBookInit = true;
     this.disabledefaultBook = true;
-    debugger;
     this.disableaddredd = true;
     this.disablearea = true;
     this.disableContact = true;
@@ -685,7 +684,6 @@ export class AccountsAddEditComponent implements OnInit {
         this.transactionTypeIDSelectionChange('1');
         this.disableTradeType = false;
         this.disabledefaultBook = false;
-        debugger;
         this.disableaddredd = false;
         this.disablearea = false;
         this.disableContact = false;
@@ -694,7 +692,6 @@ export class AccountsAddEditComponent implements OnInit {
         this.transactionTypeIDControl.setValue('1');
         this.accountTradeTypeIDControl.setValue('1');
         this.transactionTypeIDSelectionChange('1');
-        debugger;
         this.disableaddredd = false;
         this.disableContact = false;
         break;
@@ -708,7 +705,6 @@ export class AccountsAddEditComponent implements OnInit {
         this.transactionTypeIDControl.setValue('1');
         this.accountTradeTypeIDControl.setValue('1');
         this.transactionTypeIDSelectionChange('1');
-        debugger;
         this.disableaddredd = false;
         break;
     }
@@ -718,11 +714,10 @@ export class AccountsAddEditComponent implements OnInit {
     this.disableSaleBookType = true;
     this.FillSalesTypeDropDown(event);
     switch (Number(event)) {
-      case 3:
-        debugger;
-        this.salesTypeIDControl.setValue('1');
-        break;
-      case 5:
+      case 21:
+      case 22:
+      case 23:
+        this.disableSaleBookType = false;
         this.salesTypeIDControl.setValue('');
         break;
       default:

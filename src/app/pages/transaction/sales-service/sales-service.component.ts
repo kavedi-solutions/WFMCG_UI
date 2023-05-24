@@ -3,7 +3,7 @@ import {
   AccessRights,
   FilterValues,
   PaginationHeaders,
-  PurchaseS,
+  SalesS,
 } from 'src/app/shared';
 import * as fromService from '../../../shared/index';
 import * as defaultData from '../../../data/index';
@@ -11,15 +11,16 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { funSortingOrder } from 'src/app/shared/functions';
 import { PageEvent } from '@angular/material/paginator';
 import { MtxGridColumn } from 'src/app/extensions/grid/grid.interface';
+
 @Component({
-  selector: 'app-purchase-service',
-  templateUrl: './purchase-service.component.html',
-  styleUrls: ['./purchase-service.component.scss'],
+  selector: 'app-sales-service',
+  templateUrl: './sales-service.component.html',
+  styleUrls: ['./sales-service.component.scss'],
 })
-export class PurchaseServiceComponent implements OnInit {
-  PageTitle: string = 'Purchase (Service)';
-  buttonText: string = 'Add New Purchase';
-  purchaseListData: PurchaseS[] = [];
+export class SalesServiceComponent implements OnInit {
+  PageTitle: string = 'Sales (Service)';
+  buttonText: string = 'Add New Sales';
+  salesListData: SalesS[] = [];
   pagination?: PaginationHeaders = defaultData.defaultPaginationHeaders;
   filterValues?: FilterValues[];
   Sort?: string;
@@ -29,9 +30,8 @@ export class PurchaseServiceComponent implements OnInit {
   latestSortingOrder?: string;
   latestSearchText?: string;
   pageSizeOptions = defaultData.pageSizeOptions;
-
   constructor(
-    private purchaseService: fromService.PurchaseSService,
+    private salesService: fromService.SalesSService,
     private router: Router,
     private route: ActivatedRoute
   ) {
@@ -39,7 +39,7 @@ export class PurchaseServiceComponent implements OnInit {
     this.accRights = this.route.snapshot.data['userRights'];
     this.setColumns();
     this.latestSortingOrder = 'billDate';
-    this.getPurchaseList();
+    this.getSalesList();
   }
 
   ngOnInit(): void {}
@@ -100,32 +100,32 @@ export class PurchaseServiceComponent implements OnInit {
     });
   }
 
-  getPurchaseList() {
-    this.purchaseService
-      .GetPurchaseList(
+  getSalesList() {
+    this.salesService
+      .GetSalesList(
         this.pagination!,
         this.latestSortingOrder!,
         this.latestSearchText!,
         this.filterValues!
       )
       .subscribe((response) => {
-        this.purchaseListData = response.body;
+        this.salesListData = response.body;
         this.pagination = response.headers;
       });
   }
 
   edit(value: any) {
-    this.router.navigate(['/transaction/purchase-service/edit/', value.autoID]);
+    this.router.navigate(['/transaction/sales-service/edit/', value.autoID]);
   }
 
   delete(value: any) {
-    this.purchaseService.deletePurchase(value.autoID).subscribe((response) => {
-      this.getPurchaseList();
+    this.salesService.deleteSales(value.autoID).subscribe((response) => {
+      this.getSalesList();
     });
   }
 
   AddnewRecord() {
-    this.router.navigate(['/transaction/purchase-service/add']);
+    this.router.navigate(['/transaction/sales-service/add']);
   }
 
   changeSelect(e: any) {
@@ -136,14 +136,14 @@ export class PurchaseServiceComponent implements OnInit {
     this.latestSortingOrder = '';
     this.pagination!.page = 0;
     this.latestSortingOrder = funSortingOrder(event, this.latestSortingOrder);
-    this.getPurchaseList();
+    this.getSalesList();
   }
 
   getNextPage(e: PageEvent) {
     this.pagination!.page = e.pageIndex;
     this.pagination!.pageSize = e.pageSize;
     this.pagination!.recordCount = e.length;
-    this.getPurchaseList();
+    this.getSalesList();
   }
 
   onSearch($event: any) {
@@ -152,11 +152,11 @@ export class PurchaseServiceComponent implements OnInit {
       this.pagination.page = 0;
     }
     this.latestSearchText = $event.searchText;
-    this.getPurchaseList();
+    this.getSalesList();
   }
 
   onRefresh() {
-    this.getPurchaseList();
+    this.getSalesList();
   }
 
   onStatusFilter($event: any) {
@@ -167,6 +167,7 @@ export class PurchaseServiceComponent implements OnInit {
         value: $event.selectedValue,
       });
     }
-    this.getPurchaseList();
-  }
+    this.getSalesList();
+  }  
+
 }

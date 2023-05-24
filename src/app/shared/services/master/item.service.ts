@@ -143,6 +143,7 @@ export class ItemService {
       .set('IsServiceItem', `${filters.IsServiceItem}`)
       .set('IsInventory', `${filters.IsInventory}`)
       .set('AccountTradeTypeID', `${filters.AccountTradeTypeID}`)
+      .set('OnlyStockItems', `${filters.OnlyStockItems}`)
 
     return this.http
       .get<any>(encodeURI(url), {

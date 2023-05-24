@@ -1,11 +1,11 @@
 import { PaginationHeaders } from '../../common/PaginationHeaders.model';
 
-export interface PurchaseAPagedResponse {
+export interface SalesPagedResponse {
   headers?: PaginationHeaders;
-  body: PurchaseA[];
+  body: Sales[];
 }
 
-export interface PurchaseA {
+export interface Sales {
   companyID: string;
   autoID: number;
   bookAccountID: number;
@@ -25,7 +25,7 @@ export interface PurchaseA {
   modifiedDate: string;
 }
 
-export interface PurchaseAResponse {
+export interface SalesResponse {
   autoID: number;
   companyID: string;
   bookAccountID: number;
@@ -42,23 +42,35 @@ export interface PurchaseAResponse {
   totalIGSTAmount: number;
   totalCessAmount: number;
   totalTaxAmount: number;
+  totalGrossAmount: number;
+  totalSchAmount: number;
   totalNetAmount: number;
+  otherAddText: string | null;
+  otherAddAmount: number;
+  otherLessText: string | null;
+  otherLessAmount: number;
   roundOffAmount: number;
   netAmount: number;
-  details: PurchaseAItemResponse[] | null;
+  details: SalesItemResponse[] | null;
   isActive: boolean;
   createdDate: string;
   modifiedDate: string;
 }
 
-export interface PurchaseAItemResponse {
+export interface SalesItemResponse {
   autoID: number;
   parentAutoID: number;
   srNo: number;
   itemID: number;
   itemName: string;
   accountTradeTypeID: number;
+  crt: number;
+  pcs: number;
   quantity: number;
+  fCrt: number;
+  fPcs: number;
+  freeQuantity: number;
+  totalQuantity: number;
   rate: number;
   amount: number;
   discPer: number;
@@ -71,5 +83,8 @@ export interface PurchaseAItemResponse {
   igstAmount: number;
   cessAmount: number;
   totalTaxAmount: number;
+  grossAmount: number;
+  schPer: number;
+  schAmount: number;
   netAmount: number;
 }

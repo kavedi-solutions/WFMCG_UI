@@ -30,7 +30,7 @@ const routes: Routes = [
             path: 'list',
             component: CommonPages.UserRoleComponent,
             resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
-            data: { MenuID: '701' },
+            data: { MenuID: '801' },
             canActivate: [AuthGuard],
           },
           {
@@ -52,7 +52,7 @@ const routes: Routes = [
             path: 'list',
             component: CommonPages.UsersComponent,
             resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
-            data: { MenuID: '702' },
+            data: { MenuID: '802' },
             canActivate: [AuthGuard],
           },
           {
@@ -317,6 +317,72 @@ const routes: Routes = [
           },
         ],
       },
+      {
+        path: 'sales',
+        children: [
+          {
+            path: 'list',
+            component: CommonPages.SalesComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '211' },
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'add',
+            component: CommonPages.SalesAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'edit/:salesid',
+            component: CommonPages.SalesAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+        ],
+      },
+      {
+        path: 'sales-service',
+        children: [
+          {
+            path: 'list',
+            component: CommonPages.SalesServiceComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '212' },
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'add',
+            component: CommonPages.SalesServiceAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'edit/:salesid',
+            component: CommonPages.SalesServiceAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+        ],
+      },
+      {
+        path: 'sales-assets',
+        children: [
+          {
+            path: 'list',
+            component: CommonPages.SalesAssetsComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '213' },
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'add',
+            component: CommonPages.SalesAssetsAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'edit/:salesid',
+            component: CommonPages.SalesAssetsAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+        ],
+      },
     ],
   },
   {
@@ -338,6 +404,11 @@ const routes: Routes = [
       {
         path: 'purchase/add',
         component: CommonPages.PurchaseAddEditComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'sales/add',
+        component: CommonPages.SalesAddEditComponent,
         canActivate: [AuthGuard],
       },
     ],

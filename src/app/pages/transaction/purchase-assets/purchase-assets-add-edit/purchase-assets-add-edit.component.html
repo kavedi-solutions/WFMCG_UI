@@ -63,27 +63,10 @@
           />
         </mat-form-field>
       </div>
-      <div fxFlex="20%" fxFlex.lt-sm="100" class="matero-col">
+      <div fxFlex="30%" fxFlex.lt-sm="100" class="matero-col">
         <mat-form-field appearance="legacy" color="primary">
           <mat-label>Ref No</mat-label>
           <input matInput placeholder="Ref No" formControlName="RefNo" />
-        </mat-form-field>
-      </div>
-      <div fxFlex="10%" fxFlex.lt-sm="100" class="matero-col">
-        <mat-form-field appearance="legacy" color="primary">
-          <mat-label>Trade Type</mat-label>
-          <mat-select
-            formControlName="AccountTradeTypeID"
-            required
-            (valueChange)="AccountTradeTypeChange($event)"
-          >
-            <mat-option
-              *ngFor="let sbdd of accountTradeTypeDropDown"
-              [value]="sbdd.accountTradeTypeID"
-            >
-              {{ sbdd.accountTradeTypeName }}
-            </mat-option>
-          </mat-select>
         </mat-form-field>
       </div>
     </div>
@@ -115,23 +98,11 @@
       <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col invoiceType">
         <span>{{ InvoiceType }}</span>
       </div>
-      <div fxFlex="35%" fxFlex.lt-sm="100" class="matero-col"></div>
-      <div
-        fxFlex="10%"
-        fxFlex.lt-sm="100"
-        class="matero-col stocks"
-        *ngIf="I_ItemIDControl.value != ''"
-      >
-        <span>Stock</span>
-        <br />
-        <span>
-          {{ CurrentStock?.closingCrt }}/{{ CurrentStock?.closingPcs }}</span
-        >
-      </div>
+      <div fxFlex="45%" fxFlex.lt-sm="100" class="matero-col"></div>
     </div>
     <div formGroupName="Items">
       <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
-        <div fxFlex="33%" fxFlex.lt-sm="100" class="matero-col">
+        <div fxFlex="40%" fxFlex.lt-sm="100" class="matero-col">
           <mat-form-field appearance="legacy" color="primary">
             <mat-label>Select Item</mat-label>
             <input
@@ -155,63 +126,21 @@
             </mat-autocomplete>
           </mat-form-field>
         </div>
-        <div fxFlex="7%" fxFlex.lt-sm="100" class="matero-col">
+        <div fxFlex="8%" fxFlex.lt-sm="100" class="matero-col">
           <mat-form-field appearance="legacy" color="primary">
-            <mat-label>Crt</mat-label>
+            <mat-label>Quantity</mat-label>
             <input
               matInput
-              placeholder="Crt"
+              placeholder="Quantity"
               type="text"
-              formControlName="I_Crt"
+              formControlName="I_Quantity"
               maxlength="2"
               class="input-right-align"
               (keyup)="CalculateTotals()"
             />
           </mat-form-field>
         </div>
-        <div fxFlex="7%" fxFlex.lt-sm="100" class="matero-col">
-          <mat-form-field appearance="legacy" color="primary">
-            <mat-label>Pcs</mat-label>
-            <input
-              matInput
-              placeholder="Pcs"
-              type="text"
-              formControlName="I_Pcs"
-              maxlength="5"
-              class="input-right-align"
-              (keyup)="CalculateTotals()"
-            />
-          </mat-form-field>
-        </div>
-        <div fxFlex="7%" fxFlex.lt-sm="100" class="matero-col">
-          <mat-form-field appearance="legacy" color="primary">
-            <mat-label>Free Crt</mat-label>
-            <input
-              matInput
-              placeholder="Free Crt"
-              type="text"
-              formControlName="I_FreeCrt"
-              maxlength="3"
-              class="input-right-align"
-              (keyup)="CalculateTotals()"
-            />
-          </mat-form-field>
-        </div>
-        <div fxFlex="7%" fxFlex.lt-sm="100" class="matero-col">
-          <mat-form-field appearance="legacy" color="primary">
-            <mat-label>FreePcs</mat-label>
-            <input
-              matInput
-              placeholder="Free Pcs"
-              type="text"
-              formControlName="I_FreePcs"
-              maxlength="5"
-              class="input-right-align"
-              (keyup)="CalculateTotals()"
-            />
-          </mat-form-field>
-        </div>
-        <div fxFlex="10%" fxFlex.lt-sm="100" class="matero-col">
+        <div fxFlex="12%" fxFlex.lt-sm="100" class="matero-col">
           <mat-form-field appearance="legacy" color="primary">
             <mat-label>Rate</mat-label>
             <input
@@ -225,7 +154,7 @@
             />
           </mat-form-field>
         </div>
-        <div fxFlex="12%" fxFlex.lt-sm="100" class="matero-col">
+        <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
           <mat-form-field appearance="legacy" color="primary">
             <mat-label>Amount</mat-label>
             <input
@@ -238,7 +167,7 @@
             />
           </mat-form-field>
         </div>
-        <div fxFlex="7%" fxFlex.lt-sm="100" class="matero-col">
+        <div fxFlex="10%" fxFlex.lt-sm="100" class="matero-col">
           <mat-form-field appearance="legacy" color="primary">
             <mat-label>DiscPer</mat-label>
             <input
@@ -252,7 +181,7 @@
             />
           </mat-form-field>
         </div>
-        <div fxFlex="10%" fxFlex.lt-sm="100" class="matero-col">
+        <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
           <mat-form-field appearance="legacy" color="primary">
             <mat-label>Disc Amount</mat-label>
             <input
@@ -268,17 +197,20 @@
         </div>
       </div>
       <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
-        <div fxFlex="17%" fxFlex.lt-sm="100" class="matero-col">
+        <div fxFlex="40%" fxFlex.lt-sm="100" class="matero-col">
           <mat-form-field appearance="legacy" color="primary">
             <mat-label>Select Tax</mat-label>
-            <mat-select formControlName="I_GSTTaxID">
+            <mat-select
+              formControlName="I_GSTTaxID"
+              (selectionChange)="GSTTaxChange($event)"
+            >
               <mat-option *ngFor="let tdd of taxDropDown" [value]="tdd.tax_Id">
                 {{ tdd.tax_Name }}
               </mat-option>
             </mat-select>
           </mat-form-field>
         </div>
-        <div fxFlex="9%" fxFlex.lt-sm="100" class="matero-col">
+        <div fxFlex="10%" fxFlex.lt-sm="100" class="matero-col">
           <mat-form-field appearance="legacy" color="primary">
             <mat-label>CGST Amount</mat-label>
             <input
@@ -292,7 +224,7 @@
             />
           </mat-form-field>
         </div>
-        <div fxFlex="9%" fxFlex.lt-sm="100" class="matero-col">
+        <div fxFlex="10%" fxFlex.lt-sm="100" class="matero-col">
           <mat-form-field appearance="legacy" color="primary">
             <mat-label>SGST Amount</mat-label>
             <input
@@ -306,7 +238,7 @@
             />
           </mat-form-field>
         </div>
-        <div fxFlex="9%" fxFlex.lt-sm="100" class="matero-col">
+        <div fxFlex="10%" fxFlex.lt-sm="100" class="matero-col">
           <mat-form-field appearance="legacy" color="primary">
             <mat-label>IGST Amount</mat-label>
             <input
@@ -320,7 +252,7 @@
             />
           </mat-form-field>
         </div>
-        <div fxFlex="9%" fxFlex.lt-sm="100" class="matero-col">
+        <div fxFlex="10%" fxFlex.lt-sm="100" class="matero-col">
           <mat-form-field appearance="legacy" color="primary">
             <mat-label>Cess Amount</mat-label>
             <input
@@ -334,49 +266,7 @@
             />
           </mat-form-field>
         </div>
-        <div fxFlex="12%" fxFlex.lt-sm="100" class="matero-col">
-          <mat-form-field appearance="legacy" color="primary">
-            <mat-label>Gross Amount</mat-label>
-            <input
-              matInput
-              placeholder="Gross Amount"
-              type="text"
-              formControlName="I_GrossAmount"
-              maxlength="15"
-              class="input-right-align"
-              readonly
-            />
-          </mat-form-field>
-        </div>
-        <div fxFlex="7%" fxFlex.lt-sm="100" class="matero-col">
-          <mat-form-field appearance="legacy" color="primary">
-            <mat-label>Sch %</mat-label>
-            <input
-              matInput
-              placeholder="Sch %"
-              type="text"
-              formControlName="I_SchPer"
-              maxlength="5"
-              class="input-right-align"
-              (keyup)="SchPerChange($event)"
-            />
-          </mat-form-field>
-        </div>
-        <div fxFlex="9%" fxFlex.lt-sm="100" class="matero-col">
-          <mat-form-field appearance="legacy" color="primary">
-            <mat-label>Sch Amount</mat-label>
-            <input
-              matInput
-              placeholder="Sch Amount"
-              type="text"
-              formControlName="I_SchAmount"
-              maxlength="15"
-              class="input-right-align"
-              (keyup)="CalculateTotals()"
-            />
-          </mat-form-field>
-        </div>
-        <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
+        <div fxFlex="16%" fxFlex.lt-sm="100" class="matero-col">
           <mat-form-field appearance="legacy" color="primary">
             <mat-label>Net Amount</mat-label>
             <input
@@ -504,35 +394,7 @@
           />
         </mat-form-field>
       </div>
-      <div fxFlex="13%" fxFlex.lt-sm="100" class="matero-col">
-        <mat-form-field appearance="legacy" color="primary">
-          <mat-label>Total Gross Amount</mat-label>
-          <input
-            matInput
-            placeholder="Total Gross Amount"
-            type="text"
-            formControlName="TotalGrossAmount"
-            maxlength="15"
-            class="input-right-align"
-            readonly
-          />
-        </mat-form-field>
-      </div>
-      <div fxFlex="10%" fxFlex.lt-sm="100" class="matero-col">
-        <mat-form-field appearance="legacy" color="primary">
-          <mat-label>Total Sch Amount</mat-label>
-          <input
-            matInput
-            placeholder="Total Sch Amount"
-            type="text"
-            formControlName="TotalSchAmount"
-            maxlength="15"
-            class="input-right-align"
-            readonly
-          />
-        </mat-form-field>
-      </div>
-      <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
+      <div fxFlex="14%" fxFlex.lt-sm="100" class="matero-col">
         <mat-form-field appearance="legacy" color="primary">
           <mat-label>Total Net Amount</mat-label>
           <input
@@ -543,61 +405,6 @@
             maxlength="15"
             class="input-right-align"
             readonly
-          />
-        </mat-form-field>
-      </div>
-    </div>
-    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
-      <div fxFlex="28%" fxFlex.lt-sm="100" class="matero-col">
-        <mat-form-field appearance="legacy" color="primary">
-          <mat-label>Other Add Text</mat-label>
-          <input
-            matInput
-            id="OtherAddText"
-            placeholder="Other Add Text"
-            type="text"
-            formControlName="OtherAddText"
-            maxlength="100"
-          />
-        </mat-form-field>
-      </div>
-      <div fxFlex="10%" fxFlex.lt-sm="100" class="matero-col">
-        <mat-form-field appearance="legacy" color="primary">
-          <mat-label>Other Add Amount</mat-label>
-          <input
-            matInput
-            placeholder="Other Add Amount"
-            type="text"
-            formControlName="OtherAddAmount"
-            maxlength="15"
-            class="input-right-align"
-            (keyup)="CalculateNetAmount()"
-          />
-        </mat-form-field>
-      </div>
-      <div fxFlex="28%" fxFlex.lt-sm="100" class="matero-col">
-        <mat-form-field appearance="legacy" color="primary">
-          <mat-label>Other Less Text</mat-label>
-          <input
-            matInput
-            placeholder="Other Less Text"
-            type="text"
-            formControlName="OtherLessText"
-            maxlength="100"
-          />
-        </mat-form-field>
-      </div>
-      <div fxFlex="10%" fxFlex.lt-sm="100" class="matero-col">
-        <mat-form-field appearance="legacy" color="primary">
-          <mat-label>Other Less Amount</mat-label>
-          <input
-            matInput
-            placeholder="Other Less Amount"
-            type="text"
-            formControlName="OtherLessAmount"
-            maxlength="15"
-            class="input-right-align"
-            (keyup)="CalculateNetAmount()"
           />
         </mat-form-field>
       </div>
@@ -630,7 +437,6 @@
         </mat-form-field>
       </div>
     </div>
-    <br />
     <mat-card-actions align="end" class="area-mat-card-actions">
       <button
         type="button"
@@ -641,6 +447,7 @@
         Cancel
       </button>
       <button
+        id="SavePurchase"
         type="button"
         *ngIf="isEditMode == false"
         [disabled]="!purchaseForm.valid || ItemCount == 0"
@@ -651,6 +458,7 @@
         Save
       </button>
       <button
+        id="UpdatePurchase"
         type="button"
         *ngIf="isEditMode == true"
         [disabled]="!purchaseForm.valid || ItemCount == 0"

@@ -19,6 +19,9 @@ import { StockService } from './master/stock.service';
 import { TaxService } from './master/tax.service';
 import { PurchaseAService } from './transaction/purchase-a.service';
 import { PurchaseService } from './transaction/purchase.service';
+import { SalesAService } from './transaction/sales-a.service';
+import { SalesSService } from './transaction/sales-s.service';
+import { SalesService } from './transaction/sales.service';
 
 export const services: any[] = [
   AuthService,
@@ -41,6 +44,9 @@ export const services: any[] = [
   PurchaseAService,
   PurchaseService,
   StockService,
+  SalesService,
+  SalesAService,
+  SalesSService,
 ];
 
 export * from './admin/role.service';
@@ -63,6 +69,10 @@ export * from './master/manufacture.service';
 export * from './master/itemgroup.service';
 export * from './master/item.service';
 export * from './master/stock.service';
+
 export * from './transaction/purchase.service';
 export * from './transaction/purchase-a.service';
 export * from './transaction/purchase-s.service';
+export * from './transaction/sales.service';
+export * from './transaction/sales-a.service';
+export * from './transaction/sales-s.service';

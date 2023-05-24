@@ -17,12 +17,12 @@ import {
   ItemFilter_DropDown,
   ItemGroupDownDownResponse,
   itemsDropDownResponse,
-  PurchaseSItemDetail,
-  PurchaseSItemPostRequest,
-  PurchaseSItemPutRequest,
-  PurchaseSPostRequest,
-  PurchaseSPutRequest,
-  PurchaseSResponse,
+  SalesSItemDetail,
+  SalesSItemPostRequest,
+  SalesSItemPutRequest,
+  SalesSPostRequest,
+  SalesSPutRequest,
+  SalesSResponse,
   Tax,
   TaxDownDownResponse,
   TransactionTypeMaster,
@@ -33,20 +33,20 @@ import { MatAutocomplete } from '@angular/material/autocomplete';
 import { MtxGridColumn } from 'src/app/extensions/grid/grid.interface';
 
 @Component({
-  selector: 'app-purchase-service-add-edit',
-  templateUrl: './purchase-service-add-edit.component.html',
-  styleUrls: ['./purchase-service-add-edit.component.scss'],
+  selector: 'app-sales-service-add-edit',
+  templateUrl: './sales-service-add-edit.component.html',
+  styleUrls: ['./sales-service-add-edit.component.scss'],
 })
-export class PurchaseServiceAddEditComponent implements OnInit {
-  PageTitle: string = 'Create Purchase (Service)';
-  buttonText: string = 'Add New Purchase';
+export class SalesServiceAddEditComponent implements OnInit {
+  PageTitle: string = 'Create Sales (Service)';
+  buttonText: string = 'Add New Sales';
   isEditMode: boolean = false;
   isFromQuickMenu: boolean = false;
-  selectedPurchaseId: number;
+  selectedSalesId: number;
 
-  purchasePostRequest?: PurchaseSPostRequest;
-  purchasePutRequest?: PurchaseSPutRequest;
-  editPurchase?: PurchaseSResponse;
+  salesPostRequest?: SalesSPostRequest;
+  salesPutRequest?: SalesSPutRequest;
+  editSales?: SalesSResponse;
 
   itemGroupDropDown: ItemGroupDownDownResponse[] = [];
   taxDropDown: TaxDownDownResponse[] = [];
@@ -55,8 +55,8 @@ export class PurchaseServiceAddEditComponent implements OnInit {
   filteredaccountsDropDown?: Observable<accountsDropDownResponse[]>;
   itemsDropDown: itemsDropDownResponse[] = [];
   filtereditemsDropDown?: Observable<itemsDropDownResponse[]>;
-  purchaseItemDetailsList: PurchaseSItemDetail[] = [];
-  purchaseItemDetailsListData: PurchaseSItemDetail[] = [];
+  salesItemDetailsList: SalesSItemDetail[] = [];
+  salesItemDetailsListData: SalesSItemDetail[] = [];
   CurrentItem?: Item;
   CurrentTax?: Tax;
   BillMinDate?: Date;
@@ -72,9 +72,9 @@ export class PurchaseServiceAddEditComponent implements OnInit {
   IsSchPerChange: boolean = false;
 
   IsItemEditMode: boolean = false;
-  ItemEdit?: PurchaseSItemDetail;
+  ItemEdit?: SalesSItemDetail;
   ItemCount: number = 0;
-  purchaseForm = this.fb.group({
+  salesForm = this.fb.group({
     BookAccountID: ['', [Validators.required]],
     BillDate: ['', [Validators.required]],
     BillNo: ['', [Validators.required]],
@@ -114,7 +114,7 @@ export class PurchaseServiceAddEditComponent implements OnInit {
     private router: Router,
     public route: ActivatedRoute,
     private sstorage: fromService.LocalStorageService,
-    private purchaseService: fromService.PurchaseSService,
+    private salesService: fromService.SalesSService,
     private accountService: fromService.AccountsService,
     private itemService: fromService.ItemService,
     private taxService: fromService.TaxService,
@@ -124,7 +124,7 @@ export class PurchaseServiceAddEditComponent implements OnInit {
     this.CompanyStateID = this.sstorage.get('CompanyStateID');
     this.setColumns();
     this.isEditMode = false;
-    this.selectedPurchaseId = 0;
+    this.selectedSalesId = 0;
     this.itemGroupDropDown = [];
     this.taxDropDown = [];
     this.FillTaxDropDown();
@@ -159,14 +159,14 @@ export class PurchaseServiceAddEditComponent implements OnInit {
       this.route.params
         .pipe(
           tap((params) => {
-            this.selectedPurchaseId = params['purchaseid'] || 0;
+            this.selectedSalesId = params['salesid'] || 0;
           })
         )
         .subscribe();
-      if (this.selectedPurchaseId != 0) {
+      if (this.selectedSalesId != 0) {
         this.isEditMode = true;
-        this.PageTitle = 'Update Purchase';
-        this.getPurchaseByID();
+        this.PageTitle = 'Update Sales';
+        this.getSalesByID();
       } else {
         this.isEditMode = false;
       }
@@ -176,7 +176,7 @@ export class PurchaseServiceAddEditComponent implements OnInit {
   }
 
   setColumns() {
-    this.columns = defaultData.GetPurchaseSItemDetailColumns();
+    this.columns = defaultData.GetSalesSItemDetailColumns();
     this.columns.push({
       header: 'Action',
       field: 'action',
@@ -222,56 +222,56 @@ export class PurchaseServiceAddEditComponent implements OnInit {
 
   BacktoList() {
     if (this.isFromQuickMenu == false) {
-      this.router.navigate(['/transaction/purchase-service/list']);
+      this.router.navigate(['/transaction/sales-service/list']);
     } else {
-      this.ResetForm(this.purchaseForm);
+      this.ResetForm(this.salesForm);
     }
   }
 
-  getPurchaseByID() {
-    this.purchaseService
-      .GetPurchasebyID(this.selectedPurchaseId)
+  getSalesByID() {
+    this.salesService
+      .GetSalesbyID(this.selectedSalesId)
       .subscribe((response) => {
-        this.editPurchase = response;
+        this.editSales = response;
         let SeletedAccount: accountsDropDownResponse;
         SeletedAccount = this.accountsDropDown.filter(
-          (a) => a.account_Id == this.editPurchase?.accountID.toString()
+          (a) => a.account_Id == this.editSales?.accountID.toString()
         )[0];
 
-        this.purchaseForm.patchValue({
-          BookAccountID: this.editPurchase?.bookAccountID.toString(),
-          BillNo: this.editPurchase?.billNo.toString(),
-          RefNo: this.editPurchase?.refNo,
-          TotalAmount: SetFormatCurrency(this.editPurchase?.totalAmount),
+        this.salesForm.patchValue({
+          BookAccountID: this.editSales?.bookAccountID.toString(),
+          BillNo: this.editSales?.billNo.toString(),
+          RefNo: this.editSales?.refNo,
+          TotalAmount: SetFormatCurrency(this.editSales?.totalAmount),
           TotalDiscAmount: SetFormatCurrency(
-            this.editPurchase?.totalDiscAmount
+            this.editSales?.totalDiscAmount
           ),
           TotalTaxableAmount: SetFormatCurrency(
-            this.editPurchase?.totalTaxableAmount
+            this.editSales?.totalTaxableAmount
           ),
           TotalCGSTAmount: SetFormatCurrency(
-            this.editPurchase?.totalCGSTAmount
+            this.editSales?.totalCGSTAmount
           ),
           TotalSGSTAmount: SetFormatCurrency(
-            this.editPurchase?.totalSGSTAmount
+            this.editSales?.totalSGSTAmount
           ),
           TotalIGSTAmount: SetFormatCurrency(
-            this.editPurchase?.totalIGSTAmount
+            this.editSales?.totalIGSTAmount
           ),
           TotalCessAmount: SetFormatCurrency(
-            this.editPurchase?.totalCessAmount
+            this.editSales?.totalCessAmount
           ),
-          TotalTaxAmount: SetFormatCurrency(this.editPurchase?.totalTaxAmount),
-          TotalNetAmount: SetFormatCurrency(this.editPurchase?.totalNetAmount),
-          RoundOffAmount: SetFormatCurrency(this.editPurchase?.roundOffAmount),
-          NetAmount: SetFormatCurrency(this.editPurchase?.netAmount),
+          TotalTaxAmount: SetFormatCurrency(this.editSales?.totalTaxAmount),
+          TotalNetAmount: SetFormatCurrency(this.editSales?.totalNetAmount),
+          RoundOffAmount: SetFormatCurrency(this.editSales?.roundOffAmount),
+          NetAmount: SetFormatCurrency(this.editSales?.netAmount),
         });
 
-        this.BillDateControl.setValue(moment(this.editPurchase?.billDate));
+        this.BillDateControl.setValue(moment(this.editSales?.billDate));
         this.AccountIDControl.setValue(SeletedAccount);
 
-        this.editPurchase!.details!.forEach((element) => {
-          let ItemDetails: PurchaseSItemDetail = {
+        this.editSales!.details!.forEach((element) => {
+          let ItemDetails: SalesSItemDetail = {
             AutoID: element.autoID,
             SrNo: element.srNo,
             ItemID: element.itemID,
@@ -292,27 +292,27 @@ export class PurchaseServiceAddEditComponent implements OnInit {
             IsModified: false,
             IsDeleted: false,
           };
-          this.purchaseItemDetailsList.push(ItemDetails);
+          this.salesItemDetailsList.push(ItemDetails);
         });
 
-        this.purchaseItemDetailsListData = [
-          ...this.purchaseItemDetailsList.filter((a) => a.IsDeleted == false),
+        this.salesItemDetailsListData = [
+          ...this.salesItemDetailsList.filter((a) => a.IsDeleted == false),
         ];
-        this.ItemCount = this.purchaseItemDetailsListData.length;
+        this.ItemCount = this.salesItemDetailsListData.length;
       });
   }
 
-  SaveUpdatePurchase(purchaseForm: FormGroup) {
+  SaveUpdateSales(salesForm: FormGroup) {
     if (this.isEditMode == true) {
-      this.UpdatePurchase(purchaseForm);
+      this.UpdateSales(salesForm);
     } else {
-      this.SavePurchase(purchaseForm);
+      this.SaveSales(salesForm);
     }
   }
 
-  SavePurchase(purchaseForm: FormGroup) {
-    let PostRequestDetail: PurchaseSItemPostRequest[] = [];
-    this.purchaseItemDetailsList.forEach((element) => {
+  SaveSales(salesForm: FormGroup) {
+    let PostRequestDetail: SalesSItemPostRequest[] = [];
+    this.salesItemDetailsList.forEach((element) => {
       PostRequestDetail.push({
         srNo: element.SrNo,
         itemID: element.ItemID,
@@ -332,37 +332,37 @@ export class PurchaseServiceAddEditComponent implements OnInit {
         isDeleted: element.IsDeleted,
       });
     });
-    this.purchasePostRequest = {
-      bookAccountID: Number(purchaseForm.value.BookAccountID),
-      billNo: Number(purchaseForm.value.BillNo),
-      refNo: purchaseForm.value.RefNo,
-      billDate: purchaseForm.value.BillDate.format('YYYY-MM-DD'),
-      accountID: Number(purchaseForm.value.AccountID.account_Id),
+    this.salesPostRequest = {
+      bookAccountID: Number(salesForm.value.BookAccountID),
+      billNo: Number(salesForm.value.BillNo),
+      refNo: salesForm.value.RefNo,
+      billDate: salesForm.value.BillDate.format('YYYY-MM-DD'),
+      accountID: Number(salesForm.value.AccountID.account_Id),
       accountTradeTypeID: 1,
-      totalAmount: CheckIsNumber(purchaseForm.value.TotalAmount),
-      totalDiscAmount: CheckIsNumber(purchaseForm.value.TotalDiscAmount),
-      totalTaxableAmount: CheckIsNumber(purchaseForm.value.TotalTaxableAmount),
-      totalCGSTAmount: CheckIsNumber(purchaseForm.value.TotalCGSTAmount),
-      totalSGSTAmount: CheckIsNumber(purchaseForm.value.TotalSGSTAmount),
-      totalIGSTAmount: CheckIsNumber(purchaseForm.value.TotalIGSTAmount),
-      totalCessAmount: CheckIsNumber(purchaseForm.value.TotalCessAmount),
-      totalTaxAmount: CheckIsNumber(purchaseForm.value.TotalTaxAmount),
-      totalNetAmount: CheckIsNumber(purchaseForm.value.TotalNetAmount),
-      roundOffAmount: CheckIsNumber(purchaseForm.value.RoundOffAmount),
-      netAmount: CheckIsNumber(purchaseForm.value.NetAmount),
+      totalAmount: CheckIsNumber(salesForm.value.TotalAmount),
+      totalDiscAmount: CheckIsNumber(salesForm.value.TotalDiscAmount),
+      totalTaxableAmount: CheckIsNumber(salesForm.value.TotalTaxableAmount),
+      totalCGSTAmount: CheckIsNumber(salesForm.value.TotalCGSTAmount),
+      totalSGSTAmount: CheckIsNumber(salesForm.value.TotalSGSTAmount),
+      totalIGSTAmount: CheckIsNumber(salesForm.value.TotalIGSTAmount),
+      totalCessAmount: CheckIsNumber(salesForm.value.TotalCessAmount),
+      totalTaxAmount: CheckIsNumber(salesForm.value.TotalTaxAmount),
+      totalNetAmount: CheckIsNumber(salesForm.value.TotalNetAmount),
+      roundOffAmount: CheckIsNumber(salesForm.value.RoundOffAmount),
+      netAmount: CheckIsNumber(salesForm.value.NetAmount),
       details: PostRequestDetail,
       isActive: true,
     };
-    this.purchaseService
-      .createPurchase(this.purchasePostRequest)
+    this.salesService
+      .createSales(this.salesPostRequest)
       .subscribe((response) => {
         this.BacktoList();
       });
   }
 
-  UpdatePurchase(purchaseForm: FormGroup) {
-    let PutRequestDetail: PurchaseSItemPutRequest[] = [];
-    this.purchaseItemDetailsList.forEach((element) => {
+  UpdateSales(salesForm: FormGroup) {
+    let PutRequestDetail: SalesSItemPutRequest[] = [];
+    this.salesItemDetailsList.forEach((element) => {
       PutRequestDetail.push({
         autoID: element.AutoID,
         srNo: element.SrNo,
@@ -383,29 +383,29 @@ export class PurchaseServiceAddEditComponent implements OnInit {
         isDeleted: element.IsDeleted,
       });
     });
-    this.purchasePutRequest = {
-      bookAccountID: Number(purchaseForm.value.BookAccountID),
-      billNo: Number(purchaseForm.value.BillNo),
-      refNo: purchaseForm.value.RefNo,
-      billDate: purchaseForm.value.BillDate.format('YYYY-MM-DD'),
-      accountID: Number(purchaseForm.value.AccountID.account_Id),
+    this.salesPutRequest = {
+      bookAccountID: Number(salesForm.value.BookAccountID),
+      billNo: Number(salesForm.value.BillNo),
+      refNo: salesForm.value.RefNo,
+      billDate: salesForm.value.BillDate.format('YYYY-MM-DD'),
+      accountID: Number(salesForm.value.AccountID.account_Id),
       accountTradeTypeID: 1,
-      totalAmount: CheckIsNumber(purchaseForm.value.TotalAmount),
-      totalDiscAmount: CheckIsNumber(purchaseForm.value.TotalDiscAmount),
-      totalTaxableAmount: CheckIsNumber(purchaseForm.value.TotalTaxableAmount),
-      totalCGSTAmount: CheckIsNumber(purchaseForm.value.TotalCGSTAmount),
-      totalSGSTAmount: CheckIsNumber(purchaseForm.value.TotalSGSTAmount),
-      totalIGSTAmount: CheckIsNumber(purchaseForm.value.TotalIGSTAmount),
-      totalCessAmount: CheckIsNumber(purchaseForm.value.TotalCessAmount),
-      totalTaxAmount: CheckIsNumber(purchaseForm.value.TotalTaxAmount),
-      totalNetAmount: CheckIsNumber(purchaseForm.value.TotalNetAmount),
-      roundOffAmount: CheckIsNumber(purchaseForm.value.RoundOffAmount),
-      netAmount: CheckIsNumber(purchaseForm.value.NetAmount),
+      totalAmount: CheckIsNumber(salesForm.value.TotalAmount),
+      totalDiscAmount: CheckIsNumber(salesForm.value.TotalDiscAmount),
+      totalTaxableAmount: CheckIsNumber(salesForm.value.TotalTaxableAmount),
+      totalCGSTAmount: CheckIsNumber(salesForm.value.TotalCGSTAmount),
+      totalSGSTAmount: CheckIsNumber(salesForm.value.TotalSGSTAmount),
+      totalIGSTAmount: CheckIsNumber(salesForm.value.TotalIGSTAmount),
+      totalCessAmount: CheckIsNumber(salesForm.value.TotalCessAmount),
+      totalTaxAmount: CheckIsNumber(salesForm.value.TotalTaxAmount),
+      totalNetAmount: CheckIsNumber(salesForm.value.TotalNetAmount),
+      roundOffAmount: CheckIsNumber(salesForm.value.RoundOffAmount),
+      netAmount: CheckIsNumber(salesForm.value.NetAmount),
       details: PutRequestDetail,
       isActive: true,
     };
-    this.purchaseService
-      .updatePurchase(this.editPurchase!.autoID, this.purchasePutRequest)
+    this.salesService
+      .updateSales(this.editSales!.autoID, this.salesPutRequest)
       .subscribe((response) => {
         this.BacktoList();
       });
@@ -430,7 +430,7 @@ export class PurchaseServiceAddEditComponent implements OnInit {
       GroupID: 0,
       BalanceTransferToID: 0,
       AccountTypeID: AccountTypeMaster.Head_Books,
-      TransactionTypeID: TransactionTypeMaster.Purchase_Service,
+      TransactionTypeID: TransactionTypeMaster.Sales_Service,
       SalesTypeID: 0,
       AccountTradeTypeID: 0,
       AreaID: 0,
@@ -444,7 +444,7 @@ export class PurchaseServiceAddEditComponent implements OnInit {
     let filters = {
       GroupID: 0,
       BalanceTransferToID: 0,
-      AccountTypeID: AccountTypeMaster.Supplier,
+      AccountTypeID: AccountTypeMaster.Customer,
       TransactionTypeID: 0,
       SalesTypeID: 0,
       AccountTradeTypeID: 0,
@@ -504,12 +504,12 @@ export class PurchaseServiceAddEditComponent implements OnInit {
   SelectedItem(event: any) {
     //check item exitst in item Detail
 
-    let FoundItem = this.purchaseItemDetailsList.findIndex(
+    let FoundItem = this.salesItemDetailsList.findIndex(
       (a) => a.ItemID == event.option.value.item_Id
     );
     if (FoundItem != -1) {
-      this.ItemEdit = this.purchaseItemDetailsList[FoundItem];
-      let ItemDetail: PurchaseSItemDetail = this.purchaseItemDetailsList.filter(
+      this.ItemEdit = this.salesItemDetailsList[FoundItem];
+      let ItemDetail: SalesSItemDetail = this.salesItemDetailsList.filter(
         (a) => a.ItemID == event.option.value.item_Id
       )[0];
       this.I_AmountControl.setValue(ItemDetail.Amount);
@@ -546,21 +546,21 @@ export class PurchaseServiceAddEditComponent implements OnInit {
       this.CurrentTax = response;
       if (calculateTotal == true) this.CalculateTotals();
     });
-  }
+  }  
 
   AddItemToList() {
     let SrNo: number = 0;
     let ItemIndex: number = 0;
     if (this.IsItemEditMode == true) {
-      ItemIndex = this.purchaseItemDetailsList.findIndex(
+      ItemIndex = this.salesItemDetailsList.findIndex(
         (a) => a.ItemID == Number(this.I_ItemIDControl.value.item_Id)
       );
-      SrNo = this.purchaseItemDetailsList[ItemIndex].SrNo;
+      SrNo = this.salesItemDetailsList[ItemIndex].SrNo;
     } else {
-      SrNo = this.purchaseItemDetailsList.length + 1;
+      SrNo = this.salesItemDetailsList.length + 1;
     }
 
-    let ItemDetails: PurchaseSItemDetail = {
+    let ItemDetails: SalesSItemDetail = {
       AutoID: this.IsItemEditMode ? Number(this.ItemEdit?.AutoID) : 0,
       SrNo: this.IsItemEditMode ? Number(this.ItemEdit?.SrNo) : SrNo,
       ItemID: Number(this.I_ItemIDControl.value.item_Id),
@@ -586,20 +586,20 @@ export class PurchaseServiceAddEditComponent implements OnInit {
       IsDeleted: false,
     };
     if (this.IsItemEditMode == true) {
-      this.purchaseItemDetailsList[ItemIndex] = ItemDetails;
+      this.salesItemDetailsList[ItemIndex] = ItemDetails;
     } else {
-      this.purchaseItemDetailsList.push(ItemDetails);
+      this.salesItemDetailsList.push(ItemDetails);
     }
-    this.purchaseItemDetailsListData = [
-      ...this.purchaseItemDetailsList.filter((a) => a.IsDeleted == false),
+    this.salesItemDetailsListData = [
+      ...this.salesItemDetailsList.filter((a) => a.IsDeleted == false),
     ];
-    this.ItemCount = this.purchaseItemDetailsListData.length;
+    this.ItemCount = this.salesItemDetailsListData.length;
     this.ResetItems();
     this.CalculateFinalTotals();
     this.IsItemEditMode = false;
   }
 
-  editItem(record: PurchaseSItemDetail) {
+  editItem(record: SalesSItemDetail) {
     let SeletedItem: itemsDropDownResponse;
     SeletedItem = this.itemsDropDown.filter(
       (a) => a.item_Id == record.ItemID.toString()
@@ -627,25 +627,25 @@ export class PurchaseServiceAddEditComponent implements OnInit {
     });
   }
 
-  deleteItem(record: PurchaseSItemDetail) {
-    let ItemIndex = this.purchaseItemDetailsList.findIndex(
+  deleteItem(record: SalesSItemDetail) {
+    let ItemIndex = this.salesItemDetailsList.findIndex(
       (a) => a.ItemID == Number(record.ItemID)
     );
-    if (this.purchaseItemDetailsList[ItemIndex].AutoID > 0) {
-      this.purchaseItemDetailsList[ItemIndex].IsDeleted = true;
+    if (this.salesItemDetailsList[ItemIndex].AutoID > 0) {
+      this.salesItemDetailsList[ItemIndex].IsDeleted = true;
     } else {
-      this.purchaseItemDetailsList.splice(ItemIndex, 1);
+      this.salesItemDetailsList.splice(ItemIndex, 1);
     }
     let SrNo: number = 0;
-    this.purchaseItemDetailsList.forEach((element) => {
+    this.salesItemDetailsList.forEach((element) => {
       SrNo = SrNo + 1;
       element.SrNo = SrNo;
     });
 
-    this.purchaseItemDetailsListData = [
-      ...this.purchaseItemDetailsList.filter((a) => a.IsDeleted == false),
+    this.salesItemDetailsListData = [
+      ...this.salesItemDetailsList.filter((a) => a.IsDeleted == false),
     ];
-    this.ItemCount = this.purchaseItemDetailsListData.length;
+    this.ItemCount = this.salesItemDetailsListData.length;
     this.CalculateFinalTotals();
   }
 
@@ -689,8 +689,8 @@ export class PurchaseServiceAddEditComponent implements OnInit {
       control = form.controls[name];
       control.setErrors(null);
     });
-    this.purchaseItemDetailsList = [];
-    this.purchaseItemDetailsListData = [...this.purchaseItemDetailsList];
+    this.salesItemDetailsList = [];
+    this.salesItemDetailsListData = [...this.salesItemDetailsList];
     this.InvoiceType = '';
     this.I_ItemIDControl.setValue('');
     this.DisableAddItemBtn = true;
@@ -731,17 +731,17 @@ export class PurchaseServiceAddEditComponent implements OnInit {
     if (this.AutoItemID?.isOpen == false) {
       if (
         this.I_ItemIDControl.value == '' &&
-        this.purchaseItemDetailsList.length == 0
+        this.salesItemDetailsList.length == 0
       ) {
         this.renderer.selectRootElement('#ItemName', true).focus();
       } else if (
         this.I_ItemIDControl.value == '' &&
-        this.purchaseItemDetailsList.length > 0
+        this.salesItemDetailsList.length > 0
       ) {
         if (this.isEditMode == true) {
-          this.renderer.selectRootElement('#UpdatePurchase', true).focus();
+          this.renderer.selectRootElement('#UpdateSales', true).focus();
         } else {
-          this.renderer.selectRootElement('#SavePurchase', true).focus();
+          this.renderer.selectRootElement('#SaveSales', true).focus();
         }
       }
     }
@@ -749,61 +749,61 @@ export class PurchaseServiceAddEditComponent implements OnInit {
   //Controls
 
   get BookAccountIDControl() {
-    return this.purchaseForm.get('BookAccountID') as FormControl;
+    return this.salesForm.get('BookAccountID') as FormControl;
   }
 
   get BillDateControl() {
-    return this.purchaseForm.get('BillDate') as FormControl;
+    return this.salesForm.get('BillDate') as FormControl;
   }
 
   get BillNoControl() {
-    return this.purchaseForm.get('BillNo') as FormControl;
+    return this.salesForm.get('BillNo') as FormControl;
   }
 
   get RefNoControl() {
-    return this.purchaseForm.get('RefNo') as FormControl;
+    return this.salesForm.get('RefNo') as FormControl;
   }
 
   get AccountIDControl() {
-    return this.purchaseForm.get('AccountID') as FormControl;
+    return this.salesForm.get('AccountID') as FormControl;
   }
 
   get TotalAmountControl() {
-    return this.purchaseForm.get('TotalAmount') as FormControl;
+    return this.salesForm.get('TotalAmount') as FormControl;
   }
   get TotalDiscAmountControl() {
-    return this.purchaseForm.get('TotalDiscAmount') as FormControl;
+    return this.salesForm.get('TotalDiscAmount') as FormControl;
   }
   get TotalTaxableAmountControl() {
-    return this.purchaseForm.get('TotalTaxableAmount') as FormControl;
+    return this.salesForm.get('TotalTaxableAmount') as FormControl;
   }
   get TotalCGSTAmountControl() {
-    return this.purchaseForm.get('TotalCGSTAmount') as FormControl;
+    return this.salesForm.get('TotalCGSTAmount') as FormControl;
   }
   get TotalSGSTAmountControl() {
-    return this.purchaseForm.get('TotalSGSTAmount') as FormControl;
+    return this.salesForm.get('TotalSGSTAmount') as FormControl;
   }
   get TotalIGSTAmountControl() {
-    return this.purchaseForm.get('TotalIGSTAmount') as FormControl;
+    return this.salesForm.get('TotalIGSTAmount') as FormControl;
   }
   get TotalCessAmountControl() {
-    return this.purchaseForm.get('TotalCessAmount') as FormControl;
+    return this.salesForm.get('TotalCessAmount') as FormControl;
   }
   get TotalTaxAmountControl() {
-    return this.purchaseForm.get('TotalTaxAmount') as FormControl;
+    return this.salesForm.get('TotalTaxAmount') as FormControl;
   }
   get TotalNetAmountControl() {
-    return this.purchaseForm.get('TotalNetAmount') as FormControl;
+    return this.salesForm.get('TotalNetAmount') as FormControl;
   }
   get RoundOffAmountControl() {
-    return this.purchaseForm.get('RoundOffAmount') as FormControl;
+    return this.salesForm.get('RoundOffAmount') as FormControl;
   }
   get NetAmountControl() {
-    return this.purchaseForm.get('NetAmount') as FormControl;
+    return this.salesForm.get('NetAmount') as FormControl;
   }
 
   get ItemsControl() {
-    return this.purchaseForm.get('Items') as FormControl;
+    return this.salesForm.get('Items') as FormControl;
   }
 
   get I_ItemIDControl() {
@@ -848,12 +848,17 @@ export class PurchaseServiceAddEditComponent implements OnInit {
   GetNewBillNo() {
     if (this.isEditMode == false) {
       let BookId = this.BookAccountIDControl.value;
+      let BookInit = this.booksDropDown.find(
+        (a) => a.account_Id == BookId
+      )?.bookInit;
       let BillDate = this.BillDateControl.value.format('YYYY-MM-DD');
       if (BookId != '' && BillDate != '') {
-        this.purchaseService
+        this.salesService
           .GetNextBillNo(BookId, BillDate)
           .subscribe((response) => {
             this.BillNoControl.setValue(response);
+            let RefNo = BookInit + '-' + response;
+            this.RefNoControl.setValue(RefNo);
           });
       }
     }
@@ -936,7 +941,7 @@ export class PurchaseServiceAddEditComponent implements OnInit {
       TotalTaxAmount = 0,
       TotalNetAmount = 0;
 
-    this.purchaseItemDetailsList.forEach((element) => {
+    this.salesItemDetailsList.forEach((element) => {
       if (element.IsDeleted == false) {
         TotalAmount = Number(TotalAmount) + Number(element.Amount);
         TotalDiscAmount = Number(TotalDiscAmount) + Number(element.DiscAmount);

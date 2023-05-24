@@ -13,6 +13,7 @@ import * as fromService from '../../../../shared/index';
 import {
   accountsDropDownResponse,
   accountTradeTypeResponse,
+  AccountTypeMaster,
   ClosingStockbyItemID,
   Item,
   ItemFilter_DropDown,
@@ -522,7 +523,7 @@ export class PurchaseAddEditComponent implements OnInit {
     let filters = {
       GroupID: 0,
       BalanceTransferToID: 0,
-      AccountTypeID: 4,
+      AccountTypeID: AccountTypeMaster.Head_Books,
       TransactionTypeID: TransactionTypeMaster.Purchase_Inventory,
       SalesTypeID: 0,
       AccountTradeTypeID: 0,
@@ -537,7 +538,7 @@ export class PurchaseAddEditComponent implements OnInit {
     let filters = {
       GroupID: 0,
       BalanceTransferToID: 0,
-      AccountTypeID: 3,
+      AccountTypeID: AccountTypeMaster.Supplier,
       TransactionTypeID: 0,
       SalesTypeID: 0,
       AccountTradeTypeID: 0,
@@ -554,6 +555,7 @@ export class PurchaseAddEditComponent implements OnInit {
       IsServiceItem: false,
       IsInventory: true,
       AccountTradeTypeID: AccountTradeTypeID,
+      OnlyStockItems: false,
     };
     this.itemService.ItemDropDown(filters).subscribe((response) => {
       this.itemsDropDown = response;
@@ -645,13 +647,18 @@ export class PurchaseAddEditComponent implements OnInit {
             this.CurrentItem?.gstTaxID.toString()
           );
         }
-        this.GetCurrentTax(Number(this.CurrentItem?.gstTaxID));
+        this.GetCurrentTax(Number(this.CurrentItem?.gstTaxID), false);
       });
   }
 
-  GetCurrentTax(TaxID: number) {
+  GSTTaxChange(event: any) {
+    this.GetCurrentTax(Number(event.value), true);
+  }
+
+  GetCurrentTax(TaxID: number, calculateTotal: boolean) {
     this.taxService.GetTaxbyID(TaxID).subscribe((response) => {
       this.CurrentTax = response;
+      if (calculateTotal == true) this.CalculateTotals();
     });
   }
 
@@ -757,14 +764,14 @@ export class PurchaseAddEditComponent implements OnInit {
       I_NetAmount: SetFormatCurrency(record.NetAmount),
     });
     this.IsItemEditMode = true;
-    this.renderer.selectRootElement('#ItemName').focus();
+    this.renderer.selectRootElement('#ItemName', true).focus();
     this.itemService.GetItembyID(record.ItemID).subscribe((response) => {
       this.CurrentItem = response;
       this.GetCurrentStock(Number(this.CurrentItem?.itemID));
       this.I_RateControl.setValue(
         SetFormatCurrency(this.CurrentItem?.purchaseRate)
       );
-      this.GetCurrentTax(Number(record.GSTTaxID));
+      this.GetCurrentTax(Number(record.GSTTaxID), false);
     });
   }
 
@@ -853,6 +860,7 @@ export class PurchaseAddEditComponent implements OnInit {
     this.I_ItemIDControl.setValue('');
     this.DisableAddItemBtn = true;
     this.SetMinMaxBillDate();
+    this.renderer.selectRootElement('#BookAccountName', true).focus();
   }
 
   ResetItems() {
@@ -882,7 +890,7 @@ export class PurchaseAddEditComponent implements OnInit {
       I_NetAmount: 0,
     });
     this.ItemsControl.markAsUntouched();
-    this.renderer.selectRootElement('#ItemName').focus();
+    this.renderer.selectRootElement('#ItemName', true).focus();
     this.CurrentItem = undefined;
     this.CurrentStock = undefined;
     this.CurrentTax = undefined;
@@ -893,7 +901,7 @@ export class PurchaseAddEditComponent implements OnInit {
       this.AutoAccountID?.isOpen == false &&
       this.AccountIDControl.value == ''
     ) {
-      this.renderer.selectRootElement('#AccountName').focus();
+      this.renderer.selectRootElement('#AccountName', true).focus();
     }
   }
 
@@ -903,12 +911,12 @@ export class PurchaseAddEditComponent implements OnInit {
         this.I_ItemIDControl.value == '' &&
         this.purchaseItemDetailsList.length == 0
       ) {
-        this.renderer.selectRootElement('#ItemName').focus();
+        this.renderer.selectRootElement('#ItemName', true).focus();
       } else if (
         this.I_ItemIDControl.value == '' &&
         this.purchaseItemDetailsList.length > 0
       ) {
-        this.renderer.selectRootElement('#OtherAddText').focus();
+        this.renderer.selectRootElement('#OtherAddText', true).focus();
       }
     }
   }

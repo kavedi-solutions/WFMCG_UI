@@ -1,4 +1,4 @@
-export interface PurchaseAPostRequest {
+export interface SalesAPostRequest {
   bookAccountID: number;
   billNo: number;
   refNo: string | null;
@@ -16,12 +16,12 @@ export interface PurchaseAPostRequest {
   totalNetAmount: number;
   roundOffAmount: number;
   netAmount: number;
-  details: PurchaseAItemPostRequest[] | null;
+  details: SalesAItemPostRequest[] | null;
   isActive: boolean;
   createdBy?: string;
 }
 
-export interface PurchaseAItemPostRequest {
+export interface SalesAItemPostRequest {
   srNo: number;
   itemID: number;
   quantity: number;

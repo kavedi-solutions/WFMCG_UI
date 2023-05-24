@@ -1,4 +1,4 @@
-export interface PurchaseAPostRequest {
+export interface SalesPostRequest {
   bookAccountID: number;
   billNo: number;
   refNo: string | null;
@@ -13,29 +13,40 @@ export interface PurchaseAPostRequest {
   totalIGSTAmount: number;
   totalCessAmount: number;
   totalTaxAmount: number;
+  totalGrossAmount: number;
+  totalSchAmount: number;
   totalNetAmount: number;
+  otherAddText: string | null;
+  otherAddAmount: number;
+  otherLessText: string | null;
+  otherLessAmount: number;
   roundOffAmount: number;
   netAmount: number;
-  details: PurchaseAItemPostRequest[] | null;
+  details: SalesItemPostRequest[] | null;
   isActive: boolean;
   createdBy?: string;
 }
 
-export interface PurchaseAItemPostRequest {
+export interface SalesItemPostRequest {
   srNo: number;
   itemID: number;
   quantity: number;
+  freeQuantity: number;
+  totalQuantity: number;
   rate: number;
   amount: number;
   discPer: number;
   discAmount: number;
-  taxableAmount: number;
+  taxableAmount:number;
   gSTTaxID: number;
   cGSTAmount: number;
   sGSTAmount: number;
   iGSTAmount: number;
   cessAmount: number;
   totalTaxAmount: number;
+  grossAmount: number;
+  schPer: number;
+  schAmount: number;
   netAmount: number;
   isAdd: boolean;
   isModified: boolean;

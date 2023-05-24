@@ -7,7 +7,7 @@
   (onBackClick)="BacktoList()"
 ></page-header>
 <!-- -->
-<form class="form-field-full page-detail" [formGroup]="purchaseForm">
+<form class="form-field-full page-detail" [formGroup]="salesForm">
   <mat-card>
     <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
       <div fxFlex="40%" fxFlex.lt-sm="100" class="matero-col">
@@ -66,7 +66,12 @@
       <div fxFlex="30%" fxFlex.lt-sm="100" class="matero-col">
         <mat-form-field appearance="legacy" color="primary">
           <mat-label>Ref No</mat-label>
-          <input matInput placeholder="Ref No" formControlName="RefNo" />
+          <input
+            matInput
+            placeholder="Ref No"
+            formControlName="RefNo"
+            readonly="true"
+          />
         </mat-form-field>
       </div>
     </div>
@@ -269,8 +274,8 @@
     </div>
     <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
       <mtx-grid
-        class="table-main-wrapper mtx-grid-purchase"
-        [data]="purchaseItemDetailsListData"
+        class="table-main-wrapper mtx-grid-sales"
+        [data]="salesItemDetailsListData"
         [columns]="columns"
         [length]="ItemCount"
         [rowSelectable]="true"
@@ -420,24 +425,24 @@
         Cancel
       </button>
       <button
-        id="SavePurchase"
+        id="SaveSales"
         type="button"
         *ngIf="isEditMode == false"
-        [disabled]="!purchaseForm.valid || ItemCount == 0"
+        [disabled]="!salesForm.valid || ItemCount == 0"
         mat-raised-button
         color="primary"
-        (click)="SaveUpdatePurchase(purchaseForm)"
+        (click)="SaveUpdateSales(salesForm)"
       >
         Save
       </button>
       <button
-        id="UpdatePurchase"
+        id="UpdateSales"
         type="button"
         *ngIf="isEditMode == true"
-        [disabled]="!purchaseForm.valid || ItemCount == 0"
+        [disabled]="!salesForm.valid || ItemCount == 0"
         mat-raised-button
         color="primary"
-        (click)="SaveUpdatePurchase(purchaseForm)"
+        (click)="SaveUpdateSales(salesForm)"
       >
         Update
       </button>

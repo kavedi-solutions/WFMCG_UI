@@ -271,7 +271,10 @@
         <div fxFlex="17%" fxFlex.lt-sm="100" class="matero-col">
           <mat-form-field appearance="legacy" color="primary">
             <mat-label>Select Tax</mat-label>
-            <mat-select formControlName="I_GSTTaxID">
+            <mat-select
+              formControlName="I_GSTTaxID"
+              (selectionChange)="GSTTaxChange($event)"
+            >
               <mat-option *ngFor="let tdd of taxDropDown" [value]="tdd.tax_Id">
                 {{ tdd.tax_Name }}
               </mat-option>
@@ -630,7 +633,6 @@
         </mat-form-field>
       </div>
     </div>
-    <br />
     <mat-card-actions align="end" class="area-mat-card-actions">
       <button
         type="button"
