@@ -43,8 +43,13 @@ export interface ItemOpening {
   itemName: string;
   accountTradeTypeID: number;
   accountTradeTypeName: string;
+  returnTypeID: number;
+  returnTypeName: string;
   packing: number;
   opening: number;
   openingCrt: number;
   openingPcs: number;
+  openingSpoiled: number;
+  openingSpoiledCrt: number;
+  openingSpoiledPcs: number;
 }

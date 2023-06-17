@@ -26,8 +26,8 @@ export class StockService {
     this.APIURL = this.appconfig.GetCoreAPIURL() + `api/v${this.version}`;
   }
 
-  GetClosingByItemID(ItemID: number) {
-    const url = `${this.APIURL}/company/${this.CompanyID}/stock/${ItemID}/getbyid`;
+  GetClosingByItemID(ItemID: number, ReturnTypeID: number) {
+    const url = `${this.APIURL}/company/${this.CompanyID}/stock/${ItemID}/${ReturnTypeID}/getbyid`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,

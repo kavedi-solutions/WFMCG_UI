@@ -25,7 +25,7 @@
   <div class="balance-form">
     <form class="form-field-full" [formGroup]="balanceForm">
       <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
-        <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
+        <div fxFlex="30%" fxFlex.lt-sm="100" class="matero-col">
           <mat-form-field appearance="legacy" color="primary">
             <mat-label>Item</mat-label>
             <mat-select
@@ -41,10 +41,10 @@
               </mat-option>
             </mat-select>
             <mat-error *ngIf="ItemIDControlRequired"
-              >Account is required.</mat-error
+              >Return Type is required.</mat-error
             >
           </mat-form-field>
-        </div>
+        </div>      
         <div fxFlex="10%" fxFlex.lt-sm="100" class="matero-col">
           <mat-form-field appearance="legacy" color="primary">
             <mat-label>Trade Type</mat-label>
@@ -72,6 +72,26 @@
             />
           </mat-form-field>
         </div>
+        <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
+          <mat-form-field appearance="legacy" color="primary">
+            <mat-label>Return Type</mat-label>
+            <mat-select
+              formControlName="ReturnTypeID"
+              required              
+              (valueChange)="ReturnTypeIDSelectionChange($event)"
+            >
+              <mat-option
+                *ngFor="let sbdd of returnTypeDropDown"
+                [value]="sbdd.returnTypeID"                
+              >
+                {{ sbdd.returnTypeName }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="ReturnTypeIDControlRequired"
+              >Account is required.</mat-error
+            >
+          </mat-form-field>
+        </div>          
         <div fxFlex="10%" fxFlex.lt-sm="100" class="matero-col">
           <mat-form-field appearance="legacy" color="primary">
             <mat-label>Crt</mat-label>
@@ -106,15 +126,24 @@
             >
           </mat-form-field>
         </div>
-        <div fxFlex="10%" fxFlex.lt-sm="100" class="matero-col form-button">
+        <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col form-button">
           <button
             type="button"
             [disabled]="!balanceForm.valid"
             mat-raised-button
+            class="m-8"
             color="primary"
             (click)="UpdateBalance(balanceForm)"
           >
             Update
+          </button>
+          <button
+            type="button"            
+            mat-raised-button
+            color="accent"
+            (click)="ResetForms(balanceForm)"
+          >
+            Reset
           </button>
         </div>
       </div>

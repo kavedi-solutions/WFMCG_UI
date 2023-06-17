@@ -1,0 +1,234 @@
+<page-header
+  class="bg-blue-600"
+  [title]="PageTitle"
+  [addButtonToolTip]="buttonText"
+  [showBack]="!isFromQuickMenu"
+  [showAdd]="false"
+  (onBackClick)="BacktoList()"
+></page-header>
+
+<form class="form-field-full page-detail" [formGroup]="voucherForm">
+  <mat-card>
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Select Book</mat-label>
+          <mat-select
+            id="BookAccountName"
+            formControlName="BookAccountID"
+            autoFocus
+            required
+            [disabled]="isEditMode"
+            (blur)="BookAccountIDblur()"
+          >
+            <mat-option
+              *ngFor="let sbdd of booksDropDown"
+              [value]="sbdd.account_Id"
+            >
+              {{ sbdd.account_Name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div
+        fxFlex="15%"
+        fxFlex.lt-sm="100"
+        class="matero-col accountBalance text-right"
+      >
+        <span
+          >{{ BookBalance | number : "0.2-2" : "en-IN" }}
+          {{ BookBalanceType }}</span
+        >
+      </div>
+    </div>
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <input
+            matInput
+            [matDatepicker]="VoucherDatePicker"
+            placeholder="Voucher Date"
+            formControlName="VoucherDate"
+            [min]="VoucherMinDate"
+            [max]="VoucherMaxDate"
+            (dateChange)="VoucherDateChange()"
+            (blur)="VoucherDateBlur()"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="VoucherDatePicker"
+            [tabIndex]="-1"
+            ><mat-icon matDatepickerToggleIcon
+              >keyboard_arrow_down</mat-icon
+            ></mat-datepicker-toggle
+          >
+          <mat-datepicker #VoucherDatePicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Voucher No</mat-label>
+          <input
+            matInput
+            placeholder="Voucher No"
+            formControlName="VoucherNo"
+            readonly
+          />
+        </mat-form-field>
+      </div>
+      <div fxFlex="20%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Ref No</mat-label>
+          <input
+            matInput
+            placeholder="Ref No"
+            formControlName="RefNo"
+            readonly
+          />
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-error *ngIf="BothAccountisSame == true"
+            >Receiver and Giver Account Cannot be same.</mat-error
+          >
+          <mat-label>Select Receiver Account</mat-label>
+          <input
+            matInput
+            id="RAccountName"
+            [matAutocomplete]="AutoRAccountID"
+            formControlName="RAccountID"
+            (blur)="OnRAccountBlur()"
+          />
+          <mat-autocomplete
+            #AutoRAccountID="matAutocomplete"
+            [displayWith]="DisplayAccountName"
+          >
+            <mat-option
+              *ngFor="let add of filteredRAccountsDropDown | async"
+              [value]="add"
+            >
+              {{ add.account_Name }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+      <div
+        fxFlex="15%"
+        fxFlex.lt-sm="100"
+        class="matero-col accountBalance text-right"
+      >
+        <span
+          >{{ RAccountBalance | number : "0.2-2" : "en-IN" }}
+          {{ RAccountBalanceType }}</span
+        >
+      </div>
+    </div>
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-error *ngIf="BothAccountisSame == true"
+            >Receiver and Giver Account Cannot be same.</mat-error
+          >
+          <mat-label>Select Giver Account</mat-label>
+          <input
+            matInput
+            id="GAccountName"
+            [matAutocomplete]="AutoGAccountID"
+            formControlName="GAccountID"
+            (blur)="OnGAccountBlur()"
+          />
+          <mat-autocomplete
+            #AutoGAccountID="matAutocomplete"
+            [displayWith]="DisplayAccountName"
+          >
+            <mat-option
+              *ngFor="let add of filteredGAccountsDropDown | async"
+              [value]="add"
+            >
+              {{ add.account_Name }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+      <div
+        fxFlex="15%"
+        fxFlex.lt-sm="100"
+        class="matero-col accountBalance text-right"
+      >
+        <span
+          >{{ GAccountBalance | number : "0.2-2" : "en-IN" }}
+          {{ GAccountBalanceType }}</span
+        >
+      </div>
+    </div>
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Amount</mat-label>
+          <input
+            matInput
+            placeholder="Amount"
+            type="text"
+            formControlName="Amount"
+            maxlength="15"
+            class="input-right-align"
+          />
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="matero-row m-t-16" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="100%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Narration</mat-label>
+          <textarea
+            matInput
+            formControlName="Narration"
+            type="text"
+            placeholder="Narration"
+            maxlength="500"
+            rows="3"
+          ></textarea>
+          <mat-error *ngIf="NarrationControlRequired"
+            >Narration is required.</mat-error
+          >
+          <mat-error *ngIf="NarrationControlInvalid"
+            >Narration is Invalid.</mat-error
+          >
+        </mat-form-field>
+      </div>
+    </div>
+    <mat-card-actions align="end" class="area-mat-card-actions">
+      <button
+        type="button"
+        mat-raised-button
+        (click)="BacktoList()"
+        color="accent"
+      >
+        Cancel
+      </button>
+      <button
+        type="button"
+        *ngIf="isEditMode == false"
+        [disabled]="!voucherForm.valid"
+        mat-raised-button
+        color="primary"
+        (click)="SaveUpdateVoucher(voucherForm)"
+      >
+        Save
+      </button>
+      <button
+        type="button"
+        *ngIf="isEditMode == true"
+        [disabled]="!voucherForm.valid"
+        mat-raised-button
+        color="primary"
+        (click)="SaveUpdateVoucher(voucherForm)"
+      >
+        Update
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</form>

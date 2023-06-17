@@ -122,13 +122,13 @@ export class OpeningBalanceComponent implements OnInit {
 
   FillAccountDropDown(balanceTransferToID: number) {
     let filters = {
-      GroupID: 0,
-      BalanceTransferToID: balanceTransferToID,
-      AccountTypeID: 0,
-      TransactionTypeID: 0,
-      SalesTypeID: 0,
-      AccountTradeTypeID: 0,
-      AreaID: 0,
+      GroupID: [],
+      BalanceTransferToID: [balanceTransferToID],
+      AccountTypeID: [],
+      TransactionTypeID: [],
+      SalesTypeID: [],
+      AccountTradeTypeID: [],
+      AreaID: [],
     };
     this.accountService.AccountsDropDown(filters).subscribe((response) => {
       this.accountsDropDown = response;

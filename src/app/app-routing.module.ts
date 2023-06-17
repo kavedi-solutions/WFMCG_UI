@@ -383,6 +383,182 @@ const routes: Routes = [
           },
         ],
       },
+      {
+        path: 'purchase-return',
+        children: [
+          {
+            path: 'list',
+            component: CommonPages.PurchaseReturnComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '221' },
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'add',
+            component: CommonPages.PurchaseReturnAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'edit/:purchaseReturnid',
+            component: CommonPages.PurchaseReturnAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+        ],
+      },
+      {
+        path: 'sales-return',
+        children: [
+          {
+            path: 'list',
+            component: CommonPages.SalesReturnComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '222' },
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'add',
+            component: CommonPages.SalesReturnAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'edit/:salesReturnid',
+            component: CommonPages.SalesReturnAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+        ],
+      },
+      {
+        path: 'debit-note',
+        children: [
+          {
+            path: 'list',
+            component: CommonPages.DebitNoteComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '223' },
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'add',
+            component: CommonPages.DebitNoteAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'edit/:debitnoteid',
+            component: CommonPages.DebitNoteAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+        ],
+      },
+      {
+        path: 'credit-note',
+        children: [
+          {
+            path: 'list',
+            component: CommonPages.CreditNoteComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '223' },
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'add',
+            component: CommonPages.CreditNoteAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'edit/:creditnoteid',
+            component: CommonPages.CreditNoteAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+        ],
+      },
+      {
+        path: 'v-contra',
+        children: [
+          {
+            path: 'list',
+            component: CommonPages.VContraComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '231' },
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'add',
+            component: CommonPages.VContraAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'edit/:voucherid',
+            component: CommonPages.VContraAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+        ],
+      },   
+      {
+        path: 'v-payment',
+        children: [
+          {
+            path: 'list',
+            component: CommonPages.VPaymentComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '232' },
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'add',
+            component: CommonPages.VPaymentAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'edit/:voucherid',
+            component: CommonPages.VPaymentAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+        ],
+      },   
+      {
+        path: 'v-receipt',
+        children: [
+          {
+            path: 'list',
+            component: CommonPages.VReceiptComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '233' },
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'add',
+            component: CommonPages.VReceiptAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'edit/:voucherid',
+            component: CommonPages.VReceiptAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+        ],
+      },   
+      {
+        path: 'v-journal',
+        children: [
+          {
+            path: 'list',
+            component: CommonPages.VJournalComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '235' },
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'add',
+            component: CommonPages.VJournalAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'edit/:voucherid',
+            component: CommonPages.VJournalAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+        ],
+      },                 
     ],
   },
   {

@@ -39,3 +39,26 @@ export function formatDate(date: any) {
   if (day.length < 2) day = '0' + day;
   return [year, month, day].join('-');
 }
+
+export function RoundOffAmount(value: any, decimalPlace: number) {
+  value = CheckIsNumber(value);
+  let decimalvalue: number = 0;
+  switch (decimalPlace) {
+    case 1:
+      decimalvalue = 10;
+      break;
+    case 2:
+      decimalvalue = 100;
+      break;
+    case 3:
+      decimalvalue = 1000;
+      break;
+    case 4:
+      decimalvalue = 10000;
+      break;
+  }
+
+  value = Math.round(value * decimalvalue) / decimalvalue;
+
+  return value;
+}

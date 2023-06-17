@@ -382,13 +382,13 @@ export class TaxAddEditComponent implements OnInit {
 
   FillAccountDropDown(accountTypeID: number) {
     let filters = {
-      GroupID: 0,
-      BalanceTransferToID: 0,
-      AccountTypeID: accountTypeID,
-      TransactionTypeID: 0,
-      SalesTypeID: 0,
-      AccountTradeTypeID: 0,
-      AreaID: 0,
+      GroupID: [],
+      BalanceTransferToID: [],
+      AccountTypeID: [accountTypeID],
+      TransactionTypeID: [],
+      SalesTypeID: [],
+      AccountTradeTypeID: [],
+      AreaID: [],
     };
     this.accountService.AccountsDropDown(filters).subscribe((response) => {
       this.accountsDropDown = response;

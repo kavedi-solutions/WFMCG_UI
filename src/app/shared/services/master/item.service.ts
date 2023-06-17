@@ -144,6 +144,7 @@ export class ItemService {
       .set('IsInventory', `${filters.IsInventory}`)
       .set('AccountTradeTypeID', `${filters.AccountTradeTypeID}`)
       .set('OnlyStockItems', `${filters.OnlyStockItems}`)
+      .set('ReturnTypeID', `${filters.ReturnTypeID}`);
 
     return this.http
       .get<any>(encodeURI(url), {

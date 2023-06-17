@@ -46,3 +46,8 @@ export interface DD_UnitResponse {
   unitID: string;
   unitName: string;
 }
+
+export interface returnTypeResponse {
+  returnTypeID: string;
+  returnTypeName: string;
+}

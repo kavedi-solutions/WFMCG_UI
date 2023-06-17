@@ -20,5 +20,7 @@ export interface ItemPutRequest {
 }
 
 export interface OpeningItemPutRequest {
+  returnTypeID: number;
   opening: number;
+  openingSpoiled: number;
 }

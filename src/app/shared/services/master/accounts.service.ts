@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { filter, map, Observable } from 'rxjs';
 import { AppConfig } from 'src/app/app.config';
 import {
   FilterValues,
@@ -12,6 +12,7 @@ import {
   AccountFilter_DropDown,
   AccountBalancePutRequest,
   AccountBalanceResponse,
+  CurrentAccountBalanceResponse,
 } from '../../models';
 import { LocalStorageService } from '../common/storage.service';
 
@@ -157,14 +158,48 @@ export class AccountsService {
 
   AccountsDropDown(filters: AccountFilter_DropDown) {
     const url = `${this.APIURL}/company/${this.CompanyID}/accounts/dropdown`;
-    let params = new HttpParams()
-      .set('GroupID', `${filters.GroupID}`)
-      .set('BalanceTransferToID', `${filters.BalanceTransferToID}`)
-      .set('AccountTypeID', `${filters.AccountTypeID}`)
-      .set('TransactionTypeID', `${filters.TransactionTypeID}`)
-      .set('SalesTypeID', `${filters.SalesTypeID}`)
-      .set('AccountTradeTypeID', `${filters.AccountTradeTypeID}`)
-      .set('AreaID', `${filters.AreaID}`);
+    let params = new HttpParams();
+    if (filters.GroupID.length > 0) {
+      filters.GroupID.forEach((element) => {
+        params = params.append('GroupID', element);
+      });
+    } 
+
+    if (filters.BalanceTransferToID.length > 0) {
+      filters.BalanceTransferToID.forEach((element) => {
+        params = params.append('BalanceTransferToID', element);
+      });
+    } 
+
+    if (filters.AccountTypeID.length > 0) {
+      filters.AccountTypeID.forEach((element) => {
+        params = params.append('AccountTypeID', element);
+      });
+    } 
+
+    if (filters.TransactionTypeID.length > 0) {
+      filters.TransactionTypeID.forEach((element) => {
+        params = params.append('TransactionTypeID', element);
+      });
+    } 
+
+    if (filters.SalesTypeID.length > 0) {
+      filters.SalesTypeID.forEach((element) => {
+        params = params.append('SalesTypeID', element);
+      });
+    }
+
+    if (filters.AccountTradeTypeID.length > 0) {
+      filters.AccountTradeTypeID.forEach((element) => {
+        params = params.append('AccountTradeTypeID', element);
+      });
+    } 
+
+    if (filters.AreaID.length > 0) {
+      filters.AreaID.forEach((element) => {
+        params = params.append('AreaID', element);
+      });
+    } 
 
     return this.http
       .get<any>(encodeURI(url), {
@@ -179,6 +214,26 @@ export class AccountsService {
       );
   }
 
+  // VAccountsDropDown(TransactionTypeID: string) {
+  //   const url = `${this.APIURL}/company/${this.CompanyID}/vaccounts/dropdown`;
+  //   let params = new HttpParams().set(
+  //     'TransactionTypeID',
+  //     `${TransactionTypeID}`
+  //   );
+
+  //   return this.http
+  //     .get<any>(encodeURI(url), {
+  //       headers: this.headers,
+  //       observe: 'response',
+  //       params,
+  //     })
+  //     .pipe(
+  //       map((response) => {
+  //         return response.body;
+  //       })
+  //     );
+  // }
+
   GetAccountBalance() {
     const url = `${this.APIURL}/company/${this.CompanyID}/accounts/balance`;
     return this.http
@@ -189,6 +244,20 @@ export class AccountsService {
       .pipe(
         map((response) => {
           return response;
+        })
+      );
+  }
+
+  GetCurrentAccountBalance(AccountID: number) {
+    const url = `${this.APIURL}/company/${this.CompanyID}/accounts/currentbalance/${AccountID}`;
+    return this.http
+      .get<any>(encodeURI(url), {
+        headers: this.headers,
+        observe: 'response',
+      })
+      .pipe(
+        map((response) => {
+          return response.body;
         })
       );
   }

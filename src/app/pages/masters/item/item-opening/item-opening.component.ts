@@ -8,6 +8,7 @@ import {
   FilterValues,
   ItemOpening,
   ItemFilter_DropDown,
+  returnTypeResponse,
 } from 'src/app/shared';
 import * as fromService from '../../../../shared/index';
 import * as defaultData from '../../../../data/index';
@@ -31,6 +32,7 @@ export class ItemOpeningComponent implements OnInit {
   accRights?: AccessRights;
   columns: MtxGridColumn[] = [];
   itemsDropDown: itemsDropDownResponse[] = [];
+  returnTypeDropDown: returnTypeResponse[] = [];
   balanceListData: ItemOpening[] = [];
   itemData?: ItemOpening;
   balancePutRequest?: OpeningItemPutRequest;
@@ -39,9 +41,11 @@ export class ItemOpeningComponent implements OnInit {
   latestSortingOrder?: string;
   latestSearchText?: string;
   pageSizeOptions = defaultData.pageSizeOptions;
+  currentItemID: number;
 
   balanceForm = this.fb.group({
     ItemID: ['', [Validators.required]],
+    ReturnTypeID: ['', [Validators.required]],
     AccountTradeTypeName: [''],
     Packing: [''],
     Opening: [0],
@@ -51,9 +55,11 @@ export class ItemOpeningComponent implements OnInit {
 
   constructor(
     private itemService: fromService.ItemService,
+    private commonService: fromService.CommonService,
     private route: ActivatedRoute,
     private fb: FormBuilder
   ) {
+    this.currentItemID = 0;
     this.accRights = this.route.snapshot.data['userRights'];
     this.latestSearchText = '';
     this.filterValues = [];
@@ -62,6 +68,7 @@ export class ItemOpeningComponent implements OnInit {
     this.setColumns();
     this.GetItemOpening();
     this.FillItemDropDown();
+    this.FillReturnTypeDropDown();
   }
 
   ngOnInit(): void {}
@@ -73,6 +80,17 @@ export class ItemOpeningComponent implements OnInit {
   get ItemIDControlRequired() {
     return (
       this.ItemIDControl.hasError('required') && this.ItemIDControl.touched
+    );
+  }
+
+  get ReturnTypeIDControl() {
+    return this.balanceForm.get('ReturnTypeID') as FormControl;
+  }
+
+  get ReturnTypeIDControlRequired() {
+    return (
+      this.ReturnTypeIDControl.hasError('required') &&
+      this.ReturnTypeIDControl.touched
     );
   }
 
@@ -144,12 +162,22 @@ export class ItemOpeningComponent implements OnInit {
       });
   }
 
+  FillReturnTypeDropDown() {
+    this.returnTypeDropDown = [];
+    this.commonService
+      .ReutnTypeDropDown()
+      .subscribe((response: returnTypeResponse[]) => {
+        this.returnTypeDropDown = response;
+      });
+  }
+
   FillItemDropDown() {
     let filters: ItemFilter_DropDown = {
       IsServiceItem: false,
       IsInventory: true,
       AccountTradeTypeID: 0,
       OnlyStockItems: false,
+      ReturnTypeID: 0,
     };
     this.itemService.ItemDropDown(filters).subscribe((response) => {
       this.itemsDropDown = response;
@@ -157,12 +185,16 @@ export class ItemOpeningComponent implements OnInit {
   }
 
   edit(value: any) {
-    this.EditRecord(Number(value.itemID));
+    this.EditRecord(Number(value.itemID), Number(value.returnTypeID));
   }
 
   UpdateBalance(balanceForm: FormGroup) {
     this.balancePutRequest = {
-      opening: this.OpeningControl.value,
+      returnTypeID: this.ReturnTypeIDControl.value,
+      opening:
+        this.ReturnTypeIDControl.value == 1 ? this.OpeningControl.value : 0,
+      openingSpoiled:
+        this.ReturnTypeIDControl.value == 1 ? 0 : this.OpeningControl.value,
     };
     this.itemService
       .updateItemOpening(balanceForm.value.ItemID, this.balancePutRequest)
@@ -192,18 +224,55 @@ export class ItemOpeningComponent implements OnInit {
   }
 
   ItemIDSelectionChange(event: any) {
-    this.EditRecord(Number(event));
+    this.getItemDetails(Number(event));
   }
 
-  EditRecord(ItemID: number) {
-    this.itemData = this.balanceListData.find((a) => a.itemID == ItemID);
+  ReturnTypeIDSelectionChange(event: any) {
+    this.getOpeningDetail(this.currentItemID, Number(event));
+  }
+
+  getOpeningDetail(ItemID: number, ReturnTypeId: number) {
+    this.itemData = this.balanceListData.find(
+      (a) => a.itemID == ItemID && a.returnTypeID == ReturnTypeId
+    );
+    if (this.itemData) {
+      this.balanceForm.patchValue({
+        OpeningCrt: this.itemData!.openingCrt.toString(),
+        OpeningPcs: this.itemData!.openingPcs.toString(),
+      });
+      this.CalculateOpening();
+    } else {
+      this.balanceForm.patchValue({
+        OpeningCrt: '0',
+        OpeningPcs: '0',
+      });
+    }
+  }
+
+  EditRecord(ItemID: number, ReturnTypeId: number) {
+    this.itemData = this.balanceListData.find(
+      (a) => a.itemID == ItemID && a.returnTypeID == ReturnTypeId
+    );
+    if (this.itemData) {
+      this.balanceForm.patchValue({
+        ItemID: ItemID.toString(),
+        AccountTradeTypeName: this.itemData!.accountTradeTypeName,
+        Packing: this.itemData!.packing.toString(),
+        ReturnTypeID: this.itemData!.returnTypeID.toString(),
+        OpeningCrt: this.itemData!.openingCrt.toString(),
+        OpeningPcs: this.itemData!.openingPcs.toString(),
+      });
+      this.CalculateOpening();
+    }
+  }
+
+  getItemDetails(ItemID: number) {
+    this.currentItemID = ItemID;
+    let Item = this.itemsDropDown.find((a) => Number(a.item_Id) == ItemID);
     this.balanceForm.patchValue({
       ItemID: ItemID.toString(),
-      AccountTradeTypeName: this.itemData!.accountTradeTypeName,
-      Packing: this.itemData!.packing.toString(),
-      OpeningCrt: this.itemData!.openingCrt.toString(),
-      OpeningPcs: this.itemData!.openingPcs.toString(),
+      AccountTradeTypeName: Item!.accountTradeTypeName,
+      Packing: Item!.packing.toString(),
     });
-    this.CalculateOpening();
   }
 }

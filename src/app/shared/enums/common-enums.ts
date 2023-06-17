@@ -52,3 +52,8 @@ export enum TransactionTypeMaster {
   TransferStockGTtoMT = 42,
   TransferStocktoOther = 43,
 }
+
+export enum ReturnType {
+  Normal = 1,
+  Spoiled = 2,
+}

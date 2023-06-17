@@ -641,13 +641,13 @@ export class AccountsAddEditComponent implements OnInit {
 
   FillAccountDropDown(transactionTypeID: number) {
     let filters = {
-      GroupID: 0,
-      BalanceTransferToID: 0,
-      AccountTypeID: 0,
-      TransactionTypeID: transactionTypeID,
-      SalesTypeID: 0,
-      AccountTradeTypeID: 0,
-      AreaID: 0,
+      GroupID: [],
+      BalanceTransferToID: [],
+      AccountTypeID: [],
+      TransactionTypeID: [transactionTypeID],
+      SalesTypeID: [],
+      AccountTradeTypeID: [],
+      AreaID: [],
     };
     this.accountService.AccountsDropDown(filters).subscribe((response) => {
       this.salesBookDropDown = response;

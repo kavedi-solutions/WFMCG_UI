@@ -151,4 +151,19 @@ export class CommonService {
         })
       );
   }
+
+  ReutnTypeDropDown() {
+    const url = `${this.APIURL}/dropdown/returntype`;
+    return this.http
+      .get<any>(encodeURI(url), {
+        headers: this.headers,
+        observe: 'response',
+      })
+      .pipe(
+        map((response) => {
+          return response.body;
+        })
+      );
+  }
+  
 }

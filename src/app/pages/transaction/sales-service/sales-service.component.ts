@@ -66,7 +66,7 @@ export class SalesServiceComponent implements OnInit {
               buttontype: 'button',
               pop: {
                 title: 'Confirm Edit',
-                description: 'Are you sure you want to Edit this Item.',
+                description: 'Are you sure you want to Edit this Sales.',
                 closeText: 'No',
                 okText: 'Yes',
                 okColor: 'primary',
@@ -83,7 +83,7 @@ export class SalesServiceComponent implements OnInit {
               buttontype: 'button',
               pop: {
                 title: 'Confirm Delete',
-                description: 'Are you sure you want to Delete this Item.',
+                description: 'Are you sure you want to Delete this Sales.',
                 closeText: 'No',
                 okText: 'Yes',
                 okColor: 'primary',

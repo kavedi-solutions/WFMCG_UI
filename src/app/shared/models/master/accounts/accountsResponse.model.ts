@@ -41,3 +41,10 @@ export interface AccountBalanceResponse {
   creditBalance: number;
   debitBalance: number;
 }
+
+export interface CurrentAccountBalanceResponse {
+  companyID: string;
+  accountID: number;
+  balance: number;
+  balanceType: string;
+}

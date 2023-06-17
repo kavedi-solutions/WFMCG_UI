@@ -28,7 +28,11 @@ import {
   TransactionTypeMaster,
 } from '../../../../shared/index';
 import * as defaultData from '../../../../data/index';
-import { CheckIsNumber, SetFormatCurrency } from 'src/app/shared/functions';
+import {
+  CheckIsNumber,
+  RoundOffAmount,
+  SetFormatCurrency,
+} from 'src/app/shared/functions';
 import { MatAutocomplete } from '@angular/material/autocomplete';
 import { MtxGridColumn } from 'src/app/extensions/grid/grid.interface';
 
@@ -165,7 +169,7 @@ export class SalesServiceAddEditComponent implements OnInit {
         .subscribe();
       if (this.selectedSalesId != 0) {
         this.isEditMode = true;
-        this.PageTitle = 'Update Sales';
+        this.PageTitle = 'Update Sales (Service)';
         this.getSalesByID();
       } else {
         this.isEditMode = false;
@@ -243,24 +247,14 @@ export class SalesServiceAddEditComponent implements OnInit {
           BillNo: this.editSales?.billNo.toString(),
           RefNo: this.editSales?.refNo,
           TotalAmount: SetFormatCurrency(this.editSales?.totalAmount),
-          TotalDiscAmount: SetFormatCurrency(
-            this.editSales?.totalDiscAmount
-          ),
+          TotalDiscAmount: SetFormatCurrency(this.editSales?.totalDiscAmount),
           TotalTaxableAmount: SetFormatCurrency(
             this.editSales?.totalTaxableAmount
           ),
-          TotalCGSTAmount: SetFormatCurrency(
-            this.editSales?.totalCGSTAmount
-          ),
-          TotalSGSTAmount: SetFormatCurrency(
-            this.editSales?.totalSGSTAmount
-          ),
-          TotalIGSTAmount: SetFormatCurrency(
-            this.editSales?.totalIGSTAmount
-          ),
-          TotalCessAmount: SetFormatCurrency(
-            this.editSales?.totalCessAmount
-          ),
+          TotalCGSTAmount: SetFormatCurrency(this.editSales?.totalCGSTAmount),
+          TotalSGSTAmount: SetFormatCurrency(this.editSales?.totalSGSTAmount),
+          TotalIGSTAmount: SetFormatCurrency(this.editSales?.totalIGSTAmount),
+          TotalCessAmount: SetFormatCurrency(this.editSales?.totalCessAmount),
           TotalTaxAmount: SetFormatCurrency(this.editSales?.totalTaxAmount),
           TotalNetAmount: SetFormatCurrency(this.editSales?.totalNetAmount),
           RoundOffAmount: SetFormatCurrency(this.editSales?.roundOffAmount),
@@ -427,13 +421,13 @@ export class SalesServiceAddEditComponent implements OnInit {
 
   FillBooksDropDown() {
     let filters = {
-      GroupID: 0,
-      BalanceTransferToID: 0,
-      AccountTypeID: AccountTypeMaster.Head_Books,
-      TransactionTypeID: TransactionTypeMaster.Sales_Service,
-      SalesTypeID: 0,
-      AccountTradeTypeID: 0,
-      AreaID: 0,
+      GroupID: [],
+      BalanceTransferToID: [],
+      AccountTypeID: [AccountTypeMaster.Head_Books],
+      TransactionTypeID: [TransactionTypeMaster.Sales_Service],
+      SalesTypeID: [],
+      AccountTradeTypeID: [],
+      AreaID: [],
     };
     this.accountService.AccountsDropDown(filters).subscribe((response) => {
       this.booksDropDown = response;
@@ -442,13 +436,13 @@ export class SalesServiceAddEditComponent implements OnInit {
 
   FillAccountDropDown() {
     let filters = {
-      GroupID: 0,
-      BalanceTransferToID: 0,
-      AccountTypeID: AccountTypeMaster.Customer,
-      TransactionTypeID: 0,
-      SalesTypeID: 0,
-      AccountTradeTypeID: 0,
-      AreaID: 0,
+      GroupID: [],
+      BalanceTransferToID: [],
+      AccountTypeID: [AccountTypeMaster.Customer],
+      TransactionTypeID: [],
+      SalesTypeID: [],
+      AccountTradeTypeID: [],
+      AreaID: [],
     };
     this.accountService.AccountsDropDown(filters).subscribe((response) => {
       this.accountsDropDown = response;
@@ -462,6 +456,7 @@ export class SalesServiceAddEditComponent implements OnInit {
       IsInventory: false,
       AccountTradeTypeID: AccountTradeTypeID,
       OnlyStockItems: false,
+      ReturnTypeID: 1,
     };
     this.itemService.ItemDropDown(filters).subscribe((response) => {
       this.itemsDropDown = response;
@@ -507,23 +502,6 @@ export class SalesServiceAddEditComponent implements OnInit {
     let FoundItem = this.salesItemDetailsList.findIndex(
       (a) => a.ItemID == event.option.value.item_Id
     );
-    if (FoundItem != -1) {
-      this.ItemEdit = this.salesItemDetailsList[FoundItem];
-      let ItemDetail: SalesSItemDetail = this.salesItemDetailsList.filter(
-        (a) => a.ItemID == event.option.value.item_Id
-      )[0];
-      this.I_AmountControl.setValue(ItemDetail.Amount);
-      this.I_DiscPerControl.setValue(ItemDetail.DiscPer);
-      this.I_DiscAmountControl.setValue(ItemDetail.DiscAmount);
-      this.I_GSTTaxIDControl.setValue(ItemDetail.GSTTaxID.toString());
-      this.I_CGSTAmountControl.setValue(ItemDetail.CGSTAmount);
-      this.I_SGSTAmountControl.setValue(ItemDetail.SGSTAmount);
-      this.I_IGSTAmountControl.setValue(ItemDetail.IGSTAmount);
-      this.I_CessAmountControl.setValue(ItemDetail.CessAmount);
-      this.I_NetAmountControl.setValue(ItemDetail.NetAmount);
-      this.CalculateTotals();
-      this.IsItemEditMode = true;
-    }
     this.itemService
       .GetItembyID(event.option.value.item_Id)
       .subscribe((response) => {
@@ -532,8 +510,25 @@ export class SalesServiceAddEditComponent implements OnInit {
           this.I_GSTTaxIDControl.setValue(
             this.CurrentItem?.gstTaxID.toString()
           );
+          this.GetCurrentTax(Number(this.CurrentItem?.gstTaxID), false);
+        } else {
+          this.ItemEdit = this.salesItemDetailsList[FoundItem];
+          let ItemDetail: SalesSItemDetail = this.salesItemDetailsList.filter(
+            (a) => a.ItemID == event.option.value.item_Id
+          )[0];
+
+          this.I_AmountControl.setValue(ItemDetail.Amount);
+          this.I_DiscPerControl.setValue(ItemDetail.DiscPer);
+          this.I_DiscAmountControl.setValue(ItemDetail.DiscAmount);
+          this.I_GSTTaxIDControl.setValue(ItemDetail.GSTTaxID.toString());
+          this.I_CGSTAmountControl.setValue(ItemDetail.CGSTAmount);
+          this.I_SGSTAmountControl.setValue(ItemDetail.SGSTAmount);
+          this.I_IGSTAmountControl.setValue(ItemDetail.IGSTAmount);
+          this.I_CessAmountControl.setValue(ItemDetail.CessAmount);
+          this.I_NetAmountControl.setValue(ItemDetail.NetAmount);
+          this.GetCurrentTax(Number(ItemDetail.GSTTaxID), true);
+          this.IsItemEditMode = true;
         }
-        this.GetCurrentTax(Number(this.CurrentItem?.gstTaxID), false);
       });
   }
 
@@ -546,7 +541,7 @@ export class SalesServiceAddEditComponent implements OnInit {
       this.CurrentTax = response;
       if (calculateTotal == true) this.CalculateTotals();
     });
-  }  
+  }
 
   AddItemToList() {
     let SrNo: number = 0;
@@ -895,26 +890,44 @@ export class SalesServiceAddEditComponent implements OnInit {
       this.DisableAddItemBtn = false;
     }
     if (this.IsDiscPerChange) {
-      DiscAmount = Amount * (Number(this.I_DiscPerControl.value) / 100);
+      DiscAmount = RoundOffAmount(
+        Amount * (Number(this.I_DiscPerControl.value) / 100),
+        2
+      );
     } else {
       DiscAmount = Number(this.I_DiscAmountControl.value);
     }
 
     TaxableAmount = Amount - DiscAmount;
     if (this.IsIGSTInvoice) {
-      IGSTAmount = TaxableAmount * (Number(this.CurrentTax?.igstRate) / 100);
+      IGSTAmount = RoundOffAmount(
+        TaxableAmount * (Number(this.CurrentTax?.igstRate) / 100),
+        2
+      );
     } else {
-      CGSTAmount = TaxableAmount * (Number(this.CurrentTax?.cgstRate) / 100);
-      SGSTAmount = TaxableAmount * (Number(this.CurrentTax?.sgstRate) / 100);
+      CGSTAmount = RoundOffAmount(
+        TaxableAmount * (Number(this.CurrentTax?.cgstRate) / 100),
+        2
+      );
+      SGSTAmount = RoundOffAmount(
+        TaxableAmount * (Number(this.CurrentTax?.sgstRate) / 100),
+        2
+      );
     }
 
     if (Number(this.CurrentTax?.cessRate) > 0) {
-      CessAmount = TaxableAmount * (Number(this.CurrentTax?.cessRate) / 100);
+      CessAmount = RoundOffAmount(
+        TaxableAmount * (Number(this.CurrentTax?.cessRate) / 100),
+        2
+      );
     }
 
-    TotalTaxAmount = CGSTAmount + SGSTAmount + IGSTAmount + CessAmount;
+    TotalTaxAmount = RoundOffAmount(
+      CGSTAmount + SGSTAmount + IGSTAmount + CessAmount,
+      2
+    );
 
-    NetAmount = TaxableAmount + TotalTaxAmount;
+    NetAmount = RoundOffAmount(TaxableAmount + TotalTaxAmount, 2);
 
     if (this.IsDiscPerChange == true) {
       this.I_DiscAmountControl.setValue(SetFormatCurrency(DiscAmount));

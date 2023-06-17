@@ -22,6 +22,10 @@ import { PurchaseService } from './transaction/purchase.service';
 import { SalesAService } from './transaction/sales-a.service';
 import { SalesSService } from './transaction/sales-s.service';
 import { SalesService } from './transaction/sales.service';
+import { VContraService } from './transaction/vcontra.service';
+import { VJournalService } from './transaction/vjournal.service';
+import { VPaymentService } from './transaction/vpayment.service';
+import { VReceiptService } from './transaction/vreceipt.service';
 
 export const services: any[] = [
   AuthService,
@@ -47,6 +51,10 @@ export const services: any[] = [
   SalesService,
   SalesAService,
   SalesSService,
+  VPaymentService,
+  VReceiptService,
+  VContraService,
+  VJournalService,
 ];
 
 export * from './admin/role.service';
@@ -76,3 +84,13 @@ export * from './transaction/purchase-s.service';
 export * from './transaction/sales.service';
 export * from './transaction/sales-a.service';
 export * from './transaction/sales-s.service';
+
+export * from './transaction/credit-note.service';
+export * from './transaction/debit-note.service';
+export * from './transaction/purchase-return.service';
+export * from './transaction/sales-return.service';
+
+export * from './transaction/vcontra.service';
+export * from './transaction/vpayment.service';
+export * from './transaction/vreceipt.service';
+export * from './transaction/vjournal.service';

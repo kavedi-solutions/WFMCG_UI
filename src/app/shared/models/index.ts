@@ -62,7 +62,7 @@ export * from './transaction/purchase/purchaseResponse.model';
 export * from './transaction/purchase/purchaseitemdetail.model';
 export * from './transaction/purchase/purchasePostRequest.model';
 export * from './transaction/purchase/purchasePutRequest.model';
-export * from './transaction/purchase-service/purchaseSPostRequest.model'
+export * from './transaction/purchase-service/purchaseSPostRequest.model';
 export * from './transaction/purchase-service/purchaseSPutRequest.model';
 export * from './transaction/purchase-service/purchaseSResponse.model';
 export * from './transaction/purchase-service/purchaseSitemdetail.model';
@@ -71,12 +71,11 @@ export * from './transaction/purchase-assets/purchaseAPutRequest.model';
 export * from './transaction/purchase-assets/purchaseAResponse.model';
 export * from './transaction/purchase-assets/purchaseAitemdetail.model';
 
-
 export * from './transaction/sales/salesResponse.model';
 export * from './transaction/sales/salesitemdetail.model';
 export * from './transaction/sales/salesPostRequest.model';
 export * from './transaction/sales/salesPutRequest.model';
-export * from './transaction/sales-service/salesSPostRequest.model'
+export * from './transaction/sales-service/salesSPostRequest.model';
 export * from './transaction/sales-service/salesSPutRequest.model';
 export * from './transaction/sales-service/salesSResponse.model';
 export * from './transaction/sales-service/salesSitemdetail.model';
@@ -84,3 +83,37 @@ export * from './transaction/sales-assets/salesAPostRequest.model';
 export * from './transaction/sales-assets/salesAPutRequest.model';
 export * from './transaction/sales-assets/salesAResponse.model';
 export * from './transaction/sales-assets/salesAitemdetail.model';
+
+export * from './transaction/purchase-return/purchasereturnPostRequest.model';
+export * from './transaction/purchase-return/purchasereturnPutRequest.model';
+export * from './transaction/purchase-return/purchasereturnResponse.model';
+export * from './transaction/purchase-return/purchasereturnitemdetail.model';
+
+export * from './transaction/sales-return/salesreturnPostRequest.model';
+export * from './transaction/sales-return/salesreturnPutRequest.model';
+export * from './transaction/sales-return/salesreturnResponse.model';
+export * from './transaction/sales-return/salesreturnitemdetail.model';
+
+export * from './transaction/credit-note/creditnotePostRequest.model';
+export * from './transaction/credit-note/creditnotePutRequest.model';
+export * from './transaction/credit-note/creditnoteResponse.model';
+
+export * from './transaction/debit-note/debitnotePostRequest.model';
+export * from './transaction/debit-note/debitnotePutRequest.model';
+export * from './transaction/debit-note/debitnoteResponse.model';
+
+export * from './transaction/v-payment/vPaymentPostRequest.model';
+export * from './transaction/v-payment/vPaymentPutRequest.model';
+export * from './transaction/v-payment/vPaymentResponse.model';
+
+export * from './transaction/v-receipt/vReceiptPostRequest.model';
+export * from './transaction/v-receipt/vReceiptPutRequest.model';
+export * from './transaction/v-receipt/vReceiptResponse.model';
+
+export * from './transaction/v-contra/vContraPostRequest.model';
+export * from './transaction/v-contra/vContraPutRequest.model';
+export * from './transaction/v-contra/vContraResponse.model';
+
+export * from './transaction/v-journal/vJournalPostRequest.model';
+export * from './transaction/v-journal/vJournalPutRequest.model';
+export * from './transaction/v-journal/vJournalResponse.model';

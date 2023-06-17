@@ -67,7 +67,7 @@ export class PurchaseAssetsComponent implements OnInit {
               buttontype: 'button',
               pop: {
                 title: 'Confirm Edit',
-                description: 'Are you sure you want to Edit this Item.',
+                description: 'Are you sure you want to Edit this Purchase.',
                 closeText: 'No',
                 okText: 'Yes',
                 okColor: 'primary',
@@ -84,7 +84,7 @@ export class PurchaseAssetsComponent implements OnInit {
               buttontype: 'button',
               pop: {
                 title: 'Confirm Delete',
-                description: 'Are you sure you want to Delete this Item.',
+                description: 'Are you sure you want to Delete this Purchase.',
                 closeText: 'No',
                 okText: 'Yes',
                 okColor: 'primary',
