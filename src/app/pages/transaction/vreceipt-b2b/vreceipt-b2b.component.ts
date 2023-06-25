@@ -4,7 +4,7 @@ import {
   AccessRights,
   FilterValues,
   PaginationHeaders,
-  VPayment,
+  VReceiptB2B,
 } from 'src/app/shared';
 import * as fromService from '../../../shared/index';
 import * as defaultData from '../../../data/index';
@@ -13,14 +13,14 @@ import { funSortingOrder } from 'src/app/shared/functions';
 import { PageEvent } from '@angular/material/paginator';
 
 @Component({
-  selector: 'app-vpayment',
-  templateUrl: './vpayment.component.html',
-  styleUrls: ['./vpayment.component.scss'],
+  selector: 'app-vreceipt-b2b',
+  templateUrl: './vreceipt-b2b.component.html',
+  styleUrls: ['./vreceipt-b2b.component.scss'],
 })
-export class VPaymentComponent implements OnInit {
-  PageTitle: string = 'Payment Voucher';
-  buttonText: string = 'Add New Payment';
-  voucherListData: VPayment[] = [];
+export class VReceiptB2BComponent implements OnInit {
+  PageTitle: string = 'Receipt Voucher';
+  buttonText: string = 'Add New Receipt';
+  voucherListData: VReceiptB2B[] = [];
   pagination?: PaginationHeaders = defaultData.defaultPaginationHeaders;
   filterValues?: FilterValues[];
   Sort?: string;
@@ -31,7 +31,7 @@ export class VPaymentComponent implements OnInit {
   latestSearchText?: string;
   pageSizeOptions = defaultData.pageSizeOptions;
   constructor(
-    private voucherService: fromService.VPaymentService,
+    private voucherService: fromService.VReceiptB2BService,
     private router: Router,
     private route: ActivatedRoute
   ) {
@@ -102,7 +102,7 @@ export class VPaymentComponent implements OnInit {
 
   getVoucherList() {
     this.voucherService
-      .GetVPaymentList(
+      .GetVReceiptB2BList(
         this.pagination!,
         this.latestSortingOrder!,
         this.latestSearchText!,
@@ -115,17 +115,17 @@ export class VPaymentComponent implements OnInit {
   }
 
   edit(value: any) {
-    this.router.navigate(['/transaction/v-payment/edit/', value.autoID]);
+    this.router.navigate(['/transaction/v-receipt-b2b/edit/', value.autoID]);
   }
 
   delete(value: any) {
-    this.voucherService.deleteVPayment(value.autoID).subscribe((response) => {
+    this.voucherService.deleteVReceiptB2B(value.autoID).subscribe((response) => {
       this.getVoucherList();
     });
   }
 
   AddnewRecord() {
-    this.router.navigate(['/transaction/v-payment/add']);
+    this.router.navigate(['/transaction/v-receipt-b2b/add']);
   }
 
   changeSelect(e: any) {

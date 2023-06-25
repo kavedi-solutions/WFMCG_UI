@@ -71,7 +71,7 @@ export class VPaymentAddEditComponent implements OnInit {
     private router: Router,
     public route: ActivatedRoute,
     private sstorage: fromService.LocalStorageService,
-    private paymentService: fromService.VPaymentService,
+    private voucherService: fromService.VPaymentService,
     private accountService: fromService.AccountsService,
     private fb: FormBuilder,
     private renderer: Renderer2
@@ -122,7 +122,7 @@ export class VPaymentAddEditComponent implements OnInit {
   }
 
   getVoucherByID() {
-    this.paymentService
+    this.voucherService
       .GetVPaymentbyID(this.selectedVoucherId)
       .subscribe((response) => {
         this.editVoucher = response;
@@ -176,7 +176,7 @@ export class VPaymentAddEditComponent implements OnInit {
       narration: voucherForm.value.Narration,
       isActive: true,
     };
-    this.paymentService
+    this.voucherService
       .createVPayment(this.voucherPostRequest)
       .subscribe((response) => {
         this.BacktoList();
@@ -201,7 +201,7 @@ export class VPaymentAddEditComponent implements OnInit {
       narration: voucherForm.value.Narration,
       isActive: true,
     };
-    this.paymentService
+    this.voucherService
       .updateVPayment(this.editVoucher!.autoID, this.voucherPutRequest)
       .subscribe((response) => {
         this.BacktoList();
@@ -321,7 +321,7 @@ export class VPaymentAddEditComponent implements OnInit {
       )?.bookInit;
       let VoucherDate = this.VoucherDateControl.value.format('YYYY-MM-DD');
       if (BookId != '' && VoucherDate != '') {
-        this.paymentService
+        this.voucherService
           .GetNextVoucherNo(BookId, VoucherDate)
           .subscribe((response) => {
             this.VoucherNoControl.setValue(response);

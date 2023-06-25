@@ -31,7 +31,7 @@ export class VJournalComponent implements OnInit {
   latestSearchText?: string;
   pageSizeOptions = defaultData.pageSizeOptions;
   constructor(
-    private paymentService: fromService.VJournalService,
+    private voucherService: fromService.VJournalService,
     private router: Router,
     private route: ActivatedRoute
   ) {
@@ -101,7 +101,7 @@ export class VJournalComponent implements OnInit {
   }
 
   getVoucherList() {
-    this.paymentService
+    this.voucherService
       .GetVJournalList(
         this.pagination!,
         this.latestSortingOrder!,
@@ -119,7 +119,7 @@ export class VJournalComponent implements OnInit {
   }
 
   delete(value: any) {
-    this.paymentService.deleteVJournal(value.autoID).subscribe((response) => {
+    this.voucherService.deleteVJournal(value.autoID).subscribe((response) => {
       this.getVoucherList();
     });
   }

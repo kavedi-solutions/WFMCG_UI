@@ -86,7 +86,7 @@ export function tokenGetter() {
     Layouts.Layouts,
     AuthPages.AuthPages,
     Pages.Pages,
-    SharedComponent.SharedComponent,
+    SharedComponent.SharedComponent,    
   ],
   imports: [
     CommonModule,

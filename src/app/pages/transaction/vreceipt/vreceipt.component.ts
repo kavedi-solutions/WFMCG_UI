@@ -31,7 +31,7 @@ export class VReceiptComponent implements OnInit {
   latestSearchText?: string;
   pageSizeOptions = defaultData.pageSizeOptions;
   constructor(
-    private paymentService: fromService.VReceiptService,
+    private voucherService: fromService.VReceiptService,
     private router: Router,
     private route: ActivatedRoute
   ) {
@@ -101,7 +101,7 @@ export class VReceiptComponent implements OnInit {
   }
 
   getVoucherList() {
-    this.paymentService
+    this.voucherService
       .GetVReceiptList(
         this.pagination!,
         this.latestSortingOrder!,
@@ -119,7 +119,7 @@ export class VReceiptComponent implements OnInit {
   }
 
   delete(value: any) {
-    this.paymentService.deleteVReceipt(value.autoID).subscribe((response) => {
+    this.voucherService.deleteVReceipt(value.autoID).subscribe((response) => {
       this.getVoucherList();
     });
   }

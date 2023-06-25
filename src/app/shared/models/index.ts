@@ -7,6 +7,7 @@ export * from './common/FilterValues.model';
 export * from './common/accessRights.model';
 export * from './common/sortingProperties.model';
 export * from './common/dropDownResponse.model';
+export * from './common/table-column.model';
 
 //Admin
 export * from './admin/role/roleResponse.model';
@@ -117,3 +118,7 @@ export * from './transaction/v-contra/vContraResponse.model';
 export * from './transaction/v-journal/vJournalPostRequest.model';
 export * from './transaction/v-journal/vJournalPutRequest.model';
 export * from './transaction/v-journal/vJournalResponse.model';
+
+export * from './transaction/v-receipt-b2b/vReceiptB2BPostRequest.model';
+export * from './transaction/v-receipt-b2b/vReceiptB2BPutRequest.model';
+export * from './transaction/v-receipt-b2b/vReceiptB2BResponse.model';

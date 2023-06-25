@@ -26,6 +26,8 @@ import { VReceiptComponent } from './vreceipt/vreceipt.component';
 import { VReceiptAddEditComponent } from './vreceipt/vreceipt-add-edit/vreceipt-add-edit.component';
 import { VJournalComponent } from './vjournal/vjournal.component';
 import { VJournalAddEditComponent } from './vjournal/vjournal-add-edit/vjournal-add-edit.component';
+import { VReceiptB2BComponent } from './vreceipt-b2b/vreceipt-b2b.component';
+import { VReceiptB2BAddEditComponent } from './vreceipt-b2b/vreceipt-b2b-add-edit/vreceipt-b2b-add-edit.component';
 
 export const TransactionPages: any[] = [
   PurchaseComponent,
@@ -56,6 +58,8 @@ export const TransactionPages: any[] = [
   VReceiptAddEditComponent,
   VJournalComponent,
   VJournalAddEditComponent,
+  VReceiptB2BComponent,
+  VReceiptB2BAddEditComponent
 ];
 
 export * from './purchase/purchase.component';
@@ -86,3 +90,5 @@ export * from './vreceipt/vreceipt.component';
 export * from './vreceipt/vreceipt-add-edit/vreceipt-add-edit.component';
 export * from './vjournal/vjournal.component';
 export * from './vjournal/vjournal-add-edit/vjournal-add-edit.component';
+export * from './vreceipt-b2b/vreceipt-b2b.component';
+export * from './vreceipt-b2b/vreceipt-b2b-add-edit/vreceipt-b2b-add-edit.component';

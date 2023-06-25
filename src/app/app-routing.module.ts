@@ -538,6 +538,28 @@ const routes: Routes = [
         ],
       },   
       {
+        path: 'v-receipt-b2b',
+        children: [
+          {
+            path: 'list',
+            component: CommonPages.VReceiptB2BComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '234' },
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'add',
+            component: CommonPages.VReceiptB2BAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'edit/:voucherid',
+            component: CommonPages.VReceiptB2BAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+        ],
+      }, 
+      {
         path: 'v-journal',
         children: [
           {
@@ -587,6 +609,16 @@ const routes: Routes = [
         component: CommonPages.SalesAddEditComponent,
         canActivate: [AuthGuard],
       },
+      {
+        path: 'v-receipt/add',
+        component: CommonPages.VReceiptAddEditComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'v-receipt-b2b/add',
+        component: CommonPages.VReceiptB2BAddEditComponent,
+        canActivate: [AuthGuard],
+      },            
     ],
   },
   {

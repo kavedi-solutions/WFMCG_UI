@@ -1,4 +1,5 @@
-import { MtxGridColumn } from "../extensions/grid/grid.interface";
+import { MtxGridColumn } from '../extensions/grid/grid.interface';
+import { TableColumns } from '../shared';
 
 export function GetRoleColumns() {
   let RoleColumns: MtxGridColumn[] = [
@@ -768,7 +769,7 @@ export function GetItemOpeningColumns() {
       disabled: true,
       minWidth: 100,
       width: '100px',
-    },    
+    },
     {
       header: 'Trade Type',
       field: 'accountTradeTypeName',
@@ -1161,7 +1162,6 @@ export function GetPurchaseItemDetailColumns() {
       type: 'number',
       typeParameter: { digitsInfo: '0.2-2', locale: 'en-IN' },
       class: 'right-mat-header-cell right-mat-cell',
-
     },
     {
       header: 'IsAdd',
@@ -1518,7 +1518,6 @@ export function GetPurchaseAItemDetailColumns() {
   return PurchaseItemColumns;
 }
 
-
 export function GetSalesColumns() {
   let SalesColumns: MtxGridColumn[] = [
     {
@@ -1861,7 +1860,6 @@ export function GetSalesItemDetailColumns() {
       type: 'number',
       typeParameter: { digitsInfo: '0.2-2', locale: 'en-IN' },
       class: 'right-mat-header-cell right-mat-cell',
-
     },
     {
       header: 'IsAdd',
@@ -2463,7 +2461,6 @@ export function GetPurchaseReturnItemDetailColumns() {
       type: 'number',
       typeParameter: { digitsInfo: '0.2-2', locale: 'en-IN' },
       class: 'right-mat-header-cell right-mat-cell',
-
     },
     {
       header: 'IsAdd',
@@ -2730,7 +2727,6 @@ export function GetSalesReturnItemDetailColumns() {
       type: 'number',
       typeParameter: { digitsInfo: '0.2-2', locale: 'en-IN' },
       class: 'right-mat-header-cell right-mat-cell',
-
     },
     {
       header: 'IsAdd',
@@ -2787,7 +2783,7 @@ export function GetCNDNColumns() {
       minWidth: 100,
       width: '100px',
       pinned: 'left',
-    },    
+    },
     {
       header: 'Party Name',
       field: 'accountName',
@@ -2860,7 +2856,7 @@ export function GetVRPCColumns() {
       minWidth: 250,
       width: '250px',
       pinned: 'left',
-    },      
+    },
     {
       header: 'Ref No',
       field: 'refNo',
@@ -2887,8 +2883,8 @@ export function GetVRPCColumns() {
       sortable: true,
       disabled: true,
       minWidth: 100,
-      width: '100px',      
-    },      
+      width: '100px',
+    },
     {
       header: 'Party Name',
       field: 'accountName',
@@ -2946,6 +2942,93 @@ export function GetVRPCColumns() {
   return VRPCColumns;
 }
 
+export function GetPendingBills() {
+  let PendingBills: TableColumns[] = [
+    {
+      index: 1,
+      columnName: 'autoID',
+      displayColumn: 'autoID',
+      visible: false,
+      columnType: 'number',
+      columnWidth: '0',
+    },
+    {
+      index: 2,
+      columnName: 'companyID',
+      displayColumn: 'companyID',
+      visible: false,
+      columnType: 'string',
+      columnWidth: '0',
+    },
+    {
+      index: 3,
+      columnName: 'invoiceID',
+      displayColumn: 'invoiceID',
+      visible: false,
+      columnType: 'number',
+      columnWidth: '0',
+    },
+    {
+      index: 4,
+      columnName: 'salesType',
+      displayColumn: 'salesType',
+      visible: false,
+      columnType: 'string',
+      columnWidth: '0',
+    },
+    {
+      index: 5,
+      columnName: 'billNo',
+      displayColumn: 'Bill No',
+      visible: false,
+      columnType: 'string',
+      columnWidth: '0',
+    },
+    {
+      index: 6,
+      columnName: 'refNo',
+      displayColumn: 'Ref No',
+      visible: true,
+      columnType: 'string',
+      columnWidth: '200px',
+    },
+    {
+      index: 7,
+      columnName: 'billDate',
+      displayColumn: 'Bill Date',
+      visible: true,
+      columnType: 'date',
+      columnWidth: '150px',
+    },
+    {
+      index: 8,
+      columnName: 'billAmount',
+      displayColumn: 'Bill Amount',
+      visible: true,
+      columnType: 'amount',
+      columnWidth: '200px',
+    },
+    {
+      index: 9,
+      columnName: 'pendingAmount',
+      displayColumn: 'Pending Amount',
+      visible: true,
+      columnType: 'amount',
+      columnWidth: '200px',
+    },
+    {
+      index: 10,
+      columnName: 'receiveAmount',
+      displayColumn: 'Receive Amount',
+      visible: true,
+      columnType: 'inputAmount',
+      columnWidth: '200px',
+    },
+  ];
+
+  return PendingBills;
+}
+
 export function GetJVColumns() {
   let JVColumns: MtxGridColumn[] = [
     {
@@ -2961,7 +3044,7 @@ export function GetJVColumns() {
       minWidth: 250,
       width: '250px',
       pinned: 'left',
-    },      
+    },
     {
       header: 'Ref No',
       field: 'refNo',
@@ -2988,8 +3071,8 @@ export function GetJVColumns() {
       sortable: true,
       disabled: true,
       minWidth: 100,
-      width: '100px',      
-    },      
+      width: '100px',
+    },
     {
       header: 'Receiver Account',
       field: 'receiverAccountName',

@@ -1,6 +1,7 @@
 import { Component, OnInit, Renderer2, ViewChild } from '@angular/core';
 import {
   AbstractControl,
+  FormArray,
   FormBuilder,
   FormControl,
   FormGroup,
@@ -14,40 +15,51 @@ import {
   accountsDropDownResponse,
   AccountTypeMaster,
   CurrentAccountBalanceResponse,
+  TableColumns,
   TransactionTypeMaster,
-  VContraPostRequest,
-  VContraPutRequest,
-  VContraResponse,
+  VReceiptB2BPendingBillsPostRequest,
+  VReceiptB2BPendingBillsPutRequest,
+  VReceiptB2BPendingBillsResponse,
+  VReceiptB2BPostRequest,
+  VReceiptB2BPutRequest,
+  VReceiptB2BResponse,
 } from 'src/app/shared';
 import { CheckIsNumber, SetFormatCurrency } from 'src/app/shared/functions';
 import * as fromService from '../../../../shared/index';
+import * as defaultData from '../../../../data/index';
 
 @Component({
-  selector: 'app-vcontra-add-edit',
-  templateUrl: './vcontra-add-edit.component.html',
-  styleUrls: ['./vcontra-add-edit.component.scss'],
+  selector: 'app-vreceipt-b2b-add-edit',
+  templateUrl: './vreceipt-b2b-add-edit.component.html',
+  styleUrls: ['./vreceipt-b2b-add-edit.component.scss'],
 })
-export class VContraAddEditComponent implements OnInit {
-  PageTitle: string = 'Create Contra Voucher';
-  buttonText: string = 'Add New Contra Voucher';
+export class VReceiptB2BAddEditComponent implements OnInit {
+  PageTitle: string = 'Create Receipt Voucher';
+  buttonText: string = 'Add New Receipt Voucher';
   isEditMode: boolean = false;
   isFromQuickMenu: boolean = false;
   selectedVoucherId: number;
 
-  voucherPostRequest?: VContraPostRequest;
-  voucherPutRequest?: VContraPutRequest;
-  editVoucher?: VContraResponse;
+  voucherPostRequest?: VReceiptB2BPostRequest;
+  voucherPutRequest?: VReceiptB2BPutRequest;
+  editVoucher?: VReceiptB2BResponse;
 
   booksDropDown: accountsDropDownResponse[] = [];
   accountsDropDown: accountsDropDownResponse[] = [];
+  pendingBills: VReceiptB2BPendingBillsResponse[] = [];
   filteredaccountsDropDown?: Observable<accountsDropDownResponse[]>;
   VoucherMinDate?: Date;
   VoucherMaxDate?: Date;
-  BookAndAccountisSame: boolean = false;
+  DisableAddItemBtn: boolean = true;
+  CompanyStateID: number = 0;
+  AccountStateID: number = 0;
+
   BookBalance: number = 0;
   BookBalanceType: string = 'Cr';
   AccountBalance: number = 0;
   AccountBalanceType: string = 'Cr';
+
+  pendingBillsColumn: TableColumns[] = [];
 
   voucherForm = this.fb.group({
     VoucherType: [''],
@@ -60,6 +72,7 @@ export class VContraAddEditComponent implements OnInit {
     TransactionNo: [''],
     Narration: ['', [Validators.required]],
     Amount: ['0'],
+    ReceivedBills: this.fb.array([]),
   });
 
   @ViewChild('AutoAccountID') AutoAccountID?: MatAutocomplete;
@@ -68,20 +81,21 @@ export class VContraAddEditComponent implements OnInit {
     private router: Router,
     public route: ActivatedRoute,
     private sstorage: fromService.LocalStorageService,
-    private voucherService: fromService.VContraService,
+    private voucherService: fromService.VReceiptB2BService,
     private accountService: fromService.AccountsService,
     private fb: FormBuilder,
     private renderer: Renderer2
   ) {
     this.isEditMode = false;
     this.selectedVoucherId = 0;
+    this.pendingBillsColumn = defaultData.GetPendingBills();
     this.FillBooksDropDown();
     this.FillAccountDropDown();
     this.SetMinMaxVoucherDate();
   }
 
   ngOnInit(): void {
-    this.filteredaccountsDropDown = this.AccountIDControl.valueChanges.pipe(
+    this.filteredaccountsDropDown = this.AccountIDControl().valueChanges.pipe(
       startWith(''),
       map((value) => {
         const name = typeof value === 'string' ? value : value?.account_Name;
@@ -100,7 +114,7 @@ export class VContraAddEditComponent implements OnInit {
         .subscribe();
       if (this.selectedVoucherId != 0) {
         this.isEditMode = true;
-        this.PageTitle = 'Update Contra Voucher';
+        this.PageTitle = 'Update Payment Voucher';
         this.getVoucherByID();
       } else {
         this.isEditMode = false;
@@ -112,7 +126,7 @@ export class VContraAddEditComponent implements OnInit {
 
   BacktoList() {
     if (this.isFromQuickMenu == false) {
-      this.router.navigate(['/transaction/v-contra/list']);
+      this.router.navigate(['/transaction/v-receipt-b2b/list']);
     } else {
       this.ResetForm(this.voucherForm);
     }
@@ -120,7 +134,7 @@ export class VContraAddEditComponent implements OnInit {
 
   getVoucherByID() {
     this.voucherService
-      .GetVContrabyID(this.selectedVoucherId)
+      .GetVReceiptB2BbyID(this.selectedVoucherId)
       .subscribe((response) => {
         this.editVoucher = response;
         let SeletedAccount: accountsDropDownResponse;
@@ -137,13 +151,19 @@ export class VContraAddEditComponent implements OnInit {
           TransactionNo: this.editVoucher?.transactionNo,
         });
 
-        this.VoucherDateControl.setValue(moment(this.editVoucher?.voucherDate));
-        this.AccountIDControl.setValue(SeletedAccount);
+        this.VoucherDateControl().setValue(
+          moment(this.editVoucher?.voucherDate)
+        );
+        this.AccountIDControl().setValue(SeletedAccount);
         this.GetCurrentAccountBalance(
           Number(this.editVoucher?.bookAccountID),
           1
         );
         this.GetCurrentAccountBalance(Number(this.editVoucher?.accountID), 2);
+        this.GetPendingBills(
+          Number(this.editVoucher?.accountID),
+          this.selectedVoucherId
+        );
       });
   }
 
@@ -156,12 +176,23 @@ export class VContraAddEditComponent implements OnInit {
   }
 
   SaveVoucher(voucherForm: FormGroup) {
-    let BookId = this.BookAccountIDControl.value;
+    let BookId = this.BookAccountIDControl().value;
     let TransactionTypeID = this.booksDropDown.find(
       (a) => a.account_Id == BookId
     )?.transactionTypeID;
+
+    let PendingBills: VReceiptB2BPendingBillsPostRequest[] = [];
+
+    this.ReceivedBills.controls.forEach((element) => {
+      PendingBills.push({
+        salesType: element.value.SalesType,
+        invoiceID: element.value.InvoiceID,
+        amount: element.value.ReceiveAmount,
+      });
+    });
+
     this.voucherPostRequest = {
-      voucherType: 'CV',
+      voucherType: 'RVB',
       voucherNo: Number(voucherForm.value.VoucherNo),
       refNo: voucherForm.value.RefNo,
       voucherDate: voucherForm.value.VoucherDate.format('YYYY-MM-DD'),
@@ -172,21 +203,34 @@ export class VContraAddEditComponent implements OnInit {
       transactionNo: voucherForm.value.TransactionNo,
       narration: voucherForm.value.Narration,
       isActive: true,
+      receivedBills: PendingBills,
     };
     this.voucherService
-      .createVContra(this.voucherPostRequest)
+      .createVReceiptB2B(this.voucherPostRequest)
       .subscribe((response) => {
         this.BacktoList();
       });
   }
 
   UpdateVoucher(voucherForm: FormGroup) {
-    let BookId = this.BookAccountIDControl.value;
+    let BookId = this.BookAccountIDControl().value;
     let TransactionTypeID = this.booksDropDown.find(
       (a) => a.account_Id == BookId
     )?.transactionTypeID;
+
+    let PendingBills: VReceiptB2BPendingBillsPutRequest[] = [];
+
+    this.ReceivedBills.controls.forEach((element) => {
+      PendingBills.push({
+        autoID: element.value.AutoID,
+        salesType: element.value.SalesType,
+        invoiceID: element.value.InvoiceID,
+        amount: element.value.ReceiveAmount,
+      });
+    });
+
     this.voucherPutRequest = {
-      voucherType: 'CV',
+      voucherType: 'RVB',
       voucherNo: Number(voucherForm.value.VoucherNo),
       refNo: voucherForm.value.RefNo,
       voucherDate: voucherForm.value.VoucherDate.format('YYYY-MM-DD'),
@@ -197,9 +241,10 @@ export class VContraAddEditComponent implements OnInit {
       transactionNo: voucherForm.value.TransactionNo,
       narration: voucherForm.value.Narration,
       isActive: true,
+      receivedBills: PendingBills,
     };
     this.voucherService
-      .updateVContra(this.editVoucher!.autoID, this.voucherPutRequest)
+      .updateVReceiptB2B(this.editVoucher!.autoID, this.voucherPutRequest)
       .subscribe((response) => {
         this.BacktoList();
       });
@@ -209,7 +254,7 @@ export class VContraAddEditComponent implements OnInit {
     const currentYear = new Date().getFullYear();
     this.VoucherMinDate = new Date(currentYear - 20, 0, 1);
     this.VoucherMaxDate = new Date();
-    this.VoucherDateControl.setValue(moment(new Date()));
+    this.VoucherDateControl().setValue(moment(new Date()));
   }
 
   FillBooksDropDown() {
@@ -234,23 +279,28 @@ export class VContraAddEditComponent implements OnInit {
     let filters = {
       GroupID: [],
       BalanceTransferToID: [],
-      AccountTypeID: [AccountTypeMaster.Head_Books],
-      TransactionTypeID: [
-        TransactionTypeMaster.Cash,
-        TransactionTypeMaster.Bank,
-      ],
+      AccountTypeID: [AccountTypeMaster.Customer],
+      TransactionTypeID: [],
       SalesTypeID: [],
       AccountTradeTypeID: [],
       AreaID: [],
     };
     this.accountService.AccountsDropDown(filters).subscribe((response) => {
       this.accountsDropDown = response;
-      this.AccountIDControl.setValue('');
+      this.AccountIDControl().setValue('');
     });
   }
 
   DisplayAccountName(accounts: accountsDropDownResponse) {
     return accounts && accounts.account_Name ? accounts.account_Name : '';
+  }
+
+  CalculateTotals() {
+    let Total = 0;
+    this.ReceivedBills.controls.forEach((element) => {
+      Total = Number(Total) + Number(element.value.ReceiveAmount);
+    });
+    this.AmountControl().setValue(SetFormatCurrency(Total));
   }
 
   //Events
@@ -265,11 +315,20 @@ export class VContraAddEditComponent implements OnInit {
 
   BookAccountIDblur() {
     this.GetNewVoucherNo();
-    this.GetCurrentAccountBalance(Number(this.BookAccountIDControl.value), 1);
+    this.GetCurrentAccountBalance(Number(this.BookAccountIDControl().value), 1);
+  }
+
+  SelectedAccount(event: any) {
+    this.AccountStateID = event.option.value.stateID;
   }
 
   ResetForm(form: FormGroup) {
     let control: AbstractControl;
+    this.pendingBills = [];
+    this.BookBalance = 0;
+    this.BookBalanceType = 'Cr';
+    this.AccountBalance = 0;
+    this.AccountBalanceType = 'Cr';
     form.reset({
       BookAccountID: '',
       VoucherDate: '',
@@ -278,12 +337,14 @@ export class VContraAddEditComponent implements OnInit {
       AccountID: '',
       Description: '',
       Amount: 0,
+      ReceivedBills: [],
     });
     form.markAsUntouched();
     Object.keys(form.controls).forEach((name) => {
       control = form.controls[name];
       control.setErrors(null);
     });
+    this.DisableAddItemBtn = true;
     this.SetMinMaxVoucherDate();
     this.renderer.selectRootElement('#BookAccountName', true).focus();
   }
@@ -291,33 +352,36 @@ export class VContraAddEditComponent implements OnInit {
   OnAccountBlur() {
     if (
       this.AutoAccountID?.isOpen == false &&
-      this.AccountIDControl.value == ''
+      this.AccountIDControl().value == ''
     ) {
       this.renderer.selectRootElement('#AccountName', true).focus();
     }
-    if (this.AccountIDControl.value != '') {
+    if (this.AccountIDControl().value != '') {
+      this.GetPendingBills(
+        Number(this.AccountIDControl().value.account_Id),
+        this.selectedVoucherId
+      );
       this.GetCurrentAccountBalance(
-        Number(this.AccountIDControl.value.account_Id),
+        Number(this.AccountIDControl().value.account_Id),
         2
       );
-      this.CheckBookAndAccountisSame();
     }
   }
 
   GetNewVoucherNo() {
     if (this.isEditMode == false) {
-      let BookId = this.BookAccountIDControl.value;
+      let BookId = this.BookAccountIDControl().value;
       let BookInit = this.booksDropDown.find(
         (a) => a.account_Id == BookId
       )?.bookInit;
-      let VoucherDate = this.VoucherDateControl.value.format('YYYY-MM-DD');
+      let VoucherDate = this.VoucherDateControl().value.format('YYYY-MM-DD');
       if (BookId != '' && VoucherDate != '') {
         this.voucherService
           .GetNextVoucherNo(BookId, VoucherDate)
           .subscribe((response) => {
-            this.VoucherNoControl.setValue(response);
+            this.VoucherNoControl().setValue(response);
             let RefNo = BookInit + '-' + response;
-            this.RefNoControl.setValue(RefNo);
+            this.RefNoControl().setValue(RefNo);
           });
       }
     }
@@ -342,6 +406,37 @@ export class VContraAddEditComponent implements OnInit {
     }
   }
 
+  GetPendingBills(AccountID: number, VoucherID: number) {
+    this.pendingBills = [];
+    if (AccountID != 0) {
+      this.voucherService
+        .GetPendingBills(AccountID, VoucherID)
+        .subscribe((response: VReceiptB2BPendingBillsResponse[]) => {
+          this.pendingBills = response;
+          this.pendingBills.forEach((element) => {
+            this.ReceivedBills.push(this.CreatePendingBills(element));
+          });
+        });
+    }
+  }
+
+  CreatePendingBills(item: VReceiptB2BPendingBillsResponse) {
+    return this.fb.group({
+      AutoID: new FormControl(item.autoID),
+      SalesType: new FormControl(item.salesType),
+      InvoiceID: new FormControl(item.invoiceID),
+      CompanyID: new FormControl(item.companyID),
+      BillNo: new FormControl(item.billNo),
+      RefNo: new FormControl(item.refNo),
+      BillDate: new FormControl(item.billDate),
+      BillAmount: new FormControl(item.billAmount),
+      PendingAmount: new FormControl(item.pendingAmount),
+      ReceiveAmount: new FormControl(item.receiveAmount, [
+        Validators.max(item.pendingAmount),
+      ]),
+    });
+  }
+
   private _filterAccount(name: string): accountsDropDownResponse[] {
     const filterValue = name.toLowerCase();
 
@@ -350,73 +445,89 @@ export class VContraAddEditComponent implements OnInit {
     );
   }
 
+  getColumnsList(): TableColumns[] {
+    return this.pendingBillsColumn.filter((cd) => cd.visible === true);
+  }
+  getDisplayedColumns(): string[] {
+    return this.pendingBillsColumn
+      .filter((cd) => cd.visible === true)
+      .map((cd) => cd.columnName);
+  }
+
   //Controls
 
-  get VoucherTypeControl() {
+  VoucherTypeControl() {
     return this.voucherForm.get('VoucherType') as FormControl;
   }
 
-  get TransactionTypeIDControl() {
+  TransactionTypeIDControl() {
     return this.voucherForm.get('TransactionTypeID') as FormControl;
   }
 
-  get BookAccountIDControl() {
+  BookAccountIDControl() {
     return this.voucherForm.get('BookAccountID') as FormControl;
   }
 
-  get VoucherDateControl() {
+  VoucherDateControl() {
     return this.voucherForm.get('VoucherDate') as FormControl;
   }
 
-  get VoucherNoControl() {
+  VoucherNoControl() {
     return this.voucherForm.get('VoucherNo') as FormControl;
   }
 
-  get RefNoControl() {
+  RefNoControl() {
     return this.voucherForm.get('RefNo') as FormControl;
   }
 
-  get AccountIDControl() {
+  AccountIDControl() {
     return this.voucherForm.get('AccountID') as FormControl;
   }
 
-  get TransactionNoControl() {
+  TransactionNoControl() {
     return this.voucherForm.get('TransactionNo') as FormControl;
   }
 
-  get NarrationControl() {
+  NarrationControl() {
     return this.voucherForm.get('Narration') as FormControl;
   }
 
-  get NarrationControlRequired() {
+  NarrationControlRequired() {
     return (
-      this.NarrationControl.hasError('required') &&
-      this.NarrationControl.touched
+      this.NarrationControl().hasError('required') &&
+      this.NarrationControl().touched
     );
   }
 
-  get NarrationControlInvalid() {
+  NarrationControlInvalid() {
     return (
-      this.NarrationControl.hasError('pattern') && this.NarrationControl.touched
+      this.NarrationControl().hasError('pattern') &&
+      this.NarrationControl().touched
     );
   }
 
-  get AmountControl() {
+  AmountControl() {
     return this.voucherForm.get('Amount') as FormControl;
   }
 
-  CheckBookAndAccountisSame() {
-    this.BookAndAccountisSame =
-      Number(this.AccountIDControl.value.account_Id) ==
-      Number(this.BookAccountIDControl.value)
-        ? true
-        : false;
-    if (this.BookAndAccountisSame == true) {
-      this.AccountIDControl.setErrors({
-        BookAndAccountisSame: this.BookAndAccountisSame,
-      });
-    } else {
-      this.AccountIDControl.updateValueAndValidity();
-    }
+  get ReceivedBills(): FormArray {
+    return this.voucherForm.get('ReceivedBills') as FormArray;
+  }
+
+  ReceiveAmountControl(index: number) {
+    return this.ReceivedBills.controls[index].get(
+      'ReceiveAmount'
+    ) as FormControl;
+  }
+
+  ReceiveAmountMaxError(index: number) {
+    return (
+      this.ReceiveAmountControl(index)!.hasError('max') &&
+      this.ReceiveAmountControl(index)!.touched
+    );
+  }
+
+  CheckFormIsValid() {
+    return !this.voucherForm.valid || this.AmountControl().value <= 0;
   }
 }

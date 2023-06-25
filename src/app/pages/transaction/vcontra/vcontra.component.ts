@@ -31,7 +31,7 @@ export class VContraComponent implements OnInit {
   latestSearchText?: string;
   pageSizeOptions = defaultData.pageSizeOptions;
   constructor(
-    private paymentService: fromService.VContraService,
+    private voucherService: fromService.VContraService,
     private router: Router,
     private route: ActivatedRoute
   ) {
@@ -101,7 +101,7 @@ export class VContraComponent implements OnInit {
   }
 
   getVoucherList() {
-    this.paymentService
+    this.voucherService
       .GetVContraList(
         this.pagination!,
         this.latestSortingOrder!,
@@ -119,7 +119,7 @@ export class VContraComponent implements OnInit {
   }
 
   delete(value: any) {
-    this.paymentService.deleteVContra(value.autoID).subscribe((response) => {
+    this.voucherService.deleteVContra(value.autoID).subscribe((response) => {
       this.getVoucherList();
     });
   }

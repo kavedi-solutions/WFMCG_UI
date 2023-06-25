@@ -25,6 +25,7 @@ import { SalesService } from './transaction/sales.service';
 import { VContraService } from './transaction/vcontra.service';
 import { VJournalService } from './transaction/vjournal.service';
 import { VPaymentService } from './transaction/vpayment.service';
+import { VReceiptB2BService } from './transaction/vreceipt-b2b.service';
 import { VReceiptService } from './transaction/vreceipt.service';
 
 export const services: any[] = [
@@ -55,6 +56,7 @@ export const services: any[] = [
   VReceiptService,
   VContraService,
   VJournalService,
+  VReceiptB2BService
 ];
 
 export * from './admin/role.service';
@@ -94,3 +96,4 @@ export * from './transaction/vcontra.service';
 export * from './transaction/vpayment.service';
 export * from './transaction/vreceipt.service';
 export * from './transaction/vjournal.service';
+export * from './transaction/vreceipt-b2b.service';

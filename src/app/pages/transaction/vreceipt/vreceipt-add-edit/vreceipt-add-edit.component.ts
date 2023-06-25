@@ -71,7 +71,7 @@ export class VReceiptAddEditComponent implements OnInit {
     private router: Router,
     public route: ActivatedRoute,
     private sstorage: fromService.LocalStorageService,
-    private paymentService: fromService.VReceiptService,
+    private voucherService: fromService.VReceiptService,
     private accountService: fromService.AccountsService,
     private fb: FormBuilder,
     private renderer: Renderer2
@@ -122,7 +122,7 @@ export class VReceiptAddEditComponent implements OnInit {
   }
 
   getVoucherByID() {
-    this.paymentService
+    this.voucherService
       .GetVReceiptbyID(this.selectedVoucherId)
       .subscribe((response) => {
         this.editVoucher = response;
@@ -176,7 +176,7 @@ export class VReceiptAddEditComponent implements OnInit {
       narration: voucherForm.value.Narration,
       isActive: true,
     };
-    this.paymentService
+    this.voucherService
       .createVReceipt(this.voucherPostRequest)
       .subscribe((response) => {
         this.BacktoList();
@@ -201,7 +201,7 @@ export class VReceiptAddEditComponent implements OnInit {
       narration: voucherForm.value.Narration,
       isActive: true,
     };
-    this.paymentService
+    this.voucherService
       .updateVReceipt(this.editVoucher!.autoID, this.voucherPutRequest)
       .subscribe((response) => {
         this.BacktoList();
@@ -279,6 +279,10 @@ export class VReceiptAddEditComponent implements OnInit {
 
   ResetForm(form: FormGroup) {
     let control: AbstractControl;
+    this.BookBalance = 0;
+    this.BookBalanceType = 'Cr';
+    this.AccountBalance = 0;
+    this.AccountBalanceType = 'Cr';
     form.reset({
       BookAccountID: '',
       VoucherDate: '',
@@ -321,7 +325,7 @@ export class VReceiptAddEditComponent implements OnInit {
       )?.bookInit;
       let VoucherDate = this.VoucherDateControl.value.format('YYYY-MM-DD');
       if (BookId != '' && VoucherDate != '') {
-        this.paymentService
+        this.voucherService
           .GetNextVoucherNo(BookId, VoucherDate)
           .subscribe((response) => {
             this.VoucherNoControl.setValue(response);

@@ -73,7 +73,7 @@ export class VJournalAddEditComponent implements OnInit {
     private router: Router,
     public route: ActivatedRoute,
     private sstorage: fromService.LocalStorageService,
-    private paymentService: fromService.VJournalService,
+    private voucherService: fromService.VJournalService,
     private accountService: fromService.AccountsService,
     private fb: FormBuilder,
     private renderer: Renderer2
@@ -136,7 +136,7 @@ export class VJournalAddEditComponent implements OnInit {
   }
 
   getVoucherByID() {
-    this.paymentService
+    this.voucherService
       .GetVJournalbyID(this.selectedVoucherId)
       .subscribe((response) => {
         this.editVoucher = response;
@@ -202,7 +202,7 @@ export class VJournalAddEditComponent implements OnInit {
       narration: voucherForm.value.Narration,
       isActive: true,
     };
-    this.paymentService
+    this.voucherService
       .createVJournal(this.voucherPostRequest)
       .subscribe((response) => {
         this.BacktoList();
@@ -227,7 +227,7 @@ export class VJournalAddEditComponent implements OnInit {
       narration: voucherForm.value.Narration,
       isActive: true,
     };
-    this.paymentService
+    this.voucherService
       .updateVJournal(this.editVoucher!.autoID, this.voucherPutRequest)
       .subscribe((response) => {
         this.BacktoList();
@@ -377,7 +377,7 @@ export class VJournalAddEditComponent implements OnInit {
       )?.bookInit;
       let VoucherDate = this.VoucherDateControl.value.format('YYYY-MM-DD');
       if (BookId != '' && VoucherDate != '') {
-        this.paymentService
+        this.voucherService
           .GetNextVoucherNo(BookId, VoucherDate)
           .subscribe((response) => {
             this.VoucherNoControl.setValue(response);
