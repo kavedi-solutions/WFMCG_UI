@@ -1,3 +1,4 @@
+import { CompanySettingsService } from './admin/company-settings.service';
 import { RoleService } from './admin/role.service';
 import { UserService } from './admin/user.service';
 import { AppOverlayService } from './common/app-overlay.service';
@@ -17,6 +18,7 @@ import { ItemgroupService } from './master/itemgroup.service';
 import { ManufactureService } from './master/manufacture.service';
 import { StockService } from './master/stock.service';
 import { TaxService } from './master/tax.service';
+import { OthersReportService } from './reports/others.service';
 import { PurchaseAService } from './transaction/purchase-a.service';
 import { PurchaseService } from './transaction/purchase.service';
 import { SalesAService } from './transaction/sales-a.service';
@@ -56,11 +58,14 @@ export const services: any[] = [
   VReceiptService,
   VContraService,
   VJournalService,
-  VReceiptB2BService
+  VReceiptB2BService,
+  OthersReportService,
+  CompanySettingsService
 ];
 
 export * from './admin/role.service';
 export * from './admin/user.service';
+export * from './admin/company-settings.service';
 
 export * from './common/auth.service';
 export * from './common/storage.service';
@@ -97,3 +102,5 @@ export * from './transaction/vpayment.service';
 export * from './transaction/vreceipt.service';
 export * from './transaction/vjournal.service';
 export * from './transaction/vreceipt-b2b.service';
+
+export * from './reports/others.service';

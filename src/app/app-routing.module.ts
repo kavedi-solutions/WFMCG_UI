@@ -492,7 +492,7 @@ const routes: Routes = [
             canActivate: [AuthGuard],
           },
         ],
-      },   
+      },
       {
         path: 'v-payment',
         children: [
@@ -514,7 +514,7 @@ const routes: Routes = [
             canActivate: [AuthGuard],
           },
         ],
-      },   
+      },
       {
         path: 'v-receipt',
         children: [
@@ -536,7 +536,7 @@ const routes: Routes = [
             canActivate: [AuthGuard],
           },
         ],
-      },   
+      },
       {
         path: 'v-receipt-b2b',
         children: [
@@ -558,7 +558,7 @@ const routes: Routes = [
             canActivate: [AuthGuard],
           },
         ],
-      }, 
+      },
       {
         path: 'v-journal',
         children: [
@@ -580,7 +580,46 @@ const routes: Routes = [
             canActivate: [AuthGuard],
           },
         ],
-      },                 
+      },
+    ],
+  },
+  {
+    path: 'reports',
+    component: Layouts.MainLayoutComponent,
+    canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
+    children: [
+      {
+        path: 'stock',
+        children: [
+          {
+            path: 'stockstatement',
+            component: CommonPages.StockStatementComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '601' },
+            canActivate: [AuthGuard],
+          },
+        ],
+      },
+      {
+        path: 'others',
+        children: [
+          {
+            path: 'bulkprint',
+            component: CommonPages.BulkPrintComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '701' },
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'loadingslip',
+            component: CommonPages.LoadingSlipComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '702' },
+            canActivate: [AuthGuard],
+          },
+        ],
+      },
     ],
   },
   {
@@ -618,7 +657,17 @@ const routes: Routes = [
         path: 'v-receipt-b2b/add',
         component: CommonPages.VReceiptB2BAddEditComponent,
         canActivate: [AuthGuard],
-      },            
+      },
+      {
+        path: 'bulkprint',
+        component: CommonPages.BulkPrintComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'loadingslip',
+        component: CommonPages.LoadingSlipComponent,
+        canActivate: [AuthGuard],
+      },
     ],
   },
   {

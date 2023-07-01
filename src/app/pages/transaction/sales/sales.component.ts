@@ -11,6 +11,9 @@ import { MtxGridColumn } from 'src/app/extensions/grid/grid.interface';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PageEvent } from '@angular/material/paginator';
 import { funSortingOrder } from 'src/app/shared/functions';
+import { DomSanitizer } from '@angular/platform-browser';
+import { MatDialog } from '@angular/material/dialog';
+import { PdfViewerDialogComponent } from 'src/app/theme';
 
 @Component({
   selector: 'app-sales',
@@ -33,8 +36,11 @@ export class SalesComponent implements OnInit {
 
   constructor(
     private salesService: fromService.SalesService,
+    private reportService: fromService.OthersReportService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private sanitizer: DomSanitizer,
+    private dialog: MatDialog
   ) {
     this.latestSearchText = '';
     this.accRights = this.route.snapshot.data['userRights'];
@@ -95,6 +101,24 @@ export class SalesComponent implements OnInit {
                 return this.accRights!.canEdit;
               },
             },
+            {
+              text: 'Print Invoice',
+              tooltip: 'Print Invoice',
+              buttontype: 'button',
+              pop: {
+                title: 'Confirm Print',
+                description:
+                  'Are you sure you want to Print this Sales Invoice.',
+                closeText: 'No',
+                okText: 'Yes',
+                okColor: 'primary',
+                closeColor: 'warn',
+              },
+              click: (record) => this.printInvoice(record),
+              iif: () => {
+                return this.accRights!.canView;
+              },
+            },
           ],
         },
       ],
@@ -123,6 +147,30 @@ export class SalesComponent implements OnInit {
     this.salesService.deleteSales(value.autoID).subscribe((response) => {
       this.getSalesList();
     });
+  }
+
+  printInvoice(value: any) {
+    this.reportService
+      .PrintInvoiceInventory(0, [value.autoID])
+      .subscribe((response) => {
+        var file = new Blob([response as Blob], { type: 'application/pdf' });
+        var fileURL = URL.createObjectURL(file);
+
+        this.dialog.open(PdfViewerDialogComponent, {
+          data: this.sanitizer.bypassSecurityTrustResourceUrl(fileURL),
+          minWidth: '80vw',
+          minHeight: '90vh',
+          maxWidth: '80vw',
+          maxHeight: '90vh',
+          autoFocus: true,
+        });
+      });
+  }
+
+  handleResponse(data: any) {
+    var file = new Blob([data._body], { type: 'application/pdf' });
+    var fileURL = URL.createObjectURL(file);
+    window.open(fileURL);
   }
 
   AddnewRecord() {

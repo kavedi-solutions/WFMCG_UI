@@ -18,6 +18,7 @@ export * from './admin/role/roleDropDownResponse.model';
 export * from './admin/user/userResponse.model';
 export * from './admin/user/userPostRequest.model';
 export * from './admin/user/userPutRequest.model';
+export * from './admin/companysettings/settingsReponse.model';
 
 //Masters
 export * from './master//area/areaDropDown.model';
@@ -122,3 +123,9 @@ export * from './transaction/v-journal/vJournalResponse.model';
 export * from './transaction/v-receipt-b2b/vReceiptB2BPostRequest.model';
 export * from './transaction/v-receipt-b2b/vReceiptB2BPutRequest.model';
 export * from './transaction/v-receipt-b2b/vReceiptB2BResponse.model';
+
+//reports
+
+export * from './report/others/bulkPrint.model';
+export * from './report/others/loadingSlip.model';
+export * from './report/stock/stockStatement.model';

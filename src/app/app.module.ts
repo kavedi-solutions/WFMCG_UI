@@ -71,7 +71,6 @@ import { JwtHelperService, JwtModule } from '@auth0/angular-jwt';
 import { registerLocaleData } from '@angular/common';
 import localeIn from '@angular/common/locales/en-IN';
 import { ExtensionsModule } from './extensions/extensions.module';
-
 registerLocaleData(localeIn);
 
 export function tokenGetter() {
@@ -86,7 +85,7 @@ export function tokenGetter() {
     Layouts.Layouts,
     AuthPages.AuthPages,
     Pages.Pages,
-    SharedComponent.SharedComponent,    
+    SharedComponent.SharedComponent,
   ],
   imports: [
     CommonModule,
@@ -188,6 +187,7 @@ export function tokenGetter() {
       },
     },
   ],
+  entryComponents: [fromThemes.PdfViewerDialogComponent],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

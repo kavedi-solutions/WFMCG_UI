@@ -29,6 +29,8 @@ export interface transactionTypeResponse {
   transactionTypeID: string;
   transactionTypeName: string;
   accountTypeID: string;
+  allowPrintInvoice: boolean;
+  allowPrintLodingSlip: boolean;
 }
 
 export interface voucherTypeResponse {
