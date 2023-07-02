@@ -8,4 +8,8 @@ export interface loginResponse {
   isCompanyOwner: boolean;
   jwtToken: string;
   stateID: string;
+  finYearStartMonth:number;
+  manageBilltoBill:boolean;
+  spoiledReturnDays:number;
+  goodsReturnDays:number;
 }

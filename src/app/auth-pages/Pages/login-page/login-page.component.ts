@@ -41,6 +41,7 @@ export class LoginPageComponent implements OnInit {
       .subscribe((response: loginResponse) => {
         if (response.isSuccess == true) {
           this.sstorage.clear();
+          debugger;
           this.sstorage.set('companyID', response.companyID);
           this.sstorage.set('userID', response.userID);
           this.sstorage.set('userName', response.userName);
@@ -48,7 +49,11 @@ export class LoginPageComponent implements OnInit {
           this.sstorage.set('lastName', response.lastName);
           this.sstorage.set('isCompanyOwner', response.isCompanyOwner);
           this.sstorage.set('jwtToken', response.jwtToken);
-          this.sstorage.set('CompanyStateID', response.stateID);          
+          this.sstorage.set('CompanyStateID', response.stateID);
+          this.sstorage.set('FinYearStartMonth', response.finYearStartMonth);
+          this.sstorage.set('ManageBilltoBill', response.manageBilltoBill);
+          this.sstorage.set('SpoiledReturnDays', response.spoiledReturnDays);
+          this.sstorage.set('GoodsReturnDays', response.goodsReturnDays);
           this.router.navigate(['/dashboard']);
         }
       });

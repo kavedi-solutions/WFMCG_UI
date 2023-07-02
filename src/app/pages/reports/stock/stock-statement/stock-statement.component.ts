@@ -5,13 +5,15 @@ import { DomSanitizer } from '@angular/platform-browser';
 import * as moment from 'moment';
 import {
   accountTradeTypeResponse,
-  ItemGroup,
+  ItemGroupDownDownResponse,
   returnTypeResponse,
   StockStatementFilter,
 } from 'src/app/shared';
 import * as fromService from '../../../../shared/index';
 import * as defaultData from '../../../../data/index';
 import { MtxGridColumn } from 'src/app/extensions/grid/grid.interface';
+import { PdfViewerDialogComponent } from 'src/app/theme';
+import { GetFinYearStartDate } from 'src/app/shared/functions';
 
 @Component({
   selector: 'app-stock-statement',
@@ -28,8 +30,8 @@ export class StockStatementComponent implements OnInit {
   returnTypeDropDown: returnTypeResponse[] = [];
   accountTradeTypeDropDown: accountTradeTypeResponse[] = [];
   showAmountDetail: boolean = false;
-  itemGroupListData: ItemGroup[] = [];
-  selecteditemGroupData: ItemGroup[] = [];
+  itemGroupListData: ItemGroupDownDownResponse[] = [];
+  selecteditemGroupData: ItemGroupDownDownResponse[] = [];
   ItemGroupType: string = 'Parent';
 
   stockStatementForm = this.fb.group({
@@ -47,8 +49,10 @@ export class StockStatementComponent implements OnInit {
     private fb: FormBuilder,
     private sanitizer: DomSanitizer,
     private dialog: MatDialog,
+    private sessionService: fromService.LocalStorageService,
     private commonService: fromService.CommonService,
-    private itemGroupService: fromService.ItemgroupService
+    private itemGroupService: fromService.ItemgroupService,
+    private stockService: fromService.ReportStocksService
   ) {
     this.columns = defaultData.GetStockStatementItemGroupColumns();
     this.accountTradeTypeDropDown = [];
@@ -66,7 +70,14 @@ export class StockStatementComponent implements OnInit {
     const currentYear = new Date().getFullYear();
     this.FromMinDate = new Date(currentYear - 20, 0, 1);
     this.FromMaxDate = new Date();
-    this.FromDateControl.setValue(moment(new Date()));
+    this.FromDateControl.setValue(
+      moment(
+        GetFinYearStartDate(
+          new Date(),
+          Number(this.sessionService.get('FinYearStartMonth'))
+        )
+      )
+    );
   }
 
   SetMinMaxToDate() {
@@ -140,7 +151,7 @@ export class StockStatementComponent implements OnInit {
     let itemGroupIds: number[] = [];
 
     this.selecteditemGroupData.forEach((element) => {
-      itemGroupIds.push(element.itemGroupID);
+      itemGroupIds.push(Number(element.itemGroup_Id));
     });
 
     let filter: StockStatementFilter = {
@@ -154,6 +165,21 @@ export class StockStatementComponent implements OnInit {
       isChildGroups: this.IsChildGroupsControl.value,
       itemGroups: itemGroupIds,
     };
+
+    this.stockService.PrintStockStatement(filter).subscribe((response) => {
+      var file = new Blob([response as Blob], { type: 'application/pdf' });
+      var fileURL = URL.createObjectURL(file);
+
+      this.dialog.open(PdfViewerDialogComponent, {
+        data: this.sanitizer.bypassSecurityTrustResourceUrl(fileURL),
+        minWidth: '80vw',
+        minHeight: '90vh',
+        maxWidth: '80vw',
+        maxHeight: '90vh',
+        panelClass: 'dialog-container',
+        autoFocus: true,
+      });
+    });
   }
 
   get ReturnTypeIDControl() {

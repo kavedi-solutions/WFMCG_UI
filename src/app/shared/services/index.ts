@@ -19,6 +19,7 @@ import { ManufactureService } from './master/manufacture.service';
 import { StockService } from './master/stock.service';
 import { TaxService } from './master/tax.service';
 import { OthersReportService } from './reports/others.service';
+import { ReportStocksService } from './reports/reportstocks.service';
 import { PurchaseAService } from './transaction/purchase-a.service';
 import { PurchaseService } from './transaction/purchase.service';
 import { SalesAService } from './transaction/sales-a.service';
@@ -60,7 +61,8 @@ export const services: any[] = [
   VJournalService,
   VReceiptB2BService,
   OthersReportService,
-  CompanySettingsService
+  CompanySettingsService,
+  ReportStocksService
 ];
 
 export * from './admin/role.service';
@@ -104,3 +106,4 @@ export * from './transaction/vjournal.service';
 export * from './transaction/vreceipt-b2b.service';
 
 export * from './reports/others.service';
+export * from './reports/reportstocks.service';
