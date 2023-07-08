@@ -187,7 +187,11 @@ export function tokenGetter() {
       },
     },
   ],
-  entryComponents: [fromThemes.PdfViewerDialogComponent],
+  entryComponents: [
+    fromThemes.PdfViewerDialogComponent,
+    fromThemes.ConfirmDialogComponent,
+    Pages.CnDnSettlementComponent
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

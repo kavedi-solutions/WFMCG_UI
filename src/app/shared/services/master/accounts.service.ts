@@ -201,6 +201,12 @@ export class AccountsService {
       });
     } 
 
+    if (filters.HeadBookId.length > 0) {
+      filters.HeadBookId.forEach((element) => {
+        params = params.append('HeadBookId', element);
+      });
+    } 
+
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -213,26 +219,6 @@ export class AccountsService {
         })
       );
   }
-
-  // VAccountsDropDown(TransactionTypeID: string) {
-  //   const url = `${this.APIURL}/company/${this.CompanyID}/vaccounts/dropdown`;
-  //   let params = new HttpParams().set(
-  //     'TransactionTypeID',
-  //     `${TransactionTypeID}`
-  //   );
-
-  //   return this.http
-  //     .get<any>(encodeURI(url), {
-  //       headers: this.headers,
-  //       observe: 'response',
-  //       params,
-  //     })
-  //     .pipe(
-  //       map((response) => {
-  //         return response.body;
-  //       })
-  //     );
-  // }
 
   GetAccountBalance() {
     const url = `${this.APIURL}/company/${this.CompanyID}/accounts/balance`;

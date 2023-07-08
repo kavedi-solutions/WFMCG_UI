@@ -20,6 +20,7 @@ import {
   groupDownDownResponse,
   salesTypeResponse,
   stateDownDownResponse,
+  TransactionTypeMaster,
   transactionTypeResponse,
 } from 'src/app/shared';
 import * as fromService from '../../../../shared/index';
@@ -639,15 +640,20 @@ export class AccountsAddEditComponent implements OnInit {
     });
   }
 
-  FillAccountDropDown(transactionTypeID: number) {
+  FillAccountDropDown() {
     let filters = {
       GroupID: [],
       BalanceTransferToID: [],
       AccountTypeID: [],
-      TransactionTypeID: [transactionTypeID],
+      TransactionTypeID: [
+        TransactionTypeMaster.Sales_Inventory,
+        TransactionTypeMaster.Sales_Assets,
+        TransactionTypeMaster.Sales_Service,
+      ],
       SalesTypeID: [],
       AccountTradeTypeID: [],
       AreaID: [],
+      HeadBookId: [],
     };
     this.accountService.AccountsDropDown(filters).subscribe((response) => {
       this.salesBookDropDown = response;
@@ -679,7 +685,7 @@ export class AccountsAddEditComponent implements OnInit {
         this.transactionTypeIDSelectionChange('1');
         break;
       case 2: //Customer
-        this.FillAccountDropDown(5);
+        this.FillAccountDropDown();
         this.transactionTypeIDControl.setValue('1');
         this.transactionTypeIDSelectionChange('1');
         this.disableTradeType = false;

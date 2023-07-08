@@ -3240,3 +3240,83 @@ export function GetStockStatementItemGroupColumns() {
 
   return ItemGroupColumns;
 }
+
+
+export function GetCnDnDetails() {
+  let CnDnBills: TableColumns[] = [
+    {
+      index: 1,
+      columnName: 'companyID',
+      displayColumn: 'companyID',
+      visible: false,
+      columnType: 'string',
+      columnWidth: '0',
+    },    
+    {
+      index: 2,
+      columnName: 'autoID',
+      displayColumn: 'autoID',
+      visible: false,
+      columnType: 'number',
+      columnWidth: '0',
+    },
+    {
+      index: 3,
+      columnName: 'cndnType',
+      displayColumn: 'cndnType',
+      visible: false,
+      columnType: 'string',
+      columnWidth: '0',
+    },    
+    {
+      index: 4,
+      columnName: 'cnDnTypeName',
+      displayColumn: 'Type Name',
+      visible: true,
+      columnType: 'string',
+      columnWidth: '200px',
+    },
+    {
+      index: 5,
+      columnName: 'refNo',
+      displayColumn: 'Ref No',
+      visible: true,
+      columnType: 'string',
+      columnWidth: '200px',
+    },
+    {
+      index: 6,
+      columnName: 'billDate',
+      displayColumn: 'Bill Date',
+      visible: true,
+      columnType: 'date',
+      columnWidth: '150px',
+    },
+    {
+      index: 7,
+      columnName: 'amount',
+      displayColumn: 'Amount',
+      visible: true,
+      columnType: 'amount',
+      columnWidth: '200px',
+    },    
+    {
+      index: 8,
+      columnName: 'pendingAmount',
+      displayColumn: 'Pending Amount',
+      visible: true,
+      columnType: 'amount',
+      columnWidth: '200px',
+    },
+    {
+      index: 9,
+      columnName: 'receiveAmount',
+      displayColumn: 'Receive Amount',
+      visible: true,
+      columnType: 'inputAmount',
+      columnWidth: '200px',
+    },
+  ];
+
+  return CnDnBills;
+}

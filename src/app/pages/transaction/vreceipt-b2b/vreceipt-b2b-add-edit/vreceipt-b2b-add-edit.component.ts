@@ -269,6 +269,7 @@ export class VReceiptB2BAddEditComponent implements OnInit {
       SalesTypeID: [],
       AccountTradeTypeID: [],
       AreaID: [],
+      HeadBookId: [],
     };
     this.accountService.AccountsDropDown(filters).subscribe((response) => {
       this.booksDropDown = response;
@@ -284,6 +285,7 @@ export class VReceiptB2BAddEditComponent implements OnInit {
       SalesTypeID: [],
       AccountTradeTypeID: [],
       AreaID: [],
+      HeadBookId: [],
     };
     this.accountService.AccountsDropDown(filters).subscribe((response) => {
       this.accountsDropDown = response;
@@ -448,6 +450,7 @@ export class VReceiptB2BAddEditComponent implements OnInit {
   getColumnsList(): TableColumns[] {
     return this.pendingBillsColumn.filter((cd) => cd.visible === true);
   }
+  
   getDisplayedColumns(): string[] {
     return this.pendingBillsColumn
       .filter((cd) => cd.visible === true)

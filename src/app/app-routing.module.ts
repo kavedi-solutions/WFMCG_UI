@@ -602,6 +602,18 @@ const routes: Routes = [
         ],
       },
       {
+        path: 'register',
+        children: [
+          {
+            path: 'outstanding',
+            component: CommonPages.OutstandingRegisterComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '403' },
+            canActivate: [AuthGuard],
+          },
+        ],
+      },
+      {
         path: 'others',
         children: [
           {
@@ -666,6 +678,11 @@ const routes: Routes = [
       {
         path: 'loadingslip',
         component: CommonPages.LoadingSlipComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'outstanding',
+        component: CommonPages.OutstandingRegisterComponent,
         canActivate: [AuthGuard],
       },
     ],

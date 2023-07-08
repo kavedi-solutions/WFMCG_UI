@@ -446,6 +446,7 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
       SalesTypeID: [],
       AccountTradeTypeID: [],
       AreaID: [],
+      HeadBookId: [],
     };
     this.accountService.AccountsDropDown(filters).subscribe((response) => {
       this.booksDropDown = response;
@@ -461,6 +462,7 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
       SalesTypeID: [],
       AccountTradeTypeID: [],
       AreaID: [],
+      HeadBookId: [],
     };
     this.accountService.AccountsDropDown(filters).subscribe((response) => {
       this.accountsDropDown = response;

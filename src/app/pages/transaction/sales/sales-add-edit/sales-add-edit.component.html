@@ -80,7 +80,7 @@
           <mat-select
             formControlName="AccountTradeTypeID"
             required
-            (valueChange)="AccountTradeTypeChange($event)"
+            [disabled]="true"
           >
             <mat-option
               *ngFor="let sbdd of accountTradeTypeDropDown"
@@ -165,12 +165,14 @@
             <mat-label>Crt</mat-label>
             <input
               matInput
+              id="Crt"
               placeholder="Crt"
               type="text"
               formControlName="I_Crt"
-              maxlength="2"
+              maxlength="5"
               class="input-right-align"
               (keyup)="CalculateTotals()"
+              (blur)="CheckStocks($event, 'Crt')"
             />
           </mat-form-field>
         </div>
@@ -179,12 +181,14 @@
             <mat-label>Pcs</mat-label>
             <input
               matInput
+              id="Pcs"
               placeholder="Pcs"
               type="text"
               formControlName="I_Pcs"
               maxlength="5"
               class="input-right-align"
               (keyup)="CalculateTotals()"
+              (blur)="CheckStocks($event, 'Pcs')"
             />
           </mat-form-field>
         </div>
@@ -193,12 +197,14 @@
             <mat-label>Free Crt</mat-label>
             <input
               matInput
+              id="FCrt"
               placeholder="Free Crt"
               type="text"
               formControlName="I_FreeCrt"
-              maxlength="3"
+              maxlength="5"
               class="input-right-align"
               (keyup)="CalculateTotals()"
+              (blur)="CheckStocks($event, 'FCrt')"
             />
           </mat-form-field>
         </div>
@@ -207,12 +213,14 @@
             <mat-label>FreePcs</mat-label>
             <input
               matInput
+              id="FPcs"
               placeholder="Free Pcs"
               type="text"
               formControlName="I_FreePcs"
               maxlength="5"
               class="input-right-align"
               (keyup)="CalculateTotals()"
+              (blur)="CheckStocks($event, 'FPcs')"
             />
           </mat-form-field>
         </div>
@@ -556,6 +564,43 @@
       </div>
     </div>
     <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="25%" fxFlex.lt-sm="100" class="matero-col">
+        <button
+          *ngIf="IsCreditNoteAvaliable == true"
+          type="button"
+          mat-raised-button
+          color="primary"
+          (click)="OpenCNDN()"
+        >
+          Settlement of Credit Note
+        </button>
+      </div>
+      <div fxFlex="60%" fxFlex.lt-sm="100" class="matero-col">
+        <ng-container>
+          <p
+            class="f-s-18 text-center creditnote"
+            *ngIf="IsCreditNoteAvaliable == true"
+          >
+            Credit note available for settlement.
+          </p>
+        </ng-container>
+      </div>
+      <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Credit Note Amount</mat-label>
+          <input
+            matInput
+            placeholder="Credit Note Amount"
+            type="text"
+            formControlName="CreditNoteAmount"
+            maxlength="15"
+            class="input-right-align"
+            readonly
+          />
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
       <div fxFlex="28%" fxFlex.lt-sm="100" class="matero-col">
         <mat-form-field appearance="legacy" color="primary">
           <mat-label>Other Add Text</mat-label>
@@ -611,10 +656,10 @@
       </div>
       <div fxFlex="9%" fxFlex.lt-sm="100" class="matero-col">
         <mat-form-field appearance="legacy" color="primary">
-          <mat-label>Round Off Amount</mat-label>
+          <mat-label>Round Off</mat-label>
           <input
             matInput
-            placeholder="Round Off Amount"
+            placeholder="Round Off"
             type="text"
             formControlName="RoundOffAmount"
             maxlength="15"

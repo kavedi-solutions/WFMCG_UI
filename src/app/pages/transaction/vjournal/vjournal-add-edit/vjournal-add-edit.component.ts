@@ -250,6 +250,7 @@ export class VJournalAddEditComponent implements OnInit {
       SalesTypeID: [],
       AccountTradeTypeID: [],
       AreaID: [],
+      HeadBookId: [],
     };
     this.accountService.AccountsDropDown(filters).subscribe((response) => {
       this.booksDropDown = response;
@@ -270,6 +271,7 @@ export class VJournalAddEditComponent implements OnInit {
       SalesTypeID: [],
       AccountTradeTypeID: [],
       AreaID: [],
+      HeadBookId: [],
     };
     this.accountService.AccountsDropDown(filters).subscribe((response) => {
       this.rAccountsDropDown = response;
@@ -291,6 +293,7 @@ export class VJournalAddEditComponent implements OnInit {
       SalesTypeID: [],
       AccountTradeTypeID: [],
       AreaID: [],
+      HeadBookId: [],
     };
     this.accountService.AccountsDropDown(filters).subscribe((response) => {
       this.gAccountsDropDown = response;

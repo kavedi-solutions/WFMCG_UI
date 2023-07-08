@@ -6,4 +6,5 @@ export interface AccountFilter_DropDown {
   SalesTypeID: number[];
   AccountTradeTypeID: number[];
   AreaID: number[];
+  HeadBookId: number[];
 }

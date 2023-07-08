@@ -4,4 +4,6 @@ export interface accountsDropDownResponse {
   stateID: string;
   transactionTypeID: string;
   bookInit: string;
+  accountTradeTypeID: number;
+  headAccountID: number;
 }

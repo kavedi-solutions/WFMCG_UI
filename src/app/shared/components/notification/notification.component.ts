@@ -22,4 +22,13 @@ export class NotificationComponent implements OnInit {
     });
   }
 
+  openStockErrorBar(message: string, action: string, className: string) {
+    this.snackBar.open(message, "ok", {
+      duration: 1500,
+      verticalPosition: 'bottom',
+      horizontalPosition: 'center',
+      panelClass: [className],
+    });
+  }
+
 }

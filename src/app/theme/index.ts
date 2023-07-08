@@ -1,3 +1,4 @@
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { HeaderComponent } from './header/header.component';
 import { PdfViewerDialogComponent } from './pdf-viewer-dialog/pdf-viewer-dialog.component';
 import { QuickmenubarComponent } from './quickmenubar/quickmenubar.component';
@@ -16,6 +17,7 @@ export const ThemesComponent: any[] = [
   AppSpinnerComponent,
   ListCommonFiltersComponent,
   PdfViewerDialogComponent,
+  ConfirmDialogComponent
 ];
 
 export * from './header/header.component';
@@ -26,3 +28,4 @@ export * from './widgets/branding.component';
 export * from './widgets/list-common-filters/list-common-filters.component';
 export * from './widgets/app-spinner.component';
 export * from './pdf-viewer-dialog/pdf-viewer-dialog.component';
+export * from './confirm-dialog/confirm-dialog.component';

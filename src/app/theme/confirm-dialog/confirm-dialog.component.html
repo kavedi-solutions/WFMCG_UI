@@ -1,0 +1,60 @@
+<h1 *ngIf="DialogType == 1" class="dialog-title dialog-title-confirm">
+  {{ DialogTitle }}
+</h1>
+<h1 *ngIf="DialogType == 2" class="dialog-title dialog-title-info">
+  {{ DialogTitle }}
+</h1>
+<h1 *ngIf="DialogType == 3" class="dialog-title dialog-title-alert">
+  {{ DialogTitle }}
+</h1>
+<div class="dialog-content">
+  <p>
+    {{ DialogMessage1 }}
+  </p>
+  <p *ngIf="DialogMessage2 != ''">
+    {{ DialogMessage2 }}
+  </p>
+  <p *ngIf="DialogMessage3 != ''">
+    {{ DialogMessage3 }}
+  </p>
+  <p *ngIf="DialogMessage4 != ''">
+    {{ DialogMessage4 }}
+  </p>
+  <p *ngIf="DialogMessage5 != ''">
+    {{ DialogMessage5 }}
+  </p>
+</div>
+<div class="dialog-actions">
+  <ng-container *ngIf="DialogType == 1">
+    <button
+      mat-raised-button
+      mat-dialog-close="Yes"
+      cdkFocusInitial
+      color="primary"
+      (click)="_onYesClick()"
+    >
+      Yes
+    </button>
+    <button mat-raised-button mat-dialog-close="No" color="warn">No</button>
+  </ng-container>
+  <ng-container *ngIf="DialogType == 2">
+    <button
+      mat-raised-button
+      cdkFocusInitial
+      mat-dialog-close="Ok"
+      color="primary"
+    >
+      Ok
+    </button>
+  </ng-container>
+  <ng-container *ngIf="DialogType == 3">
+    <button
+      mat-raised-button
+      cdkFocusInitial
+      mat-dialog-close="Ok"
+      color="warn"
+    >
+      Ok
+    </button>
+  </ng-container>
+</div>

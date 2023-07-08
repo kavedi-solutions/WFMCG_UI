@@ -1,0 +1,97 @@
+<page-header
+  class="bg-blue-600"
+  [title]="PageTitle"
+  [showBack]="false"
+  [showAdd]="false"
+></page-header>
+
+<form class="form-field-full page-detail" [formGroup]="outstandingForm">
+  <mat-card>
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <input
+            matInput
+            [matDatepicker]="AsOnDate"
+            placeholder="As on Date"
+            formControlName="AsOnDate"
+            [min]="AsOnDateMinDate"
+            [max]="AsOnDateMaxDate"
+          />
+          <mat-datepicker-toggle matSuffix [for]="AsOnDate" [tabIndex]="-1"
+            ><mat-icon matDatepickerToggleIcon
+              >keyboard_arrow_down</mat-icon
+            ></mat-datepicker-toggle
+          >
+          <mat-datepicker #AsOnDate></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div fxFlex="30%" fxFlex.lt-sm="100" class="matero-col m-b-12 m-t-16">
+        <mat-label>Outstanding for </mat-label>
+        <mat-radio-group
+          aria-label="Outstanding for"
+          formControlName="OutstandingType"
+          (change)="ChangeOutstandingType($event)"
+        >
+          <mat-radio-button value="1">Receivable</mat-radio-button>
+          <mat-radio-button value="2">Payable</mat-radio-button>
+        </mat-radio-group>
+      </div>
+    </div>
+    <div
+      class="matero-row"
+      fxLayout.lt-sm="column"
+      fxLayout="row"
+      *ngIf="ShowMoreFilter == true"
+    >
+      <div fxFlex="15%" fxFlex.lt-sm="100" class="m-b-16 m-t-24 matero-col">
+        <mat-slide-toggle
+          color="primary"
+          class="slide_toggle_style"
+          formControlName="WithInvoice"
+        >
+          With Invoice
+        </mat-slide-toggle>
+      </div>
+      <div fxFlex="15%" fxFlex.lt-sm="100" class="m-b-16 m-t-24 matero-col">
+        <mat-slide-toggle
+          color="primary"
+          class="slide_toggle_style"
+          formControlName="AreaWise"
+          (change)="ChangeAreaWise()"
+        >
+          Area Wise
+        </mat-slide-toggle>
+      </div>
+      <div fxFlex="30%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field
+          appearance="legacy"
+          color="primary"
+          *ngIf="ShowArea == true"
+        >
+          <mat-label>Area</mat-label>
+          <mat-select formControlName="AreaID" [required]="ShowArea">
+            <mat-option
+              *ngFor="let sbdd of areaDropDown"
+              [value]="sbdd.area_Id"
+            >
+              {{ sbdd.area_Name }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="AreaIDControlRequired">Area is required.</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <mat-card-actions align="end" class="area-mat-card-actions m-r-0">
+      <button
+        type="button"
+        mat-raised-button
+        color="primary"
+        [disabled]="!outstandingForm.valid"
+        (click)="GenerateStatement()"
+      >
+        Generate (Print)
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</form>

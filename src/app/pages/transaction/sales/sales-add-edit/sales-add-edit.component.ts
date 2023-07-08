@@ -15,10 +15,12 @@ import {
   accountTradeTypeResponse,
   AccountTypeMaster,
   ClosingStockbyItemID,
+  CNDNSettlementResponse,
   Item,
   ItemFilter_DropDown,
   ItemGroupDownDownResponse,
   itemsDropDownResponse,
+  NotificationComponent,
   SalesItemDetail,
   SalesItemPostRequest,
   SalesItemPutRequest,
@@ -32,11 +34,16 @@ import {
 import * as defaultData from '../../../../data/index';
 import {
   CheckIsNumber,
+  GetCrt,
+  GetPcs,
   RoundOffAmount,
   SetFormatCurrency,
 } from 'src/app/shared/functions';
 import { MatAutocomplete } from '@angular/material/autocomplete';
 import { MtxGridColumn } from 'src/app/extensions/grid/grid.interface';
+import { ConfirmDialogComponent } from 'src/app/theme';
+import { MatDialog } from '@angular/material/dialog';
+import { CnDnSettlementComponent } from 'src/app/pages/dialogs';
 
 @Component({
   selector: 'app-sales-add-edit',
@@ -44,6 +51,7 @@ import { MtxGridColumn } from 'src/app/extensions/grid/grid.interface';
   styleUrls: ['./sales-add-edit.component.scss'],
 })
 export class SalesAddEditComponent implements OnInit {
+  dialogRef: any;
   PageTitle: string = 'Create Sales (Inventory)';
   buttonText: string = 'Add New Sales';
   isEditMode: boolean = false;
@@ -58,6 +66,7 @@ export class SalesAddEditComponent implements OnInit {
   accountTradeTypeDropDown: accountTradeTypeResponse[] = [];
   taxDropDown: TaxDownDownResponse[] = [];
   booksDropDown: accountsDropDownResponse[] = [];
+  booksIdList: number[] = [];
   accountsDropDown: accountsDropDownResponse[] = [];
   filteredaccountsDropDown?: Observable<accountsDropDownResponse[]>;
   itemsDropDown: itemsDropDownResponse[] = [];
@@ -76,6 +85,8 @@ export class SalesAddEditComponent implements OnInit {
   InvoiceType: string = '';
   columns: MtxGridColumn[] = [];
 
+  CnDnSettlementData: CNDNSettlementResponse[] = [];
+  IsCreditNoteAvaliable: boolean = false;
   IsDiscPerChange: boolean = false;
   IsSchPerChange: boolean = false;
 
@@ -110,6 +121,7 @@ export class SalesAddEditComponent implements OnInit {
       Validators.pattern(/^([\s]*[a-zA-Z0-9()&-.,/]+[\s]*)+$/i),
     ],
     OtherLessAmount: ['0', [Validators.pattern(/^([0-9,-/+])+$/i)]],
+    CreditNoteAmount: ['0'],
     RoundOffAmount: ['0'],
     NetAmount: ['0'],
     Items: this.fb.group({
@@ -152,8 +164,11 @@ export class SalesAddEditComponent implements OnInit {
     private commonService: fromService.CommonService,
     private taxService: fromService.TaxService,
     private stockService: fromService.StockService,
+    private cndnSettlementService: fromService.CreditNoteService,
     private fb: FormBuilder,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private dialog: MatDialog,
+    public notification: NotificationComponent
   ) {
     this.CompanyStateID = this.sstorage.get('CompanyStateID');
     this.setColumns();
@@ -166,7 +181,6 @@ export class SalesAddEditComponent implements OnInit {
     this.FillTaxDropDown();
     this.FillAccountTradeTypeDropDown('2');
     this.FillBooksDropDown();
-    this.FillAccountDropDown();
     this.SetMinMaxBillDate();
   }
 
@@ -519,9 +533,15 @@ export class SalesAddEditComponent implements OnInit {
       SalesTypeID: [],
       AccountTradeTypeID: [],
       AreaID: [],
+      HeadBookId: [],
     };
     this.accountService.AccountsDropDown(filters).subscribe((response) => {
       this.booksDropDown = response;
+      this.booksIdList = [];
+      this.booksDropDown.forEach((element) => {
+        this.booksIdList.push(Number(element.account_Id));
+      });
+      this.FillAccountDropDown();
     });
   }
 
@@ -534,6 +554,7 @@ export class SalesAddEditComponent implements OnInit {
       SalesTypeID: [],
       AccountTradeTypeID: [],
       AreaID: [],
+      HeadBookId: this.booksIdList,
     };
     this.accountService.AccountsDropDown(filters).subscribe((response) => {
       this.accountsDropDown = response;
@@ -583,12 +604,46 @@ export class SalesAddEditComponent implements OnInit {
 
   SelectedAccount(event: any) {
     this.AccountStateID = event.option.value.stateID;
+    this.AccountTradeTypeIDControl.setValue(
+      event.option.value.accountTradeTypeID.toString()
+    );
+    this.AccountTradeTypeChange(event.option.value.accountTradeTypeID);
     this.InvoiceType =
       this.AccountStateID != this.CompanyStateID
         ? 'IGST Invoice'
         : 'CGST/SGST Invoice';
     this.IsIGSTInvoice =
       this.AccountStateID != this.CompanyStateID ? true : false;
+
+    if (
+      event.option.value.headAccountID !=
+      Number(this.BookAccountIDControl.value)
+    ) {
+      this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        minWidth: '40vw',
+        minHeight: '20vh',
+        maxWidth: '50vw',
+        maxHeight: '40vh',
+        panelClass: 'dialog-container',
+        autoFocus: true,
+      });
+
+      this.dialogRef.componentInstance.DialogTitle = 'Confirm';
+      this.dialogRef.componentInstance.DialogMessage1 =
+        'Account is not belongs to this book.';
+      this.dialogRef.componentInstance.DialogMessage2 =
+        'Do you want to change book?';
+      this.dialogRef.componentInstance.DialogType = 1;
+
+      this.dialogRef.afterClosed().subscribe((result: any) => {
+        if (result == 'Yes') {
+          this.BookAccountIDControl.setValue(
+            event.option.value.headAccountID.toString()
+          );
+          this.BookAccountIDblur();
+        }
+      });
+    }
   }
 
   SelectedItem(event: any) {
@@ -601,8 +656,9 @@ export class SalesAddEditComponent implements OnInit {
       .GetItembyID(event.option.value.item_Id)
       .subscribe((response) => {
         this.CurrentItem = response;
-        this.GetCurrentStock(Number(this.CurrentItem?.itemID));
+
         if (FoundItem == -1) {
+          this.GetCurrentStock(Number(this.CurrentItem?.itemID), 0);
           this.I_RateControl.setValue(
             SetFormatCurrency(this.CurrentItem?.salesRate)
           );
@@ -615,7 +671,10 @@ export class SalesAddEditComponent implements OnInit {
           let ItemDetail: SalesItemDetail = this.salesItemDetailsList.filter(
             (a) => a.ItemID == event.option.value.item_Id
           )[0];
-
+          this.GetCurrentStock(
+            Number(this.CurrentItem?.itemID),
+            ItemDetail.TQty
+          );
           this.I_CrtControl.setValue(ItemDetail.Crt);
           this.I_PcsControl.setValue(ItemDetail.Pcs);
           this.I_QtyControl.setValue(ItemDetail.Qty);
@@ -653,10 +712,22 @@ export class SalesAddEditComponent implements OnInit {
     });
   }
 
-  GetCurrentStock(ItemID: number) {
+  GetCurrentStock(ItemID: number, EditQty: number) {
     //stockService
     this.stockService.GetClosingByItemID(ItemID, 1).subscribe((response) => {
       this.CurrentStock = response;
+      if (EditQty > 0) {
+        this.CurrentStock!.closing =
+          this.CurrentStock!.closing + Number(EditQty);
+        this.CurrentStock!.closingCrt = GetCrt(
+          this.CurrentStock!.closing,
+          this.CurrentStock!.packing
+        );
+        this.CurrentStock!.closingPcs = GetPcs(
+          this.CurrentStock!.closing,
+          this.CurrentStock!.packing
+        );
+      }
     });
   }
 
@@ -758,7 +829,7 @@ export class SalesAddEditComponent implements OnInit {
     this.renderer.selectRootElement('#ItemName', true).focus();
     this.itemService.GetItembyID(record.ItemID).subscribe((response) => {
       this.CurrentItem = response;
-      this.GetCurrentStock(Number(this.CurrentItem?.itemID));
+      this.GetCurrentStock(Number(this.CurrentItem?.itemID), record.TQty);
       this.I_RateControl.setValue(
         SetFormatCurrency(this.CurrentItem?.salesRate)
       );
@@ -893,6 +964,10 @@ export class SalesAddEditComponent implements OnInit {
       this.AccountIDControl.value == ''
     ) {
       this.renderer.selectRootElement('#AccountName', true).focus();
+    } else {
+      if (this.AccountIDControl.value != '') {
+        this.GetCNDNData(this.AccountIDControl.value.account_Id, 0);
+      }
     }
   }
 
@@ -970,6 +1045,11 @@ export class SalesAddEditComponent implements OnInit {
   get TotalNetAmountControl() {
     return this.salesForm.get('TotalNetAmount') as FormControl;
   }
+
+  get CreditNoteAmountControl() {
+    return this.salesForm.get('CreditNoteAmount') as FormControl;
+  }
+
   get OtherAddTextControl() {
     return this.salesForm.get('OtherAddText') as FormControl;
   }
@@ -1129,7 +1209,11 @@ export class SalesAddEditComponent implements OnInit {
     TotalQty = Qty + FreeQty;
     this.DisableAddItemBtn = true;
     if (TotalQty > 0) {
-      this.DisableAddItemBtn = false;
+      if (TotalQty > this.CurrentStock!.closing) {
+        this.DisableAddItemBtn = true;
+      } else {
+        this.DisableAddItemBtn = false;
+      }
     }
     Amount = RoundOffAmount(
       Number(this.I_CrtControl.value) * Rate +
@@ -1261,23 +1345,105 @@ export class SalesAddEditComponent implements OnInit {
 
   CalculateNetAmount() {
     let RoundOffAmount = 0,
+      CreditNoteAmount = 0,
       NetAmount = 0,
       OtherAddAmount = 0,
       OtherLessAmount = 0,
       AfterAddLessAmount = 0,
       TotalNetAmount = 0;
 
-    TotalNetAmount = Number(this.TotalNetAmountControl.value.replace(/,/g, ''));
+
+    CreditNoteAmount = CheckIsNumber(this.CreditNoteAmountControl.value);
+    TotalNetAmount = CheckIsNumber(this.TotalNetAmountControl.value);
     OtherAddAmount = CheckIsNumber(this.OtherAddAmountControl.value);
     OtherLessAmount = CheckIsNumber(this.OtherLessAmountControl.value);
 
-    AfterAddLessAmount = TotalNetAmount + OtherAddAmount - OtherLessAmount;
+    AfterAddLessAmount = TotalNetAmount - CreditNoteAmount + OtherAddAmount - OtherLessAmount;
 
     NetAmount = Math.round(Number(AfterAddLessAmount));
     RoundOffAmount = NetAmount - AfterAddLessAmount;
 
     this.RoundOffAmountControl.setValue(SetFormatCurrency(RoundOffAmount));
     this.NetAmountControl.setValue(SetFormatCurrency(NetAmount));
+  }
+
+  CheckStocks(event: Event, Field: string) {
+    event.stopPropagation();
+    event.preventDefault();
+    let TotalQty = Number(this.I_TotalQtyControl.value);
+
+    if (TotalQty > this.CurrentStock!.closing) {
+      this.notification.openStockErrorBar(
+        'Quantity is more then stock',
+        'Error',
+        'red-snackbar'
+      );
+      this.renderer.selectRootElement('#' + Field, true).focus();
+
+      if (Field == 'Crt') {
+        this.I_CrtControl.setErrors({ Validate: true });
+      }
+      if (Field == 'Pcs') {
+        this.I_PcsControl.setErrors({ Validate: true });
+      }
+      if (Field == 'FCrt') {
+        this.I_FreeCrtControl.setErrors({ Validate: true });
+      }
+      if (Field == 'FPcs') {
+        this.I_FreePcsControl.setErrors({ Validate: true });
+      }
+    } else {
+      if (Field == 'Crt') {
+        this.I_CrtControl.setErrors(null);
+      }
+      if (Field == 'Pcs') {
+        this.I_PcsControl.setErrors(null);
+      }
+      if (Field == 'FCrt') {
+        this.I_FreeCrtControl.setErrors(null);
+      }
+      if (Field == 'FPcs') {
+        this.I_FreePcsControl.setErrors(null);
+      }
+    }
+  }
+
+  OpenCNDN() {
+    this.dialogRef = this.dialog.open(CnDnSettlementComponent, {
+      minWidth: '60vw',
+      minHeight: '60vh',
+      maxWidth: '60vw',
+      maxHeight: '60vh',
+      panelClass: 'dialog-container',
+      autoFocus: true,
+    });
+
+    this.dialogRef.componentInstance.DialogTitle = 'Settlement of Credit Note';
+    this.dialogRef.componentInstance.CnDnSettlementData =
+      this.CnDnSettlementData;
+    this.dialogRef.componentInstance.TotalNetAmount = CheckIsNumber(
+      this.TotalNetAmountControl.value
+    );
+    this.dialogRef.afterClosed().subscribe((result: any) => {
+      if (result.CloseStatus == true) {
+        this.CreditNoteAmountControl.setValue(
+          SetFormatCurrency(result.SettlementAmount)
+        );
+        this.CalculateNetAmount();
+      }
+    });
+  }
+
+  GetCNDNData(AccountID: number, InvoiceID: number) {
+    this.CnDnSettlementData = [];
+    if (AccountID != 0) {
+      this.cndnSettlementService
+        .getCNDNSettlements('CN', AccountID, InvoiceID)
+        .subscribe((response: CNDNSettlementResponse[]) => {
+          this.CnDnSettlementData = response;
+          this.IsCreditNoteAvaliable = true;
+        });
+    }
   }
 
   //Private Methods

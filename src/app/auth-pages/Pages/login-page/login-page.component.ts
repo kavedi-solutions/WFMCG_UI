@@ -41,7 +41,6 @@ export class LoginPageComponent implements OnInit {
       .subscribe((response: loginResponse) => {
         if (response.isSuccess == true) {
           this.sstorage.clear();
-          debugger;
           this.sstorage.set('companyID', response.companyID);
           this.sstorage.set('userID', response.userID);
           this.sstorage.set('userName', response.userName);
