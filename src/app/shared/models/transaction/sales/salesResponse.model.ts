@@ -45,6 +45,7 @@ export interface SalesResponse {
   totalGrossAmount: number;
   totalSchAmount: number;
   totalNetAmount: number;
+  creditNoteAmount: number;
   otherAddText: string | null;
   otherAddAmount: number;
   otherLessText: string | null;

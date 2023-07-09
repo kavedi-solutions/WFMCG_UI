@@ -126,8 +126,13 @@ export class CreditNoteService {
     });
   }
 
-  getCNDNSettlements(SelectType: string, AccountID: number, InvoiceID: number) {
-    const url = `${this.APIURL}/selecttype/${SelectType}/account/${AccountID}/invoiceid/${InvoiceID}/getcndnsettlements`;
+  getCNDNSettlements(
+    SelectType: string,
+    AccountID: number,
+    InvoiceType: string,
+    InvoiceID: number
+  ) {
+    const url = `${this.APIURL}/selecttype/${SelectType}/account/${AccountID}/invoiceid/${InvoiceType}/${InvoiceID}/getcndnsettlements`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,

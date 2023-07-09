@@ -1,3 +1,5 @@
+import { CreditNoteSettlementRequest } from '../cndnsettlements/cndnsettlements.model';
+
 export interface SalesPostRequest {
   bookAccountID: number;
   billNo: number;
@@ -16,6 +18,7 @@ export interface SalesPostRequest {
   totalGrossAmount: number;
   totalSchAmount: number;
   totalNetAmount: number;
+  creditNoteAmount: number;
   otherAddText: string | null;
   otherAddAmount: number;
   otherLessText: string | null;
@@ -23,6 +26,7 @@ export interface SalesPostRequest {
   roundOffAmount: number;
   netAmount: number;
   details: SalesItemPostRequest[] | null;
+  cndnSettlement?: CreditNoteSettlementRequest[];
   isActive: boolean;
   createdBy?: string;
 }
@@ -37,7 +41,7 @@ export interface SalesItemPostRequest {
   amount: number;
   discPer: number;
   discAmount: number;
-  taxableAmount:number;
+  taxableAmount: number;
   gSTTaxID: number;
   cGSTAmount: number;
   sGSTAmount: number;

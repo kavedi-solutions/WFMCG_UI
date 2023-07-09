@@ -62,7 +62,7 @@ export class VReceiptAddEditComponent implements OnInit {
     AccountID: ['', [Validators.required]],
     TransactionNo: [''],
     Narration: ['', [Validators.required]],
-    Amount: ['0'],
+    Amount: ['0', [Validators.required, Validators.min(1)]],
   });
 
   @ViewChild('AutoAccountID') AutoAccountID?: MatAutocomplete;
@@ -235,21 +235,41 @@ export class VReceiptAddEditComponent implements OnInit {
   }
 
   FillAccountDropDown() {
-    let filters = {
-      GroupID: [],
-      BalanceTransferToID: [],
-      AccountTypeID: [
-        AccountTypeMaster.General,
-        AccountTypeMaster.Customer,
-        AccountTypeMaster.Supplier,
-        AccountTypeMaster.Proprietor_Partners,
-      ],
-      TransactionTypeID: [],
-      SalesTypeID: [],
-      AccountTradeTypeID: [],
-      AreaID: [],
-      HeadBookId: [],
-    };
+    let filters: any;
+
+    if (this.sstorage.get('ManageBilltoBill') == true) {
+      filters = {
+        GroupID: [],
+        BalanceTransferToID: [],
+        AccountTypeID: [
+          AccountTypeMaster.General,
+          AccountTypeMaster.Supplier,
+          AccountTypeMaster.Proprietor_Partners,
+        ],
+        TransactionTypeID: [],
+        SalesTypeID: [],
+        AccountTradeTypeID: [],
+        AreaID: [],
+        HeadBookId: [],
+      };
+    } else {
+      filters = {
+        GroupID: [],
+        BalanceTransferToID: [],
+        AccountTypeID: [
+          AccountTypeMaster.General,
+          AccountTypeMaster.Customer,
+          AccountTypeMaster.Supplier,
+          AccountTypeMaster.Proprietor_Partners,
+        ],
+        TransactionTypeID: [],
+        SalesTypeID: [],
+        AccountTradeTypeID: [],
+        AreaID: [],
+        HeadBookId: [],
+      };
+    }
+
     this.accountService.AccountsDropDown(filters).subscribe((response) => {
       this.accountsDropDown = response;
       this.AccountIDControl.setValue('');
@@ -295,6 +315,7 @@ export class VReceiptAddEditComponent implements OnInit {
       Amount: 0,
     });
     form.markAsUntouched();
+    form.clearValidators();
     Object.keys(form.controls).forEach((name) => {
       control = form.controls[name];
       control.setErrors(null);

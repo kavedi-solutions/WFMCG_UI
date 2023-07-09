@@ -4,4 +4,5 @@ export interface ItemFilter_DropDown {
   AccountTradeTypeID: Number;
   OnlyStockItems: boolean;
   ReturnTypeID: Number;
+  InvoiceID?: number;
 }

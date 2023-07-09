@@ -16,6 +16,7 @@ import {
   AccountTypeMaster,
   ClosingStockbyItemID,
   CNDNSettlementResponse,
+  CreditNoteSettlementRequest,
   Item,
   ItemFilter_DropDown,
   ItemGroupDownDownResponse,
@@ -181,6 +182,7 @@ export class SalesAddEditComponent implements OnInit {
     this.FillTaxDropDown();
     this.FillAccountTradeTypeDropDown('2');
     this.FillBooksDropDown();
+    //this.FillAccountDropDown();
     this.SetMinMaxBillDate();
   }
 
@@ -279,6 +281,7 @@ export class SalesAddEditComponent implements OnInit {
   }
 
   getSalesByID() {
+    this.FillAccountDropDown();
     this.salesService
       .GetSalesbyID(this.selectedSalesId)
       .subscribe((response) => {
@@ -306,6 +309,7 @@ export class SalesAddEditComponent implements OnInit {
           TotalGrossAmount: SetFormatCurrency(this.editSales?.totalGrossAmount),
           TotalSchAmount: SetFormatCurrency(this.editSales?.totalSchAmount),
           TotalNetAmount: SetFormatCurrency(this.editSales?.totalNetAmount),
+          CreditNoteAmount: SetFormatCurrency(this.editSales?.creditNoteAmount),
           OtherAddText: this.editSales?.otherAddText,
           OtherAddAmount: SetFormatCurrency(this.editSales?.otherAddAmount),
           OtherLessText: this.editSales?.otherLessText,
@@ -319,6 +323,10 @@ export class SalesAddEditComponent implements OnInit {
 
         this.AccountTradeTypeChange(
           this.editSales?.accountTradeTypeID.toString()
+        );
+        this.FillItemDropDownEdit(
+          this.editSales!.accountTradeTypeID,
+          this.selectedSalesId
         );
 
         this.editSales!.details!.forEach((element) => {
@@ -374,6 +382,23 @@ export class SalesAddEditComponent implements OnInit {
 
   SaveSales(salesForm: FormGroup) {
     let PostRequestDetail: SalesItemPostRequest[] = [];
+    let CnDnSettlemrntRequest: CreditNoteSettlementRequest[] = [];
+
+    if (this.CnDnSettlementData.length > 0) {
+      this.CnDnSettlementData.forEach((element) => {
+        if (element.receiveAmount > 0) {
+          CnDnSettlemrntRequest.push({
+            autoID: element.autoID,
+            companyID: element.companyID,
+            accountID: element.accountID,
+            cnDnType: element.cnDnType!,
+            cnDnID: element.cnDnID,
+            amount: element.receiveAmount,
+          });
+        }
+      });
+    }
+
     this.salesItemDetailsList.forEach((element) => {
       PostRequestDetail.push({
         srNo: element.SrNo,
@@ -419,6 +444,7 @@ export class SalesAddEditComponent implements OnInit {
       totalGrossAmount: CheckIsNumber(salesForm.value.TotalGrossAmount),
       totalSchAmount: CheckIsNumber(salesForm.value.TotalSchAmount),
       totalNetAmount: CheckIsNumber(salesForm.value.TotalNetAmount),
+      creditNoteAmount: CheckIsNumber(salesForm.value.CreditNoteAmount),
       otherAddText: salesForm.value.OtherAddText,
       otherAddAmount: CheckIsNumber(salesForm.value.OtherAddAmount),
       otherLessText: salesForm.value.OtherLessText,
@@ -426,6 +452,7 @@ export class SalesAddEditComponent implements OnInit {
       roundOffAmount: CheckIsNumber(salesForm.value.RoundOffAmount),
       netAmount: CheckIsNumber(salesForm.value.NetAmount),
       details: PostRequestDetail,
+      cndnSettlement: CnDnSettlemrntRequest,
       isActive: true,
     };
     this.salesService
@@ -437,6 +464,23 @@ export class SalesAddEditComponent implements OnInit {
 
   UpdateSales(salesForm: FormGroup) {
     let PutRequestDetail: SalesItemPutRequest[] = [];
+    let CnDnSettlemrntRequest: CreditNoteSettlementRequest[] = [];
+
+    if (this.CnDnSettlementData.length > 0) {
+      this.CnDnSettlementData.forEach((element) => {
+        if (element.receiveAmount > 0) {
+          CnDnSettlemrntRequest.push({
+            autoID: element.autoID,
+            companyID: element.companyID,
+            accountID: element.accountID,
+            cnDnType: element.cnDnType!,
+            cnDnID: element.cnDnID,
+            amount: element.receiveAmount,
+          });
+        }
+      });
+    }
+
     this.salesItemDetailsList.forEach((element) => {
       PutRequestDetail.push({
         autoID: element.AutoID,
@@ -483,6 +527,7 @@ export class SalesAddEditComponent implements OnInit {
       totalGrossAmount: CheckIsNumber(salesForm.value.TotalGrossAmount),
       totalSchAmount: CheckIsNumber(salesForm.value.TotalSchAmount),
       totalNetAmount: CheckIsNumber(salesForm.value.TotalNetAmount),
+      creditNoteAmount: CheckIsNumber(salesForm.value.CreditNoteAmount),
       otherAddText: salesForm.value.OtherAddText,
       otherAddAmount: CheckIsNumber(salesForm.value.OtherAddAmount),
       otherLessText: salesForm.value.OtherLessText,
@@ -490,6 +535,7 @@ export class SalesAddEditComponent implements OnInit {
       roundOffAmount: CheckIsNumber(salesForm.value.RoundOffAmount),
       netAmount: CheckIsNumber(salesForm.value.NetAmount),
       details: PutRequestDetail,
+      cndnSettlement: CnDnSettlemrntRequest,
       isActive: true,
     };
     this.salesService
@@ -558,7 +604,16 @@ export class SalesAddEditComponent implements OnInit {
     };
     this.accountService.AccountsDropDown(filters).subscribe((response) => {
       this.accountsDropDown = response;
-      this.AccountIDControl.setValue('');
+      if (this.isEditMode) {
+        if (this.AccountIDControl.value != '') {
+          this.GetCNDNData(
+            this.AccountIDControl.value.account_Id,
+            this.editSales!.autoID
+          );
+        }
+      } else {
+        this.AccountIDControl.setValue('');
+      }
     });
   }
 
@@ -571,6 +626,21 @@ export class SalesAddEditComponent implements OnInit {
       ReturnTypeID: 1,
     };
     this.itemService.ItemDropDown(filters).subscribe((response) => {
+      this.itemsDropDown = response;
+      this.I_ItemIDControl.setValue('');
+    });
+  }
+
+  FillItemDropDownEdit(AccountTradeTypeID: number, invoiceID: number) {
+    let filters: ItemFilter_DropDown = {
+      IsServiceItem: false,
+      IsInventory: true,
+      AccountTradeTypeID: AccountTradeTypeID,
+      OnlyStockItems: true,
+      ReturnTypeID: 1,
+      InvoiceID: invoiceID,
+    };
+    this.itemService.ItemDropDownEdit(filters).subscribe((response) => {
       this.itemsDropDown = response;
       this.I_ItemIDControl.setValue('');
     });
@@ -1352,13 +1422,13 @@ export class SalesAddEditComponent implements OnInit {
       AfterAddLessAmount = 0,
       TotalNetAmount = 0;
 
-
     CreditNoteAmount = CheckIsNumber(this.CreditNoteAmountControl.value);
     TotalNetAmount = CheckIsNumber(this.TotalNetAmountControl.value);
     OtherAddAmount = CheckIsNumber(this.OtherAddAmountControl.value);
     OtherLessAmount = CheckIsNumber(this.OtherLessAmountControl.value);
 
-    AfterAddLessAmount = TotalNetAmount - CreditNoteAmount + OtherAddAmount - OtherLessAmount;
+    AfterAddLessAmount =
+      TotalNetAmount - CreditNoteAmount + OtherAddAmount - OtherLessAmount;
 
     NetAmount = Math.round(Number(AfterAddLessAmount));
     RoundOffAmount = NetAmount - AfterAddLessAmount;
@@ -1438,10 +1508,12 @@ export class SalesAddEditComponent implements OnInit {
     this.CnDnSettlementData = [];
     if (AccountID != 0) {
       this.cndnSettlementService
-        .getCNDNSettlements('CN', AccountID, InvoiceID)
+        .getCNDNSettlements('CN', AccountID, 'SI', InvoiceID)
         .subscribe((response: CNDNSettlementResponse[]) => {
           this.CnDnSettlementData = response;
-          this.IsCreditNoteAvaliable = true;
+          if (this.CnDnSettlementData.length > 0)
+            this.IsCreditNoteAvaliable = true;
+          else this.IsCreditNoteAvaliable = false;
         });
     }
   }

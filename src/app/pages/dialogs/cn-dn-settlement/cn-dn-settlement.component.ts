@@ -42,6 +42,8 @@ export class CnDnSettlementComponent implements OnInit {
       Validators.max(this.TotalNetAmount),
       Validators.min(1),
     ]);
+    this.CalculateTotals();
+    this.CheckValidation();
   }
 
   getColumnsList(): TableColumns[] {
@@ -103,12 +105,24 @@ export class CnDnSettlementComponent implements OnInit {
   }
 
   onClickOk() {
+    for (let index = 0; index < this.CnDnSettlementData.length; index++) {
+      this.CnDnSettlementData[index].receiveAmount = CheckIsNumber(
+        this.ReceiveAmountControl(index).value
+      );
+    }
+
     let Amount: number = CheckIsNumber(this.AmountControl().value);
-    this.dialogRef.close({ CloseStatus: true, SettlementAmount: Amount });
+    this.dialogRef.close({
+      CloseStatus: true,
+      SettlementAmount: Amount,
+    });
   }
 
   onClickCancel() {
-    this.dialogRef.close({ CloseStatus: false, SettlementAmount: 0 });
+    this.dialogRef.close({
+      CloseStatus: false,
+      SettlementAmount: 0,
+    });
   }
 
   CheckValidation() {

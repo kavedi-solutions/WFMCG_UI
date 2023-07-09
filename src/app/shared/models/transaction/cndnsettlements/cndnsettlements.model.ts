@@ -1,14 +1,3 @@
-// export interface CNDNSettlements {
-//   cndnType: string;
-//   cndnTypeName: string;
-//   autoID: number;
-//   refNo: string;
-//   billDate: string;
-//   amount: number;
-//   PendingAmount: number;
-//   ReceiveAmount: number;
-// }
-
 export interface CNDNSettlementResponse {
   autoID: number;
   companyID: string;
@@ -21,4 +10,13 @@ export interface CNDNSettlementResponse {
   amount: number;
   pendingAmount: number;
   receiveAmount: number;
+}
+
+export interface CreditNoteSettlementRequest {
+  autoID: number;
+  companyID: string;
+  accountID: number;
+  cnDnType: string;
+  cnDnID: number;
+  amount: number;
 }
