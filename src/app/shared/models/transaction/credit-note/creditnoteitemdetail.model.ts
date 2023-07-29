@@ -1,4 +1,4 @@
-export interface CreditNoteItemDetail {
+export interface CreditNoteItemDetail_1 {
   AutoID: number;
   SrNo: number;
   Description: string;

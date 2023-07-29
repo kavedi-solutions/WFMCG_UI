@@ -57,7 +57,9 @@ export class CreditNoteAddEditComponent implements OnInit {
     RefNo: ['', [Validators.required]],
     AccountID: ['', [Validators.required]],
     Description: ['', [Validators.required]],
-    Amount: ['0'],
+    Amount: ['0', [Validators.required]],
+    RoundOffAmount: ['0'],
+    NetAmount: ['0'],
   });
 
   @ViewChild('AutoAccountID') AutoAccountID?: MatAutocomplete;
@@ -134,6 +136,8 @@ export class CreditNoteAddEditComponent implements OnInit {
           RefNo: this.editCreditNote?.refNo,
           Description: this.editCreditNote?.description,
           Amount: SetFormatCurrency(this.editCreditNote?.amount),
+          RoundOffAmount: SetFormatCurrency(this.editCreditNote?.roundOffAmount),
+          NetAmount: SetFormatCurrency(this.editCreditNote?.netAmount),
         });
 
         this.BillDateControl.setValue(moment(this.editCreditNote?.billDate));
@@ -158,6 +162,8 @@ export class CreditNoteAddEditComponent implements OnInit {
       accountID: Number(creditNoteForm.value.AccountID.account_Id),
       description: creditNoteForm.value.Description,
       amount: CheckIsNumber(creditNoteForm.value.Amount),
+      roundOffAmount: CheckIsNumber(creditNoteForm.value.RoundOffAmount),
+      netAmount: CheckIsNumber(creditNoteForm.value.NetAmount),
       isActive: true,
     };
     this.creditNoteService
@@ -176,6 +182,8 @@ export class CreditNoteAddEditComponent implements OnInit {
       accountID: Number(creditNoteForm.value.AccountID.account_Id),
       description: creditNoteForm.value.Description,
       amount: CheckIsNumber(creditNoteForm.value.Amount),
+      roundOffAmount: CheckIsNumber(creditNoteForm.value.RoundOffAmount),
+      netAmount: CheckIsNumber(creditNoteForm.value.NetAmount),      
       isActive: true,
     };
     this.creditNoteService
@@ -227,6 +235,20 @@ export class CreditNoteAddEditComponent implements OnInit {
 
   DisplayAccountName(accounts: accountsDropDownResponse) {
     return accounts && accounts.account_Name ? accounts.account_Name : '';
+  }
+
+  CalculateNetAmount() {
+    let RoundOffAmount = 0,
+    NetAmount = 0,
+    Amount = 0;
+
+    Amount = CheckIsNumber(this.AmountControl.value);
+
+    NetAmount = Math.round(Number(Amount));
+    RoundOffAmount = NetAmount - Amount;
+
+    this.RoundOffAmountControl.setValue(SetFormatCurrency(RoundOffAmount));
+    this.NetAmountControl.setValue(SetFormatCurrency(NetAmount));
   }
 
   //Events
@@ -319,6 +341,14 @@ export class CreditNoteAddEditComponent implements OnInit {
 
   get AmountControl() {
     return this.creditNoteForm.get('Amount') as FormControl;
+  }
+
+  get RoundOffAmountControl() {
+    return this.creditNoteForm.get('RoundOffAmount') as FormControl;
+  }
+
+  get NetAmountControl() {
+    return this.creditNoteForm.get('NetAmount') as FormControl;
   }
 
   GetNewBillNo() {

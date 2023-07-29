@@ -2794,7 +2794,7 @@ export function GetCNDNColumns() {
     },
     {
       header: 'Bill Amount',
-      field: 'amount',
+      field: 'netAmount',
       sortable: false,
       disabled: true,
       minWidth: 200,

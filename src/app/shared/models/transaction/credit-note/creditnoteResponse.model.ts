@@ -15,7 +15,7 @@ export interface CreditNote {
   billDate: string;
   accountID: number;
   accountName: string;
-  amount: number;
+  netAmount: number;
   isActive: boolean;
   createdBy: string;
   createdDate: string;
@@ -33,6 +33,8 @@ export interface CreditNoteResponse {
   accountID: number;
   description: string;
   amount: number;
+  roundOffAmount: number;
+  netAmount: number;    
   isActive: boolean;
   createdDate: string;
   modifiedDate: string;

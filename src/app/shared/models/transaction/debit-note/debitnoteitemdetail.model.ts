@@ -1,4 +1,4 @@
-export interface DebitNoteItemDetail {
+export interface DebitNoteItemDetail_1 {
   AutoID: number;
   SrNo: number;
   Description: string;

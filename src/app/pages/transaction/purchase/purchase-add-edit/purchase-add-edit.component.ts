@@ -1277,7 +1277,7 @@ export class PurchaseAddEditComponent implements OnInit {
       AfterAddLessAmount = 0,
       TotalNetAmount = 0;
 
-    TotalNetAmount = Number(this.TotalNetAmountControl.value.replace(/,/g, ''));
+    TotalNetAmount = CheckIsNumber(this.TotalNetAmountControl.value);
     OtherAddAmount = CheckIsNumber(this.OtherAddAmountControl.value);
     OtherLessAmount = CheckIsNumber(this.OtherLessAmountControl.value);
 

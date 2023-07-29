@@ -6,6 +6,8 @@ export interface CreditNotePutRequest {
   accountID: number;
   description: string;
   amount: number;
+  roundOffAmount: number;
+  netAmount: number;  
   isActive: boolean;
   ModifiedBy?: string;
 }

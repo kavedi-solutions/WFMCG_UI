@@ -6,6 +6,8 @@ export interface CreditNotePostRequest {
   accountID: number;
   description: string;
   amount: number;
+  roundOffAmount: number;
+  netAmount: number;
   isActive: boolean;
   createdBy?: string;
 }
