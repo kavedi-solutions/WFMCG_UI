@@ -1,3 +1,4 @@
+import { CompanyDetailService } from './admin/company-detail.service';
 import { CompanySettingsService } from './admin/company-settings.service';
 import { RoleService } from './admin/role.service';
 import { UserService } from './admin/user.service';
@@ -11,6 +12,7 @@ import {
   LocalStorageService,
   MemoryStorageService,
 } from './common/storage.service';
+import { EInvoiceService } from './einvoice/e-invoice.service';
 import { AccountsService } from './master/accounts.service';
 import { AreaService } from './master/area.service';
 import { GroupService } from './master/group.service';
@@ -62,14 +64,17 @@ export const services: any[] = [
   VJournalService,
   VReceiptB2BService,
   OthersReportService,
+  CompanyDetailService,
   CompanySettingsService,
   ReportStocksService,
-  FinancialService
+  FinancialService,
+  EInvoiceService
 ];
 
 export * from './admin/role.service';
 export * from './admin/user.service';
 export * from './admin/company-settings.service';
+export * from './admin/company-detail.service';
 
 export * from './common/auth.service';
 export * from './common/storage.service';
@@ -110,3 +115,5 @@ export * from './transaction/vreceipt-b2b.service';
 export * from './reports/others.service';
 export * from './reports/reportstocks.service';
 export * from './reports/financial.service';
+
+export * from './einvoice/e-invoice.service';

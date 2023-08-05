@@ -1,0 +1,361 @@
+<page-header
+  class="bg-blue-600"
+  [title]="PageTitle"
+  [showBack]="false"
+  [showAdd]="false"
+  [showEdit]="true"
+  (onEditClick)="EditRecord()"
+></page-header>
+
+<form class="form-field-full page-detail" [formGroup]="settingsForm">
+  <mat-card>
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Other Add Input Posting Accounts</mat-label>
+          <mat-select
+            formControlName="OtherAddInputPostingAc"
+            required
+            [disabled]="!isEditMode"
+          >
+            <mat-option
+              *ngFor="let sbdd of accountsDropDown"
+              [value]="sbdd.account_Id"
+            >
+              {{ sbdd.account_Name }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="OtherAddInputPostingAcControlRequired"
+            >Other Add Input Posting Account is required.</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Other Less Input Posting Accounts</mat-label>
+          <mat-select
+            formControlName="OtherLessInputPostingAc"
+            required
+            [disabled]="!isEditMode"
+          >
+            <mat-option
+              *ngFor="let sbdd of accountsDropDown"
+              [value]="sbdd.account_Id"
+            >
+              {{ sbdd.account_Name }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="OtherLessInputPostingAcControlRequired"
+            >Other Less Input Posting Account is required.</mat-error
+          >
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Other Add Output Posting Accounts</mat-label>
+          <mat-select
+            formControlName="OtherAddOutputPostingAc"
+            required
+            [disabled]="!isEditMode"
+          >
+            <mat-option
+              *ngFor="let sbdd of accountsDropDown"
+              [value]="sbdd.account_Id"
+            >
+              {{ sbdd.account_Name }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="OtherAddOutputPostingAcControlRequired"
+            >Other Add Output Posting Account is required.</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Other Less Output Posting Accounts</mat-label>
+          <mat-select
+            formControlName="OtherLessOutputPostingAc"
+            required
+            [disabled]="!isEditMode"
+          >
+            <mat-option
+              *ngFor="let sbdd of accountsDropDown"
+              [value]="sbdd.account_Id"
+            >
+              {{ sbdd.account_Name }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="OtherLessOutputPostingAcControlRequired"
+            >Other Less Output Posting Account is required.</mat-error
+          >
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Discount Posting Accounts</mat-label>
+          <mat-select
+            formControlName="DiscPostingAccount"
+            required
+            [disabled]="!isEditMode"
+          >
+            <mat-option
+              *ngFor="let sbdd of accountsDropDown"
+              [value]="sbdd.account_Id"
+            >
+              {{ sbdd.account_Name }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="DiscPostingAccountControlRequired"
+            >Discount Posting Account is required.</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Rounding off Posting Account</mat-label>
+          <mat-select
+            formControlName="RoundingOffPostingAccount"
+            required
+            [disabled]="!isEditMode"
+          >
+            <mat-option
+              *ngFor="let sbdd of accountsDropDown"
+              [value]="sbdd.account_Id"
+            >
+              {{ sbdd.account_Name }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="RoundingOffPostingAccountControlRequired"
+            >Rounding off Posting Account is required.</mat-error
+          >
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Scheme Posting Accounts</mat-label>
+          <mat-select
+            formControlName="SchemePostingAccount"
+            required
+            [disabled]="!isEditMode"
+          >
+            <mat-option
+              *ngFor="let sbdd of accountsDropDown"
+              [value]="sbdd.account_Id"
+            >
+              {{ sbdd.account_Name }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="SchemePostingAccountControlRequired"
+            >Scheme Posting Account is required.</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Financial Year Start Month</mat-label>
+          <mat-select
+            formControlName="FinYearStartMonth"
+            required
+            [disabled]="!isEditMode"
+          >
+            <mat-option value="1">January</mat-option>
+            <mat-option value="2">February</mat-option>
+            <mat-option value="3">March</mat-option>
+            <mat-option value="4">April</mat-option>
+            <mat-option value="5">May</mat-option>
+            <mat-option value="6">June</mat-option>
+            <mat-option value="7">July</mat-option>
+            <mat-option value="8">August</mat-option>
+            <mat-option value="9">September</mat-option>
+            <mat-option value="10">October</mat-option>
+            <mat-option value="11">November</mat-option>
+            <mat-option value="12">December</mat-option>
+          </mat-select>
+          <mat-error *ngIf="FinYearStartMonthControlRequired"
+            >Financial Year Start Month is required.</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Invoice Copy</mat-label>
+          <input
+            matInput
+            formControlName="InvoiceCopy"
+            type="text"
+            placeholder="Invoice Copy"
+            maxlength="1"
+            class="input-right-align"
+            [readonly]="!isEditMode"
+          />
+          <mat-error *ngIf="InvoiceCopyControlRequired"
+            >Invoice Copy is required.</mat-error
+          >
+          <mat-error *ngIf="InvoiceCopyControlInvalid"
+            >Invoice Copy is Invalid.</mat-error
+          >
+          <mat-error *ngIf="InvoiceCopyControlmin"
+            >Invoice Copy min value is 1.</mat-error
+          >
+          <mat-error *ngIf="InvoiceCopyControlmax"
+            >Invoice Copy max value is 9.</mat-error
+          >
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="25%" fxFlex.lt-sm="100" class="matero-col m-t-12">
+        <mat-slide-toggle
+          color="primary"
+          class="slide_toggle_style"
+          formControlName="ManageBilltoBill"
+          [disabled]="!isEditMode"
+        >
+          Manage Bill to Bill Receipt
+        </mat-slide-toggle>
+      </div>
+      <div fxFlex="25%" fxFlex.lt-sm="100" class="matero-col m-t-12">
+        <!-- <mat-slide-toggle
+              color="primary"
+              class="slide_toggle_style"
+              formControlName="ManageBilltoBill"
+            >
+              Manage Bill to Bill Payment
+            </mat-slide-toggle> -->
+      </div>
+      <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Spoiled Return Days</mat-label>
+          <input
+            matInput
+            formControlName="SpoiledReturnDays"
+            type="text"
+            placeholder="Spoiled Return Days"
+            maxlength="3"
+            class="input-right-align"
+            [readonly]="!isEditMode"
+          />
+          <mat-error *ngIf="SpoiledReturnDaysControlRequired"
+            >Spoiled Return Days is required.</mat-error
+          >
+          <mat-error *ngIf="SpoiledReturnDaysControlInvalid"
+            >Spoiled Return Days is Invalid.</mat-error
+          >
+          <mat-error *ngIf="SpoiledReturnDaysControlmin"
+            >Spoiled Return Days min value is 1.</mat-error
+          >
+          <mat-error *ngIf="SpoiledReturnDaysControlmax"
+            >Spoiled Return Days max value is 150.</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Goods Return Days</mat-label>
+          <input
+            matInput
+            formControlName="GoodsReturnDays"
+            type="text"
+            placeholder="Goods Return Days"
+            maxlength="3"
+            class="input-right-align"
+            [readonly]="!isEditMode"
+          />
+          <mat-error *ngIf="GoodsReturnDaysControlRequired"
+            >Goods Return Days is required.</mat-error
+          >
+          <mat-error *ngIf="GoodsReturnDaysControlInvalid"
+            >Goods Return Days is Invalid.</mat-error
+          >
+          <mat-error *ngIf="GoodsReturnDaysControlmin"
+            >Goods Return Days min value is 1.</mat-error
+          >
+          <mat-error *ngIf="GoodsReturnDaysControlmax"
+            >Goods Return Days max value is 9.</mat-error
+          >
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="25%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>GST API User Name</mat-label>
+          <input
+            matInput
+            formControlName="GSTLoginID"
+            type="text"
+            placeholder="GST API User Name"
+            maxlength="25"            
+            [readonly]="!isEditMode"
+          />
+        </mat-form-field>
+      </div>
+      <div fxFlex="25%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>GST API User Password</mat-label>
+          <input
+            matInput
+            formControlName="GSTLoginPassword"
+            type="password"
+            placeholder="GST API User Password"
+            maxlength="50"            
+            [readonly]="!isEditMode"
+          />
+        </mat-form-field>
+      </div>
+      <div fxFlex="25%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Taxpro ASP ID</mat-label>
+          <input
+            matInput
+            formControlName="EIAspUserId"
+            type="text"
+            placeholder="Taxpro ASP ID"
+            maxlength="25"            
+            [readonly]="!isEditMode"
+          />
+        </mat-form-field>
+      </div>
+      <div fxFlex="25%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Taxpro ASP Password</mat-label>
+          <input
+            matInput
+            formControlName="EIAspPassword"
+            type="password"
+            placeholder="Taxpro ASP Password"
+            maxlength="50"            
+            [readonly]="!isEditMode"
+          />
+        </mat-form-field>
+      </div>
+    </div>
+    <mat-card-actions align="end" class="area-mat-card-actions">
+      <button
+        type="button"
+        *ngIf="isEditMode == true"
+        mat-raised-button
+        color="accent"
+        (click)="CancelClick()"
+      >
+        Cancel
+      </button>
+      <button
+        type="button"
+        *ngIf="isEditMode == true"
+        [disabled]="!settingsForm.valid"
+        mat-raised-button
+        color="primary"
+        (click)="UpdateCompanySettings(settingsForm)"
+      >
+        Update
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</form>

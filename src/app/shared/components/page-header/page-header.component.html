@@ -24,4 +24,15 @@
   >
     <mat-icon>add</mat-icon>
   </button>
+  <button
+    class="m-r-16"
+    mat-mini-fab
+    color="accent"
+    *ngIf="showEdit"
+    [matTooltip]="editButtonToolTip"
+    matTooltipPosition="left"
+    (click)="onEditClick.emit()"
+  >
+    <mat-icon>edit</mat-icon>
+  </button>
 </div>

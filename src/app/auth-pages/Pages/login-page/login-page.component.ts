@@ -10,8 +10,9 @@ import * as fromService from '../../../shared/index';
   styleUrls: ['./login-page.component.scss'],
 })
 export class LoginPageComponent implements OnInit {
-  isSubmitting = false;
-
+  isSubmitting: boolean = false;
+  hasError: boolean = false;
+  errorMessage: string = '';
   loginForm = this.fb.nonNullable.group({
     username: ['', [Validators.required]],
     password: ['', [Validators.required]],
@@ -35,10 +36,11 @@ export class LoginPageComponent implements OnInit {
   }
 
   login() {
+    this.hasError = false;
     this.isSubmitting = true;
     this.authService
       .Login(this.username.value, this.password.value)
-      .subscribe((response: loginResponse) => {
+      .subscribe((response) => {
         if (response.isSuccess == true) {
           this.sstorage.clear();
           this.sstorage.set('companyID', response.companyID);
@@ -54,6 +56,9 @@ export class LoginPageComponent implements OnInit {
           this.sstorage.set('SpoiledReturnDays', response.spoiledReturnDays);
           this.sstorage.set('GoodsReturnDays', response.goodsReturnDays);
           this.router.navigate(['/dashboard']);
+        } else {
+          this.hasError = true;
+          this.errorMessage = response.returnMessage;
         }
       });
   }

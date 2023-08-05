@@ -67,6 +67,20 @@ const routes: Routes = [
           },
         ],
       },
+      {
+        path: 'companydetails',
+        component: CommonPages.CompanyDetailsComponent,
+        resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+        data: { MenuID: '803' },
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'companysettings',
+        component: CommonPages.CompanySettingsComponent,
+        resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+        data: { MenuID: '804' },
+        canActivate: [AuthGuard],
+      },
     ],
   },
   {

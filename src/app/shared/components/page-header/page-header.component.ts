@@ -21,13 +21,16 @@ import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 export class PageHeaderComponent implements OnInit {
   @Input() title = '';
   @Input() addButtonToolTip = 'Add';
-  @Input() backButtonToolTip = 'Add';
+  @Input() editButtonToolTip = 'Edit';
+  @Input() backButtonToolTip = 'Back';
   @Input() showBack: Boolean = false;
   @Input() showAdd: Boolean = true;
+  @Input() showEdit :boolean = false;
 
 
   @Output() onAddClick = new EventEmitter();
   @Output() onBackClick = new EventEmitter();
+  @Output() onEditClick = new EventEmitter();
 
   constructor() {}
 

@@ -71,6 +71,8 @@ import { JwtHelperService, JwtModule } from '@auth0/angular-jwt';
 import { registerLocaleData } from '@angular/common';
 import localeIn from '@angular/common/locales/en-IN';
 import { ExtensionsModule } from './extensions/extensions.module';
+import { GstDetailsComponent } from './pages/dialogs/gst-details/gst-details.component';
+
 registerLocaleData(localeIn);
 
 export function tokenGetter() {
@@ -86,6 +88,7 @@ export function tokenGetter() {
     AuthPages.AuthPages,
     Pages.Pages,
     SharedComponent.SharedComponent,
+    GstDetailsComponent,
   ],
   imports: [
     CommonModule,
@@ -190,7 +193,8 @@ export function tokenGetter() {
   entryComponents: [
     fromThemes.PdfViewerDialogComponent,
     fromThemes.ConfirmDialogComponent,
-    Pages.CnDnSettlementComponent
+    Pages.CnDnSettlementComponent,
+    Pages.GstDetailsComponent
   ],
   bootstrap: [AppComponent],
 })

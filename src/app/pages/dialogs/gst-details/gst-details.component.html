@@ -1,0 +1,37 @@
+<h1 class="dialog-title dialog-title-info">
+  GST Details of {{ DataResponse!.Gstin }}
+</h1>
+<div class="dialog-content">
+  <div class="matero-row rowclass" fxLayout.lt-sm="column" fxLayout="row">
+    <div fxFlex="40%" fxFlex.lt-sm="100" class="matero-col columnclass">Trade Name</div>
+    <div fxFlex="60%" fxFlex.lt-sm="100" class="matero-col columnclass">{{ DataResponse!.TradeName }}</div>
+  </div>
+  <div class="matero-row rowclass" fxLayout.lt-sm="column" fxLayout="row">
+    <div fxFlex="40%" fxFlex.lt-sm="100" class="matero-col columnclass">Legal Name</div>
+    <div fxFlex="60%" fxFlex.lt-sm="100" class="matero-col columnclass">{{ DataResponse!.LegalName }}</div>
+  </div>
+  <div class="matero-row rowclass" fxLayout.lt-sm="column" fxLayout="row">
+    <div fxFlex="40%" fxFlex.lt-sm="100" class="matero-col columnclass">Status</div>
+    <div fxFlex="60%" fxFlex.lt-sm="100" class="matero-col columnclass">{{ DataResponse!.Status }}</div>
+  </div>
+  <div class="matero-row rowclass" fxLayout.lt-sm="column" fxLayout="row">
+    <div fxFlex="40%" fxFlex.lt-sm="100" class="matero-col columnclass">Date of Register</div>
+    <div fxFlex="60%" fxFlex.lt-sm="100" class="matero-col columnclass">{{ DataResponse!.DtReg }}</div>
+  </div>      
+  <div class="matero-row rowclass" fxLayout.lt-sm="column" fxLayout="row">
+    <div fxFlex="40%" fxFlex.lt-sm="100" class="matero-col columnclass">Date of Dregister</div>
+    <div fxFlex="60%" fxFlex.lt-sm="100" class="matero-col columnclass">{{ DataResponse!.DtDReg }}</div>
+  </div>      
+</div>
+<div class="dialog-actions">
+  <ng-container>
+    <button
+      mat-raised-button
+      mat-dialog-close="Cancel"
+      color="warn"
+      (click)="onClickClose()"
+    >
+      Close
+    </button>
+  </ng-container>
+</div>

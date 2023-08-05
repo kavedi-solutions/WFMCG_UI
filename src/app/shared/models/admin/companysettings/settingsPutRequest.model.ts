@@ -1,5 +1,4 @@
-export interface CompanySettingResponse {
-  companyID: string;  
+export interface CompanySettingPutRequest {
   discPostingAccount: number;
   roundingOffPostingAccount: number;
   schemePostingAccount: number;
@@ -15,5 +14,5 @@ export interface CompanySettingResponse {
   gstLoginID: string;
   gstLoginPassword: string;
   eiAspUserId: string;
-  eiAspPassword: string; 
+  eiAspPassword: string;
 }

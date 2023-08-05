@@ -19,6 +19,9 @@ export * from './admin/user/userResponse.model';
 export * from './admin/user/userPostRequest.model';
 export * from './admin/user/userPutRequest.model';
 export * from './admin/companysettings/settingsReponse.model';
+export * from './admin/companysettings/settingsPutRequest.model';
+export * from './admin/companydetails/companyResponse.model';
+export * from './admin/companydetails/companyPutRequest.model';
 
 //Masters
 export * from './master//area/areaDropDown.model';
@@ -134,3 +137,5 @@ export * from './report/financial/outstanding.model';
 
 //
 export * from './transaction/cndnsettlements/cndnsettlements.model';
+
+export * from './einvoice/gstdetails.model';

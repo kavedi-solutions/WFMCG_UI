@@ -1,0 +1,245 @@
+<page-header
+  class="bg-blue-600"
+  [title]="PageTitle"
+  [showBack]="false"
+  [showAdd]="false"
+  [showEdit]="true"
+  (onEditClick)="EditRecord()"
+></page-header>
+
+<form class="form-field-full page-detail" [formGroup]="companyForm">
+  <mat-card>
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="100%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Company Name</mat-label>
+          <input
+            id="CompanyName"
+            matInput
+            formControlName="CompanyName"
+            type="text"
+            placeholder="Company Name"
+            maxlength="100"
+            required
+            [readonly]="!isEditMode"
+          />
+          <mat-error *ngIf="companyNameControlRequired"
+            >Company name is required.</mat-error
+          >
+          <mat-error *ngIf="companyNameControlInvalid"
+            >Company name is Invalid.</mat-error
+          >
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="100%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Address</mat-label>
+          <textarea
+            matInput
+            formControlName="Address"
+            type="text"
+            placeholder="Address"
+            maxlength="500"
+            rows="3"
+            [readonly]="!isEditMode"
+          ></textarea>
+          <mat-error *ngIf="addressControlRequired"
+            >Address is required.</mat-error
+          >
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="30%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>City Name</mat-label>
+          <input
+            matInput
+            formControlName="City"
+            type="text"
+            placeholder="City Name"
+            maxlength="50"
+            [readonly]="!isEditMode"
+          />
+        </mat-form-field>
+        <mat-error *ngIf="cityControlRequired"
+          >City Name is required.</mat-error
+        >
+        <mat-error *ngIf="cityControlInvalid">City Name is Invalid.</mat-error>
+      </div>
+      <div fxFlex="30%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>State</mat-label>
+          <mat-select formControlName="StateID" [disabled]="!isEditMode">
+            <mat-option
+              *ngFor="let sdd of stateDropDown"
+              [value]="sdd.state_Id"
+            >
+              {{ sdd.state_Name }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="stateIDControlRequired"
+            >State is required.</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div fxFlex="10%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Pin Code</mat-label>
+          <input
+            matInput
+            formControlName="PinCode"
+            type="text"
+            placeholder="Pin Code"
+            minlength="6"
+            maxlength="6"
+            [readonly]="!isEditMode"
+          />
+        </mat-form-field>
+        <mat-error *ngIf="pinCodeControlRequired"
+          >Pin Code is required.</mat-error
+        >
+        <mat-error *ngIf="pinCodeControlInvalid"
+          >Pin Code is Invalid.</mat-error
+        >
+        <mat-error *ngIf="pinCodeControlMinLength"
+          >Pin Code min length is 6.</mat-error
+        >
+        <mat-error *ngIf="pinCodeControlMaxLength"
+          >Pin Code max length is 6.</mat-error
+        >
+      </div>
+    </div>
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="30%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>GST No</mat-label>
+          <input
+            matInput
+            formControlName="GSTNo"
+            type="text"
+            placeholder="GST No"
+            minlength="15"
+            maxlength="15"
+            [readonly]="!isEditMode"
+          />
+        </mat-form-field>
+        <mat-error *ngIf="GSTNoControlInvalid"
+          >GST number is Invalid.</mat-error
+        >
+        <mat-error *ngIf="GSTNoControlMinLength"
+          >Pin Code min length is 15.</mat-error
+        >
+        <mat-error *ngIf="GSTNoControlMaxLength"
+          >Pin Code max length is 15.</mat-error
+        >
+      </div>
+      <div fxFlex="30%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>PAN</mat-label>
+          <input
+            matInput
+            formControlName="PAN"
+            type="text"
+            placeholder="PAN"
+            minlength="10"
+            maxlength="10"
+            [readonly]="!isEditMode"
+          />
+        </mat-form-field>
+        <mat-error *ngIf="PANControlInvalid">PAN number is Invalid.</mat-error>
+        <mat-error *ngIf="PANControlMinLength"
+          >Pin Code min length is 10.</mat-error
+        >
+        <mat-error *ngIf="PANControlMaxLength"
+          >Pin Code max length is 10.</mat-error
+        >
+      </div>
+      <div fxFlex="40%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>FSSAI No</mat-label>
+          <input
+            matInput
+            formControlName="FSSINO"
+            type="text"
+            placeholder="FSSAI No"
+            minlength="14"
+            maxlength="14"
+            [readonly]="!isEditMode"
+          />
+        </mat-form-field>
+        <mat-error *ngIf="FSSINOControlRequired"
+          >FSSAI number is Invalid.</mat-error
+        >
+        <mat-error *ngIf="FSSINOControlMinLength"
+          >Pin Code min length is 14.</mat-error
+        >
+        <mat-error *ngIf="FSSINOControlMaxLength"
+          >Pin Code max length is 14.</mat-error
+        >
+      </div>
+    </div>
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="30%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Contact No</mat-label>
+          <input
+            matInput
+            formControlName="ContactNo"
+            type="text"
+            placeholder="Contact No"
+            [readonly]="!isEditMode"
+          />
+        </mat-form-field>
+        <mat-error *ngIf="contactNoControlRequired"
+          >Contact number is required.</mat-error
+        >
+        <mat-error *ngIf="contactNoControlInvalid"
+          >Contact number is Invalid.</mat-error
+        >
+      </div>
+      <div fxFlex="70%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Email Address</mat-label>
+          <input
+            matInput
+            formControlName="EmailAddress"
+            type="text"
+            placeholder="Email Address"
+            [readonly]="!isEditMode"
+          />
+        </mat-form-field>
+        <mat-error *ngIf="EmailAddressControlRequired"
+          >Email Address is Required.</mat-error
+        >
+        <mat-error *ngIf="EmailAddressControlInvalid"
+          >Email Address is Invalid.</mat-error
+        >
+      </div>
+    </div>
+    <br />
+    <mat-card-actions align="end" class="area-mat-card-actions">
+      <button
+        type="button"
+        *ngIf="isEditMode == true"
+        mat-raised-button
+        color="accent"
+        (click)="CancelClick()"
+      >
+        Cancel
+      </button>
+      <button
+        type="button"
+        *ngIf="isEditMode == true"
+        [disabled]="!companyForm.valid"
+        mat-raised-button
+        color="primary"
+        (click)="UpdateCompanyDetail(companyForm)"
+      >
+        Update
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</form>

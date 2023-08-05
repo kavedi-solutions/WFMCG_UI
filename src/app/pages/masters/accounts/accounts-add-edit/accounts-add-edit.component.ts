@@ -18,6 +18,7 @@ import {
   areaDownDownResponse,
   balanceTransferToResponse,
   groupDownDownResponse,
+  GstDetails,
   salesTypeResponse,
   stateDownDownResponse,
   TransactionTypeMaster,
@@ -25,6 +26,8 @@ import {
 } from 'src/app/shared';
 import * as fromService from '../../../../shared/index';
 import { tap, debounceTime } from 'rxjs/operators';
+import { MatDialog } from '@angular/material/dialog';
+import { GstDetailsComponent } from 'src/app/pages/dialogs';
 
 @Component({
   selector: 'app-accounts-add-edit',
@@ -32,6 +35,7 @@ import { tap, debounceTime } from 'rxjs/operators';
   styleUrls: ['./accounts-add-edit.component.scss'],
 })
 export class AccountsAddEditComponent implements OnInit {
+  dialogRef: any;
   PageTitle: string = 'Create Account';
   buttonText: string = 'Add New Account';
   isEditMode: boolean = false;
@@ -112,7 +116,9 @@ export class AccountsAddEditComponent implements OnInit {
     private commonService: fromService.CommonService,
     private groupService: fromService.GroupService,
     private areaService: fromService.AreaService,
-    private fb: FormBuilder
+    private einvoiceService: fromService.EInvoiceService,
+    private fb: FormBuilder,
+    private dialog: MatDialog
   ) {
     this.isEditMode = false;
     this.selectedAccountId = 0;
@@ -730,5 +736,26 @@ export class AccountsAddEditComponent implements OnInit {
         this.salesTypeIDControl.setValue('1');
         break;
     }
+  }
+
+  VerifyGSTNo() {
+    let GSTNo: string = this.GSTNoControl.value;
+    let DataResponse: GstDetails;
+    this.einvoiceService.GetGSTDetail(GSTNo).subscribe((response) => {
+      debugger;
+      DataResponse = response;
+
+      this.dialogRef = this.dialog.open(GstDetailsComponent, {
+        minWidth: '60vw',
+        minHeight: '60vh',
+        maxWidth: '60vw',
+        maxHeight: '60vh',
+        panelClass: 'dialog-container',
+        autoFocus: true,
+      });
+
+      this.dialogRef.componentInstance.DataResponse = DataResponse;
+      this.dialogRef.afterClosed().subscribe((result: any) => {});
+    });
   }
 }

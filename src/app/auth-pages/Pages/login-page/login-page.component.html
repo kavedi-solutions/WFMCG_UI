@@ -9,6 +9,12 @@
         />
       </mat-card-title>
       <mat-card-content>
+        <p
+          *ngIf="hasError"
+          class="f-s-16 f-w-500 ng-star-inserted text-center text-red-800"
+        >
+          {{ errorMessage }}
+        </p>
         <mat-form-field appearance="outline">
           <mat-label>User Name</mat-label>
           <input

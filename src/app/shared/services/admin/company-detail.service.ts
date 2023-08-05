@@ -2,13 +2,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { AppConfig } from 'src/app/app.config';
-import { CompanySettingPutRequest, CompanySettingResponse } from '../../models';
+import { CompanyPutRequest, CompanyResponse } from '../../models';
 import { LocalStorageService } from '../common/storage.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class CompanySettingsService {
+export class CompanyDetailService {
   APIURL?: string = '';
   version: string = '1';
   CompanyID: string = this.storage.get('companyID');
@@ -29,8 +29,8 @@ export class CompanySettingsService {
       `api/v${this.version}/company/${this.CompanyID}`;
   }
 
-  GetCompanySettingsbyID() {
-    const url = `${this.APIURL}/settings/getbyid`;
+  GetCompanyDetailbyID() {
+    const url = `${this.APIURL}/getbyid`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -43,11 +43,11 @@ export class CompanySettingsService {
       );
   }
 
-  updateCompanySettings(
-    resourcesDetails: CompanySettingPutRequest
-  ): Observable<CompanySettingResponse> {
-    const url = `${this.APIURL}/settings/update`;
-    return this.http.put<CompanySettingResponse>(encodeURI(url), resourcesDetails, {
+  updateCompany(
+    resourcesDetails: CompanyPutRequest
+  ): Observable<CompanyResponse> {
+    const url = `${this.APIURL}/update`;
+    return this.http.put<CompanyResponse>(encodeURI(url), resourcesDetails, {
       headers: this.headers,
     });
   }
