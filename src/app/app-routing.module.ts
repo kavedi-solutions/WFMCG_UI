@@ -598,6 +598,35 @@ const routes: Routes = [
     ],
   },
   {
+    path: 'einvoice',
+    component: Layouts.MainLayoutComponent,
+    canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
+    children: [
+      {
+        path: 'generate',
+        component: CommonPages.GenerateEInvoiceComponent,
+        resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+        data: { MenuID: '301' },
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'getdetails',
+        component: CommonPages.GetEInvoiceComponent,
+        resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+        data: { MenuID: '302' },
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'geterror',
+        component: CommonPages.GetEInvoiceComponent,
+        resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+        data: { MenuID: '303' },
+        canActivate: [AuthGuard],
+      }
+    ]
+  },
+  {
     path: 'reports',
     component: Layouts.MainLayoutComponent,
     canActivate: [AuthGuard],

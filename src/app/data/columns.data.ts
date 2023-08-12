@@ -3241,7 +3241,6 @@ export function GetStockStatementItemGroupColumns() {
   return ItemGroupColumns;
 }
 
-
 export function GetCnDnDetails() {
   let CnDnBills: TableColumns[] = [
     {
@@ -3251,7 +3250,7 @@ export function GetCnDnDetails() {
       visible: false,
       columnType: 'string',
       columnWidth: '0',
-    },    
+    },
     {
       index: 2,
       columnName: 'autoID',
@@ -3267,7 +3266,7 @@ export function GetCnDnDetails() {
       visible: false,
       columnType: 'string',
       columnWidth: '0',
-    },    
+    },
     {
       index: 4,
       columnName: 'cnDnTypeName',
@@ -3299,7 +3298,7 @@ export function GetCnDnDetails() {
       visible: true,
       columnType: 'amount',
       columnWidth: '200px',
-    },    
+    },
     {
       index: 8,
       columnName: 'pendingAmount',
@@ -3319,4 +3318,61 @@ export function GetCnDnDetails() {
   ];
 
   return CnDnBills;
+}
+
+export function GeteInvoiceColumn() {
+  let BulkPrintColumns: MtxGridColumn[] = [
+    {
+      header: 'Auto ID',
+      field: 'autoID',
+      hide: true,
+    },
+    {
+      header: 'Ref No',
+      field: 'refNo',
+      sortable: false,
+      disabled: false,
+      minWidth: 150,
+      width: '150px',
+    },
+    {
+      header: 'Bill/Voucher Date',
+      field: 'billDate',
+      sortable: false,
+      disabled: false,
+      type: 'date',
+      typeParameter: { format: 'dd-MM-yyyy' },
+      minWidth: 100,
+      width: '100px',
+    },
+    {
+      header: 'Party Name',
+      field: 'accountName',
+      sortable: false,
+      disabled: false,
+      minWidth: 300,
+      width: '300px',
+    },
+    {
+      header: 'Amount',
+      field: 'amount',
+      sortable: false,
+      disabled: true,
+      minWidth: 200,
+      width: '200px',
+      type: 'number',
+      typeParameter: { digitsInfo: '0.2-2', locale: 'en-IN' },
+      class: 'right-mat-header-cell right-mat-cell',
+    },
+    {
+      header: 'Status',
+      field: 'status',
+      sortable: false,
+      disabled: false,
+      minWidth: 100,
+      width: '100px',
+    },
+  ];
+
+  return BulkPrintColumns;
 }

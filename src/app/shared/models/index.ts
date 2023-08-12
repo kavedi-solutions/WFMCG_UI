@@ -139,3 +139,5 @@ export * from './report/financial/outstanding.model';
 export * from './transaction/cndnsettlements/cndnsettlements.model';
 
 export * from './einvoice/gstdetails.model';
+export * from './einvoice/einvoiceResponse.model';
+export * from './einvoice/einvoiceAPIResponse.model';
