@@ -6,6 +6,8 @@ import {
   AccountTypeMaster,
   eInvoiceFilter,
   eInvoiceResponse,
+  e_InvoiceRequest,
+  e_InvoiceRequestDetails,
   e_invoice_api_balance_response,
   transactionTypeResponse,
 } from 'src/app/shared';
@@ -22,6 +24,7 @@ export class GenerateEInvoiceComponent implements OnInit {
   PageTitle: string = 'Generate e Invoice';
   eInvoiceAPIBalance?: e_invoice_api_balance_response;
   eInvoiceData: eInvoiceResponse[] = [];
+  eInvoiceDataResponse: eInvoiceResponse[] = [];
   selectedeInvoiceData: eInvoiceResponse[] = [];
   columns: MtxGridColumn[] = [];
   transactionTypeDropDown: transactionTypeResponse[] = [];
@@ -32,6 +35,8 @@ export class GenerateEInvoiceComponent implements OnInit {
   FromMaxDate?: Date;
   ToMinDate?: Date;
   ToMaxDate?: Date;
+  CompanyError: string = '';
+  ErrorDetails: string = '';
 
   eInvoiceForm = this.fb.group({
     TransactionTypeID: ['', [Validators.required]],
@@ -49,6 +54,26 @@ export class GenerateEInvoiceComponent implements OnInit {
 
   ngOnInit(): void {
     this.columns = defaultData.GeteInvoiceColumn();
+    this.columns.push({
+      header: 'Action',
+      field: 'action',
+      minWidth: 60,
+      width: '60px',
+      pinned: 'right',
+      type: 'button',
+      buttons: [
+        {
+          type: 'icon',
+          icon: 'remove_red_eye',
+          tooltip: 'view error',
+          buttontype: 'button',
+          iif: (record) => {
+            return record.isRequested == true;
+          },
+          click: (record) => this.ViewError(record),
+        },
+      ],
+    });
     this.geteInvoiceAPIBalance();
     this.FillTransactionType();
     this.SetMinMaxFromDate();
@@ -104,10 +129,11 @@ export class GenerateEInvoiceComponent implements OnInit {
     this.apiBalance = 0;
     this.eInvoiceService.GetAPIBalance().subscribe((response) => {
       this.eInvoiceAPIBalance = response;
-      debugger;
       if (this.eInvoiceAPIBalance?.status) {
         this.apiBalance = this.eInvoiceAPIBalance.success.ewbApiBal;
-        this.apiExpDate = moment(this.eInvoiceAPIBalance.success.ewbApiBalExpDt).format("DD-MMM-YYYY");
+        this.apiExpDate = moment(
+          this.eInvoiceAPIBalance.success.ewbApiBalExpDt
+        ).format('DD-MMM-YYYY');
         //2023-10-01T16:33:56
       }
     });
@@ -137,31 +163,66 @@ export class GenerateEInvoiceComponent implements OnInit {
       ToDate: this.ToDateControl.value.format('YYYY-MM-DD'),
     };
     this.eInvoiceService.GeteInvoiceData(filters).subscribe((response) => {
+      debugger;
       this.eInvoiceData = response;
+      this.eInvoiceDataResponse = [...this.eInvoiceData];
     });
   }
 
   Generate_eInvoice() {
-    // let InvoiceIDs: number[] = [];
-    // let NoofCopy = Number(this.NoOfCopyControl.value);
-    // this.selectedBulkPrintData.forEach((element) => {
-    //   InvoiceIDs.push(element.autoID);
-    // });
-    // this.reportService
-    //   .PrintInvoiceInventory(NoofCopy, InvoiceIDs)
-    //   .subscribe((response) => {
-    //     var file = new Blob([response as Blob], { type: 'application/pdf' });
-    //     var fileURL = URL.createObjectURL(file);
-    //     this.dialog.open(PdfViewerDialogComponent, {
-    //       data: this.sanitizer.bypassSecurityTrustResourceUrl(fileURL),
-    //       minWidth: '80vw',
-    //       minHeight: '90vh',
-    //       maxWidth: '80vw',
-    //       maxHeight: '90vh',
-    //       panelClass: 'dialog-container',
-    //       autoFocus: true,
-    //     });
-    //   });
+    let requestDetails: e_InvoiceRequestDetails[] = [];
+
+    this.selectedeInvoiceData.forEach((element) => {
+      let req: e_InvoiceRequestDetails = {
+        autoID: element.autoID,
+        irnNo: '',
+        status: '',
+        buyersError: '',
+        itemsError: '',
+      };
+      requestDetails.push(req);
+    });
+
+    let request: e_InvoiceRequest = {
+      transactionType: parseInt(this.TransactionTypeIDControl.value),
+      companyError: '',
+      requestDetails: requestDetails,
+    };
+
+    this.eInvoiceService
+      .GenerateEInvoice(request)
+      .subscribe((response: e_InvoiceRequest) => {
+        this.UpdateResponse(response);
+      });
+  }
+
+  UpdateResponse(response: e_InvoiceRequest) {
+    response.requestDetails.forEach((element) => {
+      let index = this.eInvoiceData.findIndex(
+        (a) => a.autoID == element.autoID
+      );
+      this.eInvoiceData[index].status = element.status;
+      this.eInvoiceData[index].buyersError = element.buyersError;
+      this.eInvoiceData[index].itemsError = element.itemsError;
+    });
+    this.eInvoiceDataResponse = [...this.eInvoiceData];
+  }
+
+  ViewError(record: e_InvoiceRequestDetails) {
+    this.ErrorDetails = '';
+    if (this.CompanyError != '') {
+      this.ErrorDetails = this.ErrorDetails! + this.CompanyError;
+    }
+    if (record.buyersError != '') {
+      this.ErrorDetails = this.ErrorDetails! + record.buyersError;
+    }
+    if (record.itemsError != '') {
+      this.ErrorDetails = this.ErrorDetails! + record.itemsError;
+    }
+
+    if (this.ErrorDetails == '') {
+      this.ErrorDetails = 'Please check error on Get e-Invoice Errors Page';
+    }
   }
 
   get BookAccountIDControl() {

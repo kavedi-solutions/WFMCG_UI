@@ -7,6 +7,7 @@ import {
   CompanyResponse,
   eInvoiceFilter,
   eInvoiceResponse,
+  e_InvoiceRequest,
 } from '../../models';
 import { LocalStorageService } from '../common/storage.service';
 
@@ -81,5 +82,12 @@ export class EInvoiceService {
           return response.body;
         })
       );
+  }
+
+  GenerateEInvoice(request: e_InvoiceRequest) {
+    const url = `${this.APIURL}/einvoice/generate`;
+    return this.http.post<e_InvoiceRequest>(encodeURI(url), request, {
+      headers: this.headers,
+    });
   }
 }

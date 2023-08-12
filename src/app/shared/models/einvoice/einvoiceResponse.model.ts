@@ -11,7 +11,22 @@ export interface eInvoiceResponse {
   billDate: string;
   accountName: string;
   amount: number;
-  status: string;
+  status?: string;
+  isRequested: boolean;
+  buyersError: string;
+  itemsError: string;
+}
+
+export interface e_InvoiceRequest {
+  transactionType: number;
+  companyError: string;
+  requestDetails: e_InvoiceRequestDetails[];
+}
+
+export interface e_InvoiceRequestDetails {
+  autoID: number;
+  irnNo: string;
+  status?: string;
   buyersError: string;
   itemsError: string;
 }
