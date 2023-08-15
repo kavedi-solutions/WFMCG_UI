@@ -48,7 +48,7 @@
           color="primary"
           class="slide_toggle_style m-l-16 m-t-16"
           formControlName="IsInventory"
-          [disabled]="IsInventoryDisable"          
+          [disabled]="IsInventoryDisable"
         >
           Is Inventory</mat-slide-toggle
         >
@@ -66,6 +66,14 @@
           />
           <mat-error *ngIf="HSNCodeControlRequired"
             >HSN Code/SAC Code is required.</mat-error
+          >
+          <mat-error *ngIf="HSNCodeControlMin"
+            >HSN Code/SAC Code must be a minimum length of 4
+            Characters.</mat-error
+          >
+          <mat-error *ngIf="HSNCodeControlMax"
+            >HSN Code/SAC Code must be maximum length of 8
+            Characters.</mat-error
           >
         </mat-form-field>
       </div>

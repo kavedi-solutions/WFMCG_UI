@@ -55,7 +55,7 @@ export class ItemAddEditComponent implements OnInit {
         Validators.pattern(/^([\s]*[a-zA-Z0-9()&-.,/]+[\s]*)+$/i),
       ],
     ],
-    HSNCode: ['', [Validators.required]],
+    HSNCode: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(8)]],
     IsServiceItem: [false],
     IsInventory: [true],
     ItemGroupID: ['', [Validators.required]],
@@ -201,6 +201,14 @@ export class ItemAddEditComponent implements OnInit {
     return (
       this.HSNCodeControl.hasError('required') && this.HSNCodeControl.touched
     );
+  }
+
+  get HSNCodeControlMin() {
+    return this.HSNCodeControl.hasError('minlength') && this.HSNCodeControl.touched;
+  }
+
+  get HSNCodeControlMax() {
+    return this.HSNCodeControl.hasError('maxlength') && this.HSNCodeControl.touched;
   }
 
   get ItemGroupIDControl() {

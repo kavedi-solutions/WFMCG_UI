@@ -41,7 +41,6 @@ export class SalesComponent implements OnInit {
   constructor(
     private salesService: fromService.SalesService,
     private reportService: fromService.OthersReportService,
-
     private router: Router,
     private route: ActivatedRoute,
     private sanitizer: DomSanitizer,
@@ -86,7 +85,7 @@ export class SalesComponent implements OnInit {
               },
               click: (record) => this.edit(record),
               iif: (record) => {
-                return this.accRights!.canEdit && record.eiStatus == false;
+                return this.accRights!.canEdit && record.eiStatus == false && record.eiCanceled == false;
               },
             },
             {
@@ -195,7 +194,7 @@ export class SalesComponent implements OnInit {
     this.dialogRef.componentInstance.eiCancelRequest = eiCancelRequest;
     this.dialogRef.afterClosed().subscribe((result: any) => {
       debugger;
-      if (result.CloseStatus == true) {        
+      if (result.CloseStatus == true) {
         this.ShowCancelMessage(result.eiCancelRequest);
       }
     });
@@ -217,7 +216,7 @@ export class SalesComponent implements OnInit {
     }
     if (eiCancelRequest.status == 'Success') {
       this.dialogRef.componentInstance.DialogContent =
-        'Your e-Invoice successfully to Canceled.';        
+        'Your e-Invoice successfully to Canceled.';
     }
     this.getSalesList();
   }

@@ -3,7 +3,7 @@
     min-height: fit-content;
     max-height: fit-content;
   }
-  
+
   .dialog-title {
     margin: 0;
     line-height: 2.5rem;
@@ -18,19 +18,19 @@
     font-family: Montserrat, sans-serif;
     font-weight: 600;
   }
-  
+
   .dialog-title-info {
     background: #10cbe4;
     color: black;
   }
-  
+
   .dialog-content {
     display: block;
     margin: 0;
-    padding: 0;
+    padding: 0 1.25rem 0 1.25rem;
     max-height: 100vh;
   }
-  
+
   .dialog-actions {
     display: flex;
     flex-wrap: wrap;
@@ -40,19 +40,18 @@
     padding: 8px 0;
     margin: 0px 10px 0px 0px;
   }
-  
+
   .mat-raised-button {
     margin-left: 5px !important;
   }
-  
+
   .rowclass {
     margin-right: 0px !important;
     margin-left: 0px !important;
     margin-top: 10px !important;
   }
-  
+
   .columnclass {
     margin-right: 0px !important;
     margin-left: 0px !important;
   }
-  
