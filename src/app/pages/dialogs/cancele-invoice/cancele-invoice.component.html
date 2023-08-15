@@ -1,0 +1,65 @@
+<form class="form-field-full" [formGroup]="cancelForm">
+  <h1 class="dialog-title dialog-title-info">
+    Cancel e-Invoice of {{ DialogTitle }}
+  </h1>
+  <div class="dialog-content">
+    <div class="matero-row rowclass" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col columnclass">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Cancel Reason</mat-label>
+          <mat-select
+            formControlName="eICancelReason"
+            required
+          >
+            <mat-option [value]="1">Duplicate</mat-option>
+            <mat-option [value]="2">Data Entry mistake</mat-option>
+            <mat-option [value]="3">Order Cancelled</mat-option>
+            <mat-option [value]="4">Others</mat-option>
+          </mat-select>
+          <mat-error *ngIf="eICancelReasonControlRequired"
+            >Cancel Reason is required.</mat-error
+          >          
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="matero-row rowclass" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="100%" fxFlex.lt-sm="100" class="matero-col columnclass">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Cancel Remark</mat-label>
+          <textarea
+            matInput
+            formControlName="eICancelRemark"
+            type="text"
+            placeholder="Cancel Remark"
+            maxlength="500"
+            rows="3"
+          ></textarea>
+          <mat-error *ngIf="eICancelRemarkControlRequired"
+            >Cancel Remark is required.</mat-error
+          >
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+  <div class="dialog-actions">
+    <ng-container>
+      <button
+        mat-raised-button
+        cdkFocusInitial
+        (click)="onClickOk()"
+        color="primary"
+        [disabled]="!cancelForm.valid"
+      >
+        Yes
+      </button>
+      <button
+        mat-raised-button
+        mat-dialog-close="Cancel"
+        color="warn"
+        (click)="onClickClose()"
+      >
+        No
+      </button>
+    </ng-container>
+  </div>
+</form>

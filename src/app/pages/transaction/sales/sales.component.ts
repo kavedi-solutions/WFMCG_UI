@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import {
   AccessRights,
+  eI_CancelRequest,
   FilterValues,
   PaginationHeaders,
   Sales,
+  TransactionTypeMaster,
 } from 'src/app/shared';
 import * as fromService from '../../../shared/index';
 import * as defaultData from '../../../data/index';
@@ -14,6 +16,7 @@ import { funSortingOrder } from 'src/app/shared/functions';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material/dialog';
 import { PdfViewerDialogComponent } from 'src/app/theme';
+import { CanceleInvoiceComponent, CommonDialogComponent } from '../../dialogs';
 
 @Component({
   selector: 'app-sales',
@@ -21,6 +24,7 @@ import { PdfViewerDialogComponent } from 'src/app/theme';
   styleUrls: ['./sales.component.scss'],
 })
 export class SalesComponent implements OnInit {
+  dialogRef: any;
   PageTitle: string = 'Sales (Inventory)';
   buttonText: string = 'Add New Sales';
   salesListData: Sales[] = [];
@@ -37,6 +41,7 @@ export class SalesComponent implements OnInit {
   constructor(
     private salesService: fromService.SalesService,
     private reportService: fromService.OthersReportService,
+
     private router: Router,
     private route: ActivatedRoute,
     private sanitizer: DomSanitizer,
@@ -80,8 +85,8 @@ export class SalesComponent implements OnInit {
                 closeColor: 'warn',
               },
               click: (record) => this.edit(record),
-              iif: () => {
-                return this.accRights!.canEdit;
+              iif: (record) => {
+                return this.accRights!.canEdit && record.eiStatus == false;
               },
             },
             {
@@ -97,8 +102,25 @@ export class SalesComponent implements OnInit {
                 closeColor: 'warn',
               },
               click: (record) => this.delete(record),
-              iif: () => {
-                return this.accRights!.canEdit;
+              iif: (record) => {
+                return this.accRights!.canDelete && record.eiStatus == false;
+              },
+            },
+            {
+              text: 'Cancel e-Invoice',
+              tooltip: 'Cancel e-Invoice',
+              buttontype: 'button',
+              pop: {
+                title: 'Confirm Cancel',
+                description: 'Are you sure you want to Cancel this e-Invoice.',
+                closeText: 'No',
+                okText: 'Yes',
+                okColor: 'primary',
+                closeColor: 'warn',
+              },
+              click: (record) => this.cancelEInvoice(record),
+              iif: (record) => {
+                return record.eiStatus == true && record.eiCanceled == false;
               },
             },
             {
@@ -147,6 +169,57 @@ export class SalesComponent implements OnInit {
     this.salesService.deleteSales(value.autoID).subscribe((response) => {
       this.getSalesList();
     });
+  }
+
+  cancelEInvoice(value: any) {
+    let eiCancelRequest: eI_CancelRequest = {
+      autoID: value.autoID,
+      irnNo: value.eiIrn,
+      transactionType: TransactionTypeMaster.Sales_Inventory,
+      eICancelReason: '',
+      eICancelRemark: '',
+      status: '',
+      error: '',
+    };
+
+    this.dialogRef = this.dialog.open(CanceleInvoiceComponent, {
+      minWidth: '60vw',
+      minHeight: '60vh',
+      maxWidth: '60vw',
+      maxHeight: '60vh',
+      panelClass: 'dialog-container',
+      autoFocus: true,
+    });
+
+    this.dialogRef.componentInstance.DialogTitle = 'Invoice : ' + value.refNo;
+    this.dialogRef.componentInstance.eiCancelRequest = eiCancelRequest;
+    this.dialogRef.afterClosed().subscribe((result: any) => {
+      debugger;
+      if (result.CloseStatus == true) {        
+        this.ShowCancelMessage(result.eiCancelRequest);
+      }
+    });
+  }
+
+  ShowCancelMessage(eiCancelRequest: eI_CancelRequest) {
+    this.dialogRef = this.dialog.open(CommonDialogComponent, {
+      minWidth: '60vw',
+      minHeight: '60vh',
+      maxWidth: '60vw',
+      maxHeight: '60vh',
+      panelClass: 'dialog-container',
+      autoFocus: true,
+    });
+
+    this.dialogRef.componentInstance.DialogTitle = 'e-Invoice Cancel Status';
+    if (eiCancelRequest.status == 'Failed') {
+      this.dialogRef.componentInstance.DialogContent = eiCancelRequest.error;
+    }
+    if (eiCancelRequest.status == 'Success') {
+      this.dialogRef.componentInstance.DialogContent =
+        'Your e-Invoice successfully to Canceled.';        
+    }
+    this.getSalesList();
   }
 
   printInvoice(value: any) {

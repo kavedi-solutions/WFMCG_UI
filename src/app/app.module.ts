@@ -71,10 +71,6 @@ import { JwtHelperService, JwtModule } from '@auth0/angular-jwt';
 import { registerLocaleData } from '@angular/common';
 import localeIn from '@angular/common/locales/en-IN';
 import { ExtensionsModule } from './extensions/extensions.module';
-import { GstDetailsComponent } from './pages/dialogs/gst-details/gst-details.component';
-import { GenerateEInvoiceComponent } from './pages/einvoice/generate-einvoice/generate-einvoice.component';
-import { GetEInvoiceComponent } from './pages/einvoice/get-einvoice/get-einvoice.component';
-import { GetEInvoiceErrorsComponent } from './pages/einvoice/get-einvoice-errors/get-einvoice-errors.component';
 
 registerLocaleData(localeIn);
 
@@ -91,10 +87,6 @@ export function tokenGetter() {
     AuthPages.AuthPages,
     Pages.Pages,
     SharedComponent.SharedComponent,
-    GstDetailsComponent,
-    GenerateEInvoiceComponent,
-    GetEInvoiceComponent,
-    GetEInvoiceErrorsComponent,
   ],
   imports: [
     CommonModule,
@@ -200,7 +192,9 @@ export function tokenGetter() {
     fromThemes.PdfViewerDialogComponent,
     fromThemes.ConfirmDialogComponent,
     Pages.CnDnSettlementComponent,
-    Pages.GstDetailsComponent
+    Pages.GstDetailsComponent,
+    Pages.CanceleInvoiceComponent,
+    Pages.CommonDialogComponent
   ],
   bootstrap: [AppComponent],
 })

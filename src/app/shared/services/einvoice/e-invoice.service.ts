@@ -7,6 +7,7 @@ import {
   CompanyResponse,
   eInvoiceFilter,
   eInvoiceResponse,
+  eI_CancelRequest,
   e_InvoiceRequest,
 } from '../../models';
 import { LocalStorageService } from '../common/storage.service';
@@ -117,6 +118,13 @@ export class EInvoiceService {
   GetEInvoiceDetails(request: e_InvoiceRequest) {
     const url = `${this.APIURL}/einvoice/getbyirn`;
     return this.http.post<e_InvoiceRequest>(encodeURI(url), request, {
+      headers: this.headers,
+    });
+  }
+
+  CancelEIInvoice(request: eI_CancelRequest) {
+    const url = `${this.APIURL}/einvoice/cancel`;
+    return this.http.post<eI_CancelRequest>(encodeURI(url), request, {
       headers: this.headers,
     });
   }

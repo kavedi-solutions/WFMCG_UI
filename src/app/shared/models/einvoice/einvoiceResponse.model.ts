@@ -33,3 +33,13 @@ export interface e_InvoiceRequestDetails {
   buyersError: string;
   itemsError: string;
 }
+
+export interface eI_CancelRequest {
+  autoID: number;
+  irnNo: string;
+  transactionType: number;
+  eICancelReason: string;
+  eICancelRemark: string;
+  status: string;
+  error: string;
+}
