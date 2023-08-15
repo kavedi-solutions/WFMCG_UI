@@ -159,8 +159,9 @@ export class GenerateEInvoiceComponent implements OnInit {
     let filters: eInvoiceFilter = {
       transactionTypeID: this.TransactionTypeIDControl.value,
       bookAccountID: this.BookAccountIDControl.value,
-      FromDate: this.FromDateControl.value.format('YYYY-MM-DD'),
-      ToDate: this.ToDateControl.value.format('YYYY-MM-DD'),
+      fromDate: this.FromDateControl.value.format('YYYY-MM-DD'),
+      toDate: this.ToDateControl.value.format('YYYY-MM-DD'),
+      eistatus: false,
     };
     this.eInvoiceService.GeteInvoiceData(filters).subscribe((response) => {
       debugger;

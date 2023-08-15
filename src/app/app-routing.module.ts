@@ -619,7 +619,7 @@ const routes: Routes = [
       },
       {
         path: 'geterror',
-        component: CommonPages.GetEInvoiceComponent,
+        component: CommonPages.GetEInvoiceErrorsComponent,
         resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
         data: { MenuID: '303' },
         canActivate: [AuthGuard],

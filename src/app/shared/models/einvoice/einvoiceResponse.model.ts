@@ -1,8 +1,9 @@
 export interface eInvoiceFilter {
   transactionTypeID: number;
   bookAccountID: number;
-  FromDate: string;
-  ToDate: string;
+  fromDate: string;
+  toDate: string;
+  eistatus: boolean;
 }
 
 export interface eInvoiceResponse {
@@ -12,9 +13,11 @@ export interface eInvoiceResponse {
   accountName: string;
   amount: number;
   status?: string;
+  irnNo?: string;
   isRequested: boolean;
   buyersError: string;
   itemsError: string;
+  eiErrorDetails: string;
 }
 
 export interface e_InvoiceRequest {

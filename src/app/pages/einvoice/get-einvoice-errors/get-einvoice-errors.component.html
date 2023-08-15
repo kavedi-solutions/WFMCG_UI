@@ -1,1 +1,130 @@
-<p>get-einvoice-errors works!</p>
+<page-header
+  class="bg-blue-600"
+  [title]="PageTitle"
+  [showBack]="false"
+  [showAdd]="false"
+></page-header>
+
+<form class="form-field-full page-detail" [formGroup]="eInvoiceForm">
+  <mat-card>
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="20%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Book Type</mat-label>
+          <mat-select
+            formControlName="TransactionTypeID"
+            (valueChange)="TransactionTypeIDSelectionChange($event)"
+          >
+            <mat-option
+              *ngFor="let ttdd of transactionTypeDropDown"
+              [value]="ttdd.transactionTypeID"
+            >
+              {{ ttdd.transactionTypeName }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="TransactionTypeIDControlRequired"
+            >Book Type is required.</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div fxFlex="40%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Select Book</mat-label>
+          <mat-select
+            id="BookAccountName"
+            formControlName="BookAccountID"
+            required
+          >
+            <mat-option
+              *ngFor="let sbdd of booksDropDown"
+              [value]="sbdd.account_Id"
+            >
+              {{ sbdd.account_Name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <input
+            matInput
+            [matDatepicker]="FromDatePicker"
+            placeholder="From Date"
+            formControlName="FromDate"
+            [min]="FromMinDate"
+            [max]="FromMaxDate"
+            (dateChange)="FromDateChange()"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="FromDatePicker"
+            [tabIndex]="-1"
+            ><mat-icon matDatepickerToggleIcon
+              >keyboard_arrow_down</mat-icon
+            ></mat-datepicker-toggle
+          >
+          <mat-datepicker #FromDatePicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <input
+            matInput
+            [matDatepicker]="ToDatePicker"
+            placeholder="To Date"
+            formControlName="ToDate"
+            [min]="ToMinDate"
+            [max]="ToMaxDate"
+            (dateChange)="ToDateChange()"
+          />
+          <mat-datepicker-toggle matSuffix [for]="ToDatePicker" [tabIndex]="-1"
+            ><mat-icon matDatepickerToggleIcon
+              >keyboard_arrow_down</mat-icon
+            ></mat-datepicker-toggle
+          >
+          <mat-datepicker #ToDatePicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div fxFlex="10%" fxFlex.lt-sm="100" class="m-t-4 matero-col text-right">
+        <button
+          type="button"
+          mat-raised-button
+          [disabled]="!eInvoiceForm.valid"
+          (click)="GetList()"
+          color="accent"
+        >
+          Get List
+        </button>
+      </div>
+    </div>
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="100%" fxFlex.lt-sm="100" class="matero-col">
+        <mtx-grid
+          class="table-main-wrapper"
+          [data]="eInvoiceData"
+          [columns]="columns"
+          [multiSelectable]="false"
+          [rowSelectable]="false"
+          [hideRowSelectionCheckbox]="false"
+          [pageOnFront]="false"
+          [showPaginator]="false"
+          [showToolbar]="false"
+          [showSummary]="false"
+          [showColumnMenuButton]="false"
+        >
+        </mtx-grid>
+      </div>
+    </div>
+
+    <div
+      class="matero-row"
+      fxLayout.lt-sm="column"
+      fxLayout="row"
+      *ngIf="ErrorDetails != ''"
+    >
+      <div fxFlex="100%" fxFlex.lt-sm="100" class="matero-col">
+        <span class="mat-error p-t-12">{{ ErrorDetails }}</span>
+      </div>
+    </div>
+  </mat-card>
+</form>

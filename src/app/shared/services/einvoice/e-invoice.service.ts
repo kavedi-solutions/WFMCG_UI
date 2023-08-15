@@ -54,8 +54,31 @@ export class EInvoiceService {
     let params = new HttpParams()
       .set('TransactionTypeID', `${filter.transactionTypeID}`)
       .set('BookAccountID', `${filter.bookAccountID}`)
-      .set('FromDate', `${filter.FromDate}`)
-      .set('ToDate', `${filter.ToDate}`);
+      .set('FromDate', `${filter.fromDate}`)
+      .set('ToDate', `${filter.toDate}`)
+      .set('EIstatus', `${filter.eistatus}`);
+
+    return this.http
+      .get<any>(encodeURI(url), {
+        headers: this.headers,
+        observe: 'response',
+        params,
+      })
+      .pipe(
+        map((response) => {
+          return response.body;
+        })
+      );
+  }
+
+  GeteInvoiceErrorData(filter: eInvoiceFilter): Observable<eInvoiceResponse[]> {
+    const url = `${this.APIURL}/einvoice/error`;
+    let params = new HttpParams()
+      .set('TransactionTypeID', `${filter.transactionTypeID}`)
+      .set('BookAccountID', `${filter.bookAccountID}`)
+      .set('FromDate', `${filter.fromDate}`)
+      .set('ToDate', `${filter.toDate}`)
+      .set('EIstatus', `${filter.eistatus}`);
 
     return this.http
       .get<any>(encodeURI(url), {
@@ -86,6 +109,13 @@ export class EInvoiceService {
 
   GenerateEInvoice(request: e_InvoiceRequest) {
     const url = `${this.APIURL}/einvoice/generate`;
+    return this.http.post<e_InvoiceRequest>(encodeURI(url), request, {
+      headers: this.headers,
+    });
+  }
+
+  GetEInvoiceDetails(request: e_InvoiceRequest) {
+    const url = `${this.APIURL}/einvoice/getbyirn`;
     return this.http.post<e_InvoiceRequest>(encodeURI(url), request, {
       headers: this.headers,
     });
