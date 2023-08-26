@@ -192,7 +192,6 @@ export class SalesServiceComponent implements OnInit {
     this.dialogRef.componentInstance.DialogTitle = 'Invoice : ' + value.refNo;
     this.dialogRef.componentInstance.eiCancelRequest = eiCancelRequest;
     this.dialogRef.afterClosed().subscribe((result: any) => {
-      debugger;
       if (result.CloseStatus == true) {
         this.ShowCancelMessage(result.eiCancelRequest);
       }

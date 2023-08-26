@@ -133,6 +133,9 @@ export * from './report/others/bulkPrint.model';
 export * from './report/others/loadingSlip.model';
 export * from './report/stock/stockStatement.model';
 export * from './report/financial/outstanding.model';
+export * from './report/financial/accountledger.model';
+export * from './report/financial/purchaseregister.model';
+export * from './report/financial/salesregister.model';
 
 
 //

@@ -136,7 +136,6 @@ export class GetEInvoiceErrorsComponent implements OnInit {
       eistatus: true,
     };
     this.eInvoiceService.GeteInvoiceErrorData(filters).subscribe((response) => {
-      debugger;
       this.eInvoiceData = response;
     });
   }

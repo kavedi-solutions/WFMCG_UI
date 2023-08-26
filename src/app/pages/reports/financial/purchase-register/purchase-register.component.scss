@@ -1,0 +1,13 @@
+::ng-deep mat-radio-button {
+  margin: 1.25rem;
+}
+
+.mtx-grid-purchase {
+  min-height: 500px !important;
+  max-height: 500px !important;
+}
+::ng-deep {
+  .mtx-grid-purchase .mat-table-container {
+    overflow: unset !important;
+  }
+}

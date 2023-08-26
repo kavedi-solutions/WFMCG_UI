@@ -3425,3 +3425,21 @@ export function GeteInvoiceErrorColumn() {
 
   return BulkPrintColumns;
 }
+
+export function GetFinancialColumns() {
+  let FinancialColumns: MtxGridColumn[] = [
+    {
+      header: 'Auto ID',
+      field: 'account_Id',
+      hide: true,
+    },
+    {
+      header: 'Account Name',
+      field: 'account_Name',
+      sortable: false,
+      disabled: false,
+    },
+  ];
+
+  return FinancialColumns;
+}

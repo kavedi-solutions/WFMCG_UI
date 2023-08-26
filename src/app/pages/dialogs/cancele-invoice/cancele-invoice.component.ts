@@ -33,7 +33,6 @@ export class CanceleInvoiceComponent implements OnInit {
     this.einvoiceService
       .CancelEIInvoice(this.eiCancelRequest!)
       .subscribe((response: eI_CancelRequest) => {        
-        debugger;
         this.dialogRef.close({
           CloseStatus: true,
           eiCancelRequest: response,

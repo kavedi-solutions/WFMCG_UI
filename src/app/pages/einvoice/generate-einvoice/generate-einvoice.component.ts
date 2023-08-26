@@ -164,7 +164,6 @@ export class GenerateEInvoiceComponent implements OnInit {
       eistatus: false,
     };
     this.eInvoiceService.GeteInvoiceData(filters).subscribe((response) => {
-      debugger;
       this.eInvoiceData = response;
       this.eInvoiceDataResponse = [...this.eInvoiceData];
     });

@@ -742,7 +742,6 @@ export class AccountsAddEditComponent implements OnInit {
     let GSTNo: string = this.GSTNoControl.value;
     let DataResponse: GstDetails;
     this.einvoiceService.GetGSTDetail(GSTNo).subscribe((response) => {
-      debugger;
       DataResponse = response;
 
       this.dialogRef = this.dialog.open(GstDetailsComponent, {

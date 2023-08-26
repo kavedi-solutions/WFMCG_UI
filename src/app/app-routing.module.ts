@@ -623,8 +623,8 @@ const routes: Routes = [
         resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
         data: { MenuID: '303' },
         canActivate: [AuthGuard],
-      }
-    ]
+      },
+    ],
   },
   {
     path: 'reports',
@@ -645,13 +645,46 @@ const routes: Routes = [
         ],
       },
       {
+        path: 'financial',
+        children: [
+          {
+            path: 'accountledger',
+            component: CommonPages.AccountLedgerComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '404' },
+            canActivate: [AuthGuard],
+          },
+        ],
+      },
+      {
         path: 'register',
         children: [
+          {
+            path: 'purchase',
+            component: CommonPages.PurchaseRegisterComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '401' },
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'sales',
+            component: CommonPages.SalesRegisterComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '402' },
+            canActivate: [AuthGuard],
+          },
           {
             path: 'outstanding',
             component: CommonPages.OutstandingRegisterComponent,
             resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
             data: { MenuID: '403' },
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'acledger',
+            component: CommonPages.AccountLedgerComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '404' },
             canActivate: [AuthGuard],
           },
         ],
