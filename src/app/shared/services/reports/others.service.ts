@@ -9,6 +9,7 @@ import {
   LoadingSlipInvoiceFilter,
   LodingSlipFilter,
 } from '../../models';
+import { NumberSymbol } from '@angular/common';
 
 @Injectable({
   providedIn: 'root',
@@ -57,6 +58,35 @@ export class OthersReportService {
 
   PrintInvoiceInventory(NoofCopy: number, InvoiceID: number[]) {
     const url = `${this.APIURL}/invoice/inventory`;
+    let params = new HttpParams();
+
+    if (NoofCopy != 0) {
+      params = params.append('noofCopy', NoofCopy);
+    }
+
+    if (InvoiceID.length > 0) {
+      InvoiceID.forEach((element) => {
+        params = params.append('InvoiceIDs', element);
+      });
+    }
+
+    return this.http
+      .get(encodeURI(url), {
+        headers: this.headers,
+        observe: 'response',
+        responseType: 'blob',
+        params,
+      })
+      .pipe(
+        map((response) => {
+          return response.body;
+        })
+      );
+  }
+
+  PrintInvoiceService(NoofCopy:NumberSymbol,InvoiceID:number[])
+  {
+    const url = `${this.APIURL}/invoice/service`;
     let params = new HttpParams();
 
     if (NoofCopy != 0) {

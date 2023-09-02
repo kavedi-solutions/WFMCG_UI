@@ -28,7 +28,6 @@ export class BulkPrintComponent implements OnInit {
   columns: MtxGridColumn[] = [];
   transactionTypeDropDown: transactionTypeResponse[] = [];
   booksDropDown: accountsDropDownResponse[] = [];
-
   FromMinDate?: Date;
   FromMaxDate?: Date;
   ToMinDate?: Date;
@@ -152,23 +151,48 @@ export class BulkPrintComponent implements OnInit {
     this.selectedBulkPrintData.forEach((element) => {
       InvoiceIDs.push(element.autoID);
     });
+    debugger;
+    switch (Number(this.TransactionTypeIDControl.value)) {
+      case 21:
+        this.reportService
+          .PrintInvoiceInventory(NoofCopy, InvoiceIDs)
+          .subscribe((response) => {
+            var file = new Blob([response as Blob], {
+              type: 'application/pdf',
+            });
+            var fileURL = URL.createObjectURL(file);
 
-    this.reportService
-      .PrintInvoiceInventory(NoofCopy, InvoiceIDs)
-      .subscribe((response) => {
-        var file = new Blob([response as Blob], { type: 'application/pdf' });
-        var fileURL = URL.createObjectURL(file);
+            this.dialog.open(PdfViewerDialogComponent, {
+              data: this.sanitizer.bypassSecurityTrustResourceUrl(fileURL),
+              minWidth: '80vw',
+              minHeight: '90vh',
+              maxWidth: '80vw',
+              maxHeight: '90vh',
+              panelClass: 'dialog-container',
+              autoFocus: true,
+            });
+          });
+        break;
+      case 22:
+        this.reportService
+          .PrintInvoiceService(NoofCopy, InvoiceIDs)
+          .subscribe((response) => {
+            var file = new Blob([response as Blob], {
+              type: 'application/pdf',
+            });
+            var fileURL = URL.createObjectURL(file);
 
-        this.dialog.open(PdfViewerDialogComponent, {
-          data: this.sanitizer.bypassSecurityTrustResourceUrl(fileURL),
-          minWidth: '80vw',
-          minHeight: '90vh',
-          maxWidth: '80vw',
-          maxHeight: '90vh',
-          panelClass: 'dialog-container',
-          autoFocus: true,
-        });
-      });
+            this.dialog.open(PdfViewerDialogComponent, {
+              data: this.sanitizer.bypassSecurityTrustResourceUrl(fileURL),
+              minWidth: '80vw',
+              minHeight: '90vh',
+              maxWidth: '80vw',
+              maxHeight: '90vh',
+              panelClass: 'dialog-container',
+              autoFocus: true,
+            });
+          });
+    }
   }
 
   rowSelectionChange(event: any) {

@@ -222,7 +222,7 @@ export class SalesServiceComponent implements OnInit {
 
   printInvoice(value: any) {
     this.reportService
-      .PrintInvoiceInventory(0, [value.autoID])
+      .PrintInvoiceService(0, [value.autoID])
       .subscribe((response) => {
         var file = new Blob([response as Blob], { type: 'application/pdf' });
         var fileURL = URL.createObjectURL(file);
