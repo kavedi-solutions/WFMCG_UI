@@ -48,7 +48,7 @@ export class VContraAddEditComponent implements OnInit {
   BookBalanceType: string = 'Cr';
   AccountBalance: number = 0;
   AccountBalanceType: string = 'Cr';
-
+  TransactionTypeID: string = '';
   voucherForm = this.fb.group({
     VoucherType: [''],
     TransactionTypeID: [''],
@@ -57,6 +57,7 @@ export class VContraAddEditComponent implements OnInit {
     VoucherNo: ['', [Validators.required]],
     RefNo: ['', [Validators.required]],
     AccountID: ['', [Validators.required]],
+    PaymentType: ['0', [Validators.required]],
     TransactionNo: [''],
     Narration: ['', [Validators.required]],
     Amount: ['0'],
@@ -134,8 +135,13 @@ export class VContraAddEditComponent implements OnInit {
           RefNo: this.editVoucher?.refNo,
           Amount: SetFormatCurrency(this.editVoucher?.amount),
           Narration: this.editVoucher?.narration,
+          PaymentType: this.editVoucher!.paymentType.toString(),
           TransactionNo: this.editVoucher?.transactionNo,
         });
+
+        this.TransactionTypeID = this.booksDropDown.find(
+          (a) => a.account_Id == this.BookAccountIDControl.value
+        )!.transactionTypeID;
 
         this.VoucherDateControl.setValue(moment(this.editVoucher?.voucherDate));
         this.AccountIDControl.setValue(SeletedAccount);
@@ -156,19 +162,16 @@ export class VContraAddEditComponent implements OnInit {
   }
 
   SaveVoucher(voucherForm: FormGroup) {
-    let BookId = this.BookAccountIDControl.value;
-    let TransactionTypeID = this.booksDropDown.find(
-      (a) => a.account_Id == BookId
-    )?.transactionTypeID;
     this.voucherPostRequest = {
       voucherType: 'CV',
       voucherNo: Number(voucherForm.value.VoucherNo),
       refNo: voucherForm.value.RefNo,
       voucherDate: voucherForm.value.VoucherDate.format('YYYY-MM-DD'),
-      transactionTypeID: Number(TransactionTypeID),
+      transactionTypeID: Number(this.TransactionTypeID),
       bookAccountID: Number(voucherForm.value.BookAccountID),
       accountID: Number(voucherForm.value.AccountID.account_Id),
       amount: CheckIsNumber(voucherForm.value.Amount),
+      paymentType: voucherForm.value.PaymentType,
       transactionNo: voucherForm.value.TransactionNo,
       narration: voucherForm.value.Narration,
       isActive: true,
@@ -181,19 +184,16 @@ export class VContraAddEditComponent implements OnInit {
   }
 
   UpdateVoucher(voucherForm: FormGroup) {
-    let BookId = this.BookAccountIDControl.value;
-    let TransactionTypeID = this.booksDropDown.find(
-      (a) => a.account_Id == BookId
-    )?.transactionTypeID;
     this.voucherPutRequest = {
       voucherType: 'CV',
       voucherNo: Number(voucherForm.value.VoucherNo),
       refNo: voucherForm.value.RefNo,
       voucherDate: voucherForm.value.VoucherDate.format('YYYY-MM-DD'),
-      transactionTypeID: Number(TransactionTypeID),
+      transactionTypeID: Number(this.TransactionTypeID),
       bookAccountID: Number(voucherForm.value.BookAccountID),
       accountID: Number(voucherForm.value.AccountID.account_Id),
       amount: CheckIsNumber(voucherForm.value.Amount),
+      paymentType: voucherForm.value.PaymentType,
       transactionNo: voucherForm.value.TransactionNo,
       narration: voucherForm.value.Narration,
       isActive: true,
@@ -308,10 +308,13 @@ export class VContraAddEditComponent implements OnInit {
 
   GetNewVoucherNo() {
     if (this.isEditMode == false) {
-      let BookId = this.BookAccountIDControl.value;
+      let BookId = this.BookAccountIDControl.value;      
       let BookInit = this.booksDropDown.find(
         (a) => a.account_Id == BookId
       )?.bookInit;
+      this.TransactionTypeID = this.booksDropDown.find(
+        (a) => a.account_Id == BookId
+      )!.transactionTypeID;
       let VoucherDate = this.VoucherDateControl.value.format('YYYY-MM-DD');
       if (BookId != '' && VoucherDate != '') {
         this.voucherService

@@ -7,6 +7,7 @@ export interface VContraPutRequest {
   bookAccountID: number;
   accountID: number;
   amount: number;
+  paymentType:Number;
   transactionNo?: string;
   narration?: string;
   isActive: boolean;

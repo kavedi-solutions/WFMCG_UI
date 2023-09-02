@@ -59,6 +59,8 @@ export class VReceiptB2BAddEditComponent implements OnInit {
   AccountBalance: number = 0;
   AccountBalanceType: string = 'Cr';
 
+  TransactionTypeID: string = '';
+
   pendingBillsColumn: TableColumns[] = [];
 
   voucherForm = this.fb.group({
@@ -69,6 +71,7 @@ export class VReceiptB2BAddEditComponent implements OnInit {
     VoucherNo: ['', [Validators.required]],
     RefNo: ['', [Validators.required]],
     AccountID: ['', [Validators.required]],
+    PaymentType: ['0', [Validators.required]],
     TransactionNo: [''],
     Narration: ['', [Validators.required]],
     Amount: ['0'],
@@ -95,7 +98,7 @@ export class VReceiptB2BAddEditComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.filteredaccountsDropDown = this.AccountIDControl().valueChanges.pipe(
+    this.filteredaccountsDropDown = this.AccountIDControl.valueChanges.pipe(
       startWith(''),
       map((value) => {
         const name = typeof value === 'string' ? value : value?.account_Name;
@@ -148,13 +151,18 @@ export class VReceiptB2BAddEditComponent implements OnInit {
           RefNo: this.editVoucher?.refNo,
           Amount: SetFormatCurrency(this.editVoucher?.amount),
           Narration: this.editVoucher?.narration,
+          PaymentType: this.editVoucher!.paymentType.toString(),
           TransactionNo: this.editVoucher?.transactionNo,
         });
 
-        this.VoucherDateControl().setValue(
+        this.TransactionTypeID = this.booksDropDown.find(
+          (a) => a.account_Id == this.BookAccountIDControl.value
+        )!.transactionTypeID;        
+
+        this.VoucherDateControl.setValue(
           moment(this.editVoucher?.voucherDate)
         );
-        this.AccountIDControl().setValue(SeletedAccount);
+        this.AccountIDControl.setValue(SeletedAccount);
         this.GetCurrentAccountBalance(
           Number(this.editVoucher?.bookAccountID),
           1
@@ -176,13 +184,7 @@ export class VReceiptB2BAddEditComponent implements OnInit {
   }
 
   SaveVoucher(voucherForm: FormGroup) {
-    let BookId = this.BookAccountIDControl().value;
-    let TransactionTypeID = this.booksDropDown.find(
-      (a) => a.account_Id == BookId
-    )?.transactionTypeID;
-
     let PendingBills: VReceiptB2BPendingBillsPostRequest[] = [];
-
     this.ReceivedBills.controls.forEach((element) => {
       PendingBills.push({
         salesType: element.value.SalesType,
@@ -196,10 +198,11 @@ export class VReceiptB2BAddEditComponent implements OnInit {
       voucherNo: Number(voucherForm.value.VoucherNo),
       refNo: voucherForm.value.RefNo,
       voucherDate: voucherForm.value.VoucherDate.format('YYYY-MM-DD'),
-      transactionTypeID: Number(TransactionTypeID),
+      transactionTypeID: Number(this.TransactionTypeID),
       bookAccountID: Number(voucherForm.value.BookAccountID),
       accountID: Number(voucherForm.value.AccountID.account_Id),
       amount: CheckIsNumber(voucherForm.value.Amount),
+      paymentType: voucherForm.value.PaymentType,
       transactionNo: voucherForm.value.TransactionNo,
       narration: voucherForm.value.Narration,
       isActive: true,
@@ -213,11 +216,6 @@ export class VReceiptB2BAddEditComponent implements OnInit {
   }
 
   UpdateVoucher(voucherForm: FormGroup) {
-    let BookId = this.BookAccountIDControl().value;
-    let TransactionTypeID = this.booksDropDown.find(
-      (a) => a.account_Id == BookId
-    )?.transactionTypeID;
-
     let PendingBills: VReceiptB2BPendingBillsPutRequest[] = [];
 
     this.ReceivedBills.controls.forEach((element) => {
@@ -234,10 +232,11 @@ export class VReceiptB2BAddEditComponent implements OnInit {
       voucherNo: Number(voucherForm.value.VoucherNo),
       refNo: voucherForm.value.RefNo,
       voucherDate: voucherForm.value.VoucherDate.format('YYYY-MM-DD'),
-      transactionTypeID: Number(TransactionTypeID),
+      transactionTypeID: Number(this.TransactionTypeID),
       bookAccountID: Number(voucherForm.value.BookAccountID),
       accountID: Number(voucherForm.value.AccountID.account_Id),
       amount: CheckIsNumber(voucherForm.value.Amount),
+      paymentType: voucherForm.value.PaymentType,
       transactionNo: voucherForm.value.TransactionNo,
       narration: voucherForm.value.Narration,
       isActive: true,
@@ -254,7 +253,7 @@ export class VReceiptB2BAddEditComponent implements OnInit {
     const currentYear = new Date().getFullYear();
     this.VoucherMinDate = new Date(currentYear - 20, 0, 1);
     this.VoucherMaxDate = new Date();
-    this.VoucherDateControl().setValue(moment(new Date()));
+    this.VoucherDateControl.setValue(moment(new Date()));
   }
 
   FillBooksDropDown() {
@@ -289,7 +288,7 @@ export class VReceiptB2BAddEditComponent implements OnInit {
     };
     this.accountService.AccountsDropDown(filters).subscribe((response) => {
       this.accountsDropDown = response;
-      this.AccountIDControl().setValue('');
+      this.AccountIDControl.setValue('');
     });
   }
 
@@ -302,7 +301,7 @@ export class VReceiptB2BAddEditComponent implements OnInit {
     this.ReceivedBills.controls.forEach((element) => {
       Total = Number(Total) + Number(element.value.ReceiveAmount);
     });
-    this.AmountControl().setValue(SetFormatCurrency(Total));
+    this.AmountControl.setValue(SetFormatCurrency(Total));
   }
 
   //Events
@@ -317,7 +316,7 @@ export class VReceiptB2BAddEditComponent implements OnInit {
 
   BookAccountIDblur() {
     this.GetNewVoucherNo();
-    this.GetCurrentAccountBalance(Number(this.BookAccountIDControl().value), 1);
+    this.GetCurrentAccountBalance(Number(this.BookAccountIDControl.value), 1);
   }
 
   SelectedAccount(event: any) {
@@ -354,17 +353,17 @@ export class VReceiptB2BAddEditComponent implements OnInit {
   OnAccountBlur() {
     if (
       this.AutoAccountID?.isOpen == false &&
-      this.AccountIDControl().value == ''
+      this.AccountIDControl.value == ''
     ) {
       this.renderer.selectRootElement('#AccountName', true).focus();
     }
-    if (this.AccountIDControl().value != '') {
+    if (this.AccountIDControl.value != '') {
       this.GetPendingBills(
-        Number(this.AccountIDControl().value.account_Id),
+        Number(this.AccountIDControl.value.account_Id),
         this.selectedVoucherId
       );
       this.GetCurrentAccountBalance(
-        Number(this.AccountIDControl().value.account_Id),
+        Number(this.AccountIDControl.value.account_Id),
         2
       );
     }
@@ -372,18 +371,21 @@ export class VReceiptB2BAddEditComponent implements OnInit {
 
   GetNewVoucherNo() {
     if (this.isEditMode == false) {
-      let BookId = this.BookAccountIDControl().value;
+      let BookId = this.BookAccountIDControl.value;
       let BookInit = this.booksDropDown.find(
         (a) => a.account_Id == BookId
       )?.bookInit;
-      let VoucherDate = this.VoucherDateControl().value.format('YYYY-MM-DD');
+      this.TransactionTypeID = this.booksDropDown.find(
+        (a) => a.account_Id == BookId
+      )!.transactionTypeID;                  
+      let VoucherDate = this.VoucherDateControl.value.format('YYYY-MM-DD');
       if (BookId != '' && VoucherDate != '') {
         this.voucherService
           .GetNextVoucherNo(BookId, VoucherDate)
           .subscribe((response) => {
-            this.VoucherNoControl().setValue(response);
+            this.VoucherNoControl.setValue(response);
             let RefNo = BookInit + '-' + response;
-            this.RefNoControl().setValue(RefNo);
+            this.RefNoControl.setValue(RefNo);
           });
       }
     }
@@ -459,57 +461,57 @@ export class VReceiptB2BAddEditComponent implements OnInit {
 
   //Controls
 
-  VoucherTypeControl() {
+  get VoucherTypeControl() {
     return this.voucherForm.get('VoucherType') as FormControl;
   }
 
-  TransactionTypeIDControl() {
+  get TransactionTypeIDControl() {
     return this.voucherForm.get('TransactionTypeID') as FormControl;
   }
 
-  BookAccountIDControl() {
+  get BookAccountIDControl() {
     return this.voucherForm.get('BookAccountID') as FormControl;
   }
 
-  VoucherDateControl() {
+  get VoucherDateControl() {
     return this.voucherForm.get('VoucherDate') as FormControl;
   }
 
-  VoucherNoControl() {
+  get VoucherNoControl() {
     return this.voucherForm.get('VoucherNo') as FormControl;
   }
 
-  RefNoControl() {
+  get RefNoControl() {
     return this.voucherForm.get('RefNo') as FormControl;
   }
 
-  AccountIDControl() {
+  get AccountIDControl() {
     return this.voucherForm.get('AccountID') as FormControl;
   }
 
-  TransactionNoControl() {
+  get TransactionNoControl() {
     return this.voucherForm.get('TransactionNo') as FormControl;
   }
 
-  NarrationControl() {
+  get NarrationControl() {
     return this.voucherForm.get('Narration') as FormControl;
   }
 
-  NarrationControlRequired() {
+  get NarrationControlRequired() {
     return (
-      this.NarrationControl().hasError('required') &&
-      this.NarrationControl().touched
+      this.NarrationControl.hasError('required') &&
+      this.NarrationControl.touched
     );
   }
 
-  NarrationControlInvalid() {
+  get NarrationControlInvalid() {
     return (
-      this.NarrationControl().hasError('pattern') &&
-      this.NarrationControl().touched
+      this.NarrationControl.hasError('pattern') &&
+      this.NarrationControl.touched
     );
   }
 
-  AmountControl() {
+  get AmountControl() {
     return this.voucherForm.get('Amount') as FormControl;
   }
 
@@ -531,6 +533,6 @@ export class VReceiptB2BAddEditComponent implements OnInit {
   }
 
   CheckFormIsValid() {
-    return !this.voucherForm.valid || this.AmountControl().value <= 0;
+    return !this.voucherForm.valid || this.AmountControl.value <= 0;
   }
 }

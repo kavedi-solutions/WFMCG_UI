@@ -34,6 +34,7 @@ export interface VReceiptB2BResponse {
   bookAccountID: number;
   accountID: number;
   amount: number;
+  paymentType:Number;
   transactionNo: string;
   narration: string;
   isActive: boolean;

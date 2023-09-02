@@ -34,6 +34,7 @@ export interface VContraResponse {
   bookAccountID: number;
   accountID: number;
   amount: number;
+  paymentType:Number;
   transactionNo: string;
   narration: string;
   isActive: boolean;

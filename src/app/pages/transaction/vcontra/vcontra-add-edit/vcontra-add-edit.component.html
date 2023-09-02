@@ -87,11 +87,13 @@
           />
         </mat-form-field>
       </div>
-    </div>    
+    </div>
     <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
       <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
         <mat-form-field appearance="legacy" color="primary">
-          <mat-error *ngIf="BookAndAccountisSame == true">Book and Account Cannot be same.</mat-error>
+          <mat-error *ngIf="BookAndAccountisSame == true"
+            >Book and Account Cannot be same.</mat-error
+          >
           <mat-label>Select Account</mat-label>
           <input
             matInput
@@ -138,7 +140,20 @@
           />
         </mat-form-field>
       </div>
-      <div fxFlex="35%" fxFlex.lt-sm="100" class="matero-col">
+      <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Payment Type</mat-label>
+          <mat-select formControlName="PaymentType" required>
+            <mat-option value="1" *ngIf="TransactionTypeID == '3'"
+              >Cash</mat-option
+            >
+            <mat-option value="2" *ngIf="TransactionTypeID == '2'"
+              >Cheque</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div fxFlex="20%" fxFlex.lt-sm="100" class="matero-col">
         <mat-form-field appearance="legacy" color="primary">
           <mat-label>Transaction No</mat-label>
           <input

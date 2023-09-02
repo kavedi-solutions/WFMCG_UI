@@ -139,7 +139,36 @@
           />
         </mat-form-field>
       </div>
-      <div fxFlex="35%" fxFlex.lt-sm="100" class="matero-col">
+      <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Payment Type</mat-label>
+          <mat-select formControlName="PaymentType" required>
+            <mat-option value="1" *ngIf="TransactionTypeID == '2'"
+              >Cash</mat-option
+            >
+            <mat-option value="2" *ngIf="TransactionTypeID == '3'"
+              >Cheque</mat-option
+            >
+            <mat-option value="3" *ngIf="TransactionTypeID == '3'"
+              >DD</mat-option
+            >
+            <mat-option value="4" *ngIf="TransactionTypeID == '3'"
+              >NEFT</mat-option
+            >
+            <mat-option value="5" *ngIf="TransactionTypeID == '3'"
+              >RTGS</mat-option
+            >
+            <mat-option value="6" *ngIf="TransactionTypeID == '3'"
+              >IMPS</mat-option
+            >
+            <mat-option value="7" *ngIf="TransactionTypeID == '3'"
+              >UPI</mat-option
+            >
+            <mat-option value="99">Others</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>      
+      <div fxFlex="20%" fxFlex.lt-sm="100" class="matero-col">
         <mat-form-field appearance="legacy" color="primary">
           <mat-label>Transaction No</mat-label>
           <input
