@@ -84,8 +84,7 @@ export class OthersReportService {
       );
   }
 
-  PrintInvoiceService(NoofCopy:NumberSymbol,InvoiceID:number[])
-  {
+  PrintInvoiceService(NoofCopy: NumberSymbol, InvoiceID: number[]) {
     const url = `${this.APIURL}/invoice/service`;
     let params = new HttpParams();
 
@@ -113,9 +112,36 @@ export class OthersReportService {
       );
   }
 
-  PrintInvoiceAssets(NoofCopy:NumberSymbol,InvoiceID:number[])
-  {
+  PrintInvoiceAssets(NoofCopy: NumberSymbol, InvoiceID: number[]) {
     const url = `${this.APIURL}/invoice/assets`;
+    let params = new HttpParams();
+
+    if (NoofCopy != 0) {
+      params = params.append('noofCopy', NoofCopy);
+    }
+
+    if (InvoiceID.length > 0) {
+      InvoiceID.forEach((element) => {
+        params = params.append('InvoiceIDs', element);
+      });
+    }
+
+    return this.http
+      .get(encodeURI(url), {
+        headers: this.headers,
+        observe: 'response',
+        responseType: 'blob',
+        params,
+      })
+      .pipe(
+        map((response) => {
+          return response.body;
+        })
+      );
+  }
+
+  PrintInvoiceSalesReturn(NoofCopy: NumberSymbol, InvoiceID: number[]) {
+    const url = `${this.APIURL}/invoice/salesreturn`;
     let params = new HttpParams();
 
     if (NoofCopy != 0) {
