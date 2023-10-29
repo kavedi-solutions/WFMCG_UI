@@ -11,6 +11,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { funSortingOrder } from 'src/app/shared/functions';
 import { PageEvent } from '@angular/material/paginator';
 import { MtxGridColumn } from 'src/app/extensions/grid/grid.interface';
+import { MatDialog } from '@angular/material/dialog';
+import { DomSanitizer } from '@angular/platform-browser';
+import { PdfViewerDialogComponent } from 'src/app/theme';
 
 @Component({
   selector: 'app-purchase-return',
@@ -34,7 +37,10 @@ export class PurchaseReturnComponent implements OnInit {
   constructor(
     private purchaseReturnService: fromService.PurchaseReturnService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private reportService: fromService.OthersReportService,    
+    private dialog: MatDialog,
+    private sanitizer: DomSanitizer,    
   ) {
     this.latestSearchText = '';
     this.accRights = this.route.snapshot.data['userRights'];
@@ -97,6 +103,24 @@ export class PurchaseReturnComponent implements OnInit {
                 return this.accRights!.canEdit;
               },
             },
+            {
+              text: 'Print Invoice',
+              tooltip: 'Print Invoice',
+              buttontype: 'button',
+              pop: {
+                title: 'Confirm Print',
+                description:
+                  'Are you sure you want to Print this Sales Invoice.',
+                closeText: 'No',
+                okText: 'Yes',
+                okColor: 'primary',
+                closeColor: 'warn',
+              },
+              click: (record) => this.printInvoice(record),
+              iif: () => {
+                return this.accRights!.canView;
+              },
+            },
           ],
         },
       ],
@@ -126,6 +150,24 @@ export class PurchaseReturnComponent implements OnInit {
       .deletePurchaseReturn(value.autoID)
       .subscribe((response) => {
         this.getPurchaseList();
+      });
+  }
+
+  printInvoice(value: any) {
+    this.reportService
+      .PrintInvoicePurchaseReturn(0, [value.autoID])
+      .subscribe((response) => {
+        var file = new Blob([response as Blob], { type: 'application/pdf' });
+        var fileURL = URL.createObjectURL(file);
+
+        this.dialog.open(PdfViewerDialogComponent, {
+          data: this.sanitizer.bypassSecurityTrustResourceUrl(fileURL),
+          minWidth: '80vw',
+          minHeight: '90vh',
+          maxWidth: '80vw',
+          maxHeight: '90vh',
+          autoFocus: true,
+        });
       });
   }
 

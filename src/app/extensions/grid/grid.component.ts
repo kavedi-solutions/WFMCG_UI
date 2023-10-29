@@ -355,7 +355,7 @@ export class MtxGridComponent implements OnChanges, AfterViewInit, OnDestroy {
     }
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit() {    
     if (this.pageOnFront) {
       this.dataSource.paginator = this.paginator;
     }

@@ -6,7 +6,7 @@
   [showAdd]="false"
   (onBackClick)="BacktoList()"
 ></page-header>
-<form class="form-field-full page-detail" [formGroup]="groupForm">
+<form class="form-field-full page-detail" [formGroup]="groupForm" enter-tab>
   <mat-card>
     <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
       <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
@@ -20,6 +20,7 @@
             maxlength="50"
             required
             (keyup)="onGroupNameKeyUp($event)"
+            #nextTab            
           />
           <mat-hint>Group name must be unique.</mat-hint>
           <mat-error *ngIf="groupNameControlRequired"
@@ -39,8 +40,8 @@
       <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
         <mat-form-field appearance="legacy" color="primary">
           <mat-label>Balance Transfer to</mat-label>
-          <mat-select formControlName="balanceTransferToID">
-            <mat-option
+          <mat-select formControlName="balanceTransferToID" #nextTab>
+            <mat-option 
               *ngFor="let bttdd of balanceTransferToDropDown"
               [value]="bttdd.balanceTransferToID"
             >

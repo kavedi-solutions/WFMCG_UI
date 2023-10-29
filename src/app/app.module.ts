@@ -194,7 +194,7 @@ export function tokenGetter() {
     Pages.CnDnSettlementComponent,
     Pages.GstDetailsComponent,
     Pages.CanceleInvoiceComponent,
-    Pages.CommonDialogComponent
+    Pages.CommonDialogComponent,
   ],
   bootstrap: [AppComponent],
 })

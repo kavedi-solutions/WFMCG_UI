@@ -82,7 +82,7 @@ export class VJournalAddEditComponent implements OnInit {
     this.selectedVoucherId = 0;
     this.FillBooksDropDown();
     this.FillRAccountDropDown();
-    this.FillGAccountDropDown();
+    //this.FillGAccountDropDown();
     this.SetMinMaxVoucherDate();
   }
 
@@ -149,7 +149,6 @@ export class VJournalAddEditComponent implements OnInit {
         GSeletedAccount = this.gAccountsDropDown.filter(
           (a) => a.account_Id == this.editVoucher?.giverAccountID.toString()
         )[0];
-
         this.voucherForm.patchValue({
           BookAccountID: this.editVoucher?.bookAccountID.toString(),
           VoucherNo: this.editVoucher?.voucherNo.toString(),
@@ -276,28 +275,8 @@ export class VJournalAddEditComponent implements OnInit {
     this.accountService.AccountsDropDown(filters).subscribe((response) => {
       this.rAccountsDropDown = response;
       this.RAccountIDControl.setValue('');
-    });
-  }
-
-  FillGAccountDropDown() {
-    let filters = {
-      GroupID: [],
-      BalanceTransferToID: [],
-      AccountTypeID: [
-        AccountTypeMaster.General,
-        AccountTypeMaster.Customer,
-        AccountTypeMaster.Proprietor_Partners,
-        AccountTypeMaster.Supplier,
-      ],
-      TransactionTypeID: [],
-      SalesTypeID: [],
-      AccountTradeTypeID: [],
-      AreaID: [],
-      HeadBookId: [],
-    };
-    this.accountService.AccountsDropDown(filters).subscribe((response) => {
       this.gAccountsDropDown = response;
-      this.GAccountIDControl.setValue('');
+      this.GAccountIDControl.setValue('');      
     });
   }
 
