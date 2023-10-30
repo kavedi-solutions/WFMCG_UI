@@ -38,14 +38,14 @@ export class PurchaseReturnComponent implements OnInit {
     private purchaseReturnService: fromService.PurchaseReturnService,
     private router: Router,
     private route: ActivatedRoute,
-    private reportService: fromService.OthersReportService,    
+    private reportService: fromService.OthersReportService,
     private dialog: MatDialog,
-    private sanitizer: DomSanitizer,    
+    private sanitizer: DomSanitizer,
   ) {
     this.latestSearchText = '';
     this.accRights = this.route.snapshot.data['userRights'];
     this.setColumns();
-    this.latestSortingOrder = 'billDate';
+    this.latestSortingOrder = '-billDate';
     this.getPurchaseList();
   }
 

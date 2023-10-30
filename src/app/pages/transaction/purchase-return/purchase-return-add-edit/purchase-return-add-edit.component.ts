@@ -513,8 +513,7 @@ export class PurchaseReturnAddEditComponent implements OnInit {
   FillItemDropDown() {
     if (this.AccountTradeTypeID != 0 && this.ReturnTypeID != 0) {
       let filters: ItemFilter_DropDown = {
-        IsServiceItem: false,
-        IsInventory: true,
+        ItemType: 1,
         AccountTradeTypeID: this.AccountTradeTypeID,
         OnlyStockItems: true,
         ReturnTypeID: this.ReturnTypeID,

@@ -619,8 +619,7 @@ export class SalesAddEditComponent implements OnInit {
 
   FillItemDropDown(AccountTradeTypeID: number) {
     let filters: ItemFilter_DropDown = {
-      IsServiceItem: false,
-      IsInventory: true,
+      ItemType: 1,
       AccountTradeTypeID: AccountTradeTypeID,
       OnlyStockItems: true,
       ReturnTypeID: 1,
@@ -633,8 +632,7 @@ export class SalesAddEditComponent implements OnInit {
 
   FillItemDropDownEdit(AccountTradeTypeID: number, invoiceID: number) {
     let filters: ItemFilter_DropDown = {
-      IsServiceItem: false,
-      IsInventory: true,
+      ItemType: 1,
       AccountTradeTypeID: AccountTradeTypeID,
       OnlyStockItems: true,
       ReturnTypeID: 1,

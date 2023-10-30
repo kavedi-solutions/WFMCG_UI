@@ -1,6 +1,5 @@
 export interface ItemFilter_DropDown {
-  IsServiceItem: boolean;
-  IsInventory: boolean;
+  ItemType: number;
   AccountTradeTypeID: Number;
   OnlyStockItems: boolean;
   ReturnTypeID: Number;

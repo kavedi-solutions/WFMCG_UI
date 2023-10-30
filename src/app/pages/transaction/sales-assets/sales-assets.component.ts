@@ -48,7 +48,7 @@ export class SalesAssetsComponent implements OnInit {
     this.latestSearchText = '';
     this.accRights = this.route.snapshot.data['userRights'];
     this.setColumns();
-    this.latestSortingOrder = 'billDate';
+    this.latestSortingOrder = '-billDate';
     this.getSalesList();
   }
 

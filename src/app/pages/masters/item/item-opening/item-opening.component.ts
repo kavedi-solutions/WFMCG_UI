@@ -173,11 +173,10 @@ export class ItemOpeningComponent implements OnInit {
 
   FillItemDropDown() {
     let filters: ItemFilter_DropDown = {
-      IsServiceItem: false,
-      IsInventory: true,
+      ItemType: 1,
       AccountTradeTypeID: 0,
       OnlyStockItems: false,
-      ReturnTypeID: 0,
+      ReturnTypeID: 1,
     };
     this.itemService.ItemDropDown(filters).subscribe((response) => {
       this.itemsDropDown = response;

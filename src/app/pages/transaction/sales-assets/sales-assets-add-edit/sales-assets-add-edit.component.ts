@@ -458,8 +458,7 @@ export class SalesAssetsAddEditComponent implements OnInit {
 
   FillItemDropDown() {
     let filters: ItemFilter_DropDown = {
-      IsServiceItem: false,
-      IsInventory: false,
+      ItemType: 3,
       AccountTradeTypeID: 1,
       OnlyStockItems: false,
       ReturnTypeID: 1,

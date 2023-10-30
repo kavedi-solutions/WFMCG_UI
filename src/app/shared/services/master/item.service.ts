@@ -140,8 +140,7 @@ export class ItemService {
   ItemDropDown(filters: ItemFilter_DropDown) {
     const url = `${this.APIURL}/company/${this.CompanyID}/item/dropdown`;
     let params = new HttpParams()
-      .set('IsServiceItem', `${filters.IsServiceItem}`)
-      .set('IsInventory', `${filters.IsInventory}`)
+      .set('ItemType', `${filters.ItemType}`)
       .set('AccountTradeTypeID', `${filters.AccountTradeTypeID}`)
       .set('OnlyStockItems', `${filters.OnlyStockItems}`)
       .set('ReturnTypeID', `${filters.ReturnTypeID}`)
@@ -163,8 +162,7 @@ export class ItemService {
   ItemDropDownEdit(filters: ItemFilter_DropDown) {
     const url = `${this.APIURL}/company/${this.CompanyID}/item/dropdown`;
     let params = new HttpParams()
-      .set('IsServiceItem', `${filters.IsServiceItem}`)
-      .set('IsInventory', `${filters.IsInventory}`)
+      .set('ItemType', `${filters.ItemType}`)
       .set('AccountTradeTypeID', `${filters.AccountTradeTypeID}`)
       .set('OnlyStockItems', `${filters.OnlyStockItems}`)
       .set('ReturnTypeID', `${filters.ReturnTypeID}`)

@@ -55,9 +55,11 @@ export class ItemAddEditComponent implements OnInit {
         Validators.pattern(/^([\s]*[a-zA-Z0-9()&-.,/]+[\s]*)+$/i),
       ],
     ],
-    HSNCode: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(8)]],
-    IsServiceItem: [false],
-    IsInventory: [true],
+    HSNCode: [
+      '',
+      [Validators.required, Validators.minLength(4), Validators.maxLength(8)],
+    ],
+    ItemType: ['1', [Validators.required]],
     ItemGroupID: ['', [Validators.required]],
     ManufactureID: ['', [Validators.required]],
     Packing: [
@@ -185,12 +187,14 @@ export class ItemAddEditComponent implements OnInit {
     );
   }
 
-  get IsServiceItemControl() {
-    return this.itemForm.get('IsServiceItem') as FormControl;
+  get ItemTypeControl() {
+    return this.itemForm.get('ItemType') as FormControl;
   }
 
-  get IsInventoryControl() {
-    return this.itemForm.get('IsInventory') as FormControl;
+  get ItemTypeControlRequired() {
+    return (
+      this.ItemTypeControl.hasError('required') && this.ItemTypeControl.touched
+    );
   }
 
   get HSNCodeControl() {
@@ -204,11 +208,15 @@ export class ItemAddEditComponent implements OnInit {
   }
 
   get HSNCodeControlMin() {
-    return this.HSNCodeControl.hasError('minlength') && this.HSNCodeControl.touched;
+    return (
+      this.HSNCodeControl.hasError('minlength') && this.HSNCodeControl.touched
+    );
   }
 
   get HSNCodeControlMax() {
-    return this.HSNCodeControl.hasError('maxlength') && this.HSNCodeControl.touched;
+    return (
+      this.HSNCodeControl.hasError('maxlength') && this.HSNCodeControl.touched
+    );
   }
 
   get ItemGroupIDControl() {
@@ -436,8 +444,7 @@ export class ItemAddEditComponent implements OnInit {
       this.itemForm.patchValue({
         ItemName: this.editItem!.itemName,
         HSNCode: this.editItem!.hsnCode,
-        IsServiceItem: this.editItem!.isServiceItem,
-        IsInventory: this.editItem!.isInventory,
+        ItemType: this.editItem!.itemType.toString(),
         ItemGroupID: this.editItem!.itemGroupID.toString(),
         ManufactureID: this.editItem!.manufactureID.toString(),
         Packing: this.editItem!.packing.toString(),
@@ -453,6 +460,7 @@ export class ItemAddEditComponent implements OnInit {
         isActive: this.editItem!.isActive,
       });
       this.GSTTaxIDSelectionChange(this.editItem!.gstTaxID.toString());
+      this.ItemTypeSelectionChange(this.editItem!.itemType.toString());
     });
   }
 
@@ -468,8 +476,7 @@ export class ItemAddEditComponent implements OnInit {
     form.reset({
       ItemName: '',
       HSNCode: '',
-      IsServiceItem: false,
-      IsInventory: true,
+      ItemType: 1,
       ItemGroupID: '',
       ManufactureID: '',
       Packing: '',
@@ -506,8 +513,7 @@ export class ItemAddEditComponent implements OnInit {
     this.itemPostRequest = {
       itemName: itemForm.value.ItemName,
       hSNCode: itemForm.value.HSNCode,
-      isServiceItem: itemForm.value.IsServiceItem,
-      isInventory: itemForm.value.IsInventory,
+      itemType: itemForm.value.ItemType,
       itemGroupID: Number(itemForm.value.ItemGroupID),
       manufactureID: Number(itemForm.value.ManufactureID),
       packing: Number(itemForm.value.Packing),
@@ -531,8 +537,7 @@ export class ItemAddEditComponent implements OnInit {
     this.itemPutRequest = {
       itemName: itemForm.value.ItemName,
       hSNCode: itemForm.value.HSNCode,
-      isServiceItem: itemForm.value.IsServiceItem,
-      isInventory: itemForm.value.IsInventory,
+      itemType: itemForm.value.ItemType,
       itemGroupID: Number(itemForm.value.ItemGroupID),
       manufactureID: Number(itemForm.value.ManufactureID),
       packing: Number(itemForm.value.Packing),
@@ -589,17 +594,17 @@ export class ItemAddEditComponent implements OnInit {
     });
   }
 
-  ChangeServiceItem(event: any) {
-    if (event.checked == true) {
-      this.IsInventoryDisable = true;
-      this.IsInventoryControl.setValue(false);
-      this.FillAccountTradeTypeDropDown('1');
-    } else {
-      this.IsInventoryDisable = false;
-      this.IsInventoryControl.setValue(true);
-      this.FillAccountTradeTypeDropDown('2');
-    }
-  }
+  // ChangeServiceItem(event: any) {
+  //   if (event.checked == true) {
+  //     this.IsInventoryDisable = true;
+  //     this.IsInventoryControl.setValue(false);
+  //     this.FillAccountTradeTypeDropDown('1');
+  //   } else {
+  //     this.IsInventoryDisable = false;
+  //     this.IsInventoryControl.setValue(true);
+  //     this.FillAccountTradeTypeDropDown('2');
+  //   }
+  // }
 
   onBlurWeight() {
     let Value = this.WeightControl.value;
@@ -646,6 +651,12 @@ export class ItemAddEditComponent implements OnInit {
       this.TaxDetails = response;
       this.CalculateRates();
     });
+  }
+
+  ItemTypeSelectionChange(event: any) {
+    debugger;
+    if (event == '1') this.FillAccountTradeTypeDropDown('2');
+    else this.FillAccountTradeTypeDropDown('1');
   }
 
   CalculateRates() {

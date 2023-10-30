@@ -558,8 +558,7 @@ export class PurchaseAddEditComponent implements OnInit {
 
   FillItemDropDown(AccountTradeTypeID: number) {
     let filters: ItemFilter_DropDown = {
-      IsServiceItem: false,
-      IsInventory: true,
+      ItemType: 1,
       AccountTradeTypeID: AccountTradeTypeID,
       OnlyStockItems: false,
       ReturnTypeID: 1,
@@ -630,7 +629,7 @@ export class PurchaseAddEditComponent implements OnInit {
           let ItemDetail: PurchaseItemDetail =
             this.purchaseItemDetailsList.filter(
               (a) => a.ItemID == event.option.value.item_Id
-            )[0];          
+            )[0];
           this.I_CrtControl.setValue(ItemDetail.Crt);
           this.I_PcsControl.setValue(ItemDetail.Pcs);
           this.I_QtyControl.setValue(ItemDetail.Qty);
@@ -651,7 +650,7 @@ export class PurchaseAddEditComponent implements OnInit {
           this.I_SchPerControl.setValue(ItemDetail.SchPer);
           this.I_SchAmountControl.setValue(ItemDetail.SchAmount);
           this.I_NetAmountControl.setValue(ItemDetail.NetAmount);
-          this.GetCurrentTax(Number(ItemDetail.GSTTaxID), true);          
+          this.GetCurrentTax(Number(ItemDetail.GSTTaxID), true);
           this.IsItemEditMode = true;
         }
       });

@@ -1,8 +1,7 @@
 export interface ItemPostRequest {
   itemName: string | null;
   hSNCode: string | null;
-  isServiceItem: boolean;
-  isInventory: boolean;
+  itemType: number;
   itemGroupID: number;
   manufactureID: number;
   packing: number;

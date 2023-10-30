@@ -34,12 +34,12 @@ export class DebitNoteComponent implements OnInit {
   constructor(
     private debitNoteService: fromService.DebitNoteService,
     private router: Router,
-    private route: ActivatedRoute    
-  ) { 
+    private route: ActivatedRoute
+  ) {
     this.latestSearchText = '';
     this.accRights = this.route.snapshot.data['userRights'];
     this.setColumns();
-    this.latestSortingOrder = 'billDate';
+    this.latestSortingOrder = '-billDate';
     this.getDebitNoteList();
   }
 
@@ -172,6 +172,6 @@ export class DebitNoteComponent implements OnInit {
       });
     }
     this.getDebitNoteList();
-  }  
+  }
 
 }

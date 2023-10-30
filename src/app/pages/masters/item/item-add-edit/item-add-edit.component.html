@@ -33,25 +33,18 @@
           >
         </mat-form-field>
       </div>
-      <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
-        <mat-slide-toggle
-          color="primary"
-          class="slide_toggle_style m-l-16 m-t-16"
-          formControlName="IsServiceItem"
-          (change)="ChangeServiceItem($event)"
-        >
-          Is Service</mat-slide-toggle
-        >
-      </div>
-      <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
-        <mat-slide-toggle
-          color="primary"
-          class="slide_toggle_style m-l-16 m-t-16"
-          formControlName="IsInventory"
-          [disabled]="IsInventoryDisable"
-        >
-          Is Inventory</mat-slide-toggle
-        >
+      <div fxFlex="30%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Item Type</mat-label>
+          <mat-select formControlName="ItemType" required (valueChange)="ItemTypeSelectionChange($event)">
+            <mat-option value="1"> Inventory </mat-option>
+            <mat-option value="2"> Service </mat-option>
+            <mat-option value="3"> Assets </mat-option>
+          </mat-select>
+          <mat-error *ngIf="ItemTypeControlRequired"
+            >Item Type is required.</mat-error
+          >
+        </mat-form-field>
       </div>
       <div fxFlex="25%" fxFlex.lt-sm="100" class="matero-col">
         <mat-form-field appearance="legacy" color="primary">
