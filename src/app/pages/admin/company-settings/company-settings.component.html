@@ -12,6 +12,59 @@
     <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
       <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
         <mat-form-field appearance="legacy" color="primary">
+          <mat-label>God Heading</mat-label>
+          <input
+            matInput
+            formControlName="GodHeading"
+            type="text"
+            placeholder="God Heading"
+            maxlength="25"
+            [readonly]="!isEditMode"
+          />
+          <mat-error *ngIf="GodHeadingControlRequired"
+            >Terms And Conditions is required.</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Jurisdiction</mat-label>
+          <input
+            matInput
+            formControlName="Jurisdiction"
+            type="text"
+            placeholder="Jurisdiction"
+            maxlength="50"
+            [readonly]="!isEditMode"
+          />
+          <mat-error *ngIf="JurisdictionControlRequired"
+            >Terms And Conditions is required.</mat-error
+          >
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="100%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Terms And Conditions</mat-label>
+          <textarea
+            matInput
+            formControlName="TermsConditions"
+            type="text"
+            placeholder="Terms And Conditions"
+            maxlength="500"
+            rows="3"
+            [readonly]="!isEditMode"
+          ></textarea>
+          <mat-error *ngIf="TermsConditionsControlRequired"
+            >Terms And Conditions is required.</mat-error
+          >
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
           <mat-label>Other Add Input Posting Accounts</mat-label>
           <mat-select
             formControlName="OtherAddInputPostingAc"
@@ -291,7 +344,7 @@
             formControlName="GSTLoginID"
             type="text"
             placeholder="GST API User Name"
-            maxlength="25"            
+            maxlength="25"
             [readonly]="!isEditMode"
           />
         </mat-form-field>
@@ -304,7 +357,7 @@
             formControlName="GSTLoginPassword"
             type="password"
             placeholder="GST API User Password"
-            maxlength="50"            
+            maxlength="50"
             [readonly]="!isEditMode"
           />
         </mat-form-field>
@@ -317,7 +370,7 @@
             formControlName="EIAspUserId"
             type="text"
             placeholder="Taxpro ASP ID"
-            maxlength="25"            
+            maxlength="25"
             [readonly]="!isEditMode"
           />
         </mat-form-field>
@@ -330,7 +383,7 @@
             formControlName="EIAspPassword"
             type="password"
             placeholder="Taxpro ASP Password"
-            maxlength="50"            
+            maxlength="50"
             [readonly]="!isEditMode"
           />
         </mat-form-field>

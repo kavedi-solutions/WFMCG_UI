@@ -1,5 +1,8 @@
 export interface CompanySettingResponse {
   companyID: string;  
+  godHeading: string;
+  jurisdiction: string;
+  termsConditions: string;  
   discPostingAccount: number;
   roundingOffPostingAccount: number;
   schemePostingAccount: number;

@@ -1,4 +1,7 @@
 export interface CompanySettingPutRequest {
+  godHeading: string;
+  jurisdiction: string;
+  termsConditions: string;
   discPostingAccount: number;
   roundingOffPostingAccount: number;
   schemePostingAccount: number;

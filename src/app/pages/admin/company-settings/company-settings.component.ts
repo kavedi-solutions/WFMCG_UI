@@ -25,6 +25,9 @@ export class CompanySettingsComponent implements OnInit {
   accountsDropDown: accountsDropDownResponse[] = [];
 
   settingsForm = this.fb.group({
+    GodHeading: ['', [Validators.required]],
+    Jurisdiction: ['', [Validators.required]],
+    TermsConditions: ['', [Validators.required]],
     DiscPostingAccount: ['', [Validators.required]],
     RoundingOffPostingAccount: ['', [Validators.required]],
     SchemePostingAccount: ['', [Validators.required]],
@@ -98,6 +101,9 @@ export class CompanySettingsComponent implements OnInit {
     this.settingsService.GetCompanySettingsbyID().subscribe((response) => {
       this.editsetting = response;
       this.settingsForm.patchValue({
+        GodHeading: this.editsetting?.godHeading,
+        Jurisdiction: this.editsetting?.jurisdiction,
+        TermsConditions: this.editsetting?.termsConditions,
         DiscPostingAccount: this.editsetting?.discPostingAccount.toString(),
         RoundingOffPostingAccount:
           this.editsetting?.roundingOffPostingAccount.toString(),
@@ -134,6 +140,9 @@ export class CompanySettingsComponent implements OnInit {
 
   UpdateCompanySettings(settingsForm: FormGroup) {
     this.settingPutRequest = {
+      godHeading: settingsForm.value.GodHeading,
+      jurisdiction: settingsForm.value.Jurisdiction,
+      termsConditions: settingsForm.value.TermsConditions,
       discPostingAccount: settingsForm.value.DiscPostingAccount,
       roundingOffPostingAccount: settingsForm.value.RoundingOffPostingAccount,
       schemePostingAccount: settingsForm.value.SchemePostingAccount,
@@ -159,6 +168,39 @@ export class CompanySettingsComponent implements OnInit {
   }
 
   //Controls
+
+  get GodHeadingControl() {
+    return this.settingsForm.get('GodHeading') as FormControl;
+  }
+
+  get GodHeadingControlRequired() {
+    return (
+      this.GodHeadingControl.hasError('required') &&
+      this.GodHeadingControl.touched
+    );
+  }
+
+  get JurisdictionControl() {
+    return this.settingsForm.get('Jurisdiction') as FormControl;
+  }
+
+  get JurisdictionControlRequired() {
+    return (
+      this.JurisdictionControl.hasError('required') &&
+      this.JurisdictionControl.touched
+    );
+  }
+
+  get TermsConditionsControl() {
+    return this.settingsForm.get('TermsConditions') as FormControl;
+  }
+
+  get TermsConditionsControlRequired() {
+    return (
+      this.TermsConditionsControl.hasError('required') &&
+      this.TermsConditionsControl.touched
+    );
+  }
 
   get DiscPostingAccountControl() {
     return this.settingsForm.get('DiscPostingAccount') as FormControl;
@@ -272,13 +314,15 @@ export class CompanySettingsComponent implements OnInit {
 
   get SpoiledReturnDaysControlmin() {
     return (
-      this.SpoiledReturnDaysControl.hasError('min') && this.SpoiledReturnDaysControl.touched
+      this.SpoiledReturnDaysControl.hasError('min') &&
+      this.SpoiledReturnDaysControl.touched
     );
   }
 
   get SpoiledReturnDaysControlmax() {
     return (
-      this.SpoiledReturnDaysControl.hasError('max') && this.SpoiledReturnDaysControl.touched
+      this.SpoiledReturnDaysControl.hasError('max') &&
+      this.SpoiledReturnDaysControl.touched
     );
   }
 
@@ -302,13 +346,15 @@ export class CompanySettingsComponent implements OnInit {
 
   get GoodsReturnDaysControlmin() {
     return (
-      this.GoodsReturnDaysControl.hasError('min') && this.GoodsReturnDaysControl.touched
+      this.GoodsReturnDaysControl.hasError('min') &&
+      this.GoodsReturnDaysControl.touched
     );
   }
 
   get GoodsReturnDaysControlmax() {
     return (
-      this.GoodsReturnDaysControl.hasError('max') && this.GoodsReturnDaysControl.touched
+      this.GoodsReturnDaysControl.hasError('max') &&
+      this.GoodsReturnDaysControl.touched
     );
   }
 
