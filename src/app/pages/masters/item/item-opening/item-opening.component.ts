@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2, ViewChild } from '@angular/core';
 import {
   AccessRights,
   OpeningItemPutRequest,
@@ -21,6 +21,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { MtxGridColumn } from 'src/app/extensions/grid/grid.interface';
+import { map, Observable, startWith } from 'rxjs';
+import { MatAutocomplete } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-item-opening',
@@ -28,10 +30,13 @@ import { MtxGridColumn } from 'src/app/extensions/grid/grid.interface';
   styleUrls: ['./item-opening.component.scss'],
 })
 export class ItemOpeningComponent implements OnInit {
+  @ViewChild('AutoItemID') AutoItemID?: MatAutocomplete;
+
   PageTitle: string = 'Opening Stock';
   accRights?: AccessRights;
   columns: MtxGridColumn[] = [];
   itemsDropDown: itemsDropDownResponse[] = [];
+  filtereditemsDropDown?: Observable<itemsDropDownResponse[]>;
   returnTypeDropDown: returnTypeResponse[] = [];
   balanceListData: ItemOpening[] = [];
   itemData?: ItemOpening;
@@ -57,7 +62,8 @@ export class ItemOpeningComponent implements OnInit {
     private itemService: fromService.ItemService,
     private commonService: fromService.CommonService,
     private route: ActivatedRoute,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private renderer: Renderer2
   ) {
     this.currentItemID = 0;
     this.accRights = this.route.snapshot.data['userRights'];
@@ -71,7 +77,43 @@ export class ItemOpeningComponent implements OnInit {
     this.FillReturnTypeDropDown();
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.filtereditemsDropDown = this.ItemIDControl.valueChanges.pipe(
+      startWith(''),
+      map((value) => {
+        const name = typeof value === 'string' ? value : value?.item_Name;
+        return name
+          ? this._filterItems(name as string)
+          : this.itemsDropDown.slice();
+      })
+    );
+  }
+
+  private _filterItems(name: string): itemsDropDownResponse[] {
+    const filterValue = name.toLowerCase();
+
+    return this.itemsDropDown.filter((option) =>
+      option.item_Name.toLowerCase().includes(filterValue)
+    );
+  }
+
+  OnItemblur() {
+    if (this.AutoItemID?.isOpen == false) {
+      if (this.ItemIDControl.value == '') {
+        this.renderer.selectRootElement('#ItemName', true).focus();
+      } else if (this.ItemIDControl.value != '') {
+        this.renderer.selectRootElement('#ReturnTypeID', true).focus();
+      }
+    }
+  }
+
+  SelectedItem(event: any) {
+    this.getItemDetails(Number(event.option.value.item_Id));
+  }
+
+  DisplayItemName(items: itemsDropDownResponse) {
+    return items && items.item_Name ? items.item_Name : '';
+  }
 
   get ItemIDControl() {
     return this.balanceForm.get('ItemID') as FormControl;
@@ -180,6 +222,7 @@ export class ItemOpeningComponent implements OnInit {
     };
     this.itemService.ItemDropDown(filters).subscribe((response) => {
       this.itemsDropDown = response;
+      this.ItemIDControl.setValue('');
     });
   }
 
@@ -196,11 +239,12 @@ export class ItemOpeningComponent implements OnInit {
         this.ReturnTypeIDControl.value == 1 ? 0 : this.OpeningControl.value,
     };
     this.itemService
-      .updateItemOpening(balanceForm.value.ItemID, this.balancePutRequest)
+      .updateItemOpening(balanceForm.value.ItemID.item_Id, this.balancePutRequest)
       .subscribe((response) => {
         this.ResetForms(balanceForm);
         this.GetItemOpening();
       });
+      this.renderer.selectRootElement('#ItemName', true).focus();
   }
 
   ResetForms(balanceForm: FormGroup) {
@@ -212,6 +256,7 @@ export class ItemOpeningComponent implements OnInit {
       control.setErrors(null);
       control.setValue('');
     });
+    this.renderer.selectRootElement('#ItemName', true).focus();
   }
 
   CalculateOpening() {
@@ -252,16 +297,21 @@ export class ItemOpeningComponent implements OnInit {
     this.itemData = this.balanceListData.find(
       (a) => a.itemID == ItemID && a.returnTypeID == ReturnTypeId
     );
+    let SeletedItem: itemsDropDownResponse;
+    SeletedItem = this.itemsDropDown.filter(
+      (a) => a.item_Id == this.itemData?.itemID.toString()
+    )[0];
     if (this.itemData) {
       this.balanceForm.patchValue({
-        ItemID: ItemID.toString(),
         AccountTradeTypeName: this.itemData!.accountTradeTypeName,
         Packing: this.itemData!.packing.toString(),
         ReturnTypeID: this.itemData!.returnTypeID.toString(),
         OpeningCrt: this.itemData!.openingCrt.toString(),
         OpeningPcs: this.itemData!.openingPcs.toString(),
       });
+      this.ItemIDControl.setValue(SeletedItem);
       this.CalculateOpening();
+      this.renderer.selectRootElement('#ItemName', true).focus();
     }
   }
 
@@ -269,7 +319,6 @@ export class ItemOpeningComponent implements OnInit {
     this.currentItemID = ItemID;
     let Item = this.itemsDropDown.find((a) => Number(a.item_Id) == ItemID);
     this.balanceForm.patchValue({
-      ItemID: ItemID.toString(),
       AccountTradeTypeName: Item!.accountTradeTypeName,
       Packing: Item!.packing.toString(),
     });

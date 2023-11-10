@@ -654,7 +654,6 @@ export class ItemAddEditComponent implements OnInit {
   }
 
   ItemTypeSelectionChange(event: any) {
-    debugger;
     if (event == '1') this.FillAccountTradeTypeDropDown('2');
     else this.FillAccountTradeTypeDropDown('1');
   }
