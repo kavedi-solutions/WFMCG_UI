@@ -243,8 +243,9 @@ export class ItemOpeningComponent implements OnInit {
       .subscribe((response) => {
         this.ResetForms(balanceForm);
         this.GetItemOpening();
+        this.renderer.selectRootElement('#ItemName', true).focus();
       });
-      this.renderer.selectRootElement('#ItemName', true).focus();
+
   }
 
   ResetForms(balanceForm: FormGroup) {
@@ -276,6 +277,7 @@ export class ItemOpeningComponent implements OnInit {
   }
 
   getOpeningDetail(ItemID: number, ReturnTypeId: number) {
+    debugger;
     this.itemData = this.balanceListData.find(
       (a) => a.itemID == ItemID && a.returnTypeID == ReturnTypeId
     );
