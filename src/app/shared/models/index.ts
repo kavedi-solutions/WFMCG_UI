@@ -99,10 +99,12 @@ export * from './transaction/sales-return/salesreturnPutRequest.model';
 export * from './transaction/sales-return/salesreturnResponse.model';
 export * from './transaction/sales-return/salesreturnitemdetail.model';
 
+export * from './transaction/credit-note/creditnoteitemdetail.model';
 export * from './transaction/credit-note/creditnotePostRequest.model';
 export * from './transaction/credit-note/creditnotePutRequest.model';
 export * from './transaction/credit-note/creditnoteResponse.model';
 
+export * from './transaction/debit-note/debitnoteitemdetail.model';
 export * from './transaction/debit-note/debitnotePostRequest.model';
 export * from './transaction/debit-note/debitnotePutRequest.model';
 export * from './transaction/debit-note/debitnoteResponse.model';

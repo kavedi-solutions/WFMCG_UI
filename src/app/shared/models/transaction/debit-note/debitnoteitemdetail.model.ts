@@ -1,8 +1,17 @@
-export interface DebitNoteItemDetail_1 {
+export interface DebitNoteItemDetail {
   AutoID: number;
   SrNo: number;
-  Description: string;
+  ItemID: number;
+  ItemName: string;
   Amount: number;
+  GSTTaxID: number;
+  GSTTaxName?: string;
+  CGSTAmount: number;
+  SGSTAmount: number;
+  IGSTAmount: number;
+  CessAmount: number;
+  TotalTaxAmount: number;
+  NetAmount: number;
   IsAdd: boolean;
   IsModified: boolean;
   IsDeleted: boolean;

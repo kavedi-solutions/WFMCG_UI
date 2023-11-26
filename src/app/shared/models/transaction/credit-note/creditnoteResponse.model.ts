@@ -31,11 +31,37 @@ export interface CreditNoteResponse {
   refNo: string | null;
   billDate: string;
   accountID: number;
-  description: string;
-  amount: number;
+  accountTradeTypeID: number;
+  totalAmount: number;
+  totalCGSTAmount: number;
+  totalSGSTAmount: number;
+  totalIGSTAmount: number;
+  totalCessAmount: number;
+  totalTaxAmount: number;
+  totalNetAmount: number;
   roundOffAmount: number;
-  netAmount: number;    
+  netAmount: number;
+  details: CreditNoteItemResponse[] | null;
   isActive: boolean;
   createdDate: string;
   modifiedDate: string;
+}
+
+export interface CreditNoteItemResponse {
+  autoID: number;
+  parentAutoID: number;
+  srNo: number;
+  itemID: number;
+  itemName: string;
+  accountTradeTypeID: number;
+  rate: number;
+  amount: number;
+  gstTaxID: number;
+  gstTaxName: string;
+  cgstAmount: number;
+  sgstAmount: number;
+  igstAmount: number;
+  cessAmount: number;
+  totalTaxAmount: number;
+  netAmount: number;
 }

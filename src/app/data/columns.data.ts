@@ -2845,6 +2845,141 @@ export function GetCNDNColumns() {
   return CNDNColumns;
 }
 
+export function GetCNDNItemDetailColumns() {
+  let PurchaseItemColumns: MtxGridColumn[] = [
+    {
+      header: 'Auto ID',
+      field: 'AutoID',
+      hide: true,
+    },
+    {
+      header: 'Sr#',
+      field: 'SrNo',
+      sortable: false,
+      disabled: true,
+      minWidth: 50,
+      width: '50px',
+      pinned: 'left',
+    },
+    {
+      header: 'ItemID',
+      field: 'ItemID',
+      hide: true,
+    },
+    {
+      header: 'Item Name',
+      field: 'ItemName',
+      sortable: false,
+      disabled: true,
+      minWidth: 250,
+      width: '250px',
+      pinned: 'left',
+    },
+    {
+      header: 'Amount',
+      field: 'Amount',
+      sortable: false,
+      disabled: true,
+      minWidth: 130,
+      width: '130px',
+      type: 'number',
+      typeParameter: { digitsInfo: '0.2-2', locale: 'en-IN' },
+      class: 'right-mat-header-cell right-mat-cell',
+    },    
+    {
+      header: 'GSTTaxID',
+      field: 'GSTTaxID',
+      hide: true,
+    },
+    {
+      header: 'GST Tax Name',
+      field: 'GSTTaxName',
+      sortable: false,
+      disabled: true,
+      minWidth: 200,
+      width: '200px',
+    },
+    {
+      header: 'CGST Amount',
+      field: 'CGSTAmount',
+      sortable: false,
+      disabled: true,
+      minWidth: 130,
+      width: '130px',
+      type: 'number',
+      typeParameter: { digitsInfo: '0.2-2', locale: 'en-IN' },
+      class: 'right-mat-header-cell right-mat-cell',
+    },
+    {
+      header: 'SGST Amount',
+      field: 'SGSTAmount',
+      sortable: false,
+      disabled: true,
+      minWidth: 130,
+      width: '130px',
+      type: 'number',
+      typeParameter: { digitsInfo: '0.2-2', locale: 'en-IN' },
+      class: 'right-mat-header-cell right-mat-cell',
+    },
+    {
+      header: 'IGST Amount',
+      field: 'IGSTAmount',
+      sortable: false,
+      disabled: true,
+      minWidth: 130,
+      width: '130px',
+      type: 'number',
+      typeParameter: { digitsInfo: '0.2-2', locale: 'en-IN' },
+      class: 'right-mat-header-cell right-mat-cell',
+    },
+    {
+      header: 'Cess Amount',
+      field: 'CessAmount',
+      sortable: false,
+      disabled: true,
+      minWidth: 130,
+      width: '130px',
+      type: 'number',
+      typeParameter: { digitsInfo: '0.2-2', locale: 'en-IN' },
+      class: 'right-mat-header-cell right-mat-cell',
+    },
+    {
+      header: 'TotalTaxAmount',
+      field: 'TotalTaxAmount',
+      hide: true,
+    },
+    {
+      header: 'Net Amount',
+      field: 'NetAmount',
+      sortable: false,
+      disabled: true,
+      minWidth: 130,
+      width: '130px',
+      type: 'number',
+      typeParameter: { digitsInfo: '0.2-2', locale: 'en-IN' },
+      class: 'right-mat-header-cell right-mat-cell',
+    },
+    {
+      header: 'IsAdd',
+      field: 'IsAdd',
+      hide: true,
+    },
+    {
+      header: 'IsModified',
+      field: 'IsModified',
+      hide: true,
+    },
+    {
+      header: 'IsDeleted',
+      field: 'IsDeleted',
+      hide: true,
+    },
+  ];
+
+  return PurchaseItemColumns;
+}
+
+
 export function GetVRPCColumns() {
   let VRPCColumns: MtxGridColumn[] = [
     {
