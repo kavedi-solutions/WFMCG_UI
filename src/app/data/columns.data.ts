@@ -2885,7 +2885,7 @@ export function GetCNDNItemDetailColumns() {
       type: 'number',
       typeParameter: { digitsInfo: '0.2-2', locale: 'en-IN' },
       class: 'right-mat-header-cell right-mat-cell',
-    },    
+    },
     {
       header: 'GSTTaxID',
       field: 'GSTTaxID',

@@ -204,7 +204,7 @@ export class OpeningBalanceComponent implements OnInit {
   edit(value: any) {
     this.AccountData = this.balanceListData.find(
       (a) => a.accountID == Number(value.accountID)
-    );    
+    );
 
     let SeletedAccount: accountsDropDownResponse;
     SeletedAccount = this.accountsDropDown.filter(
@@ -220,7 +220,7 @@ export class OpeningBalanceComponent implements OnInit {
       Balance: balance,
       BalanceType: balanceType,
     });
-    this.accountIDControl.setValue(SeletedAccount);      
+    this.accountIDControl.setValue(SeletedAccount);
       this.renderer.selectRootElement('#AccountName', true).focus();
   }
 

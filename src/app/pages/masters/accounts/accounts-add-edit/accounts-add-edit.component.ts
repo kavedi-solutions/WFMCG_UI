@@ -94,14 +94,6 @@ export class AccountsAddEditComponent implements OnInit {
     PinCode: ['', [Validators.pattern(/^([0-9])+$/i)]],
     StateID: [''],
     AreaID: [''],
-    GSTNo: [
-      '',
-      [
-        Validators.pattern(
-          /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/i
-        ),
-      ],
-    ],
     PAN: ['', [Validators.pattern(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/i)]],
     ContactPerson: ['', [Validators.pattern(/^([\s]*[a-zA-Z0-9]+[\s]*)+$/i)]],
     ContactNo: ['', [Validators.pattern(/^([0-9,-/+])+$/i)]],
@@ -328,14 +320,6 @@ export class AccountsAddEditComponent implements OnInit {
     );
   }
 
-  get GSTNoControl() {
-    return this.accountForm.get('GSTNo') as FormControl;
-  }
-
-  get GSTNoControlInvalid() {
-    return this.GSTNoControl.hasError('pattern') && this.GSTNoControl.touched;
-  }
-
   get PANControl() {
     return this.accountForm.get('PAN') as FormControl;
   }
@@ -499,7 +483,6 @@ export class AccountsAddEditComponent implements OnInit {
           PinCode: this.editAccount!.pinCode,
           StateID: this.editAccount!.stateID.toString(),
           AreaID: this.editAccount!.areaID.toString(),
-          GSTNo: this.editAccount!.gstNo,
           PAN: this.editAccount!.pan,
           ContactPerson: this.editAccount!.contactPerson,
           ContactNo: this.editAccount!.contactNo,
@@ -533,7 +516,6 @@ export class AccountsAddEditComponent implements OnInit {
       pinCode: accountForm.value.PinCode,
       stateID: Number(accountForm.value.StateID),
       areaID: Number(accountForm.value.AreaID),
-      gSTNo: accountForm.value.GSTNo,
       pAN: accountForm.value.PAN,
       contactPerson: accountForm.value.ContactPerson,
       contactNo: accountForm.value.ContactNo,
@@ -563,7 +545,6 @@ export class AccountsAddEditComponent implements OnInit {
       pinCode: accountForm.value.PinCode,
       stateID: Number(accountForm.value.StateID),
       areaID: Number(accountForm.value.AreaID),
-      gSTNo: accountForm.value.GSTNo,
       pAN: accountForm.value.PAN,
       contactPerson: accountForm.value.ContactPerson,
       contactNo: accountForm.value.ContactNo,
@@ -736,25 +717,5 @@ export class AccountsAddEditComponent implements OnInit {
         this.salesTypeIDControl.setValue('1');
         break;
     }
-  }
-
-  VerifyGSTNo() {
-    let GSTNo: string = this.GSTNoControl.value;
-    let DataResponse: GstDetails;
-    this.einvoiceService.GetGSTDetail(GSTNo).subscribe((response) => {
-      DataResponse = response;
-
-      this.dialogRef = this.dialog.open(GstDetailsComponent, {
-        minWidth: '60vw',
-        minHeight: '60vh',
-        maxWidth: '60vw',
-        maxHeight: '60vh',
-        panelClass: 'dialog-container',
-        autoFocus: true,
-      });
-
-      this.dialogRef.componentInstance.DataResponse = DataResponse;
-      this.dialogRef.afterClosed().subscribe((result: any) => {});
-    });
   }
 }

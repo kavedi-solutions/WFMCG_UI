@@ -1,6 +1,6 @@
 export interface AccountsPutRequest {
-  accountName: string | null;
-  legalName: string | null;
+  accountName: string;
+  legalName: string;
   groupID: number;
   balanceTransferToID: number;
   accountTypeID: number;
@@ -8,16 +8,15 @@ export interface AccountsPutRequest {
   salesTypeID: number;
   accountTradeTypeID: number;
   headAccountID: number;
-  bookInit: string | null;
-  address: string | null;
-  cityName: string | null;
-  pinCode: string | null;
+  bookInit: string;
+  address: string;
+  cityName: string;
+  pinCode: string;
   stateID: number;
   areaID: number;
-  gSTNo: string | null;
-  pAN: string | null;
-  contactPerson: string | null;
-  contactNo: string | null;
+  pAN: string;
+  contactPerson: string;
+  contactNo: string;
   isActive: boolean;
   ModifiedBy?: string;
 }

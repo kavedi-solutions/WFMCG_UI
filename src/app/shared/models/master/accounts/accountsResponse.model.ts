@@ -8,8 +8,8 @@ export interface AccountsResponse {
 export interface Accounts {
   companyID: string;
   accountID: number;
-  accountName: string | null;
-  legalName: string | null;
+  accountName: string;
+  legalName: string;
   groupID: number;
   balanceTransferToID: number;
   accountTypeID: number;
@@ -17,16 +17,15 @@ export interface Accounts {
   salesTypeID: number;
   accountTradeTypeID: number;
   headAccountID: number;
-  bookInit: string | null;
-  address: string | null;
-  cityName: string | null;
-  pinCode: string | null;
+  bookInit: string;
+  address: string;
+  cityName: string;
+  pinCode: string;
   stateID: number;
   areaID: number;
-  gstNo: string | null;
-  pan: string | null;
-  contactPerson: string | null;
-  contactNo: string | null;
+  pan: string;
+  contactPerson: string;
+  contactNo: string;
   isActive: boolean;
   createdBy: string;
   createdDate: string;
@@ -37,7 +36,7 @@ export interface Accounts {
 export interface AccountBalanceResponse {
   companyID: string;
   accountID: number;
-  accountName: string | null;
+  accountName: string;
   creditBalance: number;
   debitBalance: number;
 }

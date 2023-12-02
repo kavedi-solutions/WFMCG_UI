@@ -14,7 +14,6 @@ export interface AccountsPostRequest {
   pinCode?: string;
   stateID: number;
   areaID: number;
-  gSTNo?: string;
   pAN?: string;
   contactPerson?: string;
   contactNo?: string;
