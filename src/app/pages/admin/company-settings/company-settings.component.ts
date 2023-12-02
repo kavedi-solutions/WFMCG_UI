@@ -64,6 +64,7 @@ export class CompanySettingsComponent implements OnInit {
         Validators.pattern(/^([1-9])+$/i),
       ],
     ],
+    EIGSPName: [''],
     GSTLoginID: [''],
     GSTLoginPassword: [''],
     EIAspUserId: [''],
@@ -125,6 +126,7 @@ export class CompanySettingsComponent implements OnInit {
         GSTLoginPassword: this.editsetting?.gstLoginPassword,
         EIAspUserId: this.editsetting?.eiAspUserId,
         EIAspPassword: this.editsetting?.eiAspPassword,
+        EIGSPName: this.editsetting?.eigspName,
       });
     });
   }
@@ -159,6 +161,7 @@ export class CompanySettingsComponent implements OnInit {
       gstLoginPassword: settingsForm.value.GSTLoginPassword,
       eiAspUserId: settingsForm.value.EIAspUserId,
       eiAspPassword: settingsForm.value.EIAspPassword,
+      eigspName: settingsForm.value.EIGSPName,
     };
     this.settingsService
       .updateCompanySettings(this.settingPutRequest!)
@@ -402,5 +405,9 @@ export class CompanySettingsComponent implements OnInit {
 
   get EIAspPasswordControl() {
     return this.settingsForm.get('EIAspPassword') as FormControl;
+  }
+
+  get EIGSPNameControl() {
+    return this.settingsForm.get('EIGSPName') as FormControl;
   }
 }

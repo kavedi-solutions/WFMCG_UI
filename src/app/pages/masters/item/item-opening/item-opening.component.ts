@@ -2,7 +2,6 @@ import { Component, OnInit, Renderer2, ViewChild } from '@angular/core';
 import {
   AccessRights,
   OpeningItemPutRequest,
-  ItemOpeningResponse,
   itemsDropDownResponse,
   PaginationHeaders,
   FilterValues,
@@ -277,7 +276,6 @@ export class ItemOpeningComponent implements OnInit {
   }
 
   getOpeningDetail(ItemID: number, ReturnTypeId: number) {
-    debugger;
     this.itemData = this.balanceListData.find(
       (a) => a.itemID == ItemID && a.returnTypeID == ReturnTypeId
     );

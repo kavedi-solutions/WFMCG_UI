@@ -28,14 +28,33 @@
         <div fxFlex="60%" fxFlex.lt-sm="100" class="matero-col">
           <mat-form-field appearance="legacy" color="primary">
             <mat-label>Accounts</mat-label>
-            <mat-select formControlName="AccountID" required>
+            <input
+              matInput
+              id="AccountName"
+              [matAutocomplete]="AutoAccountID"
+              formControlName="AccountID"
+              (blur)="OnAccountblur()"
+            />
+            <mat-autocomplete
+              #AutoAccountID="matAutocomplete"
+              [displayWith]="DisplayAccountName"
+              (optionSelected)="SelectedAccount($event)"
+            >
+              <mat-option
+                *ngFor="let add of filteredaccountsDropDown | async"
+                [value]="add"
+              >
+                {{ add.account_Name }}
+              </mat-option>
+            </mat-autocomplete>
+            <!-- <mat-select formControlName="AccountID" required>
               <mat-option
                 *ngFor="let sbdd of accountsDropDown"
                 [value]="sbdd.account_Id"
               >
                 {{ sbdd.account_Name }}
               </mat-option>
-            </mat-select>
+            </mat-select> -->
             <mat-error *ngIf="accountIDControlRequired"
               >Account is required.</mat-error
             >

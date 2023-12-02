@@ -18,4 +18,5 @@ export interface CompanySettingPutRequest {
   gstLoginPassword: string;
   eiAspUserId: string;
   eiAspPassword: string;
+  eigspName: string;
 }

@@ -1,8 +1,8 @@
 export interface CompanySettingResponse {
-  companyID: string;  
+  companyID: string;
   godHeading: string;
   jurisdiction: string;
-  termsConditions: string;  
+  termsConditions: string;
   discPostingAccount: number;
   roundingOffPostingAccount: number;
   schemePostingAccount: number;
@@ -18,5 +18,6 @@ export interface CompanySettingResponse {
   gstLoginID: string;
   gstLoginPassword: string;
   eiAspUserId: string;
-  eiAspPassword: string; 
+  eiAspPassword: string;
+  eigspName: string;
 }
