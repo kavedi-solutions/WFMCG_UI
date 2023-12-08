@@ -9,9 +9,7 @@ export interface GstDetails {
   AddrLoc: string | null;
   StateCode: number;
   AddrPncd: number;
-  TxpType: string | null;
   Status: string | null;
-  BlkStatus: string | null;
   DtReg: string | null;
   DtDReg: string | null;
 }

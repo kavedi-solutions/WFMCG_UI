@@ -31,6 +31,16 @@ export interface Accounts {
   createdDate: string;
   modifiedBy: string;
   modifiedDate: string;
+  gstDetails: AccountGSTResponse[] | null;
+}
+
+export interface AccountGSTResponse {
+  autoID: number;
+  accountID: number;
+  gstNo: string;
+  status: string;
+  dtReg: string;
+  dtDReg: string;
 }
 
 export interface AccountBalanceResponse {
@@ -40,6 +50,8 @@ export interface AccountBalanceResponse {
   creditBalance: number;
   debitBalance: number;
 }
+
+
 
 export interface CurrentAccountBalanceResponse {
   companyID: string;

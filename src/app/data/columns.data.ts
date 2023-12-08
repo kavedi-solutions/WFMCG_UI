@@ -375,6 +375,55 @@ export function GetAccountColumns() {
   return AccountsColumns;
 }
 
+export function GetAccountGSTColumns() {
+  let AccountsColumns: MtxGridColumn[] = [
+    {
+      header: 'AccountID',
+      field: 'accountID',
+      hide: true,
+    },
+    {
+      header: 'AutoID',
+      field: 'autoID',
+      hide: true,
+    },    
+    {
+      header: 'GST No',
+      field: 'gstNo',
+      sortable: false,
+      disabled: false,
+      minWidth: 200,
+      width: '200px',
+    },
+    {
+      header: 'Status',
+      field: 'status',
+      sortable: false,
+      disabled: false,
+      minWidth: 150,
+      width: '150px',
+    },
+    {
+      header: 'Registration Date',
+      field: 'dtReg',
+      sortable: false,
+      disabled: false,
+      minWidth: 150,
+      width: '150px',
+    },
+    {
+      header: 'Cancel Date',
+      field: 'dtDReg',
+      sortable: false,
+      disabled: false,
+      minWidth: 150,
+      width: '150px',
+    }
+  ];
+
+  return AccountsColumns;
+}
+
 export function GetAccountBalanceColumns() {
   let BalanceColumns: MtxGridColumn[] = [
     {

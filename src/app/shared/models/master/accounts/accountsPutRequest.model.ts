@@ -19,6 +19,17 @@ export interface AccountsPutRequest {
   contactNo: string;
   isActive: boolean;
   ModifiedBy?: string;
+  gstDetails: AccountGSTPutRequest[] | null;
+}
+
+export interface AccountGSTPutRequest {
+  autoID: number;
+  gstNo: string;
+  status: string;
+  dtReg: string;
+  dtDReg: string;
+  isAdd: boolean;
+  isModified: boolean;
 }
 
 export interface AccountBalancePutRequest {

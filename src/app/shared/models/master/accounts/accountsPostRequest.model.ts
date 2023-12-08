@@ -19,4 +19,14 @@ export interface AccountsPostRequest {
   contactNo?: string;
   isActive: boolean;
   createdBy?: string;
+  gstDetails: AccountGSTPostRequest[] | null;
+}
+
+export interface AccountGSTPostRequest {
+  gstNo: string;
+  status: string;
+  dtReg: string;
+  dtDReg: string;
+  isAdd: boolean;
+  isModified: boolean;
 }

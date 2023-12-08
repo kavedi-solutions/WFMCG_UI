@@ -7,8 +7,12 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import * as defaultData from '../../../../data/index';
 import { Subject } from 'rxjs';
 import {
+  AccountGSTDetails,
+  AccountGSTPostRequest,
+  AccountGSTPutRequest,
   Accounts,
   accountsDropDownResponse,
   AccountsPostRequest,
@@ -18,7 +22,6 @@ import {
   areaDownDownResponse,
   balanceTransferToResponse,
   groupDownDownResponse,
-  GstDetails,
   salesTypeResponse,
   stateDownDownResponse,
   TransactionTypeMaster,
@@ -27,6 +30,7 @@ import {
 import * as fromService from '../../../../shared/index';
 import { tap, debounceTime } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
+import { MtxGridColumn } from 'src/app/extensions/grid/grid.interface';
 import { GstDetailsComponent } from 'src/app/pages/dialogs';
 
 @Component({
@@ -58,6 +62,10 @@ export class AccountsAddEditComponent implements OnInit {
   stateDropDown: stateDownDownResponse[] = [];
   areaDropDown: areaDownDownResponse[] = [];
   salesBookDropDown: accountsDropDownResponse[] = [];
+
+  accountGSTDetailsList: AccountGSTDetails[] = [];
+  accountGSTDetailsListData: AccountGSTDetails[] = [];
+  columns: MtxGridColumn[] = [];
 
   disableBookType: boolean = true;
   disableSaleBookType: boolean = true;
@@ -97,7 +105,6 @@ export class AccountsAddEditComponent implements OnInit {
     PAN: ['', [Validators.pattern(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/i)]],
     ContactPerson: ['', [Validators.pattern(/^([\s]*[a-zA-Z0-9]+[\s]*)+$/i)]],
     ContactNo: ['', [Validators.pattern(/^([0-9,-/+])+$/i)]],
-
     isActive: [true],
   });
 
@@ -108,7 +115,6 @@ export class AccountsAddEditComponent implements OnInit {
     private commonService: fromService.CommonService,
     private groupService: fromService.GroupService,
     private areaService: fromService.AreaService,
-    private einvoiceService: fromService.EInvoiceService,
     private fb: FormBuilder,
     private dialog: MatDialog
   ) {
@@ -120,6 +126,7 @@ export class AccountsAddEditComponent implements OnInit {
     this.FillAccountTypeDropDown();
     this.FillStateDropDown();
     this.FillAreaDropDown();
+    this.setColumns();
   }
 
   ngOnInit(): void {
@@ -149,6 +156,72 @@ export class AccountsAddEditComponent implements OnInit {
 
     this.BookInitExists.pipe(debounceTime(300)).subscribe(() => {
       this.CheckBookInitExists(this.BookInit);
+    });
+  }
+
+  setColumns() {
+    this.columns = defaultData.GetAccountGSTColumns();
+    this.columns.push({
+      header: 'Action',
+      field: 'action',
+      minWidth: 50,
+      width: '90px',
+      pinned: 'right',
+      type: 'button',
+      buttons: [
+        {
+          type: 'icon',
+          icon: 'edit',
+          tooltip: 'Edit Record',
+          buttontype: 'button',
+          iif: (record) => {
+            if (record.status != 'CNL') return true;
+            else return false;
+          },
+          click: (record) => this.EditGSTDetails(record),
+        },
+      ],
+    });
+  }
+
+  AddGSTDetails() {
+    let obj: AccountGSTDetails = {
+      autoID: 0,
+      gstNo: '',
+      status: '',
+      dtReg: '',
+      dtDReg: '',
+      isAdd: true,
+      isModified: false,
+    };
+    this.OpenGSTDialog(obj, 'New');
+  }
+
+  EditGSTDetails(event: AccountGSTDetails) {
+    this.OpenGSTDialog(event, 'Update');
+  }
+
+  OpenGSTDialog(obj: AccountGSTDetails, Type: string) {
+    this.dialogRef = this.dialog.open(GstDetailsComponent, {
+      minWidth: '60vw',
+      minHeight: '60vh',
+      maxWidth: '60vw',
+      maxHeight: '60vh',
+      panelClass: 'dialog-container',
+      autoFocus: true,
+      data: { objGSTDetails: obj, objType: Type },
+    });
+
+    this.dialogRef.afterClosed().subscribe((result: any) => {
+      if (result.CloseStatus == true) {
+        if (result.RGSTDetails.isAdd == true) {
+          this.accountGSTDetailsList.push(result.RGSTDetails);          
+        } else if (result.RGSTDetails.isModified == true) {
+          let index = this.accountGSTDetailsList.findIndex(a=>a.autoID == result.RGSTDetails.autoID);
+          this.accountGSTDetailsList[index] = result.RGSTDetails;
+        }
+        this.accountGSTDetailsListData = [...this.accountGSTDetailsList];
+      }
     });
   }
 
@@ -395,13 +468,22 @@ export class AccountsAddEditComponent implements OnInit {
       ContactPerson: '',
       ContactNo: '',
       isActive: true,
+      // GSTDetails: {
+      //   GSTNo: '',
+      //   Status: '',
+      //   DtReg: '',
+      //   DtDReg: '',
+      // },
     });
+
     let control: AbstractControl;
     form.markAsUntouched();
     Object.keys(form.controls).forEach((name) => {
       control = form.controls[name];
       control.setErrors(null);
     });
+
+    this.accountGSTDetailsListData = [...this.accountGSTDetailsList];
   }
 
   onAccountNameKeyUp($event: any) {
@@ -488,6 +570,20 @@ export class AccountsAddEditComponent implements OnInit {
           ContactNo: this.editAccount!.contactNo,
           isActive: this.editAccount!.isActive,
         });
+        this.editAccount?.gstDetails?.forEach((element) => {
+          let GSTDetails: AccountGSTDetails = {
+            autoID: element.autoID,
+            gstNo: element.gstNo,
+            status: element.status,
+            dtReg: element.dtReg,
+            dtDReg: element.dtDReg,
+            isAdd: false,
+            isModified: false,
+          };
+          this.accountGSTDetailsList.push(GSTDetails);
+        });
+
+        this.accountGSTDetailsListData = [...this.accountGSTDetailsList];
       });
   }
 
@@ -500,6 +596,20 @@ export class AccountsAddEditComponent implements OnInit {
   }
 
   SaveAccount(accountForm: FormGroup) {
+    let PostRequestDetail: AccountGSTPostRequest[] = [];
+    if (this.accountGSTDetailsList.length > 0) {
+      this.accountGSTDetailsList.forEach((element) => {
+        PostRequestDetail.push({
+          gstNo: element.gstNo,
+          status: element.status,
+          dtReg: element.dtReg,
+          dtDReg: element.dtDReg,
+          isAdd: element.isAdd,
+          isModified: element.isModified,
+        });
+      });
+    }
+
     this.accountPostRequest = {
       accountName: accountForm.value.AccountName,
       legalName: accountForm.value.LegalName,
@@ -520,6 +630,7 @@ export class AccountsAddEditComponent implements OnInit {
       contactPerson: accountForm.value.ContactPerson,
       contactNo: accountForm.value.ContactNo,
       isActive: accountForm.value.isActive,
+      gstDetails: PostRequestDetail,
     };
     this.accountService
       .createAccounts(this.accountPostRequest)
@@ -529,6 +640,21 @@ export class AccountsAddEditComponent implements OnInit {
   }
 
   UpdateAccount(accountForm: FormGroup) {
+    let PutRequestDetail: AccountGSTPutRequest[] = [];
+    if (this.accountGSTDetailsList.length > 0) {
+      this.accountGSTDetailsList.forEach((element) => {
+        PutRequestDetail.push({
+          autoID: element.autoID,
+          gstNo: element.gstNo,
+          status: element.status,
+          dtReg: element.dtReg,
+          dtDReg: element.dtDReg,
+          isAdd: element.isAdd,
+          isModified: element.isModified,
+        });
+      });
+    }
+
     this.accountPutRequest = {
       accountName: accountForm.value.AccountName,
       legalName: accountForm.value.LegalName,
@@ -549,12 +675,21 @@ export class AccountsAddEditComponent implements OnInit {
       contactPerson: accountForm.value.ContactPerson,
       contactNo: accountForm.value.ContactNo,
       isActive: accountForm.value.isActive,
+      gstDetails: PutRequestDetail,
     };
     this.accountService
       .updateAccounts(this.selectedAccountId, this.accountPutRequest!)
       .subscribe((response) => {
         this.BacktoList();
       });
+  }
+
+  DisableAddNewGST() {
+    if (
+      this.accountGSTDetailsListData.filter((a) => a.status == 'ACT').length > 0
+    )
+      return true;
+    else return false;
   }
 
   //Fill DropDown
