@@ -44,6 +44,7 @@ export class LoginPageComponent implements OnInit {
         if (response.isSuccess == true) {
           this.sstorage.clear();
           this.sstorage.set('companyID', response.companyID);
+          this.sstorage.set('CompanyName', response.companyName);
           this.sstorage.set('userID', response.userID);
           this.sstorage.set('userName', response.userName);
           this.sstorage.set('firstName', response.firstName);

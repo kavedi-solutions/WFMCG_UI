@@ -220,7 +220,7 @@ export class BulkPrintComponent implements OnInit {
                 type: 'application/pdf',
               });
               var fileURL = URL.createObjectURL(file);
-  
+
               this.dialog.open(PdfViewerDialogComponent, {
                 data: this.sanitizer.bypassSecurityTrustResourceUrl(fileURL),
                 minWidth: '80vw',
@@ -230,8 +230,8 @@ export class BulkPrintComponent implements OnInit {
                 panelClass: 'dialog-container',
                 autoFocus: true,
               });
-            });        
-          break;        
+            });
+          break;
       case 32:
         this.reportService
           .PrintInvoiceSalesReturn(NoofCopy, InvoiceIDs)
@@ -250,7 +250,7 @@ export class BulkPrintComponent implements OnInit {
               panelClass: 'dialog-container',
               autoFocus: true,
             });
-          });        
+          });
         break;
     }
   }

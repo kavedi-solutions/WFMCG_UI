@@ -139,6 +139,7 @@ export * from './report/financial/outstanding.model';
 export * from './report/financial/accountledger.model';
 export * from './report/financial/purchaseregister.model';
 export * from './report/financial/salesregister.model';
+export * from './report/gst/gstr3b.model';
 
 
 //

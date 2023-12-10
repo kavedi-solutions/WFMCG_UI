@@ -690,6 +690,32 @@ const routes: Routes = [
         ],
       },
       {
+        path: 'gstreports',
+        children: [
+          {
+            path: 'gstr3b',
+            component: CommonPages.Gstr3bComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '501' },
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'gstr1',
+            component: CommonPages.Gstr1SalesComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '502' },
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'gstr2',
+            component: CommonPages.Gstr2PurchaseComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '503' },
+            canActivate: [AuthGuard],
+          },
+        ],
+      },
+      {
         path: 'others',
         children: [
           {

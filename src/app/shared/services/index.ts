@@ -21,6 +21,7 @@ import { ManufactureService } from './master/manufacture.service';
 import { StockService } from './master/stock.service';
 import { TaxService } from './master/tax.service';
 import { FinancialService } from './reports/financial.service';
+import { GstService } from './reports/gst.service';
 import { OthersReportService } from './reports/others.service';
 import { ReportStocksService } from './reports/reportstocks.service';
 import { PurchaseAService } from './transaction/purchase-a.service';
@@ -68,7 +69,8 @@ export const services: any[] = [
   CompanySettingsService,
   ReportStocksService,
   FinancialService,
-  EInvoiceService
+  EInvoiceService,
+  GstService
 ];
 
 export * from './admin/role.service';
@@ -115,5 +117,6 @@ export * from './transaction/vreceipt-b2b.service';
 export * from './reports/others.service';
 export * from './reports/reportstocks.service';
 export * from './reports/financial.service';
+export * from './reports/gst.service';
 
 export * from './einvoice/e-invoice.service';

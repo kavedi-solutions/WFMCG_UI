@@ -8,6 +8,8 @@ import {
 } from '@angular/core';
 //import screenfull from 'screenfull';
 
+import * as fromService from '../../shared/index';
+
 @Component({
   selector: 'app-header',
   host: {
@@ -19,6 +21,12 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent {
+  CompanyName: string = '';
+
+  constructor(private sstorage: fromService.LocalStorageService) {
+    this.CompanyName = this.sstorage.get("CompanyName");
+  }
+
   @Input() showToggle = true;
   @Input() showBranding = false;
 

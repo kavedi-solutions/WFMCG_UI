@@ -1,1 +1,75 @@
-<p>gstr3b works!</p>
+<page-header
+  class="bg-blue-600"
+  [title]="PageTitle"
+  [showBack]="false"
+  [showAdd]="false"
+></page-header>
+
+<form class="form-field-full page-detail" [formGroup]="gstr3bForm">
+  <mat-card>
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <input
+            matInput
+            [matDatepicker]="FromDatePicker"
+            placeholder="From Date"
+            formControlName="FromDate"
+            [min]="FromMinDate"
+            [max]="FromMaxDate"
+            (dateChange)="FromDateChange()"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="FromDatePicker"
+            [tabIndex]="-1"
+            ><mat-icon matDatepickerToggleIcon
+              >keyboard_arrow_down</mat-icon
+            ></mat-datepicker-toggle
+          >
+          <mat-datepicker #FromDatePicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <input
+            matInput
+            [matDatepicker]="ToDatePicker"
+            placeholder="To Date"
+            formControlName="ToDate"
+            [min]="ToMinDate"
+            [max]="ToMaxDate"
+            (dateChange)="ToDateChange()"
+          />
+          <mat-datepicker-toggle matSuffix [for]="ToDatePicker" [tabIndex]="-1"
+            ><mat-icon matDatepickerToggleIcon
+              >keyboard_arrow_down</mat-icon
+            ></mat-datepicker-toggle
+          >
+          <mat-datepicker #ToDatePicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div fxFlex="40%" fxFlex.lt-sm="100" class="matero-col m-b-12 m-t-16">
+        <mat-label>Report Type</mat-label>
+        <mat-radio-group
+          aria-label="Report Type"
+          formControlName="ReportType"
+        >
+          <mat-radio-button value="1" class="m-l-12">Report (PDF)</mat-radio-button>
+          <mat-radio-button value="2" class="m-l-12">Return (Excel)</mat-radio-button>
+        </mat-radio-group>
+      </div>
+    </div>
+    <mat-card-actions align="end" class="area-mat-card-actions m-r-0">
+      <button
+        type="button"
+        mat-raised-button
+        color="primary"
+        [disabled]="!gstr3bForm.valid"
+        (click)="GenerateReport()"
+      >
+        Generate (Print)
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</form>
