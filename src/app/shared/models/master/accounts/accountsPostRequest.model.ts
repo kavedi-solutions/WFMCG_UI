@@ -17,6 +17,7 @@ export interface AccountsPostRequest {
   pAN?: string;
   contactPerson?: string;
   contactNo?: string;
+  invoiceLimit: number;
   isActive: boolean;
   createdBy?: string;
   gstDetails: AccountGSTPostRequest[] | null;

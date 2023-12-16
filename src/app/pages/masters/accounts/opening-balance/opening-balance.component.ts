@@ -40,7 +40,7 @@ export class OpeningBalanceComponent implements OnInit {
 
   balanceForm = this.fb.group({
     AccountID: ['', [Validators.required]],
-    Balance: [0, [Validators.required, Validators.pattern(/^([0-9,-/+])+$/i)]],
+    Balance: [0, [Validators.required, Validators.pattern(/^([0-9.,-/+])+$/i)]],
     BalanceType: ['Cr', [Validators.required]],
   });
 

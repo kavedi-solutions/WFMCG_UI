@@ -104,6 +104,7 @@ export class AccountsAddEditComponent implements OnInit {
     AreaID: [''],
     PAN: ['', [Validators.pattern(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/i)]],
     ContactPerson: ['', [Validators.pattern(/^([\s]*[a-zA-Z0-9]+[\s]*)+$/i)]],
+    InvoiceLimit: [0, [Validators.pattern(/^([0-9.])+$/i)]],
     ContactNo: ['', [Validators.pattern(/^([0-9,-/+])+$/i)]],
     isActive: [true],
   });
@@ -215,9 +216,11 @@ export class AccountsAddEditComponent implements OnInit {
     this.dialogRef.afterClosed().subscribe((result: any) => {
       if (result.CloseStatus == true) {
         if (result.RGSTDetails.isAdd == true) {
-          this.accountGSTDetailsList.push(result.RGSTDetails);          
+          this.accountGSTDetailsList.push(result.RGSTDetails);
         } else if (result.RGSTDetails.isModified == true) {
-          let index = this.accountGSTDetailsList.findIndex(a=>a.autoID == result.RGSTDetails.autoID);
+          let index = this.accountGSTDetailsList.findIndex(
+            (a) => a.autoID == result.RGSTDetails.autoID
+          );
           this.accountGSTDetailsList[index] = result.RGSTDetails;
         }
         this.accountGSTDetailsListData = [...this.accountGSTDetailsList];
@@ -436,6 +439,17 @@ export class AccountsAddEditComponent implements OnInit {
     );
   }
 
+  get invoiceLimitControl() {
+    return this.accountForm.get('InvoiceLimit') as FormControl;
+  }
+
+  get invoiceLimitControlInvalid() {
+    return (
+      this.invoiceLimitControl.hasError('pattern') &&
+      this.invoiceLimitControl.touched
+    );
+  }
+
   //Controls
 
   BacktoList() {
@@ -568,6 +582,7 @@ export class AccountsAddEditComponent implements OnInit {
           PAN: this.editAccount!.pan,
           ContactPerson: this.editAccount!.contactPerson,
           ContactNo: this.editAccount!.contactNo,
+          InvoiceLimit: this.editAccount!.invoiceLimit,
           isActive: this.editAccount!.isActive,
         });
         this.editAccount?.gstDetails?.forEach((element) => {
@@ -629,6 +644,7 @@ export class AccountsAddEditComponent implements OnInit {
       pAN: accountForm.value.PAN,
       contactPerson: accountForm.value.ContactPerson,
       contactNo: accountForm.value.ContactNo,
+      invoiceLimit: accountForm.value.InvoiceLimit,
       isActive: accountForm.value.isActive,
       gstDetails: PostRequestDetail,
     };
@@ -674,6 +690,7 @@ export class AccountsAddEditComponent implements OnInit {
       pAN: accountForm.value.PAN,
       contactPerson: accountForm.value.ContactPerson,
       contactNo: accountForm.value.ContactNo,
+      invoiceLimit: accountForm.value.InvoiceLimit,
       isActive: accountForm.value.isActive,
       gstDetails: PutRequestDetail,
     };
