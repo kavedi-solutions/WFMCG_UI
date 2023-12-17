@@ -98,9 +98,6 @@ export class Gstr3bComponent implements OnInit {
           type: 'application/vnd.ms.excel',
         });
         saveAs(file);
-        // const blob = new Blob([response as Blob], { type: 'application/octet-stream' });
-        // const url= window.URL.createObjectURL(blob);
-        // window.open(url);
       }
     });
   }

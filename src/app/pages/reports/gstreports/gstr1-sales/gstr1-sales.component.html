@@ -1,1 +1,65 @@
-<p>gstr1-sales works!</p>
+<page-header
+  class="bg-blue-600"
+  [title]="PageTitle"
+  [showBack]="false"
+  [showAdd]="false"
+></page-header>
+
+<form class="form-field-full page-detail" [formGroup]="gstr1Form">
+  <mat-card>
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <input
+            matInput
+            [matDatepicker]="FromDatePicker"
+            placeholder="From Date"
+            formControlName="FromDate"
+            [min]="FromMinDate"
+            [max]="FromMaxDate"
+            (dateChange)="FromDateChange()"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="FromDatePicker"
+            [tabIndex]="-1"
+            ><mat-icon matDatepickerToggleIcon
+              >keyboard_arrow_down</mat-icon
+            ></mat-datepicker-toggle
+          >
+          <mat-datepicker #FromDatePicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <input
+            matInput
+            [matDatepicker]="ToDatePicker"
+            placeholder="To Date"
+            formControlName="ToDate"
+            [min]="ToMinDate"
+            [max]="ToMaxDate"
+            (dateChange)="ToDateChange()"
+          />
+          <mat-datepicker-toggle matSuffix [for]="ToDatePicker" [tabIndex]="-1"
+            ><mat-icon matDatepickerToggleIcon
+              >keyboard_arrow_down</mat-icon
+            ></mat-datepicker-toggle
+          >
+          <mat-datepicker #ToDatePicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </div>
+    <mat-card-actions align="end" class="area-mat-card-actions m-r-0">
+      <button
+        type="button"
+        mat-raised-button
+        color="primary"
+        [disabled]="!gstr1Form.valid"
+        (click)="GenerateReport()"
+      >
+        Generate (Print)
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</form>
