@@ -63,6 +63,7 @@ export * from './master/item/itemPutRequest.model';
 export * from './master/item/itemResponse.model';
 
 export * from './master/stock/closingStockbyItemID';
+export * from './master/stock/stockFilter.model';
 
 export * from './transaction/purchase/purchaseResponse.model';
 export * from './transaction/purchase/purchaseitemdetail.model';
@@ -141,7 +142,6 @@ export * from './report/financial/purchaseregister.model';
 export * from './report/financial/salesregister.model';
 export * from './report/gst/gstr3b.model';
 export * from './report/gst/gstr1.model';
-
 
 //
 export * from './transaction/cndnsettlements/cndnsettlements.model';

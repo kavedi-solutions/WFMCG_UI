@@ -3,6 +3,8 @@ export interface SalesReturnItemDetail {
   SrNo: number;
   ItemID: number;
   ItemName: string;
+  InvoiceID: number;
+  InvoiceRefNo: string;  
   Crt: number;
   Pcs: number;
   Qty: number;

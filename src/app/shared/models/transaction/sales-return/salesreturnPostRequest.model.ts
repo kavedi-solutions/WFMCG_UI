@@ -24,6 +24,7 @@ export interface SalesReturnItemPostRequest {
   srNo: number;
   itemID: number;
   quantity: number;
+  invoiceID: number;
   rate: number;
   amount: number;
   gSTTaxID: number;

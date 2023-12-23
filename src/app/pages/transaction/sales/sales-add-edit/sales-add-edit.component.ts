@@ -58,7 +58,7 @@ export class SalesAddEditComponent implements OnInit {
   isEditMode: boolean = false;
   isFromQuickMenu: boolean = false;
   selectedSalesId: number;
-
+  InvoiceID: number = 0;
   salesPostRequest?: SalesPostRequest;
   salesPutRequest?: SalesPutRequest;
   editSales?: SalesResponse;
@@ -290,7 +290,7 @@ export class SalesAddEditComponent implements OnInit {
         SeletedAccount = this.accountsDropDown.filter(
           (a) => a.account_Id == this.editSales?.accountID.toString()
         )[0];
-
+        this.InvoiceID = this.editSales!.autoID!;
         this.salesForm.patchValue({
           BookAccountID: this.editSales?.bookAccountID.toString(),
           BillNo: this.editSales?.billNo.toString(),
@@ -324,10 +324,10 @@ export class SalesAddEditComponent implements OnInit {
         this.AccountTradeTypeChange(
           this.editSales?.accountTradeTypeID.toString()
         );
-        this.FillItemDropDownEdit(
-          this.editSales!.accountTradeTypeID,
-          this.selectedSalesId
-        );
+        // this.FillItemDropDownEdit(
+        //   this.editSales!.accountTradeTypeID,
+        //   this.selectedSalesId
+        // );
 
         this.editSales!.details!.forEach((element) => {
           let ItemDetails: SalesItemDetail = {
@@ -621,8 +621,8 @@ export class SalesAddEditComponent implements OnInit {
     let filters: ItemFilter_DropDown = {
       ItemType: 1,
       AccountTradeTypeID: AccountTradeTypeID,
-      OnlyStockItems: true,
-      ReturnTypeID: 1,
+      TransactionTypeID: TransactionTypeMaster.Sales_Inventory,
+      InvoiceID: this.InvoiceID,
     };
     this.itemService.ItemDropDown(filters).subscribe((response) => {
       this.itemsDropDown = response;
@@ -630,19 +630,19 @@ export class SalesAddEditComponent implements OnInit {
     });
   }
 
-  FillItemDropDownEdit(AccountTradeTypeID: number, invoiceID: number) {
-    let filters: ItemFilter_DropDown = {
-      ItemType: 1,
-      AccountTradeTypeID: AccountTradeTypeID,
-      OnlyStockItems: true,
-      ReturnTypeID: 1,
-      InvoiceID: invoiceID,
-    };
-    this.itemService.ItemDropDownEdit(filters).subscribe((response) => {
-      this.itemsDropDown = response;
-      this.I_ItemIDControl.setValue('');
-    });
-  }
+  // FillItemDropDownEdit(AccountTradeTypeID: number, invoiceID: number) {
+  //   let filters: ItemFilter_DropDown = {
+  //     ItemType: 1,
+  //     AccountTradeTypeID: AccountTradeTypeID,
+  //     TransactionTypeID: TransactionTypeMaster.Sales_Inventory,
+  //     ReturnTypeID: 1,
+  //     InvoiceID: invoiceID,
+  //   };
+  //   this.itemService.ItemDropDownEdit(filters).subscribe((response) => {
+  //     this.itemsDropDown = response;
+  //     this.I_ItemIDControl.setValue('');
+  //   });
+  // }
 
   DisplayAccountName(accounts: accountsDropDownResponse) {
     return accounts && accounts.account_Name ? accounts.account_Name : '';

@@ -5,3 +5,8 @@ export interface ClosingStockbyItemID {
   closingCrt: number;
   closingPcs: number;
 }
+
+export interface SalesReturnInvoiceResult {
+  autoID: number;
+  refNo: string;
+}

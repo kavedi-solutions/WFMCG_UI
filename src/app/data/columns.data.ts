@@ -386,7 +386,7 @@ export function GetAccountGSTColumns() {
       header: 'AutoID',
       field: 'autoID',
       hide: true,
-    },    
+    },
     {
       header: 'GST No',
       field: 'gstNo',
@@ -418,7 +418,7 @@ export function GetAccountGSTColumns() {
       disabled: false,
       minWidth: 150,
       width: '150px',
-    }
+    },
   ];
 
   return AccountsColumns;
@@ -2409,8 +2409,8 @@ export function GetPurchaseReturnItemDetailColumns() {
       pinned: 'left',
     },
     {
-      header: 'Qty',
-      field: 'Qty',
+      header: 'Crt',
+      field: 'Crt',
       sortable: false,
       disabled: true,
       minWidth: 60,
@@ -2419,6 +2419,23 @@ export function GetPurchaseReturnItemDetailColumns() {
       typeParameter: { digitsInfo: '0.0-0', locale: 'en-IN' },
       class: 'right-mat-header-cell right-mat-cell',
       pinned: 'left',
+    },
+    {
+      header: 'Pcs',
+      field: 'Pcs',
+      sortable: false,
+      disabled: true,
+      minWidth: 60,
+      width: '60px',
+      type: 'number',
+      typeParameter: { digitsInfo: '0.0-0', locale: 'en-IN' },
+      class: 'right-mat-header-cell right-mat-cell',
+      pinned: 'left',
+    },
+    {
+      header: 'Qty',
+      field: 'Qty',
+      hide: true,
     },
     {
       header: 'Rate',
@@ -2675,8 +2692,8 @@ export function GetSalesReturnItemDetailColumns() {
       pinned: 'left',
     },
     {
-      header: 'Qty',
-      field: 'Qty',
+      header: 'Crt',
+      field: 'Crt',
       sortable: false,
       disabled: true,
       minWidth: 60,
@@ -2685,6 +2702,31 @@ export function GetSalesReturnItemDetailColumns() {
       typeParameter: { digitsInfo: '0.0-0', locale: 'en-IN' },
       class: 'right-mat-header-cell right-mat-cell',
       pinned: 'left',
+    },
+    {
+      header: 'Pcs',
+      field: 'Pcs',
+      sortable: false,
+      disabled: true,
+      minWidth: 60,
+      width: '60px',
+      type: 'number',
+      typeParameter: { digitsInfo: '0.0-0', locale: 'en-IN' },
+      class: 'right-mat-header-cell right-mat-cell',
+      pinned: 'left',
+    },
+    {
+      header: 'Qty',
+      field: 'Qty',
+      hide: true,
+    },
+    {
+      header: 'Invoice No',
+      field: 'InvoiceRefNo',
+      sortable: false,
+      disabled: true,
+      minWidth: 150,
+      width: '150px',
     },
     {
       header: 'Rate',
@@ -3027,7 +3069,6 @@ export function GetCNDNItemDetailColumns() {
 
   return PurchaseItemColumns;
 }
-
 
 export function GetVRPCColumns() {
   let VRPCColumns: MtxGridColumn[] = [

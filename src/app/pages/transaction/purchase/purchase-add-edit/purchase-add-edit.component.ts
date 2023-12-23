@@ -560,8 +560,7 @@ export class PurchaseAddEditComponent implements OnInit {
     let filters: ItemFilter_DropDown = {
       ItemType: 1,
       AccountTradeTypeID: AccountTradeTypeID,
-      OnlyStockItems: false,
-      ReturnTypeID: 1,
+      TransactionTypeID: TransactionTypeMaster.Purchase_Inventory,
     };
     this.itemService.ItemDropDown(filters).subscribe((response) => {
       this.itemsDropDown = response;

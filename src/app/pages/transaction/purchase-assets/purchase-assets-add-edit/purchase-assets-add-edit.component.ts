@@ -473,9 +473,6 @@ export class PurchaseAssetsAddEditComponent implements OnInit {
   FillItemDropDown() {
     let filters: ItemFilter_DropDown = {
       ItemType: 3,
-      AccountTradeTypeID: 1,
-      OnlyStockItems: false,
-      ReturnTypeID: 1,
     };
     this.itemService.ItemDropDown(filters).subscribe((response) => {
       this.itemsDropDown = response;

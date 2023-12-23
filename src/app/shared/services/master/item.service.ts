@@ -141,33 +141,12 @@ export class ItemService {
     const url = `${this.APIURL}/company/${this.CompanyID}/item/dropdown`;
     let params = new HttpParams()
       .set('ItemType', `${filters.ItemType}`)
-      .set('AccountTradeTypeID', `${filters.AccountTradeTypeID}`)
-      .set('OnlyStockItems', `${filters.OnlyStockItems}`)
-      .set('ReturnTypeID', `${filters.ReturnTypeID}`)
-      .set('InvoiceID', '0');
-
-    return this.http
-      .get<any>(encodeURI(url), {
-        headers: this.headers,
-        observe: 'response',
-        params,
-      })
-      .pipe(
-        map((response) => {
-          return response.body;
-        })
-      );
-  }
-
-  ItemDropDownEdit(filters: ItemFilter_DropDown) {
-    const url = `${this.APIURL}/company/${this.CompanyID}/item/dropdown`;
-    let params = new HttpParams()
-      .set('ItemType', `${filters.ItemType}`)
-      .set('AccountTradeTypeID', `${filters.AccountTradeTypeID}`)
-      .set('OnlyStockItems', `${filters.OnlyStockItems}`)
-      .set('ReturnTypeID', `${filters.ReturnTypeID}`)
-      .set('InvoiceID', `${filters.InvoiceID!}`);
-
+      .set('AccountTradeTypeID', `${filters.AccountTradeTypeID != undefined ? filters.AccountTradeTypeID : 0}`)
+      .set('ReturnTypeID', `${filters.ReturnTypeID != undefined ? filters.ReturnTypeID : 0}`)
+      .set('TransactionTypeID', `${filters.TransactionTypeID != undefined ? filters.TransactionTypeID : 0}`)
+      .set('AccountID', `${filters.AccountID != undefined ? filters.AccountID : 0}`)
+      .set('InvoiceID', `${filters.InvoiceID != undefined ? filters.InvoiceID : 0}`)
+      .set('BillDate', `${filters.BillDate != undefined ? filters.BillDate : ''}`);
 
     return this.http
       .get<any>(encodeURI(url), {

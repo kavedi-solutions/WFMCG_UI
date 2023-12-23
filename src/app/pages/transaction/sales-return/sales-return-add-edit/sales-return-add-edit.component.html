@@ -74,23 +74,6 @@
           />
         </mat-form-field>
       </div>
-      <div fxFlex="10%" fxFlex.lt-sm="100" class="matero-col">
-        <mat-form-field appearance="legacy" color="primary">
-          <mat-label>Trade Type</mat-label>
-          <mat-select
-            formControlName="AccountTradeTypeID"
-            required
-            (valueChange)="AccountTradeTypeChange($event)"
-          >
-            <mat-option
-              *ngFor="let sbdd of accountTradeTypeDropDown"
-              [value]="sbdd.accountTradeTypeID"
-            >
-              {{ sbdd.accountTradeTypeName }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
       <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
         <mat-form-field appearance="legacy" color="primary">
           <mat-label>Return Type</mat-label>
@@ -104,6 +87,23 @@
               [value]="sbdd.returnTypeID"
             >
               {{ sbdd.returnTypeName }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div fxFlex="10%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Trade Type</mat-label>
+          <mat-select
+            formControlName="AccountTradeTypeID"
+            required
+            [disabled]="true"
+          >
+            <mat-option
+              *ngFor="let sbdd of accountTradeTypeDropDown"
+              [value]="sbdd.accountTradeTypeID"
+            >
+              {{ sbdd.accountTradeTypeName }}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -145,7 +145,7 @@
         class="matero-col stocks"
         *ngIf="I_ItemIDControl.value != ''"
       >
-        <span>Stock</span>
+        <span>Sold Quantity</span>
         <br />
         <span>
           {{ CurrentStock?.closingCrt }}/{{ CurrentStock?.closingPcs }}</span
@@ -154,7 +154,7 @@
     </div>
     <div formGroupName="Items">
       <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
-        <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
+        <div fxFlex="35%" fxFlex.lt-sm="100" class="matero-col">
           <mat-form-field appearance="legacy" color="primary">
             <mat-label>Select Item</mat-label>
             <input
@@ -178,6 +178,22 @@
             </mat-autocomplete>
           </mat-form-field>
         </div>
+        <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
+          <mat-form-field appearance="legacy" color="primary">
+            <mat-label>Sales Invoice</mat-label>
+            <mat-select
+              formControlName="I_InvoiceID"
+              (valueChange)="SelectInvoice($event)"
+            >
+              <mat-option
+                *ngFor="let sbdd of InvoiceList"
+                [value]="sbdd.autoID"
+              >
+                {{ sbdd.refNo }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
         <div fxFlex="7%" fxFlex.lt-sm="100" class="matero-col">
           <mat-form-field appearance="legacy" color="primary">
             <mat-label>Crt</mat-label>
@@ -189,6 +205,7 @@
               maxlength="2"
               class="input-right-align"
               (keyup)="CalculateTotals()"
+              (blur)="CheckStocks($event, 'Crt')"
             />
           </mat-form-field>
         </div>
@@ -203,6 +220,7 @@
               maxlength="5"
               class="input-right-align"
               (keyup)="CalculateTotals()"
+              (blur)="CheckStocks($event, 'Pcs')"
             />
           </mat-form-field>
         </div>

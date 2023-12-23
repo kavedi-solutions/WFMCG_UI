@@ -59,6 +59,8 @@ export interface SalesReturnItemResponse {
   itemID: number;
   itemName: string;
   accountTradeTypeID: number;
+  invoiceID: number;
+  invoiceRefNo: string;
   crt: number;
   pcs: number;
   quantity: number;

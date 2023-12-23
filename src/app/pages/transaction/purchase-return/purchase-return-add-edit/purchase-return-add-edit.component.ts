@@ -53,7 +53,7 @@ export class PurchaseReturnAddEditComponent implements OnInit {
   selectedPurchaseReturnId: number;
   AccountTradeTypeID: Number = 0;
   ReturnTypeID: Number = 0;
-
+  InvoiceID: number = 0;
   purchaseReturnPostRequest?: PurchaseReturnPostRequest;
   purchaseReturnPutRequest?: PurchaseReturnPutRequest;
   editPurchaseReturn?: PurchaseReturnResponse;
@@ -256,6 +256,7 @@ export class PurchaseReturnAddEditComponent implements OnInit {
         SeletedAccount = this.accountsDropDown.filter(
           (a) => a.account_Id == this.editPurchaseReturn?.accountID.toString()
         )[0];
+        this.InvoiceID = this.editPurchaseReturn!.autoID!;
 
         this.purchaseReturnForm.patchValue({
           BookAccountID: this.editPurchaseReturn?.bookAccountID.toString(),
@@ -515,8 +516,9 @@ export class PurchaseReturnAddEditComponent implements OnInit {
       let filters: ItemFilter_DropDown = {
         ItemType: 1,
         AccountTradeTypeID: this.AccountTradeTypeID,
-        OnlyStockItems: true,
+        TransactionTypeID: TransactionTypeMaster.Purchase_Return,
         ReturnTypeID: this.ReturnTypeID,
+        InvoiceID: this.InvoiceID,
       };
       this.itemService.ItemDropDown(filters).subscribe((response) => {
         this.itemsDropDown = response;

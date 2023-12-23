@@ -1,7 +1,8 @@
-import { HttpHeaders, HttpClient } from '@angular/common/http';
+import { HttpHeaders, HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs';
 import { AppConfig } from 'src/app/app.config';
+import { StockFilter } from '../../models';
 import { LocalStorageService } from '../common/storage.service';
 
 @Injectable({
@@ -32,6 +33,51 @@ export class StockService {
       .get<any>(encodeURI(url), {
         headers: this.headers,
         observe: 'response',
+      })
+      .pipe(
+        map((response) => {
+          return response.body;
+        })
+      );
+  }
+
+  SalesReturnItemStock(filters: StockFilter) {
+    const url = `${this.APIURL}/company/${this.CompanyID}/stock/salesreturnitemstock`;
+    let params = new HttpParams()
+      .set('ReturnTypeID', `${filters.ReturnTypeID}`)
+      .set('AccountTradeTypeID', `${filters.AccountTradeTypeID}`)
+      .set('ItemID', `${filters.ItemID}`)
+      .set('AccountID', `${filters.AccountID}`)
+      .set('BillDate', `${filters.BillDate}`)
+      .set('InvoiceID', `${filters.InvoiceID}`);
+
+    return this.http
+      .get<any>(encodeURI(url), {
+        headers: this.headers,
+        observe: 'response',
+        params,
+      })
+      .pipe(
+        map((response) => {
+          return response.body;
+        })
+      );
+  }
+
+  SalesReturnInvoiceList(filters: StockFilter) {
+    const url = `${this.APIURL}/company/${this.CompanyID}/stock/salesreturninvoicelist`;
+    let params = new HttpParams()
+      .set('ReturnTypeID', `${filters.ReturnTypeID}`)
+      .set('AccountTradeTypeID', `${filters.AccountTradeTypeID}`)
+      .set('ItemID', `${filters.ItemID}`)
+      .set('AccountID', `${filters.AccountID}`)
+      .set('BillDate', `${filters.BillDate}`);
+
+    return this.http
+      .get<any>(encodeURI(url), {
+        headers: this.headers,
+        observe: 'response',
+        params,
       })
       .pipe(
         map((response) => {

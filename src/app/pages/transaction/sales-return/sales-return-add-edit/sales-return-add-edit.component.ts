@@ -29,6 +29,9 @@ import {
   Tax,
   TaxDownDownResponse,
   TransactionTypeMaster,
+  StockFilter,
+  NotificationComponent,
+  SalesReturnInvoiceResult,
 } from '../../../../shared/index';
 import * as defaultData from '../../../../data/index';
 import {
@@ -52,7 +55,8 @@ export class SalesReturnAddEditComponent implements OnInit {
   selectedSalesReturnId: number;
   AccountTradeTypeID: Number = 0;
   ReturnTypeID: Number = 0;
-
+  InvoiceID: number = 0;
+  SelectedSalesInvoiceID: number = 0;
   salesReturnPostRequest?: SalesReturnPostRequest;
   salesReturnPutRequest?: SalesReturnPutRequest;
   editSalesReturn?: SalesReturnResponse;
@@ -71,6 +75,7 @@ export class SalesReturnAddEditComponent implements OnInit {
   CurrentItem?: Item;
   CurrentTax?: Tax;
   CurrentStock?: ClosingStockbyItemID;
+  InvoiceList?: SalesReturnInvoiceResult[] = [];
   BillMinDate?: Date;
   BillMaxDate?: Date;
   DisableAddItemBtn: boolean = true;
@@ -105,6 +110,7 @@ export class SalesReturnAddEditComponent implements OnInit {
     NetAmount: ['0'],
     Items: this.fb.group({
       I_ItemID: [''],
+      I_InvoiceID: [''],
       I_Crt: [0, [Validators.pattern(/^([0-9,-/+])+$/i)]],
       I_Pcs: [0, [Validators.pattern(/^([0-9,-/+])+$/i)]],
       I_Qty: [0],
@@ -134,7 +140,8 @@ export class SalesReturnAddEditComponent implements OnInit {
     private taxService: fromService.TaxService,
     private stockService: fromService.StockService,
     private fb: FormBuilder,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    public notification: NotificationComponent
   ) {
     this.CompanyStateID = this.sstorage.get('CompanyStateID');
     this.setColumns();
@@ -255,6 +262,7 @@ export class SalesReturnAddEditComponent implements OnInit {
         SeletedAccount = this.accountsDropDown.filter(
           (a) => a.account_Id == this.editSalesReturn?.accountID.toString()
         )[0];
+        this.InvoiceID = this.editSalesReturn!.autoID!;
 
         this.salesReturnForm.patchValue({
           BookAccountID: this.editSalesReturn?.bookAccountID.toString(),
@@ -303,6 +311,8 @@ export class SalesReturnAddEditComponent implements OnInit {
             SrNo: element.srNo,
             ItemID: element.itemID,
             ItemName: element.itemName,
+            InvoiceID: element.invoiceID,
+            InvoiceRefNo: element.invoiceRefNo,
             Crt: element.crt,
             Pcs: element.pcs,
             Qty: element.quantity,
@@ -347,6 +357,7 @@ export class SalesReturnAddEditComponent implements OnInit {
         srNo: element.SrNo,
         itemID: element.ItemID,
         quantity: element.Qty,
+        invoiceID: element.InvoiceID,
         rate: element.Rate,
         amount: element.Amount,
         gSTTaxID: element.GSTTaxID,
@@ -395,6 +406,7 @@ export class SalesReturnAddEditComponent implements OnInit {
         autoID: element.AutoID,
         srNo: element.SrNo,
         itemID: element.ItemID,
+        invoiceID: element.InvoiceID,
         quantity: element.Qty,
         rate: element.Rate,
         amount: element.Amount,
@@ -512,8 +524,11 @@ export class SalesReturnAddEditComponent implements OnInit {
       let filters: ItemFilter_DropDown = {
         ItemType: 1,
         AccountTradeTypeID: this.AccountTradeTypeID,
-        OnlyStockItems: true,
+        TransactionTypeID: TransactionTypeMaster.Sales_Return,
         ReturnTypeID: this.ReturnTypeID,
+        InvoiceID: this.InvoiceID,
+        AccountID: this.AccountIDControl.value.account_Id,
+        BillDate: this.BillDateControl.value.format('YYYY-MM-DD'),
       };
       this.itemService.ItemDropDown(filters).subscribe((response) => {
         this.itemsDropDown = response;
@@ -556,12 +571,17 @@ export class SalesReturnAddEditComponent implements OnInit {
 
   SelectedAccount(event: any) {
     this.AccountStateID = event.option.value.stateID;
+    this.AccountTradeTypeIDControl.setValue(
+      event.option.value.accountTradeTypeID.toString()
+    );
+    this.AccountTradeTypeChange(event.option.value.accountTradeTypeID);
     this.InvoiceType =
       this.AccountStateID != this.CompanyStateID
         ? 'IGST Invoice'
         : 'CGST/SGST Invoice';
     this.IsIGSTInvoice =
       this.AccountStateID != this.CompanyStateID ? true : false;
+    this.FillItemDropDown();
   }
 
   SelectedItem(event: any) {
@@ -574,7 +594,8 @@ export class SalesReturnAddEditComponent implements OnInit {
       .GetItembyID(event.option.value.item_Id)
       .subscribe((response) => {
         this.CurrentItem = response;
-        this.GetCurrentStock(Number(this.CurrentItem?.itemID));
+        this.GetInvoiceList(Number(this.CurrentItem?.itemID));
+        //this.GetCurrentStock(Number(this.CurrentItem?.itemID));
         if (FoundItem == -1) {
           this.I_RateControl.setValue(
             SetFormatCurrency(this.CurrentItem?.salesRate)
@@ -589,6 +610,7 @@ export class SalesReturnAddEditComponent implements OnInit {
             this.salesReturnItemDetailsList.filter(
               (a) => a.ItemID == event.option.value.item_Id
             )[0];
+          this.I_InvoiceIDControl.setValue(ItemDetail.InvoiceID);
           this.I_CrtControl.setValue(ItemDetail.Crt);
           this.I_PcsControl.setValue(ItemDetail.Pcs);
           this.I_QtyControl.setValue(ItemDetail.Qty);
@@ -606,6 +628,11 @@ export class SalesReturnAddEditComponent implements OnInit {
       });
   }
 
+  SelectInvoice(event: any) {
+    this.SelectedSalesInvoiceID = Number(event);
+    this.GetCurrentStock(this.I_ItemIDControl.value.item_Id);
+  }
+
   GSTTaxChange(event: any) {
     this.GetCurrentTax(Number(event.value), true);
   }
@@ -619,12 +646,42 @@ export class SalesReturnAddEditComponent implements OnInit {
 
   GetCurrentStock(ItemID: number) {
     //stockService
-    let ReturnTypeID = Number(this.ReturnTypeIDControl.value);
-    this.stockService
-      .GetClosingByItemID(ItemID, ReturnTypeID)
-      .subscribe((response) => {
-        this.CurrentStock = response;
-      });
+    debugger;
+    let filters: StockFilter = {
+      ReturnTypeID: Number(this.ReturnTypeIDControl.value),
+      AccountTradeTypeID: Number(this.AccountTradeTypeIDControl.value),
+      ItemID: ItemID,
+      AccountID: Number(this.AccountIDControl.value.account_Id),
+      BillDate: this.BillDateControl.value.format('YYYY-MM-DD'),
+      InvoiceID: this.SelectedSalesInvoiceID,
+    };
+
+    this.stockService.SalesReturnItemStock(filters).subscribe((response) => {
+      this.CurrentStock = response;
+    });
+
+    //let ReturnTypeID = Number(this.ReturnTypeIDControl.value);
+    // this.stockService
+    //   .GetClosingByItemID(ItemID, ReturnTypeID)
+    //   .subscribe((response) => {
+    //     this.CurrentStock = response;
+    //   });
+  }
+
+  GetInvoiceList(ItemID: number) {
+    //stockService
+
+    let filters: StockFilter = {
+      ReturnTypeID: Number(this.ReturnTypeIDControl.value),
+      AccountTradeTypeID: Number(this.AccountTradeTypeIDControl.value),
+      ItemID: ItemID,
+      AccountID: Number(this.AccountIDControl.value.account_Id),
+      BillDate: this.BillDateControl.value.format('YYYY-MM-DD'),
+    };
+
+    this.stockService.SalesReturnInvoiceList(filters).subscribe((response) => {
+      this.InvoiceList = response;
+    });
   }
 
   AddItemToList() {
@@ -638,12 +695,17 @@ export class SalesReturnAddEditComponent implements OnInit {
     } else {
       SrNo = this.salesReturnItemDetailsList.length + 1;
     }
-
+    debugger;
     let ItemDetails: SalesReturnItemDetail = {
       AutoID: this.IsItemEditMode ? Number(this.ItemEdit?.AutoID) : 0,
       SrNo: this.IsItemEditMode ? Number(this.ItemEdit?.SrNo) : SrNo,
       ItemID: Number(this.I_ItemIDControl.value.item_Id),
       ItemName: this.I_ItemIDControl.value.item_Name,
+      InvoiceID: Number(this.I_InvoiceIDControl.value),
+      InvoiceRefNo:
+        this.InvoiceList?.find(
+          (a) => (a.autoID = Number(this.I_InvoiceIDControl.value))
+        )!.refNo || '',
       Crt: CheckIsNumber(this.I_CrtControl.value),
       Pcs: CheckIsNumber(this.I_PcsControl.value),
       Qty: CheckIsNumber(this.I_QtyControl.value),
@@ -688,6 +750,7 @@ export class SalesReturnAddEditComponent implements OnInit {
     this.ItemEdit = record;
     this.ItemsControl.patchValue({
       I_ItemID: SeletedItem,
+      I_InvoiceID: record.InvoiceID,
       I_Crt: record.Crt,
       I_Pcs: record.Pcs,
       I_Qty: record.Qty,
@@ -705,6 +768,7 @@ export class SalesReturnAddEditComponent implements OnInit {
     this.renderer.selectRootElement('#ItemName', true).focus();
     this.itemService.GetItembyID(record.ItemID).subscribe((response) => {
       this.CurrentItem = response;
+      this.GetInvoiceList(Number(this.CurrentItem?.itemID));
       this.GetCurrentStock(Number(this.CurrentItem?.itemID));
       this.I_RateControl.setValue(
         SetFormatCurrency(this.CurrentItem?.salesRate)
@@ -763,6 +827,7 @@ export class SalesReturnAddEditComponent implements OnInit {
       NetAmount: 0,
       Items: {
         I_ItemID: '',
+        I_InvoiceID: '',
         I_Crt: 0,
         I_Pcs: 0,
         I_Qty: 0,
@@ -794,6 +859,7 @@ export class SalesReturnAddEditComponent implements OnInit {
   ResetItems() {
     this.ItemsControl.reset({
       I_ItemID: '',
+      I_InvoiceID: '',
       I_Crt: 0,
       I_Pcs: 0,
       I_Qty: 0,
@@ -908,6 +974,10 @@ export class SalesReturnAddEditComponent implements OnInit {
     return this.ItemsControl.get('I_ItemID') as FormControl;
   }
 
+  get I_InvoiceIDControl() {
+    return this.ItemsControl.get('I_InvoiceID') as FormControl;
+  }
+
   get I_CrtControl() {
     return this.ItemsControl.get('I_Crt') as FormControl;
   }
@@ -980,6 +1050,35 @@ export class SalesReturnAddEditComponent implements OnInit {
     }
   }
 
+  CheckStocks(event: Event, Field: string) {
+    event.stopPropagation();
+    event.preventDefault();
+    let TotalQty = Number(this.I_QtyControl.value);
+
+    if (TotalQty > this.CurrentStock!.closing) {
+      this.notification.openStockErrorBar(
+        'Quantity is more then stock',
+        'Error',
+        'red-snackbar'
+      );
+      this.renderer.selectRootElement('#' + Field, true).focus();
+
+      if (Field == 'Crt') {
+        this.I_CrtControl.setErrors({ Validate: true });
+      }
+      if (Field == 'Pcs') {
+        this.I_PcsControl.setErrors({ Validate: true });
+      }
+    } else {
+      if (Field == 'Crt') {
+        this.I_CrtControl.setErrors(null);
+      }
+      if (Field == 'Pcs') {
+        this.I_PcsControl.setErrors(null);
+      }
+    }
+  }
+
   CalculateTotals() {
     let Rate = 0,
       RatePerPcs = 0,
@@ -1000,7 +1099,13 @@ export class SalesReturnAddEditComponent implements OnInit {
 
     this.DisableAddItemBtn = true;
     if (Qty > 0) {
-      this.DisableAddItemBtn = false;
+      if (Qty > 0) {
+        if (Qty > this.CurrentStock!.closing) {
+          this.DisableAddItemBtn = true;
+        } else {
+          this.DisableAddItemBtn = false;
+        }
+      }
     }
     Amount = RoundOffAmount(
       Number(this.I_CrtControl.value) * Rate +
