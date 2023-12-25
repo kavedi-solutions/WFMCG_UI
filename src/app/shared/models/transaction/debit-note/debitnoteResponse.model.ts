@@ -16,6 +16,9 @@ export interface DebitNote {
   accountID: number;
   accountName: string;
   amount: number;
+  eiStatus: boolean;
+  eiCanceled: boolean;
+  eiIrn: string;
   isActive: boolean;
   createdBy: string;
   createdDate: string;

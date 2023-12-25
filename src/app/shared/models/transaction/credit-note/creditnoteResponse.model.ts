@@ -16,6 +16,9 @@ export interface CreditNote {
   accountID: number;
   accountName: string;
   netAmount: number;
+  eiStatus: boolean;
+  eiCanceled: boolean;
+  eiIrn: string;
   isActive: boolean;
   createdBy: string;
   createdDate: string;

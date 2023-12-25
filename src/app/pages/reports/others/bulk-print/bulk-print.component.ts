@@ -6,6 +6,7 @@ import {
   BulkPrintFilter,
   BulkPrintResponse,
   CompanySettingResponse,
+  TransactionTypeMaster,
   transactionTypeResponse,
 } from 'src/app/shared';
 import * as fromService from '../../../../shared/index';
@@ -152,7 +153,7 @@ export class BulkPrintComponent implements OnInit {
       InvoiceIDs.push(element.autoID);
     });
     switch (Number(this.TransactionTypeIDControl.value)) {
-      case 21:
+      case TransactionTypeMaster.Sales_Inventory:
         this.reportService
           .PrintInvoiceInventory(NoofCopy, InvoiceIDs)
           .subscribe((response) => {
@@ -172,7 +173,7 @@ export class BulkPrintComponent implements OnInit {
             });
           });
         break;
-      case 22:
+      case TransactionTypeMaster.Sales_Service:
         this.reportService
           .PrintInvoiceService(NoofCopy, InvoiceIDs)
           .subscribe((response) => {
@@ -192,7 +193,7 @@ export class BulkPrintComponent implements OnInit {
             });
           });
         break;
-      case 23:
+      case TransactionTypeMaster.Sales_Assets:
         this.reportService
           .PrintInvoiceAssets(NoofCopy, InvoiceIDs)
           .subscribe((response) => {
@@ -212,27 +213,27 @@ export class BulkPrintComponent implements OnInit {
             });
           });
         break;
-        case 31:
-          this.reportService
-            .PrintInvoicePurchaseReturn(NoofCopy, InvoiceIDs)
-            .subscribe((response) => {
-              var file = new Blob([response as Blob], {
-                type: 'application/pdf',
-              });
-              var fileURL = URL.createObjectURL(file);
-
-              this.dialog.open(PdfViewerDialogComponent, {
-                data: this.sanitizer.bypassSecurityTrustResourceUrl(fileURL),
-                minWidth: '80vw',
-                minHeight: '90vh',
-                maxWidth: '80vw',
-                maxHeight: '90vh',
-                panelClass: 'dialog-container',
-                autoFocus: true,
-              });
+      case TransactionTypeMaster.Purchase_Return:
+        this.reportService
+          .PrintInvoicePurchaseReturn(NoofCopy, InvoiceIDs)
+          .subscribe((response) => {
+            var file = new Blob([response as Blob], {
+              type: 'application/pdf',
             });
-          break;
-      case 32:
+            var fileURL = URL.createObjectURL(file);
+
+            this.dialog.open(PdfViewerDialogComponent, {
+              data: this.sanitizer.bypassSecurityTrustResourceUrl(fileURL),
+              minWidth: '80vw',
+              minHeight: '90vh',
+              maxWidth: '80vw',
+              maxHeight: '90vh',
+              panelClass: 'dialog-container',
+              autoFocus: true,
+            });
+          });
+        break;
+      case TransactionTypeMaster.Sales_Return:
         this.reportService
           .PrintInvoiceSalesReturn(NoofCopy, InvoiceIDs)
           .subscribe((response) => {
@@ -251,6 +252,46 @@ export class BulkPrintComponent implements OnInit {
               autoFocus: true,
             });
           });
+        break;
+      case TransactionTypeMaster.Credit_Note:
+        this.reportService
+        .PrintInvoiceCreditNote(NoofCopy, InvoiceIDs)
+        .subscribe((response) => {
+          var file = new Blob([response as Blob], {
+            type: 'application/pdf',
+          });
+          var fileURL = URL.createObjectURL(file);
+
+          this.dialog.open(PdfViewerDialogComponent, {
+            data: this.sanitizer.bypassSecurityTrustResourceUrl(fileURL),
+            minWidth: '80vw',
+            minHeight: '90vh',
+            maxWidth: '80vw',
+            maxHeight: '90vh',
+            panelClass: 'dialog-container',
+            autoFocus: true,
+          });
+        });
+        break;
+      case TransactionTypeMaster.Debit_Note:
+        this.reportService
+        .PrintInvoiceDebitNote(NoofCopy, InvoiceIDs)
+        .subscribe((response) => {
+          var file = new Blob([response as Blob], {
+            type: 'application/pdf',
+          });
+          var fileURL = URL.createObjectURL(file);
+
+          this.dialog.open(PdfViewerDialogComponent, {
+            data: this.sanitizer.bypassSecurityTrustResourceUrl(fileURL),
+            minWidth: '80vw',
+            minHeight: '90vh',
+            maxWidth: '80vw',
+            maxHeight: '90vh',
+            panelClass: 'dialog-container',
+            autoFocus: true,
+          });
+        });
         break;
     }
   }

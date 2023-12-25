@@ -157,7 +157,7 @@ export class VReceiptB2BAddEditComponent implements OnInit {
 
         this.TransactionTypeID = this.booksDropDown.find(
           (a) => a.account_Id == this.BookAccountIDControl.value
-        )!.transactionTypeID;        
+        )!.transactionTypeID;
 
         this.VoucherDateControl.setValue(
           moment(this.editVoucher?.voucherDate)
@@ -370,14 +370,14 @@ export class VReceiptB2BAddEditComponent implements OnInit {
   }
 
   GetNewVoucherNo() {
-    if (this.isEditMode == false) {
-      let BookId = this.BookAccountIDControl.value;
+    let BookId = this.BookAccountIDControl.value;
+    if (this.isEditMode == false && BookId != "") {
       let BookInit = this.booksDropDown.find(
         (a) => a.account_Id == BookId
       )?.bookInit;
       this.TransactionTypeID = this.booksDropDown.find(
         (a) => a.account_Id == BookId
-      )!.transactionTypeID;                  
+      )!.transactionTypeID;
       let VoucherDate = this.VoucherDateControl.value.format('YYYY-MM-DD');
       if (BookId != '' && VoucherDate != '') {
         this.voucherService
@@ -412,6 +412,7 @@ export class VReceiptB2BAddEditComponent implements OnInit {
 
   GetPendingBills(AccountID: number, VoucherID: number) {
     this.pendingBills = [];
+    this.ReceivedBills.clear()
     if (AccountID != 0) {
       this.voucherService
         .GetPendingBills(AccountID, VoucherID)
@@ -452,7 +453,7 @@ export class VReceiptB2BAddEditComponent implements OnInit {
   getColumnsList(): TableColumns[] {
     return this.pendingBillsColumn.filter((cd) => cd.visible === true);
   }
-  
+
   getDisplayedColumns(): string[] {
     return this.pendingBillsColumn
       .filter((cd) => cd.visible === true)

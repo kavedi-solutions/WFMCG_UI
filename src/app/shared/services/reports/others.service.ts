@@ -194,7 +194,63 @@ export class OthersReportService {
           return response.body;
         })
       );
-  }  
+  }
+
+  PrintInvoiceCreditNote(NoofCopy: NumberSymbol, InvoiceID: number[]) {
+    const url = `${this.APIURL}/invoice/creditnote`;
+    let params = new HttpParams();
+
+    if (NoofCopy != 0) {
+      params = params.append('noofCopy', NoofCopy);
+    }
+
+    if (InvoiceID.length > 0) {
+      InvoiceID.forEach((element) => {
+        params = params.append('InvoiceIDs', element);
+      });
+    }
+
+    return this.http
+      .get(encodeURI(url), {
+        headers: this.headers,
+        observe: 'response',
+        responseType: 'blob',
+        params,
+      })
+      .pipe(
+        map((response) => {
+          return response.body;
+        })
+      );
+  }
+
+  PrintInvoiceDebitNote(NoofCopy: NumberSymbol, InvoiceID: number[]) {
+    const url = `${this.APIURL}/invoice/debitnote`;
+    let params = new HttpParams();
+
+    if (NoofCopy != 0) {
+      params = params.append('noofCopy', NoofCopy);
+    }
+
+    if (InvoiceID.length > 0) {
+      InvoiceID.forEach((element) => {
+        params = params.append('InvoiceIDs', element);
+      });
+    }
+
+    return this.http
+      .get(encodeURI(url), {
+        headers: this.headers,
+        observe: 'response',
+        responseType: 'blob',
+        params,
+      })
+      .pipe(
+        map((response) => {
+          return response.body;
+        })
+      );
+  }
 
   GetinvoiceidsData(filter: LoadingSlipInvoiceFilter): Observable<number[]> {
     const url = `${this.APIURL}/invoiceids/get`;

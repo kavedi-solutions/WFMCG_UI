@@ -20,6 +20,9 @@ export interface SalesReturn {
   accountTradeTypeID: number;
   accountTradeTypeName: string;
   netAmount: number;
+  eiStatus: boolean;
+  eiCanceled: boolean;
+  eiIrn: string;
   isActive: boolean;
   createdBy: string;
   createdDate: string;

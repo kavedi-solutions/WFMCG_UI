@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import {
   AccessRights,
+  eI_CancelRequest,
   FilterValues,
   PaginationHeaders,
   PurchaseReturn,
+  TransactionTypeMaster,
 } from 'src/app/shared';
 import * as fromService from '../../../shared/index';
 import * as defaultData from '../../../data/index';
@@ -14,6 +16,7 @@ import { MtxGridColumn } from 'src/app/extensions/grid/grid.interface';
 import { MatDialog } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
 import { PdfViewerDialogComponent } from 'src/app/theme';
+import { CanceleInvoiceComponent, CommonDialogComponent } from '../../dialogs';
 
 @Component({
   selector: 'app-purchase-return',
@@ -21,6 +24,7 @@ import { PdfViewerDialogComponent } from 'src/app/theme';
   styleUrls: ['./purchase-return.component.scss'],
 })
 export class PurchaseReturnComponent implements OnInit {
+  dialogRef: any;
   PageTitle: string = 'Purchase Return';
   buttonText: string = 'Add New Purchase Return';
   purchaseListData: PurchaseReturn[] = [];
@@ -81,8 +85,8 @@ export class PurchaseReturnComponent implements OnInit {
                 closeColor: 'warn',
               },
               click: (record) => this.edit(record),
-              iif: () => {
-                return this.accRights!.canEdit;
+              iif: (record) => {
+                return this.accRights!.canEdit && record.eiStatus == false && record.eiCanceled == false;
               },
             },
             {
@@ -99,8 +103,25 @@ export class PurchaseReturnComponent implements OnInit {
                 closeColor: 'warn',
               },
               click: (record) => this.delete(record),
-              iif: () => {
-                return this.accRights!.canEdit;
+              iif: (record) => {
+                return this.accRights!.canEdit && record.eiStatus == false;
+              },
+            },
+            {
+              text: 'Cancel e-Invoice',
+              tooltip: 'Cancel e-Invoice',
+              buttontype: 'button',
+              pop: {
+                title: 'Confirm Cancel',
+                description: 'Are you sure you want to Cancel this e-Invoice.',
+                closeText: 'No',
+                okText: 'Yes',
+                okColor: 'primary',
+                closeColor: 'warn',
+              },
+              click: (record) => this.cancelEInvoice(record),
+              iif: (record) => {
+                return record.eiStatus == true && record.eiCanceled == false;
               },
             },
             {
@@ -151,6 +172,56 @@ export class PurchaseReturnComponent implements OnInit {
       .subscribe((response) => {
         this.getPurchaseList();
       });
+  }
+
+  cancelEInvoice(value: any) {
+    let eiCancelRequest: eI_CancelRequest = {
+      autoID: value.autoID,
+      irnNo: value.eiIrn,
+      transactionType: TransactionTypeMaster.Purchase_Return,
+      eICancelReason: '',
+      eICancelRemark: '',
+      status: '',
+      error: '',
+    };
+
+    this.dialogRef = this.dialog.open(CanceleInvoiceComponent, {
+      minWidth: '60vw',
+      minHeight: '60vh',
+      maxWidth: '60vw',
+      maxHeight: '60vh',
+      panelClass: 'dialog-container',
+      autoFocus: true,
+    });
+
+    this.dialogRef.componentInstance.DialogTitle = 'Invoice : ' + value.refNo;
+    this.dialogRef.componentInstance.eiCancelRequest = eiCancelRequest;
+    this.dialogRef.afterClosed().subscribe((result: any) => {
+      if (result.CloseStatus == true) {
+        this.ShowCancelMessage(result.eiCancelRequest);
+      }
+    });
+  }
+
+  ShowCancelMessage(eiCancelRequest: eI_CancelRequest) {
+    this.dialogRef = this.dialog.open(CommonDialogComponent, {
+      minWidth: '60vw',
+      minHeight: '60vh',
+      maxWidth: '60vw',
+      maxHeight: '60vh',
+      panelClass: 'dialog-container',
+      autoFocus: true,
+    });
+
+    this.dialogRef.componentInstance.DialogTitle = 'e-Invoice Cancel Status';
+    if (eiCancelRequest.status == 'Failed') {
+      this.dialogRef.componentInstance.DialogContent = eiCancelRequest.error;
+    }
+    if (eiCancelRequest.status == 'Success') {
+      this.dialogRef.componentInstance.DialogContent =
+        'Your e-Invoice successfully to Canceled.';
+    }
+    this.getPurchaseList();
   }
 
   printInvoice(value: any) {
