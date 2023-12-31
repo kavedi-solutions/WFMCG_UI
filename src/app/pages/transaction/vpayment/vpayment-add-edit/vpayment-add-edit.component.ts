@@ -61,7 +61,7 @@ export class VPaymentAddEditComponent implements OnInit {
     VoucherNo: ['', [Validators.required]],
     RefNo: ['', [Validators.required]],
     AccountID: ['', [Validators.required]],
-    PaymentType: ['0', [Validators.required]],
+    PaymentType: ['', [Validators.required]],
     TransactionNo: [''],
     Narration: ['', [Validators.required]],
     Amount: ['0'],
