@@ -320,6 +320,7 @@ export class SalesAddEditComponent implements OnInit {
 
         this.BillDateControl.setValue(moment(this.editSales?.billDate));
         this.AccountIDControl.setValue(SeletedAccount);
+        this.SelectedAccountState(Number(SeletedAccount.stateID));
 
         this.AccountTradeTypeChange(
           this.editSales?.accountTradeTypeID.toString()
@@ -676,12 +677,7 @@ export class SalesAddEditComponent implements OnInit {
       event.option.value.accountTradeTypeID.toString()
     );
     this.AccountTradeTypeChange(event.option.value.accountTradeTypeID);
-    this.InvoiceType =
-      this.AccountStateID != this.CompanyStateID
-        ? 'IGST Invoice'
-        : 'CGST/SGST Invoice';
-    this.IsIGSTInvoice =
-      this.AccountStateID != this.CompanyStateID ? true : false;
+    this.SelectedAccountState(event.option.value.stateID);
 
     if (
       event.option.value.headAccountID !=
@@ -713,6 +709,16 @@ export class SalesAddEditComponent implements OnInit {
       });
     }
   }
+
+  SelectedAccountState(StateID: number) {
+    this.AccountStateID = StateID;
+    this.InvoiceType =
+      this.AccountStateID != this.CompanyStateID
+        ? 'IGST Invoice'
+        : 'CGST/SGST Invoice';
+    this.IsIGSTInvoice =
+      this.AccountStateID != this.CompanyStateID ? true : false;
+  }  
 
   SelectedItem(event: any) {
     //check item exitst in item Detail

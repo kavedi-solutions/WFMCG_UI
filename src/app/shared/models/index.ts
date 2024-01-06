@@ -135,6 +135,7 @@ export * from './transaction/v-receipt-b2b/vReceiptB2BResponse.model';
 
 export * from './report/others/bulkPrint.model';
 export * from './report/others/loadingSlip.model';
+export * from './report/others/voucherprint.model';
 export * from './report/stock/stockStatement.model';
 export * from './report/financial/outstanding.model';
 export * from './report/financial/accountledger.model';

@@ -3452,6 +3452,55 @@ export function GetLoadingSlipColumn() {
   return LoadingSlipColumns;
 }
 
+export function GetVoucherPrintColumn() {
+  let VoucherPrintColumns: MtxGridColumn[] = [
+    {
+      header: 'Auto ID',
+      field: 'autoID',
+      hide: true,
+    },
+    {
+      header: 'Ref No',
+      field: 'refNo',
+      sortable: false,
+      disabled: false,
+      minWidth: 150,
+      width: '150px',
+    },
+    {
+      header: 'Voucher Date',
+      field: 'voucherDate',
+      sortable: false,
+      disabled: false,
+      type: 'date',
+      typeParameter: { format: 'dd-MM-yyyy' },
+      minWidth: 100,
+      width: '100px',
+    },
+    {
+      header: 'Party Name',
+      field: 'accountName',
+      sortable: false,
+      disabled: false,
+      minWidth: 300,
+      width: '300px',
+    },
+    {
+      header: 'Amount',
+      field: 'amount',
+      sortable: false,
+      disabled: true,
+      minWidth: 200,
+      width: '200px',
+      type: 'number',
+      typeParameter: { digitsInfo: '0.2-2', locale: 'en-IN' },
+      class: 'right-mat-header-cell right-mat-cell',
+    },
+  ];
+
+  return VoucherPrintColumns;
+}
+
 export function GetStockStatementItemGroupColumns() {
   let ItemGroupColumns: MtxGridColumn[] = [
     {

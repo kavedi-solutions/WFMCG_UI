@@ -8,6 +8,8 @@ import {
   BulkPrintResponse,
   LoadingSlipInvoiceFilter,
   LodingSlipFilter,
+  VoucherPrintFilter,
+  VoucherPrintResponse,
 } from '../../models';
 import { NumberSymbol } from '@angular/common';
 
@@ -286,4 +288,92 @@ export class OthersReportService {
         })
       );
   }
+
+  GetVoucherPrintData(
+    filter: VoucherPrintFilter
+  ): Observable<VoucherPrintResponse[]> {
+    const url = `${this.APIURL}/voucher/get`;
+    let params = new HttpParams()
+      .set('VoucherType', `${filter.voucherType}`)
+      .set('BookAccountID', `${filter.bookAccountID}`)
+      .set('FromDate', `${filter.FromDate}`)
+      .set('ToDate', `${filter.ToDate}`);
+
+    return this.http
+      .get<any>(encodeURI(url), {
+        headers: this.headers,
+        observe: 'response',
+        params,
+      })
+      .pipe(
+        map((response) => {
+          return response.body;
+        })
+      );
+  }
+
+  PrintVouchers(
+    VoucherType: string,
+    NoofCopy: NumberSymbol,
+    InvoiceID: number[]
+  ) {
+    const url = `${this.APIURL}/voucher/print`;
+    let params = new HttpParams();
+    if (VoucherType != "")
+    {
+      params = params.append('VoucherType', VoucherType);
+    }
+    if (NoofCopy != 0) {
+      params = params.append('noofCopy', NoofCopy);
+    }
+
+    if (InvoiceID.length > 0) {
+      InvoiceID.forEach((element) => {
+        params = params.append('InvoiceIDs', element);
+      });
+    }
+
+    return this.http
+      .get(encodeURI(url), {
+        headers: this.headers,
+        observe: 'response',
+        responseType: 'blob',
+        params,
+      })
+      .pipe(
+        map((response) => {
+          return response.body;
+        })
+      );
+  }
+
+  PrintJVouchers(
+    NoofCopy: NumberSymbol,
+    InvoiceID: number[]
+  ) {
+    const url = `${this.APIURL}/jvoucher/print`;
+    let params = new HttpParams();
+    if (NoofCopy != 0) {
+      params = params.append('noofCopy', NoofCopy);
+    }
+
+    if (InvoiceID.length > 0) {
+      InvoiceID.forEach((element) => {
+        params = params.append('InvoiceIDs', element);
+      });
+    }
+
+    return this.http
+      .get(encodeURI(url), {
+        headers: this.headers,
+        observe: 'response',
+        responseType: 'blob',
+        params,
+      })
+      .pipe(
+        map((response) => {
+          return response.body;
+        })
+      );
+  }  
 }

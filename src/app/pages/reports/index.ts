@@ -7,6 +7,7 @@ import { Gstr2PurchaseComponent } from './gstreports/gstr2-purchase/gstr2-purcha
 import { Gstr3bComponent } from './gstreports/gstr3b/gstr3b.component';
 import { BulkPrintComponent } from './others/bulk-print/bulk-print.component';
 import { LoadingSlipComponent } from './others/loading-slip/loading-slip.component';
+import { VoucherPrintComponent } from './others/voucher-print/voucher-print.component';
 import { StockStatementComponent } from './stock/stock-statement/stock-statement.component';
 
 export const ReportPages: any[] = [
@@ -19,7 +20,8 @@ export const ReportPages: any[] = [
   AccountLedgerComponent,
   Gstr3bComponent,
   Gstr1SalesComponent,
-  Gstr2PurchaseComponent
+  Gstr2PurchaseComponent,
+  VoucherPrintComponent
 ];
 
 export * from './others/bulk-print/bulk-print.component';
@@ -32,3 +34,4 @@ export * from './financial/account-ledger/account-ledger.component';
 export * from './gstreports/gstr1-sales/gstr1-sales.component';
 export * from './gstreports/gstr2-purchase/gstr2-purchase.component';
 export * from './gstreports/gstr3b/gstr3b.component';
+export * from './others/voucher-print/voucher-print.component';

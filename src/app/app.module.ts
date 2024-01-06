@@ -71,9 +71,6 @@ import { JwtHelperService, JwtModule } from '@auth0/angular-jwt';
 import { registerLocaleData } from '@angular/common';
 import localeIn from '@angular/common/locales/en-IN';
 import { ExtensionsModule } from './extensions/extensions.module';
-import { Gstr3bComponent } from './pages/reports/gstreports/gstr3b/gstr3b.component';
-import { Gstr1SalesComponent } from './pages/reports/gstreports/gstr1-sales/gstr1-sales.component';
-import { Gstr2PurchaseComponent } from './pages/reports/gstreports/gstr2-purchase/gstr2-purchase.component';
 
 registerLocaleData(localeIn);
 
@@ -90,9 +87,6 @@ export function tokenGetter() {
     AuthPages.AuthPages,
     Pages.Pages,
     SharedComponent.SharedComponent,
-    Gstr3bComponent,
-    Gstr1SalesComponent,
-    Gstr2PurchaseComponent,
   ],
   imports: [
     CommonModule,

@@ -732,6 +732,13 @@ const routes: Routes = [
             data: { MenuID: '702' },
             canActivate: [AuthGuard],
           },
+          {
+            path: 'voucherprint',
+            component: CommonPages.VoucherPrintComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '703' },
+            canActivate: [AuthGuard],
+          },
         ],
       },
     ],

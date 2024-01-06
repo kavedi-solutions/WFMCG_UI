@@ -298,6 +298,7 @@ export class SalesReturnAddEditComponent implements OnInit {
 
         this.BillDateControl.setValue(moment(this.editSalesReturn?.billDate));
         this.AccountIDControl.setValue(SeletedAccount);
+        this.SelectedAccountState(Number(SeletedAccount.stateID));
 
         this.AccountTradeTypeChange(
           this.editSalesReturn?.accountTradeTypeID.toString()
@@ -575,13 +576,18 @@ export class SalesReturnAddEditComponent implements OnInit {
       event.option.value.accountTradeTypeID.toString()
     );
     this.AccountTradeTypeChange(event.option.value.accountTradeTypeID);
+    this.SelectedAccountState(event.option.value.stateID);
+    this.FillItemDropDown();
+  }
+
+  SelectedAccountState(StateID: number) {
+    this.AccountStateID = StateID;
     this.InvoiceType =
       this.AccountStateID != this.CompanyStateID
         ? 'IGST Invoice'
         : 'CGST/SGST Invoice';
     this.IsIGSTInvoice =
       this.AccountStateID != this.CompanyStateID ? true : false;
-    this.FillItemDropDown();
   }
 
   SelectedItem(event: any) {

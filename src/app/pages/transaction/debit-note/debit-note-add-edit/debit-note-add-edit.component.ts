@@ -255,6 +255,7 @@ export class DebitNoteAddEditComponent implements OnInit {
 
         this.BillDateControl.setValue(moment(this.editDebitNote?.billDate));
         this.AccountIDControl.setValue(SeletedAccount);
+        this.SelectedAccountState(Number(SeletedAccount.stateID));
 
         this.editDebitNote!.details!.forEach((element) => {
           let ItemDetails: DebitNoteItemDetail = {
@@ -464,14 +465,18 @@ export class DebitNoteAddEditComponent implements OnInit {
   }
 
   SelectedAccount(event: any) {
-    this.AccountStateID = event.option.value.stateID;
+    this.SelectedAccountState(event.option.value.stateID);
+  }
+
+  SelectedAccountState(StateID: number) {
+    this.AccountStateID = StateID;
     this.InvoiceType =
       this.AccountStateID != this.CompanyStateID
         ? 'IGST Invoice'
         : 'CGST/SGST Invoice';
     this.IsIGSTInvoice =
       this.AccountStateID != this.CompanyStateID ? true : false;
-  }
+  }  
 
   SelectedItem(event: any) {
     //check item exitst in item Detail

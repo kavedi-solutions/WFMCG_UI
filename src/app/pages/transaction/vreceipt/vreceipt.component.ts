@@ -11,6 +11,9 @@ import * as defaultData from '../../../data/index';
 import { ActivatedRoute, Router } from '@angular/router';
 import { funSortingOrder } from 'src/app/shared/functions';
 import { PageEvent } from '@angular/material/paginator';
+import { MatDialog } from '@angular/material/dialog';
+import { DomSanitizer } from '@angular/platform-browser';
+import { PdfViewerDialogComponent } from 'src/app/theme';
 
 @Component({
   selector: 'app-vreceipt',
@@ -33,7 +36,10 @@ export class VReceiptComponent implements OnInit {
   constructor(
     private voucherService: fromService.VReceiptService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private reportService: fromService.OthersReportService,
+    private sanitizer: DomSanitizer,
+    private dialog: MatDialog
   ) {
     this.latestSearchText = '';
     this.accRights = this.route.snapshot.data['userRights'];
@@ -94,6 +100,24 @@ export class VReceiptComponent implements OnInit {
                 return this.accRights!.canEdit;
               },
             },
+            {
+              text: 'Print Voucher',
+              tooltip: 'Print Voucher',
+              buttontype: 'button',
+              pop: {
+                title: 'Confirm Print',
+                description:
+                  'Are you sure you want to Print this Receipt Voucher.',
+                closeText: 'No',
+                okText: 'Yes',
+                okColor: 'primary',
+                closeColor: 'warn',
+              },
+              click: (record) => this.printVoucher(record),
+              iif: () => {
+                return this.accRights!.canView;
+              },
+            },
           ],
         },
       ],
@@ -122,6 +146,24 @@ export class VReceiptComponent implements OnInit {
     this.voucherService.deleteVReceipt(value.autoID).subscribe((response) => {
       this.getVoucherList();
     });
+  }
+
+  printVoucher(value: any) {
+    this.reportService
+      .PrintVouchers('RV', 0, [value.autoID])
+      .subscribe((response) => {
+        var file = new Blob([response as Blob], { type: 'application/pdf' });
+        var fileURL = URL.createObjectURL(file);
+
+        this.dialog.open(PdfViewerDialogComponent, {
+          data: this.sanitizer.bypassSecurityTrustResourceUrl(fileURL),
+          minWidth: '80vw',
+          minHeight: '90vh',
+          maxWidth: '80vw',
+          maxHeight: '90vh',
+          autoFocus: true,
+        });
+      });
   }
 
   AddnewRecord() {

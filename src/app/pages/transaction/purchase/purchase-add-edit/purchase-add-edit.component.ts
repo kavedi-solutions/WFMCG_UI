@@ -272,7 +272,6 @@ export class PurchaseAddEditComponent implements OnInit {
         SeletedAccount = this.accountsDropDown.filter(
           (a) => a.account_Id == this.editPurchase?.accountID.toString()
         )[0];
-
         this.purchaseForm.patchValue({
           BookAccountID: this.editPurchase?.bookAccountID.toString(),
           BillNo: this.editPurchase?.billNo.toString(),
@@ -315,7 +314,7 @@ export class PurchaseAddEditComponent implements OnInit {
 
         this.BillDateControl.setValue(moment(this.editPurchase?.billDate));
         this.AccountIDControl.setValue(SeletedAccount);
-
+        this.SelectedAccountState(Number(SeletedAccount.stateID));
         this.AccountTradeTypeChange(
           this.editPurchase?.accountTradeTypeID.toString()
         );
@@ -595,7 +594,11 @@ export class PurchaseAddEditComponent implements OnInit {
   }
 
   SelectedAccount(event: any) {
-    this.AccountStateID = event.option.value.stateID;
+    this.SelectedAccountState(event.option.value.stateID);
+  }
+
+  SelectedAccountState(StateID: number) {
+    this.AccountStateID = StateID;
     this.InvoiceType =
       this.AccountStateID != this.CompanyStateID
         ? 'IGST Invoice'
