@@ -34,6 +34,7 @@ import { VJournalService } from './transaction/vjournal.service';
 import { VPaymentService } from './transaction/vpayment.service';
 import { VReceiptB2BService } from './transaction/vreceipt-b2b.service';
 import { VReceiptService } from './transaction/vreceipt.service';
+import { UtilityService } from './utility/utility.service';
 
 export const services: any[] = [
   AuthService,
@@ -70,7 +71,8 @@ export const services: any[] = [
   ReportStocksService,
   FinancialService,
   EInvoiceService,
-  GstService
+  GstService,
+  UtilityService
 ];
 
 export * from './admin/role.service';
@@ -120,3 +122,7 @@ export * from './reports/financial.service';
 export * from './reports/gst.service';
 
 export * from './einvoice/e-invoice.service';
+
+export * from './utility/utility.service';
+
+

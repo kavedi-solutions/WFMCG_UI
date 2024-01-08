@@ -5,6 +5,7 @@ import { EInvoicePages } from './einvoice';
 import { MasterPages } from './masters';
 import { ReportPages } from './reports';
 import { TransactionPages } from './transaction';
+import { UtilitiesPages } from './utility';
 
 export const Pages: any[] = [
   DashboardPageComponent,
@@ -14,6 +15,7 @@ export const Pages: any[] = [
   EInvoicePages,
   ReportPages,
   DialogPages,
+  UtilitiesPages,
 ];
 
 export * from './dashboard-page/dashboard-page.component';
@@ -23,3 +25,4 @@ export * from './transaction';
 export * from './einvoice';
 export * from './reports';
 export * from './dialogs';
+export * from './utility';

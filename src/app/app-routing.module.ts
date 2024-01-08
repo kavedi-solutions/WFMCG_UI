@@ -744,6 +744,24 @@ const routes: Routes = [
     ],
   },
   {
+    path: 'utilities',
+    component: Layouts.MainLayoutComponent,
+    canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
+    children: [
+      {
+        path: 'backupdatabse',
+        component: CommonPages.BackupDatabaseComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'diskcleanup',
+        component: CommonPages.DiskCleanupComponent,
+        canActivate: [AuthGuard],
+      }
+    ],
+  },
+  {
     path: 'quickmenu',
     component: Layouts.MainLayoutComponent,
     canActivate: [AuthGuard],

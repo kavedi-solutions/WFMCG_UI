@@ -3721,3 +3721,67 @@ export function GetFinancialColumns() {
 
   return FinancialColumns;
 }
+
+export function GetBackupDBColumns() {
+  let BackupDBColumns: MtxGridColumn[] = [
+    {
+      header: 'Auto ID',
+      field: 'autoID',
+      hide: true,
+    },
+    {
+      header: 'Backup Date',
+      field: 'backupDate',
+      sortable: false,
+      disabled: false,
+      minWidth: 250,
+      width: '250px',
+      type: 'date',
+      typeParameter: { format: 'dd-MM-yyyy HH:mm:ss' },
+    },
+    {
+      header: 'Backup File Name',
+      field: 'backupFileName',
+      sortable: false,
+      disabled: false,
+      minWidth: 100,
+      width: '100px',
+    },
+    {
+      header: 'Backup Status',
+      field: 'backupStatus',
+      sortable: false,
+      disabled: false,
+      type: 'tag',
+      tag: {
+        true: { text: 'Success', color: 'green-100' },
+        false: { text: 'Failed', color: 'red-100' },
+      },
+      minWidth: 75,
+      width: '75px',
+    },
+    {
+      header: 'Zip File Status',
+      field: 'zipStatus',
+      sortable: false,
+      disabled: false,
+      type: 'tag',
+      tag: {
+        true: { text: 'Success', color: 'green-100' },
+        false: { text: 'Failed', color: 'red-100' },
+      },
+      minWidth: 75,
+      width: '75px',
+    },
+    {
+      header: 'Backup Location',
+      field: 'backupLocation',
+      sortable: false,
+      disabled: false,
+      minWidth: 200,
+      width: '200px',
+    },
+  ];
+
+  return BackupDBColumns;
+}

@@ -1,0 +1,55 @@
+<page-header
+  class="bg-blue-600"
+  [title]="PageTitle"
+  [showBack]="false"
+  [showAdd]="false"
+  [showEdit]="false"
+></page-header>
+
+<div class="page-detail">
+  <mat-card *ngIf="ShowTakeBackup">
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="100%" fxFlex.lt-sm="100" class="matero-col">
+        <p>
+          This Process will take backup of all databases. It will take some
+          time.
+        </p>
+      </div>
+    </div>
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="100%" fxFlex.lt-sm="100" class="matero-col">
+        <span>
+          <strong>Backup Location </strong>:
+          {{ backupLocation!.backupFullPath }}</span
+        >
+      </div>
+    </div>
+    <div class="matero-row m-t-24" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="100%" fxFlex.lt-sm="100" class="matero-col">
+        <button
+          type="button"
+          mat-raised-button
+          color="accent"
+          (click)="TakeDatabaseBackup()"
+        >
+          Backup
+        </button>
+      </div>
+    </div>
+  </mat-card>
+  <mat-card *ngIf="!ShowTakeBackup">
+
+  </mat-card>
+  <mat-card>
+    <mtx-grid
+    [data]="backupLocation!.pastBackups!"
+    [columns]="columns"
+    [pageOnFront]="false"
+    [showPaginator]="false"
+    [showToolbar]="false"
+    [showSummary]="false"
+    [showColumnMenuButton]="false"
+  >
+  </mtx-grid>
+  </mat-card>
+</div>
