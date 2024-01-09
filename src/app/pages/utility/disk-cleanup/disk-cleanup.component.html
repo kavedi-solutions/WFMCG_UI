@@ -1,1 +1,42 @@
-<p>disk-cleanup works!</p>
+<page-header
+  class="bg-blue-600"
+  [title]="PageTitle"
+  [showBack]="false"
+  [showAdd]="false"
+  [showEdit]="false"
+></page-header>
+
+<div class="page-detail">
+  <mat-card *ngIf="!ShowStatus">
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="100%" fxFlex.lt-sm="100" class="matero-col">
+        <p class="f-s-18 f-w-500 text-center text-green-500">
+          This process will remove all temp files where created for reports and
+          others
+        </p>
+      </div>
+    </div>
+    <div class="matero-row m-t-24" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="100%" fxFlex.lt-sm="100" class="matero-col text-right">
+        <button
+          type="button"
+          mat-raised-button
+          color="accent"
+          (click)="DiskCleanup()"
+        >
+          Clean
+        </button>
+      </div>
+    </div>
+  </mat-card>
+
+  <mat-card *ngIf="ShowStatus">
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="100%" fxFlex.lt-sm="100" class="matero-col">
+        <p class="f-s-18 f-w-500 text-center text-green-500">
+          Temp files remove successfully.
+        </p>
+      </div>
+    </div>
+  </mat-card>
+</div>

@@ -10,7 +10,7 @@
   <mat-card *ngIf="ShowTakeBackup">
     <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
       <div fxFlex="100%" fxFlex.lt-sm="100" class="matero-col">
-        <p>
+        <p class="f-s-18 f-w-500 text-red-500">
           This Process will take backup of all databases. It will take some
           time.
         </p>
@@ -25,7 +25,7 @@
       </div>
     </div>
     <div class="matero-row m-t-24" fxLayout.lt-sm="column" fxLayout="row">
-      <div fxFlex="100%" fxFlex.lt-sm="100" class="matero-col">
+      <div fxFlex="100%" fxFlex.lt-sm="100" class="matero-col text-right">
         <button
           type="button"
           mat-raised-button
@@ -38,18 +38,31 @@
     </div>
   </mat-card>
   <mat-card *ngIf="!ShowTakeBackup">
-
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="100%" fxFlex.lt-sm="100" class="matero-col">
+        <p class="f-s-18 f-w-500 text-center text-green-500">
+          Backup of database process completed. Please check Status below.
+        </p>
+      </div>
+    </div>
   </mat-card>
   <mat-card>
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="100%" fxFlex.lt-sm="100" class="matero-col">
+        <p class="f-s-18 f-w-500 text-center text-red-500">
+          Last 5 Backup Taken Deails
+        </p>
+      </div>
+    </div>
     <mtx-grid
-    [data]="backupLocation!.pastBackups!"
-    [columns]="columns"
-    [pageOnFront]="false"
-    [showPaginator]="false"
-    [showToolbar]="false"
-    [showSummary]="false"
-    [showColumnMenuButton]="false"
-  >
-  </mtx-grid>
+      [data]="backupLocation!.pastBackups!"
+      [columns]="columns"
+      [pageOnFront]="false"
+      [showPaginator]="false"
+      [showToolbar]="false"
+      [showSummary]="false"
+      [showColumnMenuButton]="false"
+    >
+    </mtx-grid>
   </mat-card>
 </div>

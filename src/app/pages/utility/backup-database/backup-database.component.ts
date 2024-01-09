@@ -47,7 +47,6 @@ export class BackupDatabaseComponent implements OnInit {
     };
 
     this.utilityService.TakeBackupDatabase(filter).subscribe((response) => {
-      debugger;
       if (response == true) {
         this.ShowTakeBackup = false;
         this.GetBackupLocation();

@@ -652,7 +652,6 @@ export class SalesReturnAddEditComponent implements OnInit {
 
   GetCurrentStock(ItemID: number) {
     //stockService
-    debugger;
     let filters: StockFilter = {
       ReturnTypeID: Number(this.ReturnTypeIDControl.value),
       AccountTradeTypeID: Number(this.AccountTradeTypeIDControl.value),
@@ -701,7 +700,6 @@ export class SalesReturnAddEditComponent implements OnInit {
     } else {
       SrNo = this.salesReturnItemDetailsList.length + 1;
     }
-    debugger;
     let ItemDetails: SalesReturnItemDetail = {
       AutoID: this.IsItemEditMode ? Number(this.ItemEdit?.AutoID) : 0,
       SrNo: this.IsItemEditMode ? Number(this.ItemEdit?.SrNo) : SrNo,
