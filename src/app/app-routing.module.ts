@@ -739,6 +739,13 @@ const routes: Routes = [
             data: { MenuID: '703' },
             canActivate: [AuthGuard],
           },
+          {
+            path: 'salespurchasereport',
+            component: CommonPages.SalesPurchaseReportComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '704' },
+            canActivate: [AuthGuard],
+          },
         ],
       },
     ],
