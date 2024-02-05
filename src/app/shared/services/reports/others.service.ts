@@ -8,6 +8,8 @@ import {
   BulkPrintResponse,
   LoadingSlipInvoiceFilter,
   LodingSlipFilter,
+  SalesPurchaseReportFilter,
+  SalesPurchaseReportResponse,
   VoucherPrintFilter,
   VoucherPrintResponse,
 } from '../../models';
@@ -319,8 +321,7 @@ export class OthersReportService {
   ) {
     const url = `${this.APIURL}/voucher/print`;
     let params = new HttpParams();
-    if (VoucherType != "")
-    {
+    if (VoucherType != '') {
       params = params.append('VoucherType', VoucherType);
     }
     if (NoofCopy != 0) {
@@ -347,10 +348,7 @@ export class OthersReportService {
       );
   }
 
-  PrintJVouchers(
-    NoofCopy: NumberSymbol,
-    InvoiceID: number[]
-  ) {
+  PrintJVouchers(NoofCopy: NumberSymbol, InvoiceID: number[]) {
     const url = `${this.APIURL}/jvoucher/print`;
     let params = new HttpParams();
     if (NoofCopy != 0) {
@@ -375,5 +373,200 @@ export class OthersReportService {
           return response.body;
         })
       );
-  }  
+  }
+
+  GetsalespurchaseData(
+    filter: SalesPurchaseReportFilter
+  ): Observable<SalesPurchaseReportResponse[]> {
+    const url = `${this.APIURL}/salepurchasereport`;
+    let params = new HttpParams()
+      .set('FromDate', `${filter.fromDate}`)
+      .set('ToDate', `${filter.toDate}`)
+      .set('TransactionTypeID', `${filter.transactionTypeID}`)
+      .set('ReturnTypeID', `${filter.returnTypeID}`)
+      .set('HasBookSelected', `${filter.hasBookSelected}`)
+      .set('HasFirstSelected', `${filter.hasFirstSelected}`)
+      .set('SelectedFirstName', `${filter.selectedFirstName}`)
+      .set('HasSecondSelected', `${filter.hasSecondSelected}`)
+      .set('SelectedSecondName', `${filter.selectedSecondName}`)
+      .set('HasThirdSelected', `${filter.hasThirdSelected}`)
+      .set('SelectedThirdName', `${filter.selectedThirdName}`)
+      .set('HasFourthSelected', `${filter.hasFourthSelected}`)
+      .set('SelectedFourthName', `${filter.selectedFourthName}`)
+      .set('HasFifthSelected', `${filter.hasFifthSelected}`)
+      .set('SelectedFifthName', `${filter.selectedFifthName}`)
+      .set('HasSixthSelected', `${filter.hasSixthSelected}`)
+      .set('SelectedSixthName', `${filter.selectedSixthName}`)
+      .set('MonthWise', `${filter.monthWise}`)
+      .set('ShowInvoiceNo', `${filter.showInvoiceNo}`)
+      .set('ShowInvoiceDate', `${filter.showInvoiceDate}`)
+      .set('ShowQuantity', `${filter.showQuantity}`)
+      .set('ShowAmount', `${filter.showAmount}`)
+      .set('ShowDiscountAmount', `${filter.showDiscountAmount}`)
+      .set('ShowTaxableAmount', `${filter.showTaxableAmount}`)
+      .set('ShowTaxAmount', `${filter.showTaxAmount}`)
+      .set('ShowGrossAmount', `${filter.showGrossAmount}`)
+      .set('ShowSchemeAmount', `${filter.showSchemeAmount}`)
+      .set('ShowNetAmount', `${filter.showNetAmount}`)
+      .set('SortFirst', `${filter.sortFirst}`)
+      .set('SortSecond', `${filter.sortSecond}`)
+      .set('SortThird', `${filter.sortThird}`)
+      .set('SortFourth', `${filter.sortFourth}`)
+      .set('SortFifth', `${filter.sortFifth}`)
+      .set('SortSixth', `${filter.sortSixth}`);
+
+    if (
+      filter.selectedBookAccountID != null &&
+      filter.selectedBookAccountID.length > 0
+    ) {
+      filter.selectedBookAccountID.forEach((element) => {
+        params = params.append('SelectedBookAccountID', element);
+      });
+    }
+
+    if (filter.selectedFirstID != null && filter.selectedFirstID.length > 0) {
+      filter.selectedFirstID.forEach((element) => {
+        params = params.append('SelectedFirstID', element);
+      });
+    }
+
+    if (filter.selectedSecondID != null && filter.selectedSecondID.length > 0) {
+      filter.selectedSecondID.forEach((element) => {
+        params = params.append('SelectedSecondID', element);
+      });
+    }
+
+    if (filter.selectedThirdID != null && filter.selectedThirdID.length > 0) {
+      filter.selectedThirdID.forEach((element) => {
+        params = params.append('SelectedThirdID', element);
+      });
+    }
+
+    if (filter.selectedFourthID != null && filter.selectedFourthID.length > 0) {
+      filter.selectedFourthID.forEach((element) => {
+        params = params.append('SelectedFourthID', element);
+      });
+    }
+
+    if (filter.selectedFifthID != null && filter.selectedFifthID.length > 0) {
+      filter.selectedFifthID.forEach((element) => {
+        params = params.append('SelectedFifthID', element);
+      });
+    }
+
+    if (filter.selectedSixthID != null && filter.selectedSixthID.length > 0) {
+      filter.selectedSixthID.forEach((element) => {
+        params = params.append('SelectedSixthID', element);
+      });
+    }
+
+    return this.http
+      .get<any>(encodeURI(url), {
+        headers: this.headers,
+        observe: 'response',
+        params,
+      })
+      .pipe(
+        map((response) => {
+          return response.body;
+        })
+      );
+  }
+
+  ExportsalespurchaseData(filter: SalesPurchaseReportFilter) {
+    const url = `${this.APIURL}/exportsalepurchasereport`;
+    let params = new HttpParams()
+      .set('FromDate', `${filter.fromDate}`)
+      .set('ToDate', `${filter.toDate}`)
+      .set('TransactionTypeID', `${filter.transactionTypeID}`)
+      .set('ReturnTypeID', `${filter.returnTypeID}`)
+      .set('HasBookSelected', `${filter.hasBookSelected}`)
+      .set('HasFirstSelected', `${filter.hasFirstSelected}`)
+      .set('SelectedFirstName', `${filter.selectedFirstName}`)
+      .set('HasSecondSelected', `${filter.hasSecondSelected}`)
+      .set('SelectedSecondName', `${filter.selectedSecondName}`)
+      .set('HasThirdSelected', `${filter.hasThirdSelected}`)
+      .set('SelectedThirdName', `${filter.selectedThirdName}`)
+      .set('HasFourthSelected', `${filter.hasFourthSelected}`)
+      .set('SelectedFourthName', `${filter.selectedFourthName}`)
+      .set('HasFifthSelected', `${filter.hasFifthSelected}`)
+      .set('SelectedFifthName', `${filter.selectedFifthName}`)
+      .set('HasSixthSelected', `${filter.hasSixthSelected}`)
+      .set('SelectedSixthName', `${filter.selectedSixthName}`)
+      .set('MonthWise', `${filter.monthWise}`)
+      .set('ShowInvoiceNo', `${filter.showInvoiceNo}`)
+      .set('ShowInvoiceDate', `${filter.showInvoiceDate}`)
+      .set('ShowQuantity', `${filter.showQuantity}`)
+      .set('ShowAmount', `${filter.showAmount}`)
+      .set('ShowDiscountAmount', `${filter.showDiscountAmount}`)
+      .set('ShowTaxableAmount', `${filter.showTaxableAmount}`)
+      .set('ShowTaxAmount', `${filter.showTaxAmount}`)
+      .set('ShowGrossAmount', `${filter.showGrossAmount}`)
+      .set('ShowSchemeAmount', `${filter.showSchemeAmount}`)
+      .set('ShowNetAmount', `${filter.showNetAmount}`)
+      .set('SortFirst', `${filter.sortFirst}`)
+      .set('SortSecond', `${filter.sortSecond}`)
+      .set('SortThird', `${filter.sortThird}`)
+      .set('SortFourth', `${filter.sortFourth}`)
+      .set('SortFifth', `${filter.sortFifth}`)
+      .set('SortSixth', `${filter.sortSixth}`);
+
+    if (
+      filter.selectedBookAccountID != null &&
+      filter.selectedBookAccountID.length > 0
+    ) {
+      filter.selectedBookAccountID.forEach((element) => {
+        params = params.append('SelectedBookAccountID', element);
+      });
+    }
+
+    if (filter.selectedFirstID != null && filter.selectedFirstID.length > 0) {
+      filter.selectedFirstID.forEach((element) => {
+        params = params.append('SelectedFirstID', element);
+      });
+    }
+
+    if (filter.selectedSecondID != null && filter.selectedSecondID.length > 0) {
+      filter.selectedSecondID.forEach((element) => {
+        params = params.append('SelectedSecondID', element);
+      });
+    }
+
+    if (filter.selectedThirdID != null && filter.selectedThirdID.length > 0) {
+      filter.selectedThirdID.forEach((element) => {
+        params = params.append('SelectedThirdID', element);
+      });
+    }
+
+    if (filter.selectedFourthID != null && filter.selectedFourthID.length > 0) {
+      filter.selectedFourthID.forEach((element) => {
+        params = params.append('SelectedFourthID', element);
+      });
+    }
+
+    if (filter.selectedFifthID != null && filter.selectedFifthID.length > 0) {
+      filter.selectedFifthID.forEach((element) => {
+        params = params.append('SelectedFifthID', element);
+      });
+    }
+
+    if (filter.selectedSixthID != null && filter.selectedSixthID.length > 0) {
+      filter.selectedSixthID.forEach((element) => {
+        params = params.append('SelectedSixthID', element);
+      });
+    }
+
+    return this.http
+      .get(encodeURI(url), {
+        headers: this.headers,
+        observe: 'response',
+        responseType: 'blob',
+        params,
+      })
+      .pipe(
+        map((response) => {
+          return response.body;
+        })
+      );
+  }
 }

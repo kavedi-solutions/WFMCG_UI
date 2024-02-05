@@ -1,0 +1,62 @@
+<h1 class="dialog-title dialog-title-info">
+  {{ DialogTitle }}
+</h1>
+<div class="dialog-content">
+  <div class="matero-row rowclass" fxLayout.lt-sm="column" fxLayout="row">
+    <div fxFlex="100%" fxFlex.lt-sm="100" class="matero-col">
+      <mat-form-field appearance="legacy" color="primary" class="w-full">
+        <mat-label>Search</mat-label>
+        <input
+          matInput
+          type="text"
+          placeholder="Search"
+          maxlength="100"
+          (keyup)="onSearchKeyUp($event)"
+        />
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="matero-row rowclass" fxLayout.lt-sm="column" fxLayout="row">
+    <div fxFlex="100%" fxFlex.lt-sm="100" class="matero-col columnclass">
+      <div class="table-container">
+        <mtx-grid
+          class="table-main-wrapper mtx-grid-selection"
+          [data]="filterData"
+          [columns]="columns"
+          [multiSelectable]="true"
+          [rowSelected]="selectedData"
+          [rowSelectable]="true"
+          [hideRowSelectionCheckbox]="false"
+          [pageOnFront]="false"
+          [showPaginator]="false"
+          [showToolbar]="false"
+          [showSummary]="false"
+          [showColumnMenuButton]="false"
+          (rowSelectionChange)="rowSelectionChange($event)"
+        >
+        </mtx-grid>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="dialog-actions">
+  <ng-container>
+    <button
+      mat-raised-button
+      mat-dialog-close="Ok"
+      cdkFocusInitial
+      (click)="onClickOk()"
+      color="primary"
+    >
+      Ok
+    </button>
+    <button
+      mat-raised-button
+      mat-dialog-close="Cancel"
+      color="warn"
+      (click)="onClickCancel()"
+    >
+      Cancel
+    </button>
+  </ng-container>
+</div>

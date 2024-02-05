@@ -33,6 +33,7 @@ export interface transactionTypeResponse {
   allowPrintLodingSlip: boolean;
   alloweInvoice: boolean;
   alloweWayBill: boolean;
+  allowSPReport: boolean;
 }
 
 export interface voucherTypeResponse {

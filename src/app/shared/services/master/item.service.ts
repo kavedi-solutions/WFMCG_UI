@@ -12,6 +12,7 @@ import {
   ItemOpeningResponse,
   OpeningItemPutRequest,
   ItemFilter_DropDown,
+  ItemFilter_DropDownReport,
 } from '../../models';
 import { LocalStorageService } from '../common/storage.service';
 
@@ -147,6 +148,25 @@ export class ItemService {
       .set('AccountID', `${filters.AccountID != undefined ? filters.AccountID : 0}`)
       .set('InvoiceID', `${filters.InvoiceID != undefined ? filters.InvoiceID : 0}`)
       .set('BillDate', `${filters.BillDate != undefined ? filters.BillDate : ''}`);
+
+    return this.http
+      .get<any>(encodeURI(url), {
+        headers: this.headers,
+        observe: 'response',
+        params,
+      })
+      .pipe(
+        map((response) => {
+          return response.body;
+        })
+      );
+  }
+
+  ItemDropDownReport(filters: ItemFilter_DropDownReport) {
+    const url = `${this.APIURL}/company/${this.CompanyID}/item/dropdownreport`;
+    let params = new HttpParams()
+      .set('ItemType', `${filters.ItemType}`)      
+      .set('TransactionTypeID', `${filters.TransactionTypeID != undefined ? filters.TransactionTypeID : 0}`)
 
     return this.http
       .get<any>(encodeURI(url), {

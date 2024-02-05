@@ -1,0 +1,15 @@
+.sel-button {
+  padding-left: 0px;
+  padding-right: 0px;
+  min-width: 35px !important;
+}
+
+.mtx-grid-sales-purchase-report {
+  min-height: 250px !important;
+  max-height: 500px !important;
+}
+::ng-deep {
+  .mtx-grid-sales-purchase-report .mat-table-container {
+    overflow: unset !important;
+  }
+}

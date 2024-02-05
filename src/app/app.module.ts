@@ -195,6 +195,7 @@ export function tokenGetter() {
     Pages.GstDetailsComponent,
     Pages.CanceleInvoiceComponent,
     Pages.CommonDialogComponent,
+    Pages.SPReportSelectionsComponent
   ],
   bootstrap: [AppComponent],
 })

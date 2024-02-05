@@ -7,3 +7,8 @@ export interface ItemFilter_DropDown {
   InvoiceID?: number;
   BillDate?: string;
 }
+
+export interface ItemFilter_DropDownReport {
+  ItemType: number;
+  TransactionTypeID?: number;
+}
