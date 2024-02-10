@@ -404,10 +404,29 @@
         [pageOnFront]="false"
         [showPaginator]="false"
         [showToolbar]="false"
-        [showSummary]="false"
+        [showSummary]="true"
         [showColumnMenuButton]="false"
+        [summaryTemplate]="{
+          amount: footerTpl,
+          discountAmount: footerTpl,
+          taxableAmount: footerTpl,
+          igstAmount: footerTpl,
+          cgstAmount: footerTpl,
+          sgstAmount: footerTpl,
+          cessAmount: footerTpl,
+          totalTaxAmount: footerTpl,
+          grossAmount: footerTpl,
+          schemeAmount: footerTpl,
+          netAmount: footerTpl
+        }"
       >
       </mtx-grid>
     </div>
   </div>
 </mat-card>
+
+<ng-template #footerTpl let-data>
+  <div class="right-mat-cell-summary">
+    {{ getTotal(data) | number : "0.2-2" : "en-IN" }}
+  </div>
+</ng-template>

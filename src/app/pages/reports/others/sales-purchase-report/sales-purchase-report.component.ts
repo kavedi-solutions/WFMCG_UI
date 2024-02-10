@@ -9,7 +9,10 @@ import {
   SalesPurchaseReportResponse,
   transactionTypeResponse,
 } from '../../../../shared/index';
-import { GetFinYearStartDate } from 'src/app/shared/functions';
+import {
+  GetFinYearStartDate,
+  SetFormatCurrency,
+} from 'src/app/shared/functions';
 import { MatDialog } from '@angular/material/dialog';
 import { SPReportSelectionsComponent } from 'src/app/pages/dialogs';
 import { MtxGridColumn } from 'src/app/extensions/grid/grid.interface';
@@ -712,15 +715,17 @@ export class SalesPurchaseReportComponent implements OnInit {
       sortSixth: this.SelectedSixthName,
     };
 
-    this.reportService.ExportsalespurchaseData(filters).subscribe((response) => {
-      const blob = new Blob([response as Blob], {
-        type: 'application/vnd.ms.excel',
+    this.reportService
+      .ExportsalespurchaseData(filters)
+      .subscribe((response) => {
+        const blob = new Blob([response as Blob], {
+          type: 'application/vnd.ms.excel',
+        });
+        const file = new File([blob], 'SalesPurchaseReport.xlsx', {
+          type: 'application/vnd.ms.excel',
+        });
+        saveAs(file);
       });
-      const file = new File([blob], 'SalesPurchaseReport.xlsx', {
-        type: 'application/vnd.ms.excel',
-      });
-      saveAs(file);
-    });
   }
 
   CreateGridColumns() {
@@ -732,6 +737,7 @@ export class SalesPurchaseReportComponent implements OnInit {
       disabled: true,
       minWidth: 250,
       width: '250px',
+      summary: 'Total',
     });
 
     if (this.SelectedFirstName != '') {
@@ -1048,5 +1054,9 @@ export class SalesPurchaseReportComponent implements OnInit {
         class: 'right-mat-header-cell right-mat-cell',
       });
     }
+  }
+
+  getTotal(data: any) {
+    return data.reduce((acc: any, value: any) => acc + value, 0);
   }
 }
