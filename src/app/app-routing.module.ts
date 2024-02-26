@@ -746,6 +746,13 @@ const routes: Routes = [
             data: { MenuID: '704' },
             canActivate: [AuthGuard],
           },
+          {
+            path: 'incentivereport',
+            component: CommonPages.IncentiveReportComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '705' },
+            canActivate: [AuthGuard],
+          },
         ],
       },
     ],

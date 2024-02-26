@@ -7,3 +7,4 @@ export interface accountsDropDownResponse {
   accountTradeTypeID: number;
   headAccountID: number;
 }
+

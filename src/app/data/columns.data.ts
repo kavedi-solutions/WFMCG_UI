@@ -3785,3 +3785,21 @@ export function GetBackupDBColumns() {
 
   return BackupDBColumns;
 }
+
+export function GetIncentiveAccountColumns() {
+  let FinancialColumns: MtxGridColumn[] = [
+    {
+      header: 'Account ID',
+      field: 'accountID',
+      hide: true,
+    },
+    {
+      header: 'Account Name',
+      field: 'accountName',
+      sortable: false,
+      disabled: false,
+    },
+  ];
+
+  return FinancialColumns;
+}

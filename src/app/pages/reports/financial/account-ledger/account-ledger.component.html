@@ -149,6 +149,7 @@
               [data]="filteraccountsData"
               [columns]="columns"
               [multiSelectable]="true"
+              [rowSelected]="selectedeAccountsData"
               [rowSelectable]="true"
               [hideRowSelectionCheckbox]="false"
               [pageOnFront]="false"
@@ -168,7 +169,7 @@
         type="button"
         mat-raised-button
         color="primary"
-        [disabled]="!registerForm.valid && selectedeAccountsData.length == 0"
+        [disabled]="!registerForm.valid || selectedeAccountsData.length == 0"
         (click)="GenerateReport()"
       >
         Generate (Print)

@@ -1,0 +1,162 @@
+<page-header
+  class="bg-blue-600"
+  [title]="PageTitle"
+  [showBack]="false"
+  [showAdd]="false"
+></page-header>
+
+<form class="form-field-full page-detail" [formGroup]="incentiveForm">
+  <mat-card>
+    <div
+      class="matero-row"
+      fxLayout.lt-sm="column"
+      fxLayout="row"
+      fxLayoutGap="20px"
+      fxLayoutGap.xs="5px"
+    >
+      <div fxFlex="30%" fxFlex.lt-sm="100" class="matero-col">
+        <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+          <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
+            <mat-form-field appearance="legacy" color="primary">
+              <input
+                matInput
+                [matDatepicker]="FromDatePicker"
+                placeholder="From Date"
+                formControlName="FromDate"
+                [min]="FromMinDate"
+                [max]="FromMaxDate"
+                (dateChange)="FromDateChange()"
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="FromDatePicker"
+                [tabIndex]="-1"
+                ><mat-icon matDatepickerToggleIcon
+                  >keyboard_arrow_down</mat-icon
+                ></mat-datepicker-toggle
+              >
+              <mat-datepicker #FromDatePicker></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
+            <mat-form-field appearance="legacy" color="primary">
+              <input
+                matInput
+                [matDatepicker]="ToDatePicker"
+                placeholder="To Date"
+                formControlName="ToDate"
+                [min]="ToMinDate"
+                [max]="ToMaxDate"
+                (dateChange)="ToDateChange()"
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="ToDatePicker"
+                [tabIndex]="-1"
+                ><mat-icon matDatepickerToggleIcon
+                  >keyboard_arrow_down</mat-icon
+                ></mat-datepicker-toggle
+              >
+              <mat-datepicker #ToDatePicker></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+          <div fxFlex="100%" fxFlex.lt-sm="100" class="matero-col">
+            <mat-form-field appearance="legacy" color="primary">
+              <mat-label>Manufacture</mat-label>
+              <mat-select
+                formControlName="ManufactureID"
+                required
+                (selectionChange)="ManufactureChange($event)"
+              >
+                <mat-option
+                  *ngFor="let mdd of manufactureDropDown"
+                  [value]="mdd.manufacture_Id"
+                >
+                  {{ mdd.manufacture_Name }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="manufactureIDControlRequired"
+                >Manufacture is required.</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+          <div fxFlex="100%" fxFlex.lt-sm="100" class="matero-col">
+            <mat-radio-group
+              aria-label="Select an option"
+              formControlName="ReportType"
+            >
+              <mat-radio-button value="S">Summary</mat-radio-button>
+              <mat-radio-button value="D">Details</mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </div>
+      </div>
+      <div fxFlex="70%" fxFlex.lt-sm="100" class="matero-col">
+        <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+          <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
+            <mat-form-field appearance="legacy" color="primary">
+              <mat-label>Area</mat-label>
+              <mat-select
+                formControlName="AreaID"
+                (selectionChange)="AreaChange($event)"
+              >
+                <mat-option value="0">-- ALL --</mat-option>
+                <mat-option
+                  *ngFor="let sbdd of areaDropDown"
+                  [value]="sbdd.area_Id"
+                >
+                  {{ sbdd.area_Name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
+            <mat-form-field appearance="legacy" color="primary">
+              <mat-label>Search Account</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="AccountName"
+                placeholder="Search Account"
+                maxlength="100"
+                (keyup)="onAccountNameKeyUp($event)"
+              />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+          <mtx-grid
+            class="table-main-wrapper mtx-grid-purchase"
+            [data]="filteraccountsData"
+            [columns]="columns"
+            [multiSelectable]="true"
+            [rowSelectable]="true"
+            [hideRowSelectionCheckbox]="false"
+            [pageOnFront]="false"
+            [showPaginator]="false"
+            [showToolbar]="false"
+            [showSummary]="false"
+            [showColumnMenuButton]="false"
+            (rowSelectionChange)="rowSelectionChange($event)"
+          >
+          </mtx-grid>
+        </div>
+      </div>
+    </div>
+    <mat-card-actions align="end" class="area-mat-card-actions m-r-0">
+      <button
+        type="button"
+        mat-raised-button
+        color="primary"
+        [disabled]="!incentiveForm.valid || selectedAccountsData.length == 0"
+        (click)="GenerateReport()"
+      >
+        Generate (Print)
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</form>

@@ -4,8 +4,10 @@ import { AppConfig } from 'src/app/app.config';
 import { LocalStorageService } from '../common/storage.service';
 import { map, Observable } from 'rxjs';
 import {
+  accountsIncentiveDropDown,
   BulkPrintFilter,
   BulkPrintResponse,
+  IncentiveReportFilter,
   LoadingSlipInvoiceFilter,
   LodingSlipFilter,
   SalesPurchaseReportFilter,
@@ -553,6 +555,62 @@ export class OthersReportService {
     if (filter.selectedSixthID != null && filter.selectedSixthID.length > 0) {
       filter.selectedSixthID.forEach((element) => {
         params = params.append('SelectedSixthID', element);
+      });
+    }
+
+    return this.http
+      .get(encodeURI(url), {
+        headers: this.headers,
+        observe: 'response',
+        responseType: 'blob',
+        params,
+      })
+      .pipe(
+        map((response) => {
+          return response.body;
+        })
+      );
+  }
+
+  GetIncentiveAccountData(
+    filter: IncentiveReportFilter
+  ): Observable<accountsIncentiveDropDown[]> {
+    const url = `${this.APIURL}/incentive/accounts`;
+    let params = new HttpParams()
+      .set('ReportType', `${filter.reportType}`)
+      .set('ManufactureID', `${filter.manufactureID}`)
+      .set('AreaID', `${filter.areaID}`)
+      .set('FromDate', `${filter.fromDate}`)
+      .set('ToDate', `${filter.toDate}`);
+
+    return this.http
+      .get<any>(encodeURI(url), {
+        headers: this.headers,
+        observe: 'response',
+        params,
+      })
+      .pipe(
+        map((response) => {
+          return response.body;
+        })
+      );
+  }
+
+  GetIncentiveReport(filter: IncentiveReportFilter) {
+    const url = `${this.APIURL}/incentive`;
+    let params = new HttpParams()
+      .set('ReportType', `${filter.reportType}`)
+      .set('ManufactureID', `${filter.manufactureID}`)
+      .set('AreaID', `${filter.areaID}`)
+      .set('FromDate', `${filter.fromDate}`)
+      .set('ToDate', `${filter.toDate}`);
+
+    if (
+      filter.SelectedAccountID != null &&
+      filter.SelectedAccountID.length > 0
+    ) {
+      filter.SelectedAccountID.forEach((element) => {
+        params = params.append('SelectedAccountID', element);
       });
     }
 
