@@ -753,6 +753,13 @@ const routes: Routes = [
             data: { MenuID: '705' },
             canActivate: [AuthGuard],
           },
+          {
+            path: 'dailycollectionreport',
+            component: CommonPages.DailyCollectionReportComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '706' },
+            canActivate: [AuthGuard],
+          },
         ],
       },
     ],

@@ -6,6 +6,7 @@ import { Gstr1SalesComponent } from './gstreports/gstr1-sales/gstr1-sales.compon
 import { Gstr2PurchaseComponent } from './gstreports/gstr2-purchase/gstr2-purchase.component';
 import { Gstr3bComponent } from './gstreports/gstr3b/gstr3b.component';
 import { BulkPrintComponent } from './others/bulk-print/bulk-print.component';
+import { DailyCollectionReportComponent } from './others/daily-collection-report/daily-collection-report.component';
 import { IncentiveReportComponent } from './others/incentive-report/incentive-report.component';
 import { LoadingSlipComponent } from './others/loading-slip/loading-slip.component';
 import { SalesPurchaseReportComponent } from './others/sales-purchase-report/sales-purchase-report.component';
@@ -25,7 +26,8 @@ export const ReportPages: any[] = [
   Gstr2PurchaseComponent,
   VoucherPrintComponent,
   SalesPurchaseReportComponent,
-  IncentiveReportComponent
+  IncentiveReportComponent,
+  DailyCollectionReportComponent
 ];
 
 export * from './others/bulk-print/bulk-print.component';
@@ -41,3 +43,4 @@ export * from './gstreports/gstr3b/gstr3b.component';
 export * from './others/voucher-print/voucher-print.component';
 export * from './others/sales-purchase-report/sales-purchase-report.component';
 export * from './others/incentive-report/incentive-report.component';
+export * from './others/daily-collection-report/daily-collection-report.component';

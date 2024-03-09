@@ -138,6 +138,7 @@ export * from './report/others/loadingSlip.model';
 export * from './report/others/voucherprint.model';
 export * from './report/others/salespurchasereport.model';
 export * from './report/others/incentivereport.model';
+export * from './report/others/dailyCollectionReport.model';
 export * from './report/stock/stockStatement.model';
 export * from './report/financial/outstanding.model';
 export * from './report/financial/accountledger.model';

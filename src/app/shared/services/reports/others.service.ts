@@ -7,6 +7,7 @@ import {
   accountsIncentiveDropDown,
   BulkPrintFilter,
   BulkPrintResponse,
+  DailyCollectionReportFilter,
   IncentiveReportFilter,
   LoadingSlipInvoiceFilter,
   LodingSlipFilter,
@@ -627,4 +628,45 @@ export class OthersReportService {
         })
       );
   }
+
+  GetDailyCollectionReport(filter: DailyCollectionReportFilter) {
+    const url = `${this.APIURL}/dailycollection`;
+    let params = new HttpParams()
+      .set('ReportType', `${filter.reportType}`)
+      .set('transactionTypeID', `${filter.transactionTypeID}`)
+      .set('returnTypeID', `${filter.returnTypeID}`)
+      .set('FromDate', `${filter.fromDate}`)
+      .set('ToDate', `${filter.toDate}`);
+
+    if (
+      filter.selectedBookAccountID != null &&
+      filter.selectedBookAccountID.length > 0
+    ) {
+      filter.selectedBookAccountID.forEach((element) => {
+        params = params.append('SelectedBookAccountID', element);
+      });
+    }
+
+    if (
+      filter.selectedAccountID != null &&
+      filter.selectedAccountID.length > 0
+    ) {
+      filter.selectedAccountID.forEach((element) => {
+        params = params.append('SelectedAccountID', element);
+      });
+    }
+
+    return this.http
+      .get(encodeURI(url), {
+        headers: this.headers,
+        observe: 'response',
+        responseType: 'blob',
+        params,
+      })
+      .pipe(
+        map((response) => {
+          return response.body;
+        })
+      );
+  } 
 }

@@ -10,8 +10,7 @@ import {
   transactionTypeResponse,
 } from '../../../../shared/index';
 import {
-  GetFinYearStartDate,
-  SetFormatCurrency,
+  GetFinYearStartDate
 } from 'src/app/shared/functions';
 import { MatDialog } from '@angular/material/dialog';
 import { SPReportSelectionsComponent } from 'src/app/pages/dialogs';
