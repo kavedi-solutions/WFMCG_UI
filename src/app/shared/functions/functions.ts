@@ -65,14 +65,14 @@ export function RoundOffAmount(value: any, decimalPlace: number) {
 
 export function GetFinYearStartDate(InputDate: any, FirstMonth: number) {
   const d = new Date(InputDate);
-  const InputMonth: number = d.getMonth() + 1;
+  const InputMonth: number = d.getMonth();
   let InputYear: number = d.getFullYear();
 
   InputYear = InputYear - (InputMonth < FirstMonth - 1 ? 1 : 0);
 
-  const RetutnDate = new Date(InputYear, FirstMonth - 1, 1);
+  const ReturnDate = new Date(InputYear, FirstMonth - 1, 1);
 
-  return RetutnDate;
+  return ReturnDate;
 }
 
 export function GetCrt(Stock: number, Packing: number) {
