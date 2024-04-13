@@ -29,6 +29,16 @@ import { VJournalAddEditComponent } from './vjournal/vjournal-add-edit/vjournal-
 import { VReceiptB2BComponent } from './vreceipt-b2b/vreceipt-b2b.component';
 import { VReceiptB2BAddEditComponent } from './vreceipt-b2b/vreceipt-b2b-add-edit/vreceipt-b2b-add-edit.component';
 
+import { TransferDumpComponent } from './transfer-dump/transfer-dump.component';
+import { TransferDumpAddEditComponent } from './transfer-dump/transfer-dump-add-edit/transfer-dump-add-edit.component';
+import { TransferGTMTComponent } from './transfer-gtmt/transfer-gtmt.component';
+import { TransferGTMTAddEditComponent } from './transfer-gtmt/transfer-gtmtadd-edit/transfer-gtmtadd-edit.component';
+import { TransferMTGTComponent } from './transfer-mtgt/transfer-mtgt.component';
+import { TransferMTGTAddEditComponent } from './transfer-mtgt/transfer-mtgtadd-edit/transfer-mtgtadd-edit.component';
+import { TransferOtherAddEditComponent } from './transfer-other/transfer-other-add-edit/transfer-other-add-edit.component';
+import { TransferOtherComponent } from './transfer-other/transfer-other.component';
+
+
 export const TransactionPages: any[] = [
   PurchaseComponent,
   PurchaseAddEditComponent,
@@ -59,7 +69,15 @@ export const TransactionPages: any[] = [
   VJournalComponent,
   VJournalAddEditComponent,
   VReceiptB2BComponent,
-  VReceiptB2BAddEditComponent
+  VReceiptB2BAddEditComponent,
+  TransferDumpComponent,
+  TransferDumpAddEditComponent,
+  TransferGTMTComponent,
+  TransferGTMTAddEditComponent,
+  TransferMTGTComponent,
+  TransferMTGTAddEditComponent,
+  TransferOtherComponent,
+  TransferOtherAddEditComponent,
 ];
 
 export * from './purchase/purchase.component';
@@ -92,3 +110,12 @@ export * from './vjournal/vjournal.component';
 export * from './vjournal/vjournal-add-edit/vjournal-add-edit.component';
 export * from './vreceipt-b2b/vreceipt-b2b.component';
 export * from './vreceipt-b2b/vreceipt-b2b-add-edit/vreceipt-b2b-add-edit.component';
+
+export * from './transfer-dump/transfer-dump.component';
+export * from './transfer-dump/transfer-dump-add-edit/transfer-dump-add-edit.component';
+export * from './transfer-gtmt/transfer-gtmt.component';
+export * from './transfer-gtmt/transfer-gtmtadd-edit/transfer-gtmtadd-edit.component';
+export * from './transfer-mtgt/transfer-mtgt.component';
+export * from './transfer-mtgt/transfer-mtgtadd-edit/transfer-mtgtadd-edit.component';
+export * from './transfer-other/transfer-other-add-edit/transfer-other-add-edit.component';
+export * from './transfer-other/transfer-other.component';

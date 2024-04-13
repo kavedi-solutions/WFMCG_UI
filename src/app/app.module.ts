@@ -86,7 +86,7 @@ export function tokenGetter() {
     Layouts.Layouts,
     AuthPages.AuthPages,
     Pages.Pages,
-    SharedComponent.SharedComponent,    
+    SharedComponent.SharedComponent,
   ],
   imports: [
     CommonModule,
@@ -195,7 +195,7 @@ export function tokenGetter() {
     Pages.GstDetailsComponent,
     Pages.CanceleInvoiceComponent,
     Pages.CommonDialogComponent,
-    Pages.SPReportSelectionsComponent
+    Pages.SPReportSelectionsComponent,
   ],
   bootstrap: [AppComponent],
 })
