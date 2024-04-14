@@ -112,7 +112,7 @@ export class CreditNoteService {
     creditnoteID: number,
     resourcesDetails: CreditNotePutRequest
   ): Observable<any> {
-    resourcesDetails.ModifiedBy = this.UserID;
+    resourcesDetails.modifiedBy = this.UserID;
     const url = `${this.APIURL}/update/${creditnoteID}`;
     return this.http.put<any>(encodeURI(url), resourcesDetails, {
       headers: this.headers,

@@ -30,7 +30,7 @@ export class SalesService {
     private storage: LocalStorageService,
     private appconfig: AppConfig
   ) {
-    this.APIURL = this.appconfig.GetCoreAPIURL() + `api/v${this.version}`;
+    this.APIURL = this.appconfig.GetCoreAPIURL() + `api/v${this.version}/company/${this.CompanyID}/sales/inventory`;
   }
 
   GetSalesList(
@@ -52,7 +52,7 @@ export class SalesService {
       });
     }
 
-    const url = `${this.APIURL}/company/${this.CompanyID}/sales/inventory/paged`;
+    const url = `${this.APIURL}/paged`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -71,7 +71,7 @@ export class SalesService {
   }
 
   GetNextBillNo(BookAccountID: number, BillDate: Date) {
-    const url = `${this.APIURL}/company/${this.CompanyID}/sales/inventory/getnextbill/${BookAccountID}?BillDate=${BillDate}`;
+    const url = `${this.APIURL}/getnextbill/${BookAccountID}?BillDate=${BillDate}`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -85,7 +85,7 @@ export class SalesService {
   }
 
   GetSalesbyID(SalesID: number) {
-    const url = `${this.APIURL}/company/${this.CompanyID}/sales/inventory/${SalesID}/getbyid`;
+    const url = `${this.APIURL}/${SalesID}/getbyid`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -100,7 +100,7 @@ export class SalesService {
 
   createSales(resourcesDetails: SalesPostRequest): Observable<any> {
     resourcesDetails.createdBy = this.UserID;
-    const url = `${this.APIURL}/company/${this.CompanyID}/sales/inventory/create`;
+    const url = `${this.APIURL}/create`;
     return this.http.post<any>(encodeURI(url), resourcesDetails, {
       headers: this.headers,
     });
@@ -110,15 +110,15 @@ export class SalesService {
     SalesID: number,
     resourcesDetails: SalesPutRequest
   ): Observable<any> {
-    resourcesDetails.ModifiedBy = this.UserID;
-    const url = `${this.APIURL}/company/${this.CompanyID}/sales/inventory/update/${SalesID}`;
+    resourcesDetails.modifiedBy = this.UserID;
+    const url = `${this.APIURL}/update/${SalesID}`;
     return this.http.put<any>(encodeURI(url), resourcesDetails, {
       headers: this.headers,
     });
   }
 
   deleteSales(SalesID: number) {
-    const url = `${this.APIURL}/company/${this.CompanyID}/sales/inventory/delete/${SalesID}`;
+    const url = `${this.APIURL}/delete/${SalesID}`;
     return this.http.delete<any>(encodeURI(url), {
       headers: this.headers,
     });

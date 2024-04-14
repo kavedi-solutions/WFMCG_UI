@@ -3,5 +3,5 @@ export interface ItemGroupPutRequest {
   itemGroupType: string;
   parentGroupItemGroupID: number;
   isActive: boolean;
-  ModifiedBy?: string;
+  modifiedBy?: string;
 }

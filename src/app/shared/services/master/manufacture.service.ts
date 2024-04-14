@@ -112,7 +112,7 @@ export class ManufactureService {
     manufactureID: number,
     resourcesDetails: ManufacturePutRequest
   ): Observable<Manufacture> {
-    resourcesDetails.ModifiedBy = this.UserID;
+    resourcesDetails.modifiedBy = this.UserID;
     const url = `${this.APIURL}/company/${this.CompanyID}/manufacture/update/${manufactureID}`;
     return this.http.put<Manufacture>(encodeURI(url), resourcesDetails, {
       headers: this.headers,

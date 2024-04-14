@@ -131,7 +131,7 @@ export class RoleService {
     roleID: number,
     resourcesDetails: RolePutRequest
   ): Observable<Role> {
-    resourcesDetails.ModifiedBy = this.UserID;
+    resourcesDetails.modifiedBy = this.UserID;
     const url = `${this.APIURL}/company/${this.CompanyID}/role/update/${roleID}`;
     return this.http.put<Role>(encodeURI(url), resourcesDetails, {
       headers: this.headers,

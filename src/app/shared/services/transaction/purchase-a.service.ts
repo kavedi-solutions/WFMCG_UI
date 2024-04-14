@@ -29,7 +29,7 @@ export class PurchaseAService {
     private storage: LocalStorageService,
     private appconfig: AppConfig
   ) {
-    this.APIURL = this.appconfig.GetCoreAPIURL() + `api/v${this.version}`;
+    this.APIURL = this.appconfig.GetCoreAPIURL() + `api/v${this.version}/company/${this.CompanyID}/purchase/assets`;
   }
 
   GetPurchaseList(
@@ -51,7 +51,7 @@ export class PurchaseAService {
       });
     }
 
-    const url = `${this.APIURL}/company/${this.CompanyID}/purchase/assets/paged`;
+    const url = `${this.APIURL}/paged`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -70,7 +70,7 @@ export class PurchaseAService {
   }
 
   GetNextBillNo(BookAccountID: number, BillDate: Date) {
-    const url = `${this.APIURL}/company/${this.CompanyID}/purchase/assets/getnextbill/${BookAccountID}?BillDate=${BillDate}`;
+    const url = `${this.APIURL}/getnextbill/${BookAccountID}?BillDate=${BillDate}`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -84,7 +84,7 @@ export class PurchaseAService {
   }
 
   GetPurchasebyID(PurchaseID: number) {
-    const url = `${this.APIURL}/company/${this.CompanyID}/purchase/assets/${PurchaseID}/getbyid`;
+    const url = `${this.APIURL}/${PurchaseID}/getbyid`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -99,7 +99,7 @@ export class PurchaseAService {
 
   createPurchase(resourcesDetails: PurchaseAPostRequest): Observable<any> {
     resourcesDetails.createdBy = this.UserID;
-    const url = `${this.APIURL}/company/${this.CompanyID}/purchase/assets/create`;
+    const url = `${this.APIURL}/create`;
     return this.http.post<any>(encodeURI(url), resourcesDetails, {
       headers: this.headers,
     });
@@ -109,15 +109,15 @@ export class PurchaseAService {
     purchaseID: number,
     resourcesDetails: PurchaseAPutRequest
   ): Observable<any> {
-    resourcesDetails.ModifiedBy = this.UserID;
-    const url = `${this.APIURL}/company/${this.CompanyID}/purchase/assets/update/${purchaseID}`;
+    resourcesDetails.modifiedBy = this.UserID;
+    const url = `${this.APIURL}/update/${purchaseID}`;
     return this.http.put<any>(encodeURI(url), resourcesDetails, {
       headers: this.headers,
     });
   }
 
   deletePurchase(purchaseID: number) {
-    const url = `${this.APIURL}/company/${this.CompanyID}/purchase/assets/delete/${purchaseID}`;
+    const url = `${this.APIURL}/delete/${purchaseID}`;
     return this.http.delete<any>(encodeURI(url), {
       headers: this.headers,
     });

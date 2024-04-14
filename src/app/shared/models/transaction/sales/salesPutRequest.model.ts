@@ -28,7 +28,7 @@ export interface SalesPutRequest {
   details: SalesItemPutRequest[] | null;
   cndnSettlement?: CreditNoteSettlementRequest[];
   isActive: boolean;
-  ModifiedBy?: string;
+  modifiedBy?: string;
 }
 
 export interface SalesItemPutRequest {

@@ -112,7 +112,7 @@ export class VJournalService {
     VJournalID: number,
     resourcesDetails: VJournalPutRequest
   ): Observable<any> {
-    resourcesDetails.ModifiedBy = this.UserID;
+    resourcesDetails.modifiedBy = this.UserID;
     const url = `${this.APIURL}/update/${VJournalID}`;
     return this.http.put<any>(encodeURI(url), resourcesDetails, {
       headers: this.headers,

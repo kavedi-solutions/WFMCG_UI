@@ -30,7 +30,7 @@ export class DebitNoteService {
     private storage: LocalStorageService,
     private appconfig: AppConfig
   ) {
-    this.APIURL = this.appconfig.GetCoreAPIURL() + `api/v${this.version}`;
+    this.APIURL = this.appconfig.GetCoreAPIURL() + `api/v${this.version}/company/${this.CompanyID}/debitnote`;
   }
 
   GetDebitNoteList(
@@ -52,7 +52,7 @@ export class DebitNoteService {
       });
     }
 
-    const url = `${this.APIURL}/company/${this.CompanyID}/debitnote/paged`;
+    const url = `${this.APIURL}/paged`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -71,7 +71,7 @@ export class DebitNoteService {
   }
 
   GetNextBillNo(BookAccountID: number, BillDate: Date) {
-    const url = `${this.APIURL}/company/${this.CompanyID}/debitnote/getnextbill/${BookAccountID}?BillDate=${BillDate}`;
+    const url = `${this.APIURL}/getnextbill/${BookAccountID}?BillDate=${BillDate}`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -85,7 +85,7 @@ export class DebitNoteService {
   }
 
   GetDebitNotebyID(DebitNoteID: number) {
-    const url = `${this.APIURL}/company/${this.CompanyID}/debitnote/${DebitNoteID}/getbyid`;
+    const url = `${this.APIURL}/${DebitNoteID}/getbyid`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -100,7 +100,7 @@ export class DebitNoteService {
 
   createDebitNote(resourcesDetails: DebitNotePostRequest): Observable<any> {
     resourcesDetails.createdBy = this.UserID;
-    const url = `${this.APIURL}/company/${this.CompanyID}/debitnote/create`;
+    const url = `${this.APIURL}/create`;
     return this.http.post<any>(encodeURI(url), resourcesDetails, {
       headers: this.headers,
     });
@@ -110,15 +110,15 @@ export class DebitNoteService {
     debitnoteID: number,
     resourcesDetails: DebitNotePutRequest
   ): Observable<any> {
-    resourcesDetails.ModifiedBy = this.UserID;
-    const url = `${this.APIURL}/company/${this.CompanyID}/debitnote/update/${debitnoteID}`;
+    resourcesDetails.modifiedBy = this.UserID;
+    const url = `${this.APIURL}/update/${debitnoteID}`;
     return this.http.put<any>(encodeURI(url), resourcesDetails, {
       headers: this.headers,
     });
   }
 
   deleteDebitNote(debitnoteID: number) {
-    const url = `${this.APIURL}/company/${this.CompanyID}/debitnote/delete/${debitnoteID}`;
+    const url = `${this.APIURL}/delete/${debitnoteID}`;
     return this.http.delete<any>(encodeURI(url), {
       headers: this.headers,
     });

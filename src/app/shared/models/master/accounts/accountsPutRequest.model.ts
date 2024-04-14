@@ -19,7 +19,7 @@ export interface AccountsPutRequest {
   contactNo: string;
   invoiceLimit: number;
   isActive: boolean;
-  ModifiedBy?: string;
+  modifiedBy?: string;
   gstDetails: AccountGSTPutRequest[] | null;
 }
 

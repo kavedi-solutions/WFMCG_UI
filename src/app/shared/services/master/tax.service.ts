@@ -104,7 +104,7 @@ export class TaxService {
     taxID: number,
     resourcesDetails: TaxPutRequest
   ): Observable<Tax> {
-    resourcesDetails.ModifiedBy = this.UserID;
+    resourcesDetails.modifiedBy = this.UserID;
     const url = `${this.APIURL}/company/${this.CompanyID}/tax/update/${taxID}`;
     return this.http.put<Tax>(encodeURI(url), resourcesDetails, {
       headers: this.headers,

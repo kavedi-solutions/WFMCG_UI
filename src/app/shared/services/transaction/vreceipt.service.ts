@@ -24,7 +24,7 @@ export class VReceiptService {
   headers = new HttpHeaders({
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
-  }); 
+  });
 
 
   constructor(
@@ -112,7 +112,7 @@ export class VReceiptService {
     VReceiptID: number,
     resourcesDetails: VReceiptPutRequest
   ): Observable<any> {
-    resourcesDetails.ModifiedBy = this.UserID;
+    resourcesDetails.modifiedBy = this.UserID;
     const url = `${this.APIURL}/update/${VReceiptID}`;
     return this.http.put<any>(encodeURI(url), resourcesDetails, {
       headers: this.headers,
@@ -124,5 +124,5 @@ export class VReceiptService {
     return this.http.delete<any>(encodeURI(url), {
       headers: this.headers,
     });
-  }  
+  }
 }

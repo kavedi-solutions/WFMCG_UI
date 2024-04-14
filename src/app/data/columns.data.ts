@@ -2,7 +2,7 @@ import { MtxGridColumn } from '../extensions/grid/grid.interface';
 import { TableColumns } from '../shared';
 
 export function GetRoleColumns() {
-  let RoleColumns: MtxGridColumn[] = [
+  let ColumnList: MtxGridColumn[] = [
     {
       header: 'RoleID',
       field: 'RoleID',
@@ -60,11 +60,11 @@ export function GetRoleColumns() {
     },
   ];
 
-  return RoleColumns;
+  return ColumnList;
 }
 
 export function GetUserColumns() {
-  let UserColumns: MtxGridColumn[] = [
+  let ColumnList: MtxGridColumn[] = [
     {
       header: 'UserID',
       field: 'userID',
@@ -157,11 +157,11 @@ export function GetUserColumns() {
       width: '150px',
     },
   ];
-  return UserColumns;
+  return ColumnList;
 }
 
 export function GetAreaColumns() {
-  let AreaColumns: MtxGridColumn[] = [
+  let ColumnList: MtxGridColumn[] = [
     {
       header: 'AreaID',
       field: 'AreaID',
@@ -208,11 +208,11 @@ export function GetAreaColumns() {
     },
   ];
 
-  return AreaColumns;
+  return ColumnList;
 }
 
 export function GetGroupColumns() {
-  let GroupColumns: MtxGridColumn[] = [
+  let ColumnList: MtxGridColumn[] = [
     {
       header: 'GroupID',
       field: 'GroupID',
@@ -278,11 +278,11 @@ export function GetGroupColumns() {
     },
   ];
 
-  return GroupColumns;
+  return ColumnList;
 }
 
 export function GetAccountColumns() {
-  let AccountsColumns: MtxGridColumn[] = [
+  let ColumnList: MtxGridColumn[] = [
     {
       header: 'AccountID',
       field: 'AccountID',
@@ -372,11 +372,11 @@ export function GetAccountColumns() {
     },
   ];
 
-  return AccountsColumns;
+  return ColumnList;
 }
 
 export function GetAccountGSTColumns() {
-  let AccountsColumns: MtxGridColumn[] = [
+  let ColumnList: MtxGridColumn[] = [
     {
       header: 'AccountID',
       field: 'accountID',
@@ -421,11 +421,11 @@ export function GetAccountGSTColumns() {
     },
   ];
 
-  return AccountsColumns;
+  return ColumnList;
 }
 
 export function GetAccountBalanceColumns() {
-  let BalanceColumns: MtxGridColumn[] = [
+  let ColumnList: MtxGridColumn[] = [
     {
       header: 'AccountID',
       field: 'accountID',
@@ -463,11 +463,11 @@ export function GetAccountBalanceColumns() {
       class: 'right-mat-header-cell right-mat-cell',
     },
   ];
-  return BalanceColumns;
+  return ColumnList;
 }
 
 export function GetTaxColumns() {
-  let TaxColumns: MtxGridColumn[] = [
+  let ColumnList: MtxGridColumn[] = [
     {
       header: 'TaxID',
       field: 'taxID',
@@ -574,11 +574,11 @@ export function GetTaxColumns() {
     },
   ];
 
-  return TaxColumns;
+  return ColumnList;
 }
 
 export function GetManufactureColumns() {
-  let ManufactureColumns: MtxGridColumn[] = [
+  let ColumnList: MtxGridColumn[] = [
     {
       header: 'ManufactureID',
       field: 'manufactureID',
@@ -625,11 +625,11 @@ export function GetManufactureColumns() {
     },
   ];
 
-  return ManufactureColumns;
+  return ColumnList;
 }
 
 export function GetItemGroupColumns() {
-  let ItemGroupColumns: MtxGridColumn[] = [
+  let ColumnList: MtxGridColumn[] = [
     {
       header: 'Item Group ID',
       field: 'itemGroupID',
@@ -695,11 +695,11 @@ export function GetItemGroupColumns() {
     },
   ];
 
-  return ItemGroupColumns;
+  return ColumnList;
 }
 
 export function GetItemColumns() {
-  let ItemColumns: MtxGridColumn[] = [
+  let ColumnList: MtxGridColumn[] = [
     {
       header: 'Item ID',
       field: 'itemID',
@@ -798,11 +798,11 @@ export function GetItemColumns() {
     },
   ];
 
-  return ItemColumns;
+  return ColumnList;
 }
 
 export function GetItemOpeningColumns() {
-  let ItemOpeningColumns: MtxGridColumn[] = [
+  let ColumnList: MtxGridColumn[] = [
     {
       header: 'Item ID',
       field: 'itemID',
@@ -870,11 +870,11 @@ export function GetItemOpeningColumns() {
       class: 'right-mat-header-cell right-mat-cell',
     },
   ];
-  return ItemOpeningColumns;
+  return ColumnList;
 }
 
 export function GetPurchaseColumns() {
-  let PurchaseColumns: MtxGridColumn[] = [
+  let ColumnList: MtxGridColumn[] = [
     {
       header: 'Auto ID',
       field: 'autoID',
@@ -972,11 +972,11 @@ export function GetPurchaseColumns() {
     },
   ];
 
-  return PurchaseColumns;
+  return ColumnList;
 }
 
 export function GetPurchaseItemDetailColumns() {
-  let PurchaseItemColumns: MtxGridColumn[] = [
+  let ColumnList: MtxGridColumn[] = [
     {
       header: 'Auto ID',
       field: 'AutoID',
@@ -1233,11 +1233,11 @@ export function GetPurchaseItemDetailColumns() {
     },
   ];
 
-  return PurchaseItemColumns;
+  return ColumnList;
 }
 
 export function GetPurchaseSItemDetailColumns() {
-  let PurchaseItemColumns: MtxGridColumn[] = [
+  let ColumnList: MtxGridColumn[] = [
     {
       header: 'Auto ID',
       field: 'AutoID',
@@ -1389,11 +1389,11 @@ export function GetPurchaseSItemDetailColumns() {
     },
   ];
 
-  return PurchaseItemColumns;
+  return ColumnList;
 }
 
 export function GetPurchaseAItemDetailColumns() {
-  let PurchaseItemColumns: MtxGridColumn[] = [
+  let ColumnList: MtxGridColumn[] = [
     {
       header: 'Auto ID',
       field: 'AutoID',
@@ -1568,11 +1568,11 @@ export function GetPurchaseAItemDetailColumns() {
     },
   ];
 
-  return PurchaseItemColumns;
+  return ColumnList;
 }
 
 export function GetSalesColumns() {
-  let SalesColumns: MtxGridColumn[] = [
+  let ColumnList: MtxGridColumn[] = [
     {
       header: 'Auto ID',
       field: 'autoID',
@@ -1670,11 +1670,11 @@ export function GetSalesColumns() {
     },
   ];
 
-  return SalesColumns;
+  return ColumnList;
 }
 
 export function GetSalesItemDetailColumns() {
-  let SalesItemColumns: MtxGridColumn[] = [
+  let ColumnList: MtxGridColumn[] = [
     {
       header: 'Auto ID',
       field: 'AutoID',
@@ -1931,11 +1931,11 @@ export function GetSalesItemDetailColumns() {
     },
   ];
 
-  return SalesItemColumns;
+  return ColumnList;
 }
 
 export function GetSalesSItemDetailColumns() {
-  let SalesItemColumns: MtxGridColumn[] = [
+  let ColumnList: MtxGridColumn[] = [
     {
       header: 'Auto ID',
       field: 'AutoID',
@@ -2087,11 +2087,11 @@ export function GetSalesSItemDetailColumns() {
     },
   ];
 
-  return SalesItemColumns;
+  return ColumnList;
 }
 
 export function GetSalesAItemDetailColumns() {
-  let SalesItemColumns: MtxGridColumn[] = [
+  let ColumnList: MtxGridColumn[] = [
     {
       header: 'Auto ID',
       field: 'AutoID',
@@ -2266,11 +2266,11 @@ export function GetSalesAItemDetailColumns() {
     },
   ];
 
-  return SalesItemColumns;
+  return ColumnList;
 }
 
 export function GetPurchaseReturnColumns() {
-  let PurchaseReturnColumns: MtxGridColumn[] = [
+  let ColumnList: MtxGridColumn[] = [
     {
       header: 'Auto ID',
       field: 'autoID',
@@ -2375,11 +2375,11 @@ export function GetPurchaseReturnColumns() {
     },
   ];
 
-  return PurchaseReturnColumns;
+  return ColumnList;
 }
 
 export function GetPurchaseReturnItemDetailColumns() {
-  let PurchaseItemColumns: MtxGridColumn[] = [
+  let ColumnList: MtxGridColumn[] = [
     {
       header: 'Auto ID',
       field: 'AutoID',
@@ -2549,11 +2549,11 @@ export function GetPurchaseReturnItemDetailColumns() {
     },
   ];
 
-  return PurchaseItemColumns;
+  return ColumnList;
 }
 
 export function GetSalesReturnColumns() {
-  let SalesReturnColumns: MtxGridColumn[] = [
+  let ColumnList: MtxGridColumn[] = [
     {
       header: 'Auto ID',
       field: 'autoID',
@@ -2658,11 +2658,11 @@ export function GetSalesReturnColumns() {
     },
   ];
 
-  return SalesReturnColumns;
+  return ColumnList;
 }
 
 export function GetSalesReturnItemDetailColumns() {
-  let SalesItemColumns: MtxGridColumn[] = [
+  let ColumnList: MtxGridColumn[] = [
     {
       header: 'Auto ID',
       field: 'AutoID',
@@ -2840,11 +2840,11 @@ export function GetSalesReturnItemDetailColumns() {
     },
   ];
 
-  return SalesItemColumns;
+  return ColumnList;
 }
 
 export function GetCNDNColumns() {
-  let CNDNColumns: MtxGridColumn[] = [
+  let ColumnList: MtxGridColumn[] = [
     {
       header: 'Auto ID',
       field: 'autoID',
@@ -2933,11 +2933,11 @@ export function GetCNDNColumns() {
     },
   ];
 
-  return CNDNColumns;
+  return ColumnList;
 }
 
 export function GetCNDNItemDetailColumns() {
-  let PurchaseItemColumns: MtxGridColumn[] = [
+  let ColumnList: MtxGridColumn[] = [
     {
       header: 'Auto ID',
       field: 'AutoID',
@@ -3067,11 +3067,11 @@ export function GetCNDNItemDetailColumns() {
     },
   ];
 
-  return PurchaseItemColumns;
+  return ColumnList;
 }
 
 export function GetVRPCColumns() {
-  let VRPCColumns: MtxGridColumn[] = [
+  let ColumnList: MtxGridColumn[] = [
     {
       header: 'Auto ID',
       field: 'autoID',
@@ -3168,11 +3168,11 @@ export function GetVRPCColumns() {
     },
   ];
 
-  return VRPCColumns;
+  return ColumnList;
 }
 
 export function GetPendingBills() {
-  let PendingBills: TableColumns[] = [
+  let ColumnList: TableColumns[] = [
     {
       index: 1,
       columnName: 'autoID',
@@ -3255,11 +3255,11 @@ export function GetPendingBills() {
     },
   ];
 
-  return PendingBills;
+  return ColumnList;
 }
 
 export function GetJVColumns() {
-  let JVColumns: MtxGridColumn[] = [
+  let ColumnList: MtxGridColumn[] = [
     {
       header: 'Auto ID',
       field: 'autoID',
@@ -3364,11 +3364,11 @@ export function GetJVColumns() {
     },
   ];
 
-  return JVColumns;
+  return ColumnList;
 }
 
 export function GetBulkPrintColumn() {
-  let BulkPrintColumns: MtxGridColumn[] = [
+  let ColumnList: MtxGridColumn[] = [
     {
       header: 'Auto ID',
       field: 'autoID',
@@ -3413,11 +3413,11 @@ export function GetBulkPrintColumn() {
     },
   ];
 
-  return BulkPrintColumns;
+  return ColumnList;
 }
 
 export function GetLoadingSlipColumn() {
-  let LoadingSlipColumns: MtxGridColumn[] = [
+  let ColumnList: MtxGridColumn[] = [
     {
       header: 'Book ID',
       field: 'bookAccountID',
@@ -3449,11 +3449,11 @@ export function GetLoadingSlipColumn() {
     },
   ];
 
-  return LoadingSlipColumns;
+  return ColumnList;
 }
 
 export function GetVoucherPrintColumn() {
-  let VoucherPrintColumns: MtxGridColumn[] = [
+  let ColumnList: MtxGridColumn[] = [
     {
       header: 'Auto ID',
       field: 'autoID',
@@ -3498,11 +3498,11 @@ export function GetVoucherPrintColumn() {
     },
   ];
 
-  return VoucherPrintColumns;
+  return ColumnList;
 }
 
 export function GetStockStatementItemGroupColumns() {
-  let ItemGroupColumns: MtxGridColumn[] = [
+  let ColumnList: MtxGridColumn[] = [
     {
       header: 'Item Group ID',
       field: 'itemGroup_Id',
@@ -3516,11 +3516,11 @@ export function GetStockStatementItemGroupColumns() {
     },
   ];
 
-  return ItemGroupColumns;
+  return ColumnList;
 }
 
 export function GetCnDnDetails() {
-  let CnDnBills: TableColumns[] = [
+  let ColumnList: TableColumns[] = [
     {
       index: 1,
       columnName: 'companyID',
@@ -3595,11 +3595,11 @@ export function GetCnDnDetails() {
     },
   ];
 
-  return CnDnBills;
+  return ColumnList;
 }
 
 export function GeteInvoiceColumn() {
-  let BulkPrintColumns: MtxGridColumn[] = [
+  let ColumnList: MtxGridColumn[] = [
     {
       header: 'Auto ID',
       field: 'autoID',
@@ -3652,11 +3652,11 @@ export function GeteInvoiceColumn() {
     },
   ];
 
-  return BulkPrintColumns;
+  return ColumnList;
 }
 
 export function GeteInvoiceErrorColumn() {
-  let BulkPrintColumns: MtxGridColumn[] = [
+  let ColumnList: MtxGridColumn[] = [
     {
       header: 'Auto ID',
       field: 'autoID',
@@ -3701,11 +3701,11 @@ export function GeteInvoiceErrorColumn() {
     },
   ];
 
-  return BulkPrintColumns;
+  return ColumnList;
 }
 
 export function GetFinancialColumns() {
-  let FinancialColumns: MtxGridColumn[] = [
+  let ColumnList: MtxGridColumn[] = [
     {
       header: 'Auto ID',
       field: 'account_Id',
@@ -3719,11 +3719,11 @@ export function GetFinancialColumns() {
     },
   ];
 
-  return FinancialColumns;
+  return ColumnList;
 }
 
 export function GetBackupDBColumns() {
-  let BackupDBColumns: MtxGridColumn[] = [
+  let ColumnList: MtxGridColumn[] = [
     {
       header: 'Auto ID',
       field: 'autoID',
@@ -3783,11 +3783,11 @@ export function GetBackupDBColumns() {
     },
   ];
 
-  return BackupDBColumns;
+  return ColumnList;
 }
 
 export function GetIncentiveAccountColumns() {
-  let FinancialColumns: MtxGridColumn[] = [
+  let ColumnList: MtxGridColumn[] = [
     {
       header: 'Account ID',
       field: 'accountID',
@@ -3801,5 +3801,254 @@ export function GetIncentiveAccountColumns() {
     },
   ];
 
-  return FinancialColumns;
+  return ColumnList;
+}
+
+export function GetTransferMTGTColumns() {
+  let ColumnList: MtxGridColumn[] = [
+    {
+      header: 'Auto ID',
+      field: 'autoID',
+      hide: true,
+    },
+    {
+      header: 'TransferNo',
+      field: 'transferNo',
+      sortable: false,
+      disabled: false,
+      minWidth: 150,
+      width: '150px',
+    },
+    {
+      header: 'Transfer Date',
+      field: 'transferDate',
+      sortable: false,
+      disabled: false,
+      type: 'date',
+      typeParameter: { format: 'dd-MM-yyyy' },
+      minWidth: 100,
+      width: '100px',
+    },
+    {
+      header: 'Is Active',
+      field: 'isActive',
+      sortable: true,
+      disabled: true,
+      type: 'tag',
+      tag: {
+        true: { text: 'Active', color: 'green-100' },
+        false: { text: 'In Active', color: 'red-100' },
+      },
+      minWidth: 75,
+      width: '75px',
+    },
+    {
+      header: 'Created Date',
+      field: 'createdDate',
+      sortable: true,
+      disabled: true,
+      type: 'date',
+      typeParameter: { format: 'dd-MM-yyyy HH:mm:ss' },
+      minWidth: 150,
+      width: '150px',
+    },
+    {
+      header: 'Updated Date',
+      field: 'modifiedDate',
+      sortable: true,
+      disabled: true,
+      type: 'date',
+      typeParameter: { format: 'dd-MM-yyyy HH:mm:ss' },
+      minWidth: 150,
+      width: '150px',
+    },
+  ];
+
+  return ColumnList;
+}
+
+export function GetTransferGTMTColumns() {
+  let ColumnList: MtxGridColumn[] = [
+    {
+      header: 'Auto ID',
+      field: 'autoID',
+      hide: true,
+    },
+    {
+      header: 'TransferNo',
+      field: 'transferNo',
+      sortable: false,
+      disabled: false,
+      minWidth: 150,
+      width: '150px',
+    },
+    {
+      header: 'Transfer Date',
+      field: 'transferDate',
+      sortable: false,
+      disabled: false,
+      type: 'date',
+      typeParameter: { format: 'dd-MM-yyyy' },
+      minWidth: 100,
+      width: '100px',
+    },
+    {
+      header: 'Is Active',
+      field: 'isActive',
+      sortable: true,
+      disabled: true,
+      type: 'tag',
+      tag: {
+        true: { text: 'Active', color: 'green-100' },
+        false: { text: 'In Active', color: 'red-100' },
+      },
+      minWidth: 75,
+      width: '75px',
+    },
+    {
+      header: 'Created Date',
+      field: 'createdDate',
+      sortable: true,
+      disabled: true,
+      type: 'date',
+      typeParameter: { format: 'dd-MM-yyyy HH:mm:ss' },
+      minWidth: 150,
+      width: '150px',
+    },
+    {
+      header: 'Updated Date',
+      field: 'modifiedDate',
+      sortable: true,
+      disabled: true,
+      type: 'date',
+      typeParameter: { format: 'dd-MM-yyyy HH:mm:ss' },
+      minWidth: 150,
+      width: '150px',
+    },
+  ];
+  return ColumnList;
+}
+
+export function GetTransferDumpColumns() {
+  let ColumnList: MtxGridColumn[] = [
+    {
+      header: 'Auto ID',
+      field: 'autoID',
+      hide: true,
+    },
+    {
+      header: 'TransferNo',
+      field: 'transferNo',
+      sortable: false,
+      disabled: false,
+      minWidth: 150,
+      width: '150px',
+    },
+    {
+      header: 'Transfer Date',
+      field: 'transferDate',
+      sortable: false,
+      disabled: false,
+      type: 'date',
+      typeParameter: { format: 'dd-MM-yyyy' },
+      minWidth: 100,
+      width: '100px',
+    },
+    {
+      header: 'Is Active',
+      field: 'isActive',
+      sortable: true,
+      disabled: true,
+      type: 'tag',
+      tag: {
+        true: { text: 'Active', color: 'green-100' },
+        false: { text: 'In Active', color: 'red-100' },
+      },
+      minWidth: 75,
+      width: '75px',
+    },
+    {
+      header: 'Created Date',
+      field: 'createdDate',
+      sortable: true,
+      disabled: true,
+      type: 'date',
+      typeParameter: { format: 'dd-MM-yyyy HH:mm:ss' },
+      minWidth: 150,
+      width: '150px',
+    },
+    {
+      header: 'Updated Date',
+      field: 'modifiedDate',
+      sortable: true,
+      disabled: true,
+      type: 'date',
+      typeParameter: { format: 'dd-MM-yyyy HH:mm:ss' },
+      minWidth: 150,
+      width: '150px',
+    },
+  ];
+  return ColumnList;
+}
+
+export function GetTransferOtherColumns() {
+  let ColumnList: MtxGridColumn[] = [
+    {
+      header: 'Auto ID',
+      field: 'autoID',
+      hide: true,
+    },
+    {
+      header: 'TransferNo',
+      field: 'transferNo',
+      sortable: false,
+      disabled: false,
+      minWidth: 150,
+      width: '150px',
+    },
+    {
+      header: 'Transfer Date',
+      field: 'transferDate',
+      sortable: false,
+      disabled: false,
+      type: 'date',
+      typeParameter: { format: 'dd-MM-yyyy' },
+      minWidth: 100,
+      width: '100px',
+    },
+    {
+      header: 'Is Active',
+      field: 'isActive',
+      sortable: true,
+      disabled: true,
+      type: 'tag',
+      tag: {
+        true: { text: 'Active', color: 'green-100' },
+        false: { text: 'In Active', color: 'red-100' },
+      },
+      minWidth: 75,
+      width: '75px',
+    },
+    {
+      header: 'Created Date',
+      field: 'createdDate',
+      sortable: true,
+      disabled: true,
+      type: 'date',
+      typeParameter: { format: 'dd-MM-yyyy HH:mm:ss' },
+      minWidth: 150,
+      width: '150px',
+    },
+    {
+      header: 'Updated Date',
+      field: 'modifiedDate',
+      sortable: true,
+      disabled: true,
+      type: 'date',
+      typeParameter: { format: 'dd-MM-yyyy HH:mm:ss' },
+      minWidth: 150,
+      width: '150px',
+    },
+  ];
+  return ColumnList;
 }

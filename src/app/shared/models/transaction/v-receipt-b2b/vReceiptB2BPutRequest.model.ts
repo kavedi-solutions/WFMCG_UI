@@ -11,7 +11,7 @@ export interface VReceiptB2BPutRequest {
   transactionNo?: string;
   narration?: string;
   isActive: boolean;
-  ModifiedBy?: string;
+  modifiedBy?: string;
   receivedBills: VReceiptB2BPendingBillsPutRequest[];
 }
 

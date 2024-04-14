@@ -131,6 +131,26 @@ export * from './transaction/v-receipt-b2b/vReceiptB2BPostRequest.model';
 export * from './transaction/v-receipt-b2b/vReceiptB2BPutRequest.model';
 export * from './transaction/v-receipt-b2b/vReceiptB2BResponse.model';
 
+export * from './transaction/transferdump/transferDumpItemdetail.model';
+export * from './transaction/transferdump/transferDumpPostRequest.model';
+export * from './transaction/transferdump/transferDumpPutRequest.model';
+export * from './transaction/transferdump/transferDumpResponse.model';
+
+export * from './transaction/transfergtmt/transferGtMtItemdetail.model';
+export * from './transaction/transfergtmt/transferGtMtPostRequest.model';
+export * from './transaction/transfergtmt/transferGtMtPutRequest.model';
+export * from './transaction/transfergtmt/transferGtMtResponse.model';
+
+export * from './transaction/transfermtgt/transferMtGtPostRequest.model';
+export * from './transaction/transfermtgt/transferMtGtPutRequest.model';
+export * from './transaction/transfermtgt/transfermtgtItemdetail.model';
+export * from './transaction/transfermtgt/transfermtgtResponse.model';
+
+export * from './transaction/transferother/transferOtherItemdetail.model';
+export * from './transaction/transferother/transferOtherPostRequest.model';
+export * from './transaction/transferother/transferOtherPutRequest.model';
+export * from './transaction/transferother/transferOtherResponse.model';
+
 //reports
 
 export * from './report/others/bulkPrint.model';

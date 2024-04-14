@@ -15,7 +15,7 @@ export interface ItemPutRequest {
   salesRate: number;
   margin: number;
   isActive: boolean;
-  ModifiedBy?: string;
+  modifiedBy?: string;
 }
 
 export interface OpeningItemPutRequest {

@@ -3,5 +3,5 @@ export interface GroupPutRequest {
   balanceTransferToID: number;
   scheduleID: number;
   isActive: boolean;
-  ModifiedBy?: string;
+  modifiedBy?: string;
 }

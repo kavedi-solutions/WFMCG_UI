@@ -4,7 +4,7 @@ export interface RolePutRequest {
   isAdminRole: boolean;
   permission: PermissionPutRequest[];
   isActive: boolean;
-  ModifiedBy?: string;
+  modifiedBy?: string;
 }
 
 export interface PermissionPutRequest {

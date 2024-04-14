@@ -114,7 +114,7 @@ export class GroupService {
     GroupID: number,
     resourcesDetails: GroupPutRequest
   ): Observable<Group> {
-    resourcesDetails.ModifiedBy = this.UserID;
+    resourcesDetails.modifiedBy = this.UserID;
     const url = `${this.APIURL}/company/${this.CompanyID}/group/update/${GroupID}`;
     return this.http.put<Group>(encodeURI(url), resourcesDetails, {
       headers: this.headers,

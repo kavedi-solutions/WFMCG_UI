@@ -126,7 +126,7 @@ export class VReceiptB2BService {
     VReceiptB2BID: number,
     resourcesDetails: VReceiptB2BPutRequest
   ): Observable<any> {
-    resourcesDetails.ModifiedBy = this.UserID;
+    resourcesDetails.modifiedBy = this.UserID;
     const url = `${this.APIURL}/update/${VReceiptB2BID}`;
     return this.http.put<any>(encodeURI(url), resourcesDetails, {
       headers: this.headers,

@@ -11,5 +11,5 @@ export interface VPaymentPutRequest {
   transactionNo?: string;
   narration?: string;
   isActive: boolean;
-  ModifiedBy?: string;
+  modifiedBy?: string;
 }

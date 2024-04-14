@@ -30,7 +30,7 @@ export class PurchaseReturnService {
     private storage: LocalStorageService,
     private appconfig: AppConfig
   ) {
-    this.APIURL = this.appconfig.GetCoreAPIURL() + `api/v${this.version}`;
+    this.APIURL = this.appconfig.GetCoreAPIURL() + `api/v${this.version}/company/${this.CompanyID}/purchasereturn/inventory`;
   }
 
   GetPurchaseReturnList(
@@ -52,7 +52,7 @@ export class PurchaseReturnService {
       });
     }
 
-    const url = `${this.APIURL}/company/${this.CompanyID}/purchasereturn/inventory/paged`;
+    const url = `${this.APIURL}/paged`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -71,7 +71,7 @@ export class PurchaseReturnService {
   }
 
   GetNextBillNo(BookAccountID: number, BillDate: Date) {
-    const url = `${this.APIURL}/company/${this.CompanyID}/purchasereturn/inventory/getnextbill/${BookAccountID}?BillDate=${BillDate}`;
+    const url = `${this.APIURL}/getnextbill/${BookAccountID}?BillDate=${BillDate}`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -85,7 +85,7 @@ export class PurchaseReturnService {
   }
 
   GetPurchaseReturnbyID(PurchaseReturnID: number) {
-    const url = `${this.APIURL}/company/${this.CompanyID}/purchasereturn/inventory/${PurchaseReturnID}/getbyid`;
+    const url = `${this.APIURL}/${PurchaseReturnID}/getbyid`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -100,7 +100,7 @@ export class PurchaseReturnService {
 
   createPurchaseReturn(resourcesDetails: PurchaseReturnPostRequest): Observable<any> {
     resourcesDetails.createdBy = this.UserID;
-    const url = `${this.APIURL}/company/${this.CompanyID}/purchasereturn/inventory/create`;
+    const url = `${this.APIURL}/create`;
     return this.http.post<any>(encodeURI(url), resourcesDetails, {
       headers: this.headers,
     });
@@ -110,15 +110,15 @@ export class PurchaseReturnService {
     PurchaseReturnID: number,
     resourcesDetails: PurchaseReturnPutRequest
   ): Observable<any> {
-    resourcesDetails.ModifiedBy = this.UserID;
-    const url = `${this.APIURL}/company/${this.CompanyID}/purchasereturn/inventory/update/${PurchaseReturnID}`;
+    resourcesDetails.modifiedBy = this.UserID;
+    const url = `${this.APIURL}/update/${PurchaseReturnID}`;
     return this.http.put<any>(encodeURI(url), resourcesDetails, {
       headers: this.headers,
     });
   }
 
   deletePurchaseReturn(PurchaseReturnID: number) {
-    const url = `${this.APIURL}/company/${this.CompanyID}/purchasereturn/inventory/delete/${PurchaseReturnID}`;
+    const url = `${this.APIURL}/delete/${PurchaseReturnID}`;
     return this.http.delete<any>(encodeURI(url), {
       headers: this.headers,
     });

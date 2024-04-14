@@ -595,6 +595,94 @@ const routes: Routes = [
           },
         ],
       },
+      {
+        path: 'transfermtgt',
+        children: [
+          {
+            path: 'list',
+            component: CommonPages.TransferMTGTComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '241' },
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'add',
+            component: CommonPages.TransferMTGTAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'edit/:transferid',
+            component: CommonPages.TransferMTGTAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+        ],
+      },
+      {
+        path: 'transfergtmt',
+        children: [
+          {
+            path: 'list',
+            component: CommonPages.TransferGTMTComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '242' },
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'add',
+            component: CommonPages.TransferGTMTAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'edit/:transferid',
+            component: CommonPages.TransferGTMTAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+        ],
+      },
+      {
+        path: 'transferother',
+        children: [
+          {
+            path: 'list',
+            component: CommonPages.TransferOtherComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '243' },
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'add',
+            component: CommonPages.TransferOtherAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'edit/:transferid',
+            component: CommonPages.TransferOtherAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+        ],
+      },
+      {
+        path: 'transferdump',
+        children: [
+          {
+            path: 'list',
+            component: CommonPages.TransferDumpComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '244' },
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'add',
+            component: CommonPages.TransferDumpAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'edit/:transferid',
+            component: CommonPages.TransferDumpAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+        ],
+      },
     ],
   },
   {

@@ -16,7 +16,7 @@ export interface DebitNotePutRequest {
   netAmount: number;
   details: DebitNoteItemPutRequest[] | null;
   isActive: boolean;
-  ModifiedBy?: string;
+  modifiedBy?: string;
 }
 
 export interface DebitNoteItemPutRequest {

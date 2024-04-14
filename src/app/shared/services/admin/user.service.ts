@@ -128,7 +128,7 @@ export class UserService {
     UserID: string,
     resourcesDetails: UserPutRequest
   ): Observable<User> {
-    resourcesDetails.ModifiedBy = this.UserID;
+    resourcesDetails.modifiedBy = this.UserID;
     const url = `${this.APIURL}/company/${this.CompanyID}/users/update/${UserID}`;
     return this.http.put<User>(encodeURI(url), resourcesDetails, {
       headers: this.headers,

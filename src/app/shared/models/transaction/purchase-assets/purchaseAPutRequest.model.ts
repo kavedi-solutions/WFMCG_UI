@@ -18,7 +18,7 @@ export interface PurchaseAPutRequest {
   netAmount: number;
   details: PurchaseAItemPutRequest[] | null;
   isActive: boolean;
-  ModifiedBy?: string;
+  modifiedBy?: string;
 }
 
 export interface PurchaseAItemPutRequest {

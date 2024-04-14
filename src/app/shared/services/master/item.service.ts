@@ -117,7 +117,7 @@ export class ItemService {
     ItemID: number,
     resourcesDetails: ItemPutRequest
   ): Observable<Item> {
-    resourcesDetails.ModifiedBy = this.UserID;
+    resourcesDetails.modifiedBy = this.UserID;
     const url = `${this.APIURL}/company/${this.CompanyID}/item/update/${ItemID}`;
     return this.http.put<Item>(encodeURI(url), resourcesDetails, {
       headers: this.headers,
@@ -165,7 +165,7 @@ export class ItemService {
   ItemDropDownReport(filters: ItemFilter_DropDownReport) {
     const url = `${this.APIURL}/company/${this.CompanyID}/item/dropdownreport`;
     let params = new HttpParams()
-      .set('ItemType', `${filters.ItemType}`)      
+      .set('ItemType', `${filters.ItemType}`)
       .set('TransactionTypeID', `${filters.TransactionTypeID != undefined ? filters.TransactionTypeID : 0}`)
 
     return this.http

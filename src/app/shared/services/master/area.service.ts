@@ -114,7 +114,7 @@ export class AreaService {
     areaID: number,
     resourcesDetails: AreaPutRequest
   ): Observable<Area> {
-    resourcesDetails.ModifiedBy = this.UserID;
+    resourcesDetails.modifiedBy = this.UserID;
     const url = `${this.APIURL}/company/${this.CompanyID}/area/update/${areaID}`;
     return this.http.put<Area>(encodeURI(url), resourcesDetails, {
       headers: this.headers,

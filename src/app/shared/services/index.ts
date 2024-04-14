@@ -29,6 +29,10 @@ import { PurchaseService } from './transaction/purchase.service';
 import { SalesAService } from './transaction/sales-a.service';
 import { SalesSService } from './transaction/sales-s.service';
 import { SalesService } from './transaction/sales.service';
+import { TransferDumpService } from './transaction/transfer-dump.service';
+import { TransferGTMTService } from './transaction/transfer-gtmt.service';
+import { TransferMTGTService } from './transaction/transfer-mtgt.service';
+import { TransferOtherService } from './transaction/transfer-other.service';
 import { VContraService } from './transaction/vcontra.service';
 import { VJournalService } from './transaction/vjournal.service';
 import { VPaymentService } from './transaction/vpayment.service';
@@ -60,6 +64,10 @@ export const services: any[] = [
   SalesService,
   SalesAService,
   SalesSService,
+  TransferDumpService,
+  TransferGTMTService,
+  TransferMTGTService,
+  TransferOtherService,
   VPaymentService,
   VReceiptService,
   VContraService,
@@ -72,7 +80,7 @@ export const services: any[] = [
   FinancialService,
   EInvoiceService,
   GstService,
-  UtilityService
+  UtilityService,
 ];
 
 export * from './admin/role.service';
@@ -110,6 +118,11 @@ export * from './transaction/debit-note.service';
 export * from './transaction/purchase-return.service';
 export * from './transaction/sales-return.service';
 
+export * from './transaction/transfer-dump.service';
+export * from './transaction/transfer-gtmt.service';
+export * from './transaction/transfer-mtgt.service';
+export * from './transaction/transfer-other.service';
+
 export * from './transaction/vcontra.service';
 export * from './transaction/vpayment.service';
 export * from './transaction/vreceipt.service';
@@ -124,5 +137,3 @@ export * from './reports/gst.service';
 export * from './einvoice/e-invoice.service';
 
 export * from './utility/utility.service';
-
-

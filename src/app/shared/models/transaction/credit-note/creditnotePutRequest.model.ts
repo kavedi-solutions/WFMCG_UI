@@ -16,7 +16,7 @@ export interface CreditNotePutRequest {
   netAmount: number;
   details: CreditNoteItemPutRequest[] | null;
   isActive: boolean;
-  ModifiedBy?: string;
+  modifiedBy?: string;
 }
 
 export interface CreditNoteItemPutRequest {

@@ -12,5 +12,5 @@ export interface UserPutRequest {
   isCompanyOwner: boolean;
   roleID: number;
   isActive: boolean;
-  ModifiedBy?: string;
+  modifiedBy?: string;
 }

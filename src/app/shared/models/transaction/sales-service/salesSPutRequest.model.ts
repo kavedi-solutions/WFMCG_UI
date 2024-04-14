@@ -18,7 +18,7 @@ export interface SalesSPutRequest {
   netAmount: number;
   details: SalesSItemPutRequest[] | null;
   isActive: boolean;
-  ModifiedBy?: string;
+  modifiedBy?: string;
 }
 
 export interface SalesSItemPutRequest {

@@ -11,5 +11,5 @@ export interface VReceiptPutRequest {
   transactionNo?: string;
   narration?: string;
   isActive: boolean;
-  ModifiedBy?: string;
+  modifiedBy?: string;
 }

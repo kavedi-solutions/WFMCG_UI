@@ -135,7 +135,7 @@ export class AccountsService {
     AccountsID: number,
     resourcesDetails: AccountsPutRequest
   ): Observable<Accounts> {
-    resourcesDetails.ModifiedBy = this.UserID;
+    resourcesDetails.modifiedBy = this.UserID;
     const url = `${this.APIURL}/company/${this.CompanyID}/accounts/update/${AccountsID}`;
     return this.http.put<Accounts>(encodeURI(url), resourcesDetails, {
       headers: this.headers,
@@ -163,25 +163,25 @@ export class AccountsService {
       filters.GroupID.forEach((element) => {
         params = params.append('GroupID', element);
       });
-    } 
+    }
 
     if (filters.BalanceTransferToID.length > 0) {
       filters.BalanceTransferToID.forEach((element) => {
         params = params.append('BalanceTransferToID', element);
       });
-    } 
+    }
 
     if (filters.AccountTypeID.length > 0) {
       filters.AccountTypeID.forEach((element) => {
         params = params.append('AccountTypeID', element);
       });
-    } 
+    }
 
     if (filters.TransactionTypeID.length > 0) {
       filters.TransactionTypeID.forEach((element) => {
         params = params.append('TransactionTypeID', element);
       });
-    } 
+    }
 
     if (filters.SalesTypeID.length > 0) {
       filters.SalesTypeID.forEach((element) => {
@@ -193,19 +193,19 @@ export class AccountsService {
       filters.AccountTradeTypeID.forEach((element) => {
         params = params.append('AccountTradeTypeID', element);
       });
-    } 
+    }
 
     if (filters.AreaID.length > 0) {
       filters.AreaID.forEach((element) => {
         params = params.append('AreaID', element);
       });
-    } 
+    }
 
     if (filters.HeadBookId.length > 0) {
       filters.HeadBookId.forEach((element) => {
         params = params.append('HeadBookId', element);
       });
-    } 
+    }
 
     return this.http
       .get<any>(encodeURI(url), {

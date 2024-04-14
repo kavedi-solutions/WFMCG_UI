@@ -117,7 +117,7 @@ export class ItemgroupService {
     ItemGroupID: number,
     resourcesDetails: ItemGroupPutRequest
   ): Observable<ItemGroup> {
-    resourcesDetails.ModifiedBy = this.UserID;
+    resourcesDetails.modifiedBy = this.UserID;
     const url = `${this.APIURL}/company/${this.CompanyID}/itemgroup/update/${ItemGroupID}`;
     return this.http.put<ItemGroup>(encodeURI(url), resourcesDetails, {
       headers: this.headers,

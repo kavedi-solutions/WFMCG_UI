@@ -110,7 +110,7 @@ export class VContraService {
     VContraID: number,
     resourcesDetails: VContraPutRequest
   ): Observable<any> {
-    resourcesDetails.ModifiedBy = this.UserID;
+    resourcesDetails.modifiedBy = this.UserID;
     const url = `${this.APIURL}/update/${VContraID}`;
     return this.http.put<any>(encodeURI(url), resourcesDetails, {
       headers: this.headers,

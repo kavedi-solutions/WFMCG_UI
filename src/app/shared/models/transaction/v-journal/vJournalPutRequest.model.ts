@@ -10,5 +10,5 @@ export interface VJournalPutRequest {
   amount: number;
   narration?: string;
   isActive: boolean;
-  ModifiedBy?: string;
+  modifiedBy?: string;
 }

@@ -110,7 +110,7 @@ export class VPaymentService {
     VPaymentID: number,
     resourcesDetails: VPaymentPutRequest
   ): Observable<any> {
-    resourcesDetails.ModifiedBy = this.UserID;
+    resourcesDetails.modifiedBy = this.UserID;
     const url = `${this.APIURL}/update/${VPaymentID}`;
     return this.http.put<any>(encodeURI(url), resourcesDetails, {
       headers: this.headers,

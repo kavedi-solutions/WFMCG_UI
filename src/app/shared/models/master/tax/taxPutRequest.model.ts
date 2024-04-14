@@ -14,5 +14,5 @@ export interface TaxPutRequest {
   cessOutputPostingAc: number;
   totalTaxRate: number;
   isActive: boolean;
-  ModifiedBy?: string;
+  modifiedBy?: string;
 }
