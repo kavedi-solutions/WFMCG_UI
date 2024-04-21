@@ -81,11 +81,7 @@ export class TransferMTGTComponent implements OnInit {
               },
               click: (record) => this.edit(record),
               iif: (record) => {
-                return (
-                  this.accRights!.canEdit &&
-                  record.eiStatus == false &&
-                  record.eiCanceled == false
-                );
+                return this.accRights!.canEdit;
               },
             },
             {
@@ -102,7 +98,7 @@ export class TransferMTGTComponent implements OnInit {
               },
               click: (record) => this.delete(record),
               iif: (record) => {
-                return this.accRights!.canDelete && record.eiStatus == false;
+                return this.accRights!.canDelete;
               },
             },
             {
@@ -111,8 +107,7 @@ export class TransferMTGTComponent implements OnInit {
               buttontype: 'button',
               pop: {
                 title: 'Confirm Print',
-                description:
-                  'Are you sure you want to Print this Transfer.',
+                description: 'Are you sure you want to Print this Transfer.',
                 closeText: 'No',
                 okText: 'Yes',
                 okColor: 'primary',
@@ -207,7 +202,6 @@ export class TransferMTGTComponent implements OnInit {
     //   .subscribe((response) => {
     //     var file = new Blob([response as Blob], { type: 'application/pdf' });
     //     var fileURL = URL.createObjectURL(file);
-
     //     this.dialog.open(PdfViewerDialogComponent, {
     //       data: this.sanitizer.bypassSecurityTrustResourceUrl(fileURL),
     //       minWidth: '80vw',

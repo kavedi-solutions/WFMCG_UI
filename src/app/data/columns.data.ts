@@ -3867,6 +3867,84 @@ export function GetTransferMTGTColumns() {
   return ColumnList;
 }
 
+export function GetTransferMTGTDetailColumns() {
+  let ColumnList: MtxGridColumn[] = [
+    {
+      header: 'Auto ID',
+      field: 'autoID',
+      hide: true,
+    },
+    {
+      header: 'Sr#',
+      field: 'SrNo',
+      sortable: false,
+      disabled: true,
+      minWidth: 50,
+      width: '50px',
+      pinned: 'left',
+    },
+    {
+      header: 'FromItemID',
+      field: 'FromItemID',
+      hide: true,
+    },
+    {
+      header: 'From Item Name',
+      field: 'FromItemName',
+      sortable: false,
+      disabled: true,
+      minWidth: 250,
+      width: '250px',
+      pinned: 'left',
+    },
+    {
+      header: 'ToItemID',
+      field: 'ToItemID',
+      hide: true,
+    },
+    {
+      header: 'To Item Name',
+      field: 'ToItemName',
+      sortable: false,
+      disabled: true,
+      minWidth: 250,
+      width: '250px',
+      pinned: 'left',
+    },
+    {
+      header: 'Crt',
+      field: 'Crt',
+      sortable: false,
+      disabled: true,
+      minWidth: 60,
+      width: '60px',
+      type: 'number',
+      typeParameter: { digitsInfo: '0.0-0', locale: 'en-IN' },
+      class: 'right-mat-header-cell right-mat-cell',
+      pinned: 'left',
+    },
+    {
+      header: 'Pcs',
+      field: 'Pcs',
+      sortable: false,
+      disabled: true,
+      minWidth: 60,
+      width: '60px',
+      type: 'number',
+      typeParameter: { digitsInfo: '0.0-0', locale: 'en-IN' },
+      class: 'right-mat-header-cell right-mat-cell',
+      pinned: 'left',
+    },
+    {
+      header: 'Qty',
+      field: 'qty',
+      hide: true,
+    },
+  ];
+
+  return ColumnList;
+}
+
 export function GetTransferGTMTColumns() {
   let ColumnList: MtxGridColumn[] = [
     {

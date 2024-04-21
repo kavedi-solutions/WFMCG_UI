@@ -63,7 +63,6 @@ export class SalesAddEditComponent implements OnInit {
   salesPutRequest?: SalesPutRequest;
   editSales?: SalesResponse;
 
-  itemGroupDropDown: ItemGroupDownDownResponse[] = [];
   accountTradeTypeDropDown: accountTradeTypeResponse[] = [];
   taxDropDown: TaxDownDownResponse[] = [];
   booksDropDown: accountsDropDownResponse[] = [];
@@ -176,7 +175,6 @@ export class SalesAddEditComponent implements OnInit {
     //this.AddTempItems();
     this.isEditMode = false;
     this.selectedSalesId = 0;
-    this.itemGroupDropDown = [];
     this.accountTradeTypeDropDown = [];
     this.taxDropDown = [];
     this.FillTaxDropDown();
@@ -718,7 +716,7 @@ export class SalesAddEditComponent implements OnInit {
         : 'CGST/SGST Invoice';
     this.IsIGSTInvoice =
       this.AccountStateID != this.CompanyStateID ? true : false;
-  }  
+  }
 
   SelectedItem(event: any) {
     //check item exitst in item Detail

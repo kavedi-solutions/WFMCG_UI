@@ -1,15 +1,734 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2, ViewChild } from '@angular/core';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
+import { MatAutocomplete } from '@angular/material/autocomplete';
+import { ActivatedRoute, Router } from '@angular/router';
+import * as moment from 'moment';
+import { map, Observable, startWith, tap } from 'rxjs';
+import {
+  ClosingStockbyItemID,
+  Item,
+  ItemFilter_DropDown,
+  itemsDropDownResponse,
+  NotificationComponent,
+  Tax,
+  TransactionTypeMaster,
+  TransferMTGTItemDetail,
+  TransferMTGTItemPostRequest,
+  TransferMTGTItemPutRequest,
+  TransferMTGTItemResponse,
+  TransferMTGTPostRequest,
+  TransferMTGTPutRequest,
+  TransferMTGTResponse,
+} from 'src/app/shared';
+import { CheckIsNumber, GetCrt, GetPcs } from 'src/app/shared/functions';
+import * as fromService from '../../../../shared/index';
+import * as defaultData from '../../../../data/index';
+import { MtxGridColumn } from 'src/app/extensions/grid/grid.interface';
 
 @Component({
   selector: 'app-transfer-mtgtadd-edit',
   templateUrl: './transfer-mtgtadd-edit.component.html',
-  styleUrls: ['./transfer-mtgtadd-edit.component.scss']
+  styleUrls: ['./transfer-mtgtadd-edit.component.scss'],
 })
 export class TransferMTGTAddEditComponent implements OnInit {
+  PageTitle: string = 'Create Transfer MT to GT';
+  buttonText: string = 'Add New Transfer MT to GT';
+  isEditMode: boolean = false;
+  selectedTransferId: number;
+  isFromQuickMenu: boolean = false;
+  TransferMinDate?: Date;
+  TransferMaxDate?: Date;
+  TransferID: number = 0;
 
-  constructor() { }
+  transferPostRequest?: TransferMTGTPostRequest;
+  transferPutRequest?: TransferMTGTPutRequest;
 
-  ngOnInit(): void {
+  CurrentFromItem?: Item;
+  CurrentToItem?: Item;
+  CurrentTax?: Tax;
+  CurrentStock?: ClosingStockbyItemID;
+
+  DisableAddItemBtn: boolean = true;
+
+  fromItemsDropDown: itemsDropDownResponse[] = [];
+  filteredFromitemsDropDown?: Observable<itemsDropDownResponse[]>;
+
+  toItemsDropDown: itemsDropDownResponse[] = [];
+  filteredToitemsDropDown?: Observable<itemsDropDownResponse[]>;
+
+  ItemEdit?: TransferMTGTItemDetail;
+  IsItemEditMode: boolean = false;
+  ItemCount: number = 0;
+
+  transferItemDetailsList: TransferMTGTItemDetail[] = [];
+  transferItemDetailsListData: TransferMTGTItemDetail[] = [];
+
+  columns: MtxGridColumn[] = [];
+
+  editTransfer?: TransferMTGTResponse;
+
+  transferForm = this.fb.group({
+    TransferDate: ['', [Validators.required]],
+    TransferNo: ['', [Validators.required]],
+    Items: this.fb.group({
+      I_FromItemID: [''],
+      I_ToItemID: [''],
+      I_Crt: [0, [Validators.pattern(/^([0-9,-/+])+$/i)]],
+      I_Pcs: [0, [Validators.pattern(/^([0-9,-/+])+$/i)]],
+      I_Qty: [0],
+    }),
+  });
+
+  @ViewChild('AutoFromItemID') AutoFromItemID?: MatAutocomplete;
+  @ViewChild('AutoToItemID') AutoToItemID?: MatAutocomplete;
+
+  constructor(
+    private router: Router,
+    private fb: FormBuilder,
+    public route: ActivatedRoute,
+    private renderer: Renderer2,
+    private transferMtGtService: fromService.TransferMTGTService,
+    private itemService: fromService.ItemService,
+    private stockService: fromService.StockService,
+    public notification: NotificationComponent
+  ) {
+    this.isEditMode = false;
+    this.setColumns();
+    this.selectedTransferId = 0;
+    this.SetMinMaxBillDate();
+    this.FillFromItemDropDown(3);
+    this.FillToItemDropDown(2);
   }
 
+  ngOnInit(): void {
+    this.filteredFromitemsDropDown = this.I_FromItemIDControl.valueChanges.pipe(
+      startWith(''),
+      map((value) => {
+        const name = typeof value === 'string' ? value : value?.item_Name;
+        return name
+          ? this._filterFromItems(name as string)
+          : this.fromItemsDropDown.slice();
+      })
+    );
+
+    this.filteredToitemsDropDown = this.I_ToItemIDControl.valueChanges.pipe(
+      startWith(''),
+      map((value) => {
+        const name = typeof value === 'string' ? value : value?.item_Name;
+        return name
+          ? this._filterToItems(name as string)
+          : this.toItemsDropDown.slice();
+      })
+    );
+
+    this.route.params
+      .pipe(
+        tap((params) => {
+          this.selectedTransferId = params['transferid'] || 0;
+        })
+      )
+      .subscribe();
+    if (this.selectedTransferId != 0) {
+      this.isEditMode = true;
+      this.PageTitle = 'Update Transfer MT to GT';
+      this.getTransferByID();
+    } else {
+      this.isEditMode = false;
+    }
+  }
+
+  //DropDowns
+
+  FillFromItemDropDown(AccountTradeTypeID: number) {
+    let filters: ItemFilter_DropDown = {
+      ItemType: 1,
+      AccountTradeTypeID: AccountTradeTypeID,
+      TransactionTypeID: TransactionTypeMaster.TransferStockMTtoGT,
+      InvoiceID: this.TransferID,
+    };
+    this.itemService.ItemDropDown(filters).subscribe((response) => {
+      this.fromItemsDropDown = response;
+      this.I_FromItemIDControl.setValue('');
+    });
+  }
+
+  FillToItemDropDown(AccountTradeTypeID: number) {
+    let filters: ItemFilter_DropDown = {
+      ItemType: 1,
+      AccountTradeTypeID: AccountTradeTypeID,
+      TransactionTypeID: TransactionTypeMaster.TransferStockMTtoGT,
+      InvoiceID: this.TransferID,
+    };
+    this.itemService.ItemDropDown(filters).subscribe((response) => {
+      this.toItemsDropDown = response;
+      this.I_ToItemIDControl.setValue('');
+    });
+  }
+
+  setColumns() {
+    this.columns = defaultData.GetTransferMTGTDetailColumns();
+    this.columns.push({
+      header: 'Action',
+      field: 'action',
+      minWidth: 120,
+      width: '120px',
+      pinned: 'right',
+      type: 'button',
+      class: '',
+      buttons: [
+        {
+          type: 'icon',
+          icon: 'edit',
+          tooltip: 'Edit Record',
+          buttontype: 'button',
+          pop: {
+            title: 'Confirm Edit',
+            description: 'Are you sure you want to Edit this Item.',
+            closeText: 'No',
+            okText: 'Yes',
+            okColor: 'primary',
+            closeColor: 'warn',
+          },
+          click: (record) => this.editItem(record),
+        },
+        {
+          type: 'icon',
+          icon: 'delete',
+          tooltip: 'Delete Record',
+          buttontype: 'button',
+          pop: {
+            title: 'Confirm Delete',
+            description: 'Are you sure you want to Delete this Item.',
+            closeText: 'No',
+            okText: 'Yes',
+            okColor: 'primary',
+            closeColor: 'warn',
+          },
+          click: (record) => this.deleteItem(record),
+        },
+      ],
+    });
+  }
+
+  //Controls
+  get TransferDateControl() {
+    return this.transferForm.get('TransferDate') as FormControl;
+  }
+
+  get TransferNoControl() {
+    return this.transferForm.get('TransferNo') as FormControl;
+  }
+
+  get ItemsControl() {
+    return this.transferForm.get('Items') as FormControl;
+  }
+
+  get I_FromItemIDControl() {
+    return this.ItemsControl.get('I_FromItemID') as FormControl;
+  }
+
+  get I_ToItemIDControl() {
+    return this.ItemsControl.get('I_ToItemID') as FormControl;
+  }
+
+  get I_CrtControl() {
+    return this.ItemsControl.get('I_Crt') as FormControl;
+  }
+  get I_PcsControl() {
+    return this.ItemsControl.get('I_Pcs') as FormControl;
+  }
+  get I_QtyControl() {
+    return this.ItemsControl.get('I_Qty') as FormControl;
+  }
+
+  BacktoList() {
+    if (this.isFromQuickMenu == false) {
+      this.router.navigate(['/transaction/transfermtgt/list']);
+    } else {
+      //this.ResetForm(this.transferForm);
+    }
+  }
+
+  ResetItems() {
+    this.ItemsControl.reset({
+      I_FromItemID: '',
+      I_ToItemID: '',
+      I_Crt: 0,
+      I_Pcs: 0,
+      I_Qty: 0,
+    });
+    this.ItemsControl.markAsUntouched();
+    this.renderer.selectRootElement('#FromItemName', true).focus();
+    this.CurrentFromItem = undefined;
+    this.CurrentToItem = undefined;
+    this.CurrentStock = undefined;
+    this.CurrentTax = undefined;
+  }
+
+  getTransferByID() {
+    this.transferMtGtService
+      .GetTransferMTGTbyID(this.selectedTransferId)
+      .subscribe((response) => {
+        this.editTransfer = response;
+
+        this.TransferID = this.editTransfer!.autoID!;
+        this.transferForm.patchValue({
+          TransferNo: this.editTransfer?.transferNo.toString(),
+        });
+
+        this.TransferDateControl.setValue(
+          moment(this.editTransfer?.transferDate)
+        );
+        debugger;
+        this.editTransfer!.details!.forEach((element) => {
+          let ItemDetails: TransferMTGTItemDetail = {
+            AutoID: element.autoID,
+            SrNo: element.srNo,
+            FromItemID: element.fromItemID,
+            FromItemName: element.fromItemName,
+            ToItemID: element.toItemID,
+            ToItemName: element.toItemName,
+            Crt: element.crt,
+            Pcs: element.pcs,
+            Qty: element.quantity,
+            IsAdd: false,
+            IsModified: false,
+            IsDeleted: false,
+          };
+          this.transferItemDetailsList.push(ItemDetails);
+        });
+
+        this.transferItemDetailsListData = [
+          ...this.transferItemDetailsList.filter((a) => a.IsDeleted == false),
+        ];
+        this.ItemCount = this.transferItemDetailsListData.length;
+      });
+  }
+
+  ResetForm(form: FormGroup) {
+    let control: AbstractControl;
+    form.reset({
+      TransferDate: '',
+      TransferNo: '',
+      Items: {
+        I_FromItemID: '',
+        I_ToItemID: '',
+        I_Crt: 0,
+        I_Pcs: 0,
+        I_Qty: 0,
+      },
+    });
+    form.markAsUntouched();
+    Object.keys(form.controls).forEach((name) => {
+      control = form.controls[name];
+      control.setErrors(null);
+    });
+    this.transferItemDetailsList = [];
+    this.transferItemDetailsListData = [...this.transferItemDetailsList];
+    this.I_FromItemIDControl.setValue('');
+    this.I_ToItemIDControl.setValue('');
+    this.DisableAddItemBtn = true;
+    this.SetMinMaxBillDate();
+    this.renderer.selectRootElement('#TransferDate', true).focus();
+  }
+
+  //events
+
+  SetMinMaxBillDate() {
+    const currentYear = new Date().getFullYear();
+    this.TransferMinDate = new Date(currentYear - 20, 0, 1);
+    this.TransferMaxDate = new Date();
+    this.TransferDateControl.setValue(moment(new Date()));
+    this.GetNewTransferNo();
+  }
+
+  TransferDateChange() {
+    this.GetNewTransferNo();
+  }
+
+  TransferDateBlur() {
+    this.GetNewTransferNo();
+  }
+
+  GetNewTransferNo() {
+    if (this.isEditMode == false) {
+      let TransferDate = this.TransferDateControl.value.format('YYYY-MM-DD');
+      if (TransferDate != '') {
+        this.transferMtGtService
+          .GetNextTransferNo(TransferDate)
+          .subscribe((response) => {
+            this.TransferNoControl.setValue(response);
+          });
+      }
+    }
+  }
+
+  AddItemToList() {
+    let SrNo: number = 0;
+    let ItemIndex: number = 0;
+    if (this.IsItemEditMode == true) {
+      ItemIndex = this.transferItemDetailsList.findIndex(
+        (a) => a.FromItemID == Number(this.I_FromItemIDControl.value.item_Id)
+      );
+      SrNo = this.transferItemDetailsList[ItemIndex].SrNo;
+    } else {
+      SrNo = this.transferItemDetailsList.length + 1;
+    }
+
+    let ItemDetails: TransferMTGTItemDetail = {
+      AutoID: this.IsItemEditMode ? Number(this.ItemEdit?.AutoID) : 0,
+      SrNo: this.IsItemEditMode ? Number(this.ItemEdit?.SrNo) : SrNo,
+      FromItemID: Number(this.I_FromItemIDControl.value.item_Id),
+      FromItemName: this.I_FromItemIDControl.value.item_Name,
+      ToItemID: Number(this.I_ToItemIDControl.value.item_Id),
+      ToItemName: this.I_ToItemIDControl.value.item_Name,
+      Crt: CheckIsNumber(this.I_CrtControl.value),
+      Pcs: CheckIsNumber(this.I_PcsControl.value),
+      Qty: CheckIsNumber(this.I_QtyControl.value),
+
+      IsModified: this.isEditMode
+        ? this.IsItemEditMode
+          ? true
+          : false
+        : false,
+      IsDeleted: false,
+      IsAdd: this.isEditMode ? (this.IsItemEditMode ? false : true) : true,
+    };
+    if (this.IsItemEditMode == true) {
+      this.transferItemDetailsList[ItemIndex] = ItemDetails;
+    } else {
+      this.transferItemDetailsList.push(ItemDetails);
+    }
+    this.transferItemDetailsListData = [
+      ...this.transferItemDetailsList.filter((a) => a.IsDeleted == false),
+    ];
+
+    this.ItemCount = this.transferItemDetailsListData.length;
+    this.ResetItems();
+    this.IsItemEditMode = false;
+  }
+
+  CheckStocks(event: Event, Field: string) {
+    event.stopPropagation();
+    event.preventDefault();
+    let TotalQty = Number(this.I_QtyControl.value);
+    if (TotalQty > this.CurrentStock!.closing) {
+      this.notification.openStockErrorBar(
+        'Quantity is more then stock',
+        'Error',
+        'red-snackbar'
+      );
+      this.renderer.selectRootElement('#' + Field, true).focus();
+      if (Field == 'Crt') {
+        this.I_CrtControl.setErrors({ Validate: true });
+      }
+      if (Field == 'Pcs') {
+        this.I_PcsControl.setErrors({ Validate: true });
+      }
+    } else {
+      if (Field == 'Crt') {
+        this.I_CrtControl.setErrors(null);
+      }
+      if (Field == 'Pcs') {
+        this.I_PcsControl.setErrors(null);
+      }
+    }
+  }
+
+  CalculateTotals() {
+    let Qty = 0;
+    Qty =
+      Number(this.I_CrtControl.value) * Number(this.CurrentFromItem?.packing) +
+      Number(this.I_PcsControl.value);
+
+    this.DisableAddItemBtn = true;
+    if (Qty > 0) {
+      if (Qty > this.CurrentStock!.closing) {
+        this.DisableAddItemBtn = true;
+      } else {
+        this.DisableAddItemBtn = false;
+      }
+    }
+    this.I_QtyControl.setValue(Qty);
+  }
+
+  SelectedFromItem(event: any) {
+    //check item exitst in item Detail
+    // let FoundItem = this.transferItemDetailsList.findIndex(
+    //   (a) => a.FromItemID == event.option.value.item_Id
+    // );
+    this.itemService
+      .GetItembyID(event.option.value.item_Id)
+      .subscribe((response) => {
+        this.CurrentFromItem = response;
+        //if (FoundItem == -1) {
+        this.GetCurrentStock(Number(this.CurrentFromItem?.itemID), 0);
+        // } else {
+        //   this.ItemEdit = this.transferItemDetailsList[FoundItem];
+        //   let ItemDetail: TransferMTGTItemDetail = this.transferItemDetailsList.filter(
+        //     (a) => a.FromItemID == event.option.value.item_Id
+        //   )[0];
+        //   this.GetCurrentStock(
+        //     Number(this.CurrentFromItem?.itemID),
+        //     ItemDetail.Qty
+        //   );
+        //   this.I_CrtControl.setValue(ItemDetail.Crt);
+        //   this.I_PcsControl.setValue(ItemDetail.Pcs);
+        //   this.I_QtyControl.setValue(ItemDetail.Qty);
+        //   this.IsItemEditMode = true;
+        // }
+      });
+  }
+
+  SelectedToItem(event: any) {
+    //check item exitst in item Detail
+    // let FoundItem = this.salesItemDetailsList.findIndex(
+    //   (a) => a.ItemID == event.option.value.item_Id
+    // );
+    // this.itemService
+    //   .GetItembyID(event.option.value.item_Id)
+    //   .subscribe((response) => {
+    //     this.CurrentItem = response;
+    //     if (FoundItem == -1) {
+    //       this.GetCurrentStock(Number(this.CurrentItem?.itemID), 0);
+    //       this.I_RateControl.setValue(
+    //         SetFormatCurrency(this.CurrentItem?.salesRate)
+    //       );
+    //       this.I_GSTTaxIDControl.setValue(
+    //         this.CurrentItem?.gstTaxID.toString()
+    //       );
+    //       this.GetCurrentTax(Number(this.CurrentItem?.gstTaxID), false);
+    //     } else {
+    //       this.ItemEdit = this.salesItemDetailsList[FoundItem];
+    //       let ItemDetail: SalesItemDetail = this.salesItemDetailsList.filter(
+    //         (a) => a.ItemID == event.option.value.item_Id
+    //       )[0];
+    //       this.GetCurrentStock(
+    //         Number(this.CurrentItem?.itemID),
+    //         ItemDetail.TQty
+    //       );
+    //       this.I_CrtControl.setValue(ItemDetail.Crt);
+    //       this.I_PcsControl.setValue(ItemDetail.Pcs);
+    //       this.I_QtyControl.setValue(ItemDetail.Qty);
+    //       this.I_FreeCrtControl.setValue(ItemDetail.FCrt);
+    //       this.I_FreePcsControl.setValue(ItemDetail.FPcs);
+    //       this.I_FreeQtyControl.setValue(ItemDetail.FQty);
+    //       this.I_TotalQtyControl.setValue(ItemDetail.TQty);
+    //       this.I_RateControl.setValue(ItemDetail.Rate);
+    //       this.I_AmountControl.setValue(ItemDetail.Amount);
+    //       this.I_DiscPerControl.setValue(ItemDetail.DiscPer);
+    //       this.I_DiscAmountControl.setValue(ItemDetail.DiscAmount);
+    //       this.I_GSTTaxIDControl.setValue(ItemDetail.GSTTaxID.toString());
+    //       this.I_CGSTAmountControl.setValue(ItemDetail.CGSTAmount);
+    //       this.I_SGSTAmountControl.setValue(ItemDetail.SGSTAmount);
+    //       this.I_IGSTAmountControl.setValue(ItemDetail.IGSTAmount);
+    //       this.I_CessAmountControl.setValue(ItemDetail.CessAmount);
+    //       this.I_GrossAmountControl.setValue(ItemDetail.GrossAmount);
+    //       this.I_SchPerControl.setValue(ItemDetail.SchPer);
+    //       this.I_SchAmountControl.setValue(ItemDetail.SchAmount);
+    //       this.I_NetAmountControl.setValue(ItemDetail.NetAmount);
+    //       this.GetCurrentTax(Number(ItemDetail.GSTTaxID), true);
+    //       this.IsItemEditMode = true;
+    //     }
+    //   });
+  }
+
+  DisplayToItemName(items: itemsDropDownResponse) {
+    return items && items.item_Name ? items.item_Name : '';
+  }
+
+  DisplayFromItemName(items: itemsDropDownResponse) {
+    return items && items.item_Name ? items.item_Name : '';
+  }
+
+  OnFromItemblur() {
+    // if (this.AutoItemID?.isOpen == false) {
+    //   if (
+    //     this.I_ItemIDControl.value == '' &&
+    //     this.salesItemDetailsList.length == 0
+    //   ) {
+    //     this.renderer.selectRootElement('#ItemName', true).focus();
+    //   } else if (
+    //     this.I_ItemIDControl.value == '' &&
+    //     this.salesItemDetailsList.length > 0
+    //   ) {
+    //     this.renderer.selectRootElement('#OtherAddText', true).focus();
+    //   }
+    // }
+  }
+
+  OnToItemblur() {
+    // if (this.AutoItemID?.isOpen == false) {
+    //   if (
+    //     this.I_ItemIDControl.value == '' &&
+    //     this.salesItemDetailsList.length == 0
+    //   ) {
+    //     this.renderer.selectRootElement('#ItemName', true).focus();
+    //   } else if (
+    //     this.I_ItemIDControl.value == '' &&
+    //     this.salesItemDetailsList.length > 0
+    //   ) {
+    //     this.renderer.selectRootElement('#OtherAddText', true).focus();
+    //   }
+    // }
+  }
+
+  // CheckItemFoundinDetail()
+  // {
+  //   let FromItemID = this.I_FromItemIDControl.value;
+  //   let ToItemID = this.I_ToItemIDControl.value;
+  // }
+
+  GetCurrentStock(ItemID: number, EditQty: number) {
+    //stockService
+    this.stockService.GetClosingByItemID(ItemID, 1).subscribe((response) => {
+      this.CurrentStock = response;
+      if (EditQty > 0) {
+        this.CurrentStock!.closing =
+          this.CurrentStock!.closing + Number(EditQty);
+        this.CurrentStock!.closingCrt = GetCrt(
+          this.CurrentStock!.closing,
+          this.CurrentStock!.packing
+        );
+        this.CurrentStock!.closingPcs = GetPcs(
+          this.CurrentStock!.closing,
+          this.CurrentStock!.packing
+        );
+      }
+    });
+  }
+
+  editItem(record: TransferMTGTItemDetail) {
+    debugger;
+    let SelectedFromItem: itemsDropDownResponse;
+    let SelectedToItem: itemsDropDownResponse;
+    SelectedFromItem = this.fromItemsDropDown.filter(
+      (a) => a.item_Id == record.FromItemID.toString()
+    )[0];
+    SelectedToItem = this.toItemsDropDown.filter(
+      (a) => a.item_Id == record.ToItemID.toString()
+    )[0];
+    this.ItemEdit = record;
+    this.ItemsControl.patchValue({
+      I_FromItemID: SelectedFromItem,
+      I_ToItemID: SelectedToItem,
+      I_Crt: record.Crt,
+      I_Pcs: record.Pcs,
+      I_Qty: record.Qty,
+    });
+    this.IsItemEditMode = true;
+    this.renderer.selectRootElement('#FromItemName', true).focus();
+    this.itemService.GetItembyID(record.FromItemID).subscribe((response) => {
+      this.CurrentFromItem = response;
+      this.GetCurrentStock(Number(this.CurrentFromItem?.itemID), record.Qty);
+    });
+  }
+
+  deleteItem(record: TransferMTGTItemDetail) {
+    let ItemIndex = this.transferItemDetailsList.findIndex(
+      (a) =>
+        a.FromItemID == Number(record.FromItemID) &&
+        a.ToItemID == Number(record.ToItemID)
+    );
+    if (this.transferItemDetailsList[ItemIndex].AutoID > 0) {
+      this.transferItemDetailsList[ItemIndex].IsDeleted = true;
+    } else {
+      this.transferItemDetailsList.splice(ItemIndex, 1);
+    }
+    let SrNo: number = 0;
+    this.transferItemDetailsList.forEach((element) => {
+      SrNo = SrNo + 1;
+      element.SrNo = SrNo;
+    });
+
+    this.transferItemDetailsListData = [
+      ...this.transferItemDetailsList.filter((a) => a.IsDeleted == false),
+    ];
+    this.ItemCount = this.transferItemDetailsListData.length;
+  }
+
+  private _filterFromItems(name: string): itemsDropDownResponse[] {
+    const filterValue = name.toLowerCase();
+
+    return this.toItemsDropDown.filter((option) =>
+      option.item_Name.toLowerCase().includes(filterValue)
+    );
+  }
+
+  private _filterToItems(name: string): itemsDropDownResponse[] {
+    const filterValue = name.toLowerCase();
+
+    return this.toItemsDropDown.filter((option) =>
+      option.item_Name.toLowerCase().includes(filterValue)
+    );
+  }
+
+  SaveUpdateTransfer(transferForm: FormGroup) {
+    if (this.isEditMode == true) {
+      this.UpdateTransfer(transferForm);
+    } else {
+      this.SaveTransfer(transferForm);
+    }
+  }
+
+  SaveTransfer(transferForm: FormGroup) {
+    let PostRequestDetail: TransferMTGTItemPostRequest[] = [];
+
+    this.transferItemDetailsList.forEach((element) => {
+      PostRequestDetail.push({
+        srNo: element.SrNo,
+        fromItemID: element.FromItemID,
+        toItemID: element.ToItemID,
+        quantity: element.Qty,
+        isAdd: element.IsAdd,
+        isModified: element.IsModified,
+        isDeleted: element.IsDeleted,
+      });
+    });
+    this.transferPostRequest = {
+      transferNo: Number(transferForm.value.TransferNo),
+      transferDate: transferForm.value.TransferDate.format('YYYY-MM-DD'),
+      details: PostRequestDetail,
+      isActive: true,
+    };
+    this.transferMtGtService
+      .createTransferMTGT(this.transferPostRequest)
+      .subscribe((response) => {
+        this.BacktoList();
+      });
+  }
+
+  UpdateTransfer(transferForm: FormGroup) {
+    let PutRequestDetail: TransferMTGTItemPutRequest[] = [];
+
+    this.transferItemDetailsList.forEach((element) => {
+      PutRequestDetail.push({
+        autoID: element.AutoID,
+        srNo: element.SrNo,
+        fromItemID: element.FromItemID,
+        toItemID: element.ToItemID,
+        quantity: element.Qty,
+        isAdd: element.IsAdd,
+        isModified: element.IsModified,
+        isDeleted: element.IsDeleted,
+      });
+    });
+    this.transferPutRequest = {
+      transferNo: Number(transferForm.value.TransferNo),
+      transferDate: transferForm.value.TransferDate.format('YYYY-MM-DD'),
+      details: PutRequestDetail,
+      isActive: true,
+    };
+    this.transferMtGtService
+      .updateTransferMTGT(this.editTransfer!.autoID, this.transferPutRequest)
+      .subscribe((response) => {
+        this.BacktoList();
+      });
+  }
 }
