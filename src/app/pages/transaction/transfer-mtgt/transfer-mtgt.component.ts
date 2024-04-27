@@ -9,11 +9,8 @@ import {
 import * as fromService from '../../../shared/index';
 import * as defaultData from '../../../data/index';
 import { MtxGridColumn } from 'src/app/extensions/grid/grid.interface';
-import { DomSanitizer } from '@angular/platform-browser';
-import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { funSortingOrder } from 'src/app/shared/functions';
-import { PdfViewerDialogComponent } from 'src/app/theme';
 
 @Component({
   selector: 'app-transfer-mtgt',
@@ -36,11 +33,8 @@ export class TransferMTGTComponent implements OnInit {
 
   constructor(
     private transferMtGtService: fromService.TransferMTGTService,
-    private reportService: fromService.OthersReportService,
     private router: Router,
     private route: ActivatedRoute,
-    private sanitizer: DomSanitizer,
-    private dialog: MatDialog
   ) {
     this.latestSearchText = '';
     this.accRights = this.route.snapshot.data['userRights'];
@@ -101,23 +95,23 @@ export class TransferMTGTComponent implements OnInit {
                 return this.accRights!.canDelete;
               },
             },
-            {
-              text: 'Print',
-              tooltip: 'Print',
-              buttontype: 'button',
-              pop: {
-                title: 'Confirm Print',
-                description: 'Are you sure you want to Print this Transfer.',
-                closeText: 'No',
-                okText: 'Yes',
-                okColor: 'primary',
-                closeColor: 'warn',
-              },
-              click: (record) => this.printTransfer(record),
-              iif: () => {
-                return this.accRights!.canView;
-              },
-            },
+            // {
+            //   text: 'Print',
+            //   tooltip: 'Print',
+            //   buttontype: 'button',
+            //   pop: {
+            //     title: 'Confirm Print',
+            //     description: 'Are you sure you want to Print this Transfer.',
+            //     closeText: 'No',
+            //     okText: 'Yes',
+            //     okColor: 'primary',
+            //     closeColor: 'warn',
+            //   },
+            //   click: (record) => this.printTransfer(record),
+            //   iif: () => {
+            //     return this.accRights!.canView;
+            //   },
+            // },
           ],
         },
       ],
@@ -196,26 +190,26 @@ export class TransferMTGTComponent implements OnInit {
     this.getTransferList();
   }
 
-  printTransfer(value: any) {
-    // this.reportService
-    //   .PrintInvoiceInventory(0, [value.autoID])
-    //   .subscribe((response) => {
-    //     var file = new Blob([response as Blob], { type: 'application/pdf' });
-    //     var fileURL = URL.createObjectURL(file);
-    //     this.dialog.open(PdfViewerDialogComponent, {
-    //       data: this.sanitizer.bypassSecurityTrustResourceUrl(fileURL),
-    //       minWidth: '80vw',
-    //       minHeight: '90vh',
-    //       maxWidth: '80vw',
-    //       maxHeight: '90vh',
-    //       autoFocus: true,
-    //     });
-    //   });
-  }
+  // printTransfer(value: any) {
+  //   // this.reportService
+  //   //   .PrintInvoiceInventory(0, [value.autoID])
+  //   //   .subscribe((response) => {
+  //   //     var file = new Blob([response as Blob], { type: 'application/pdf' });
+  //   //     var fileURL = URL.createObjectURL(file);
+  //   //     this.dialog.open(PdfViewerDialogComponent, {
+  //   //       data: this.sanitizer.bypassSecurityTrustResourceUrl(fileURL),
+  //   //       minWidth: '80vw',
+  //   //       minHeight: '90vh',
+  //   //       maxWidth: '80vw',
+  //   //       maxHeight: '90vh',
+  //   //       autoFocus: true,
+  //   //     });
+  //   //   });
+  // }
 
-  handleResponse(data: any) {
-    var file = new Blob([data._body], { type: 'application/pdf' });
-    var fileURL = URL.createObjectURL(file);
-    window.open(fileURL);
-  }
+  // handleResponse(data: any) {
+  //   var file = new Blob([data._body], { type: 'application/pdf' });
+  //   var fileURL = URL.createObjectURL(file);
+  //   window.open(fileURL);
+  // }
 }

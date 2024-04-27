@@ -1,0 +1,21 @@
+.stocks {
+  text-align: center;
+  color: red;
+  font-size: larger;
+  font-weight: 500;
+}
+
+.mtx-grid-sales {
+  min-height: 250px !important;
+  max-height: 250px !important;
+}
+::ng-deep {
+  .mtx-grid-sales .mat-table-container {
+    overflow: unset !important;
+  }
+}
+
+.toItemTitle {
+  font-size: 12px;
+  color: gray;
+}

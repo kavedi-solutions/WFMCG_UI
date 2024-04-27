@@ -12,6 +12,7 @@ import * as moment from 'moment';
 import { map, Observable, startWith, tap } from 'rxjs';
 import {
   ClosingStockbyItemID,
+  GTMTItemResponse,
   Item,
   ItemFilter_DropDown,
   itemsDropDownResponse,
@@ -21,7 +22,6 @@ import {
   TransferMTGTItemDetail,
   TransferMTGTItemPostRequest,
   TransferMTGTItemPutRequest,
-  TransferMTGTItemResponse,
   TransferMTGTPostRequest,
   TransferMTGTPutRequest,
   TransferMTGTResponse,
@@ -50,7 +50,6 @@ export class TransferMTGTAddEditComponent implements OnInit {
   transferPutRequest?: TransferMTGTPutRequest;
 
   CurrentFromItem?: Item;
-  CurrentToItem?: Item;
   CurrentTax?: Tax;
   CurrentStock?: ClosingStockbyItemID;
 
@@ -58,9 +57,7 @@ export class TransferMTGTAddEditComponent implements OnInit {
 
   fromItemsDropDown: itemsDropDownResponse[] = [];
   filteredFromitemsDropDown?: Observable<itemsDropDownResponse[]>;
-
-  toItemsDropDown: itemsDropDownResponse[] = [];
-  filteredToitemsDropDown?: Observable<itemsDropDownResponse[]>;
+  toItemName: string = '';
 
   ItemEdit?: TransferMTGTItemDetail;
   IsItemEditMode: boolean = false;
@@ -72,8 +69,6 @@ export class TransferMTGTAddEditComponent implements OnInit {
   columns: MtxGridColumn[] = [];
 
   editTransfer?: TransferMTGTResponse;
-
-  isBothItemMatch: boolean = false;
 
   transferForm = this.fb.group({
     TransferDate: ['', [Validators.required]],
@@ -88,7 +83,6 @@ export class TransferMTGTAddEditComponent implements OnInit {
   });
 
   @ViewChild('AutoFromItemID') AutoFromItemID?: MatAutocomplete;
-  @ViewChild('AutoToItemID') AutoToItemID?: MatAutocomplete;
 
   constructor(
     private router: Router,
@@ -105,7 +99,6 @@ export class TransferMTGTAddEditComponent implements OnInit {
     this.selectedTransferId = 0;
     this.SetMinMaxBillDate();
     this.FillFromItemDropDown(3);
-    this.FillToItemDropDown(2);
   }
 
   ngOnInit(): void {
@@ -116,16 +109,6 @@ export class TransferMTGTAddEditComponent implements OnInit {
         return name
           ? this._filterFromItems(name as string)
           : this.fromItemsDropDown.slice();
-      })
-    );
-
-    this.filteredToitemsDropDown = this.I_ToItemIDControl.valueChanges.pipe(
-      startWith(''),
-      map((value) => {
-        const name = typeof value === 'string' ? value : value?.item_Name;
-        return name
-          ? this._filterToItems(name as string)
-          : this.toItemsDropDown.slice();
       })
     );
 
@@ -157,19 +140,6 @@ export class TransferMTGTAddEditComponent implements OnInit {
     this.itemService.ItemDropDown(filters).subscribe((response) => {
       this.fromItemsDropDown = response;
       this.I_FromItemIDControl.setValue('');
-    });
-  }
-
-  FillToItemDropDown(AccountTradeTypeID: number) {
-    let filters: ItemFilter_DropDown = {
-      ItemType: 1,
-      AccountTradeTypeID: AccountTradeTypeID,
-      TransactionTypeID: TransactionTypeMaster.TransferStockMTtoGT,
-      InvoiceID: this.TransferID,
-    };
-    this.itemService.ItemDropDown(filters).subscribe((response) => {
-      this.toItemsDropDown = response;
-      this.I_ToItemIDControl.setValue('');
     });
   }
 
@@ -268,9 +238,10 @@ export class TransferMTGTAddEditComponent implements OnInit {
     this.ItemsControl.markAsUntouched();
     this.renderer.selectRootElement('#FromItemName', true).focus();
     this.CurrentFromItem = undefined;
-    this.CurrentToItem = undefined;
     this.CurrentStock = undefined;
     this.CurrentTax = undefined;
+    this.toItemName = '';
+    this.IsItemEditMode = false;
   }
 
   getTransferByID() {
@@ -387,8 +358,8 @@ export class TransferMTGTAddEditComponent implements OnInit {
       SrNo: this.IsItemEditMode ? Number(this.ItemEdit?.SrNo) : SrNo,
       FromItemID: Number(this.I_FromItemIDControl.value.item_Id),
       FromItemName: this.I_FromItemIDControl.value.item_Name,
-      ToItemID: Number(this.I_ToItemIDControl.value.item_Id),
-      ToItemName: this.I_ToItemIDControl.value.item_Name,
+      ToItemID: Number(this.I_ToItemIDControl.value),
+      ToItemName: this.toItemName,
       Crt: CheckIsNumber(this.I_CrtControl.value),
       Pcs: CheckIsNumber(this.I_PcsControl.value),
       Qty: CheckIsNumber(this.I_QtyControl.value),
@@ -447,10 +418,8 @@ export class TransferMTGTAddEditComponent implements OnInit {
     Qty =
       Number(this.I_CrtControl.value) * Number(this.CurrentFromItem?.packing) +
       Number(this.I_PcsControl.value);
-
     this.DisableAddItemBtn = true;
-    debugger;
-    if (Qty > 0 && this.isBothItemMatch == true) {
+    if (Qty > 0) {
       if (Qty > this.CurrentStock!.closing) {
         this.DisableAddItemBtn = true;
       } else {
@@ -461,65 +430,52 @@ export class TransferMTGTAddEditComponent implements OnInit {
   }
 
   SelectedFromItem(event: any) {
+    let FoundItem = this.transferItemDetailsList.findIndex(
+      (a) => a.FromItemID == event.option.value.item_Id
+    );
+
     this.itemService
       .GetItembyID(event.option.value.item_Id)
       .subscribe((response) => {
         this.CurrentFromItem = response;
-        this.CheckItemFoundinDetail();
-        this.GetCurrentStock(Number(this.CurrentFromItem?.itemID), 0);
+        this.GetToItem(this.CurrentFromItem!.itemID);
+        if (FoundItem == -1) {
+          this.GetCurrentStock(Number(this.CurrentFromItem?.itemID), 0);
+        } else {
+          this.ItemEdit = this.transferItemDetailsList[FoundItem];
+          let ItemDetail: TransferMTGTItemDetail =
+            this.transferItemDetailsList.filter(
+              (a) => a.FromItemID == event.option.value.item_Id
+            )[0];
+          this.GetCurrentStock(
+            Number(this.CurrentFromItem?.itemID),
+            ItemDetail.Qty
+          );
+          this.I_CrtControl.setValue(ItemDetail.Crt);
+          this.I_PcsControl.setValue(ItemDetail.Pcs);
+          this.IsItemEditMode = true;
+        }
       });
   }
 
-  SelectedToItem(event: any) {
+  GetToItem(FromItemId: number) {
     this.itemService
-      .GetItembyID(event.option.value.item_Id)
-      .subscribe((response) => {
-        this.CurrentToItem = response;
-        this.CheckItemFoundinDetail();
+      .getItemNameFromGTMT(FromItemId, 'GT')
+      .subscribe((response: GTMTItemResponse) => {
+        this.toItemName = response.itemName;
+        this.I_ToItemIDControl.setValue(response.gtItemID);
       });
-  }
-
-  DisplayToItemName(items: itemsDropDownResponse) {
-    return items && items.item_Name ? items.item_Name : '';
   }
 
   DisplayFromItemName(items: itemsDropDownResponse) {
     return items && items.item_Name ? items.item_Name : '';
   }
 
-  CheckItemFoundinDetail() {
-    if (this.CurrentFromItem != undefined && this.CurrentToItem != undefined) {
-      if (
-        this.CurrentFromItem?.itemType == this.CurrentToItem?.itemType &&
-        this.CurrentFromItem?.hsnCode == this.CurrentToItem?.hsnCode &&
-        this.CurrentFromItem?.itemGroupID == this.CurrentToItem?.itemGroupID &&
-        this.CurrentFromItem?.manufactureID ==
-          this.CurrentToItem?.manufactureID &&
-        this.CurrentFromItem?.gstTaxID == this.CurrentToItem?.gstTaxID &&
-        this.CurrentFromItem?.packing == this.CurrentToItem?.packing &&
-        this.CurrentFromItem?.mrp == this.CurrentToItem?.mrp &&
-        this.CurrentFromItem?.accountTradeTypeID !=
-          this.CurrentToItem?.accountTradeTypeID
-      ) {
-        this.isBothItemMatch = true;
-        // let FromItemID = this.I_FromItemIDControl.value;
-        // let ToItemID = this.I_ToItemIDControl.value;
-      } else {
-        this.isBothItemMatch = false;
-        this.notification.openStockErrorBar(
-          'Selected MT and GT Item Not Matched.',
-          'Error',
-          'red-snackbar'
-        );
-      }
-    }
-  }
-
   GetCurrentStock(ItemID: number, EditQty: number) {
     //stockService
     this.stockService.GetClosingByItemID(ItemID, 1).subscribe((response) => {
       this.CurrentStock = response;
-      if (EditQty > 0) {
+      if (EditQty > 0 && this.isEditMode == true) {
         this.CurrentStock!.closing =
           this.CurrentStock!.closing + Number(EditQty);
         this.CurrentStock!.closingCrt = GetCrt(
@@ -531,32 +487,31 @@ export class TransferMTGTAddEditComponent implements OnInit {
           this.CurrentStock!.packing
         );
       }
+      this.CalculateTotals();
     });
   }
 
   editItem(record: TransferMTGTItemDetail) {
     let SelectedFromItem: itemsDropDownResponse;
-    let SelectedToItem: itemsDropDownResponse;
     SelectedFromItem = this.fromItemsDropDown.filter(
       (a) => a.item_Id == record.FromItemID.toString()
-    )[0];
-    SelectedToItem = this.toItemsDropDown.filter(
-      (a) => a.item_Id == record.ToItemID.toString()
     )[0];
     this.ItemEdit = record;
     this.ItemsControl.patchValue({
       I_FromItemID: SelectedFromItem,
-      I_ToItemID: SelectedToItem,
+      I_ToItemID: record.ToItemID,
       I_Crt: record.Crt,
       I_Pcs: record.Pcs,
       I_Qty: record.Qty,
     });
     this.IsItemEditMode = true;
+    this.GetToItem(record.FromItemID);
     this.renderer.selectRootElement('#FromItemName', true).focus();
     this.itemService.GetItembyID(record.FromItemID).subscribe((response) => {
       this.CurrentFromItem = response;
       this.GetCurrentStock(Number(this.CurrentFromItem?.itemID), record.Qty);
     });
+
   }
 
   deleteItem(record: TransferMTGTItemDetail) {
@@ -585,15 +540,7 @@ export class TransferMTGTAddEditComponent implements OnInit {
   private _filterFromItems(name: string): itemsDropDownResponse[] {
     const filterValue = name.toLowerCase();
 
-    return this.toItemsDropDown.filter((option) =>
-      option.item_Name.toLowerCase().includes(filterValue)
-    );
-  }
-
-  private _filterToItems(name: string): itemsDropDownResponse[] {
-    const filterValue = name.toLowerCase();
-
-    return this.toItemsDropDown.filter((option) =>
+    return this.fromItemsDropDown.filter((option) =>
       option.item_Name.toLowerCase().includes(filterValue)
     );
   }

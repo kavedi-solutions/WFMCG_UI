@@ -788,7 +788,7 @@ export class SalesAddEditComponent implements OnInit {
     //stockService
     this.stockService.GetClosingByItemID(ItemID, 1).subscribe((response) => {
       this.CurrentStock = response;
-      if (EditQty > 0) {
+      if (EditQty > 0 && this.isEditMode == true) {
         this.CurrentStock!.closing =
           this.CurrentStock!.closing + Number(EditQty);
         this.CurrentStock!.closingCrt = GetCrt(
@@ -994,6 +994,7 @@ export class SalesAddEditComponent implements OnInit {
     this.I_ItemIDControl.setValue('');
     this.DisableAddItemBtn = true;
     this.SetMinMaxBillDate();
+    this.IsItemEditMode = false;
     this.renderer.selectRootElement('#BookAccountName', true).focus();
   }
 
@@ -1028,6 +1029,7 @@ export class SalesAddEditComponent implements OnInit {
     this.CurrentItem = undefined;
     this.CurrentStock = undefined;
     this.CurrentTax = undefined;
+    this.IsItemEditMode = false;
   }
 
   OnAccountBlur() {

@@ -52,3 +52,10 @@ export interface ItemOpening {
   openingSpoiledCrt: number;
   openingSpoiledPcs: number;
 }
+
+export interface GTMTItemResponse {
+  companyID: string;
+  gtItemID: number;
+  mtItemID: number;
+  itemName: string;
+}

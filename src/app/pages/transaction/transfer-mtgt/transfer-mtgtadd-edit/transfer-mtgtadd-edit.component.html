@@ -63,7 +63,7 @@
       <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
         <div fxFlex="40%" fxFlex.lt-sm="100" class="matero-col">
           <mat-form-field appearance="legacy" color="primary">
-            <mat-label>Select From Item</mat-label>
+            <mat-label>Select MT Item</mat-label>
             <input
               matInput
               id="FromItemName"
@@ -85,27 +85,9 @@
           </mat-form-field>
         </div>
         <div fxFlex="40%" fxFlex.lt-sm="100" class="matero-col">
-          <mat-form-field appearance="legacy" color="primary">
-            <mat-label>Select To Item</mat-label>
-            <input
-              matInput
-              id="ToItemName"
-              [matAutocomplete]="AutoToItemID"
-              formControlName="I_ToItemID"
-            />
-            <mat-autocomplete
-              #AutoToItemID="matAutocomplete"
-              [displayWith]="DisplayToItemName"
-              (optionSelected)="SelectedToItem($event)"
-            >
-              <mat-option
-                *ngFor="let add of filteredToitemsDropDown | async"
-                [value]="add"
-              >
-                {{ add.item_Name }}
-              </mat-option>
-            </mat-autocomplete>
-          </mat-form-field>
+          <span class="toItemTitle">GT Item</span>
+          <br />
+          <span>{{ toItemName }}</span>
         </div>
         <div fxFlex="7%" fxFlex.lt-sm="100" class="matero-col">
           <mat-form-field appearance="legacy" color="primary">

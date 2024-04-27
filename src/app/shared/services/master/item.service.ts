@@ -13,6 +13,7 @@ import {
   OpeningItemPutRequest,
   ItemFilter_DropDown,
   ItemFilter_DropDownReport,
+  GTMTItemResponse,
 } from '../../models';
 import { LocalStorageService } from '../common/storage.service';
 
@@ -142,12 +143,36 @@ export class ItemService {
     const url = `${this.APIURL}/company/${this.CompanyID}/item/dropdown`;
     let params = new HttpParams()
       .set('ItemType', `${filters.ItemType}`)
-      .set('AccountTradeTypeID', `${filters.AccountTradeTypeID != undefined ? filters.AccountTradeTypeID : 0}`)
-      .set('ReturnTypeID', `${filters.ReturnTypeID != undefined ? filters.ReturnTypeID : 0}`)
-      .set('TransactionTypeID', `${filters.TransactionTypeID != undefined ? filters.TransactionTypeID : 0}`)
-      .set('AccountID', `${filters.AccountID != undefined ? filters.AccountID : 0}`)
-      .set('InvoiceID', `${filters.InvoiceID != undefined ? filters.InvoiceID : 0}`)
-      .set('BillDate', `${filters.BillDate != undefined ? filters.BillDate : ''}`);
+      .set(
+        'AccountTradeTypeID',
+        `${
+          filters.AccountTradeTypeID != undefined
+            ? filters.AccountTradeTypeID
+            : 0
+        }`
+      )
+      .set(
+        'ReturnTypeID',
+        `${filters.ReturnTypeID != undefined ? filters.ReturnTypeID : 0}`
+      )
+      .set(
+        'TransactionTypeID',
+        `${
+          filters.TransactionTypeID != undefined ? filters.TransactionTypeID : 0
+        }`
+      )
+      .set(
+        'AccountID',
+        `${filters.AccountID != undefined ? filters.AccountID : 0}`
+      )
+      .set(
+        'InvoiceID',
+        `${filters.InvoiceID != undefined ? filters.InvoiceID : 0}`
+      )
+      .set(
+        'BillDate',
+        `${filters.BillDate != undefined ? filters.BillDate : ''}`
+      );
 
     return this.http
       .get<any>(encodeURI(url), {
@@ -166,7 +191,12 @@ export class ItemService {
     const url = `${this.APIURL}/company/${this.CompanyID}/item/dropdownreport`;
     let params = new HttpParams()
       .set('ItemType', `${filters.ItemType}`)
-      .set('TransactionTypeID', `${filters.TransactionTypeID != undefined ? filters.TransactionTypeID : 0}`)
+      .set(
+        'TransactionTypeID',
+        `${
+          filters.TransactionTypeID != undefined ? filters.TransactionTypeID : 0
+        }`
+      );
 
     return this.http
       .get<any>(encodeURI(url), {
@@ -226,5 +256,19 @@ export class ItemService {
     return this.http.put<Item>(encodeURI(url), resourcesDetails, {
       headers: this.headers,
     });
+  }
+
+  getItemNameFromGTMT(ItemID: number, ResponseType: string){
+    const url = `${this.APIURL}/company/${this.CompanyID}/item/${ItemID}/getgtmt/${ResponseType}`;
+    return this.http
+      .get<any>(encodeURI(url), {
+        headers: this.headers,
+        observe: 'response',
+      })
+      .pipe(
+        map((response) => {
+          return response.body;
+        })
+      );
   }
 }

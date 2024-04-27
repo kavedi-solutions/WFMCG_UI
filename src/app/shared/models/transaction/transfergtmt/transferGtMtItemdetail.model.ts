@@ -7,6 +7,7 @@ export interface TransferGTMTItemDetail {
   ToItemName: string;
   Crt: number;
   Pcs: number;
+  Qty: number;
   IsAdd: boolean;
   IsModified: boolean;
   IsDeleted: boolean;
