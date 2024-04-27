@@ -73,6 +73,8 @@ export class TransferMTGTAddEditComponent implements OnInit {
 
   editTransfer?: TransferMTGTResponse;
 
+  isBothItemMatch: boolean = false;
+
   transferForm = this.fb.group({
     TransferDate: ['', [Validators.required]],
     TransferNo: ['', [Validators.required]],
@@ -285,7 +287,6 @@ export class TransferMTGTAddEditComponent implements OnInit {
         this.TransferDateControl.setValue(
           moment(this.editTransfer?.transferDate)
         );
-        debugger;
         this.editTransfer!.details!.forEach((element) => {
           let ItemDetails: TransferMTGTItemDetail = {
             AutoID: element.autoID,
@@ -448,7 +449,8 @@ export class TransferMTGTAddEditComponent implements OnInit {
       Number(this.I_PcsControl.value);
 
     this.DisableAddItemBtn = true;
-    if (Qty > 0) {
+    debugger;
+    if (Qty > 0 && this.isBothItemMatch == true) {
       if (Qty > this.CurrentStock!.closing) {
         this.DisableAddItemBtn = true;
       } else {
@@ -459,84 +461,22 @@ export class TransferMTGTAddEditComponent implements OnInit {
   }
 
   SelectedFromItem(event: any) {
-    //check item exitst in item Detail
-    // let FoundItem = this.transferItemDetailsList.findIndex(
-    //   (a) => a.FromItemID == event.option.value.item_Id
-    // );
     this.itemService
       .GetItembyID(event.option.value.item_Id)
       .subscribe((response) => {
         this.CurrentFromItem = response;
-        //if (FoundItem == -1) {
+        this.CheckItemFoundinDetail();
         this.GetCurrentStock(Number(this.CurrentFromItem?.itemID), 0);
-        // } else {
-        //   this.ItemEdit = this.transferItemDetailsList[FoundItem];
-        //   let ItemDetail: TransferMTGTItemDetail = this.transferItemDetailsList.filter(
-        //     (a) => a.FromItemID == event.option.value.item_Id
-        //   )[0];
-        //   this.GetCurrentStock(
-        //     Number(this.CurrentFromItem?.itemID),
-        //     ItemDetail.Qty
-        //   );
-        //   this.I_CrtControl.setValue(ItemDetail.Crt);
-        //   this.I_PcsControl.setValue(ItemDetail.Pcs);
-        //   this.I_QtyControl.setValue(ItemDetail.Qty);
-        //   this.IsItemEditMode = true;
-        // }
       });
   }
 
   SelectedToItem(event: any) {
-    //check item exitst in item Detail
-    // let FoundItem = this.salesItemDetailsList.findIndex(
-    //   (a) => a.ItemID == event.option.value.item_Id
-    // );
-    // this.itemService
-    //   .GetItembyID(event.option.value.item_Id)
-    //   .subscribe((response) => {
-    //     this.CurrentItem = response;
-    //     if (FoundItem == -1) {
-    //       this.GetCurrentStock(Number(this.CurrentItem?.itemID), 0);
-    //       this.I_RateControl.setValue(
-    //         SetFormatCurrency(this.CurrentItem?.salesRate)
-    //       );
-    //       this.I_GSTTaxIDControl.setValue(
-    //         this.CurrentItem?.gstTaxID.toString()
-    //       );
-    //       this.GetCurrentTax(Number(this.CurrentItem?.gstTaxID), false);
-    //     } else {
-    //       this.ItemEdit = this.salesItemDetailsList[FoundItem];
-    //       let ItemDetail: SalesItemDetail = this.salesItemDetailsList.filter(
-    //         (a) => a.ItemID == event.option.value.item_Id
-    //       )[0];
-    //       this.GetCurrentStock(
-    //         Number(this.CurrentItem?.itemID),
-    //         ItemDetail.TQty
-    //       );
-    //       this.I_CrtControl.setValue(ItemDetail.Crt);
-    //       this.I_PcsControl.setValue(ItemDetail.Pcs);
-    //       this.I_QtyControl.setValue(ItemDetail.Qty);
-    //       this.I_FreeCrtControl.setValue(ItemDetail.FCrt);
-    //       this.I_FreePcsControl.setValue(ItemDetail.FPcs);
-    //       this.I_FreeQtyControl.setValue(ItemDetail.FQty);
-    //       this.I_TotalQtyControl.setValue(ItemDetail.TQty);
-    //       this.I_RateControl.setValue(ItemDetail.Rate);
-    //       this.I_AmountControl.setValue(ItemDetail.Amount);
-    //       this.I_DiscPerControl.setValue(ItemDetail.DiscPer);
-    //       this.I_DiscAmountControl.setValue(ItemDetail.DiscAmount);
-    //       this.I_GSTTaxIDControl.setValue(ItemDetail.GSTTaxID.toString());
-    //       this.I_CGSTAmountControl.setValue(ItemDetail.CGSTAmount);
-    //       this.I_SGSTAmountControl.setValue(ItemDetail.SGSTAmount);
-    //       this.I_IGSTAmountControl.setValue(ItemDetail.IGSTAmount);
-    //       this.I_CessAmountControl.setValue(ItemDetail.CessAmount);
-    //       this.I_GrossAmountControl.setValue(ItemDetail.GrossAmount);
-    //       this.I_SchPerControl.setValue(ItemDetail.SchPer);
-    //       this.I_SchAmountControl.setValue(ItemDetail.SchAmount);
-    //       this.I_NetAmountControl.setValue(ItemDetail.NetAmount);
-    //       this.GetCurrentTax(Number(ItemDetail.GSTTaxID), true);
-    //       this.IsItemEditMode = true;
-    //     }
-    //   });
+    this.itemService
+      .GetItembyID(event.option.value.item_Id)
+      .subscribe((response) => {
+        this.CurrentToItem = response;
+        this.CheckItemFoundinDetail();
+      });
   }
 
   DisplayToItemName(items: itemsDropDownResponse) {
@@ -547,43 +487,33 @@ export class TransferMTGTAddEditComponent implements OnInit {
     return items && items.item_Name ? items.item_Name : '';
   }
 
-  OnFromItemblur() {
-    // if (this.AutoItemID?.isOpen == false) {
-    //   if (
-    //     this.I_ItemIDControl.value == '' &&
-    //     this.salesItemDetailsList.length == 0
-    //   ) {
-    //     this.renderer.selectRootElement('#ItemName', true).focus();
-    //   } else if (
-    //     this.I_ItemIDControl.value == '' &&
-    //     this.salesItemDetailsList.length > 0
-    //   ) {
-    //     this.renderer.selectRootElement('#OtherAddText', true).focus();
-    //   }
-    // }
+  CheckItemFoundinDetail() {
+    if (this.CurrentFromItem != undefined && this.CurrentToItem != undefined) {
+      if (
+        this.CurrentFromItem?.itemType == this.CurrentToItem?.itemType &&
+        this.CurrentFromItem?.hsnCode == this.CurrentToItem?.hsnCode &&
+        this.CurrentFromItem?.itemGroupID == this.CurrentToItem?.itemGroupID &&
+        this.CurrentFromItem?.manufactureID ==
+          this.CurrentToItem?.manufactureID &&
+        this.CurrentFromItem?.gstTaxID == this.CurrentToItem?.gstTaxID &&
+        this.CurrentFromItem?.packing == this.CurrentToItem?.packing &&
+        this.CurrentFromItem?.mrp == this.CurrentToItem?.mrp &&
+        this.CurrentFromItem?.accountTradeTypeID !=
+          this.CurrentToItem?.accountTradeTypeID
+      ) {
+        this.isBothItemMatch = true;
+        // let FromItemID = this.I_FromItemIDControl.value;
+        // let ToItemID = this.I_ToItemIDControl.value;
+      } else {
+        this.isBothItemMatch = false;
+        this.notification.openStockErrorBar(
+          'Selected MT and GT Item Not Matched.',
+          'Error',
+          'red-snackbar'
+        );
+      }
+    }
   }
-
-  OnToItemblur() {
-    // if (this.AutoItemID?.isOpen == false) {
-    //   if (
-    //     this.I_ItemIDControl.value == '' &&
-    //     this.salesItemDetailsList.length == 0
-    //   ) {
-    //     this.renderer.selectRootElement('#ItemName', true).focus();
-    //   } else if (
-    //     this.I_ItemIDControl.value == '' &&
-    //     this.salesItemDetailsList.length > 0
-    //   ) {
-    //     this.renderer.selectRootElement('#OtherAddText', true).focus();
-    //   }
-    // }
-  }
-
-  // CheckItemFoundinDetail()
-  // {
-  //   let FromItemID = this.I_FromItemIDControl.value;
-  //   let ToItemID = this.I_ToItemIDControl.value;
-  // }
 
   GetCurrentStock(ItemID: number, EditQty: number) {
     //stockService
@@ -605,7 +535,6 @@ export class TransferMTGTAddEditComponent implements OnInit {
   }
 
   editItem(record: TransferMTGTItemDetail) {
-    debugger;
     let SelectedFromItem: itemsDropDownResponse;
     let SelectedToItem: itemsDropDownResponse;
     SelectedFromItem = this.fromItemsDropDown.filter(
