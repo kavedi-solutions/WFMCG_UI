@@ -30,7 +30,7 @@ export class VPaymentService {
     private storage: LocalStorageService,
     private appconfig: AppConfig
   ) {
-    this.APIURL = this.appconfig.GetCoreAPIURL() + `api/v${this.version}/company/${this.CompanyID}/voucher/payment`;
+    this.APIURL = this.appconfig.GetCoreAPIURL() + `api/v${this.version}`;
   }
 
   GetVPaymentList(
@@ -39,6 +39,8 @@ export class VPaymentService {
     searchText: string,
     filter: FilterValues[]
   ): Observable<VPaymentPagedResponse> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     let params = new HttpParams()
       .set('Page', `${paginationHeaders.page}`)
       .set('PageSize', `${paginationHeaders.pageSize}`)
@@ -52,7 +54,7 @@ export class VPaymentService {
       });
     }
 
-    const url = `${this.APIURL}/paged`;
+    const url = `${this.APIURL}/company/${this.CompanyID}/voucher/payment/paged`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -71,7 +73,9 @@ export class VPaymentService {
   }
 
   GetNextVoucherNo(BookAccountID: number, VoucherDate: Date) {
-    const url = `${this.APIURL}/getnextvoucher/${BookAccountID}?VoucherDate=${VoucherDate}`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/voucher/payment/getnextvoucher/${BookAccountID}?VoucherDate=${VoucherDate}`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -85,7 +89,9 @@ export class VPaymentService {
   }
 
   GetVPaymentbyID(VPaymentID: number) {
-    const url = `${this.APIURL}/${VPaymentID}/getbyid`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/voucher/payment/${VPaymentID}/getbyid`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -99,8 +105,10 @@ export class VPaymentService {
   }
 
   createVPayment(resourcesDetails: VPaymentPostRequest): Observable<any> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     resourcesDetails.createdBy = this.UserID;
-    const url = `${this.APIURL}/create`;
+    const url = `${this.APIURL}/company/${this.CompanyID}/voucher/payment/create`;
     return this.http.post<any>(encodeURI(url), resourcesDetails, {
       headers: this.headers,
     });
@@ -110,15 +118,19 @@ export class VPaymentService {
     VPaymentID: number,
     resourcesDetails: VPaymentPutRequest
   ): Observable<any> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     resourcesDetails.modifiedBy = this.UserID;
-    const url = `${this.APIURL}/update/${VPaymentID}`;
+    const url = `${this.APIURL}/company/${this.CompanyID}/voucher/payment/update/${VPaymentID}`;
     return this.http.put<any>(encodeURI(url), resourcesDetails, {
       headers: this.headers,
     });
   }
 
   deleteVPayment(VPaymentID: number) {
-    const url = `${this.APIURL}/delete/${VPaymentID}`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/voucher/payment/delete/${VPaymentID}`;
     return this.http.delete<any>(encodeURI(url), {
       headers: this.headers,
     });

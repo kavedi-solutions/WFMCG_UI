@@ -1,5 +1,6 @@
 export interface ItemPutRequest {
   itemName: string;
+  displayItemName: string;
   hSNCode: string;
   itemType: number;
   itemGroupID: number;

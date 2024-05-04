@@ -30,7 +30,7 @@ export class DebitNoteService {
     private storage: LocalStorageService,
     private appconfig: AppConfig
   ) {
-    this.APIURL = this.appconfig.GetCoreAPIURL() + `api/v${this.version}/company/${this.CompanyID}/debitnote`;
+    this.APIURL = this.appconfig.GetCoreAPIURL() + `api/v${this.version}`;
   }
 
   GetDebitNoteList(
@@ -39,6 +39,8 @@ export class DebitNoteService {
     searchText: string,
     filter: FilterValues[]
   ): Observable<DebitNotePagedResponse> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     let params = new HttpParams()
       .set('Page', `${paginationHeaders.page}`)
       .set('PageSize', `${paginationHeaders.pageSize}`)
@@ -52,7 +54,7 @@ export class DebitNoteService {
       });
     }
 
-    const url = `${this.APIURL}/paged`;
+    const url = `${this.APIURL}/company/${this.CompanyID}/debitnote/paged`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -71,7 +73,9 @@ export class DebitNoteService {
   }
 
   GetNextBillNo(BookAccountID: number, BillDate: Date) {
-    const url = `${this.APIURL}/getnextbill/${BookAccountID}?BillDate=${BillDate}`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/debitnote/getnextbill/${BookAccountID}?BillDate=${BillDate}`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -85,7 +89,9 @@ export class DebitNoteService {
   }
 
   GetDebitNotebyID(DebitNoteID: number) {
-    const url = `${this.APIURL}/${DebitNoteID}/getbyid`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/debitnote/${DebitNoteID}/getbyid`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -99,8 +105,10 @@ export class DebitNoteService {
   }
 
   createDebitNote(resourcesDetails: DebitNotePostRequest): Observable<any> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     resourcesDetails.createdBy = this.UserID;
-    const url = `${this.APIURL}/create`;
+    const url = `${this.APIURL}/company/${this.CompanyID}/debitnote/create`;
     return this.http.post<any>(encodeURI(url), resourcesDetails, {
       headers: this.headers,
     });
@@ -110,15 +118,19 @@ export class DebitNoteService {
     debitnoteID: number,
     resourcesDetails: DebitNotePutRequest
   ): Observable<any> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     resourcesDetails.modifiedBy = this.UserID;
-    const url = `${this.APIURL}/update/${debitnoteID}`;
+    const url = `${this.APIURL}/company/${this.CompanyID}/debitnote/update/${debitnoteID}`;
     return this.http.put<any>(encodeURI(url), resourcesDetails, {
       headers: this.headers,
     });
   }
 
   deleteDebitNote(debitnoteID: number) {
-    const url = `${this.APIURL}/delete/${debitnoteID}`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/debitnote/delete/${debitnoteID}`;
     return this.http.delete<any>(encodeURI(url), {
       headers: this.headers,
     });

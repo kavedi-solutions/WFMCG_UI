@@ -39,6 +39,8 @@ export class ManufactureService {
     searchText: string,
     filter: FilterValues[]
   ): Observable<ManufactureResponse> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     let params = new HttpParams()
       .set('Page', `${paginationHeaders.page}`)
       .set('PageSize', `${paginationHeaders.pageSize}`)
@@ -71,6 +73,8 @@ export class ManufactureService {
   }
 
   GetManufacturebyID(ManufactureID: number) {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${this.CompanyID}/manufacture/${ManufactureID}/getbyid`;
     return this.http
       .get<any>(encodeURI(url), {
@@ -85,9 +89,11 @@ export class ManufactureService {
   }
 
   CheckManufactureNameExists(ManufactureID: number, ManufactureName: string) {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${
       this.CompanyID
-    }/manufacture/${ManufactureID}/${encodeURIComponent(ManufactureName)}/manufacturename-exists`;
+    }/manufacture/${ManufactureID}/${ManufactureName}/manufacturename-exists`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -101,6 +107,8 @@ export class ManufactureService {
   }
 
   createManufacture(resourcesDetails: ManufacturePostRequest): Observable<Manufacture> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     resourcesDetails.createdBy = this.UserID;
     const url = `${this.APIURL}/company/${this.CompanyID}/manufacture/create`;
     return this.http.post<Manufacture>(encodeURI(url), resourcesDetails, {
@@ -112,6 +120,8 @@ export class ManufactureService {
     manufactureID: number,
     resourcesDetails: ManufacturePutRequest
   ): Observable<Manufacture> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     resourcesDetails.modifiedBy = this.UserID;
     const url = `${this.APIURL}/company/${this.CompanyID}/manufacture/update/${manufactureID}`;
     return this.http.put<Manufacture>(encodeURI(url), resourcesDetails, {
@@ -120,6 +130,8 @@ export class ManufactureService {
   }
 
   DeactivateManufacture(ManufactureID: number) {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${this.CompanyID}/manufacture/${ManufactureID}/deactivate/${this.UserID}`;
     return this.http.put<Manufacture>(encodeURI(url), null, {
       headers: this.headers,
@@ -127,6 +139,8 @@ export class ManufactureService {
   }
 
   ActivateManufacture(ManufactureID: number) {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${this.CompanyID}/manufacture/${ManufactureID}/activate/${this.UserID}`;
     return this.http.put<Manufacture>(encodeURI(url), null, {
       headers: this.headers,
@@ -134,6 +148,8 @@ export class ManufactureService {
   }
 
   ManufactureDropDown() {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${this.CompanyID}/manufacture/dropdown`;
     return this.http
       .get<any>(encodeURI(url), {

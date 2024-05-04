@@ -31,11 +31,13 @@ export class FinancialService {
   ) {
     this.APIURL =
       this.appconfig.GetCoreAPIURL() +
-      `api/v${this.version}/company/${this.CompanyID}/reports/financial`;
+      `api/v${this.version}`;
   }
 
   PrintPurchaseRegister(filter: PurchaseRegisterFilter) {
-    const url = `${this.APIURL}/register/purchase`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/reports/financial/register/purchase`;
     let params = new HttpParams()
       .set('FromDate', `${filter.fromDate}`)
       .set('ToDate', `${filter.toDate}`)
@@ -63,7 +65,9 @@ export class FinancialService {
   }
 
   PrintSalesRegister(filter: SalesRegisterFilter) {
-    const url = `${this.APIURL}/register/sales`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/reports/financial/register/sales`;
     let params = new HttpParams()
       .set('FromDate', `${filter.fromDate}`)
       .set('ToDate', `${filter.toDate}`)
@@ -92,7 +96,9 @@ export class FinancialService {
   }
 
   PrintOutstandingReport(filter: OutstandingRegisterFilter) {
-    const url = `${this.APIURL}/register/outstanding`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/reports/financial/register/outstanding`;
     let params = new HttpParams()
       .set('AsOnDate', `${filter.asOnDate}`)
       .set('AreaWise', `${filter.areaWise}`)
@@ -115,7 +121,9 @@ export class FinancialService {
   }
 
   PrintAccountLedger(filter: AccountLedgerFilter) {
-    const url = `${this.APIURL}/accountledger`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/reports/financial/accountledger`;
     let params = new HttpParams()
       .set('FromDate', `${filter.fromDate}`)
       .set('ToDate', `${filter.toDate}`)

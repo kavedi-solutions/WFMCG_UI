@@ -45,6 +45,8 @@ export class ItemService {
     searchText: string,
     filter: FilterValues[]
   ): Observable<ItemResponse> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     let params = new HttpParams()
       .set('Page', `${paginationHeaders.page}`)
       .set('PageSize', `${paginationHeaders.pageSize}`)
@@ -77,6 +79,8 @@ export class ItemService {
   }
 
   GetItembyID(ItemID: number) {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${this.CompanyID}/item/${ItemID}/getbyid`;
     return this.http
       .get<any>(encodeURI(url), {
@@ -91,9 +95,11 @@ export class ItemService {
   }
 
   CheckItemNameExists(ItemID: number, ItemName: string) {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${
       this.CompanyID
-    }/item/${ItemID}/${encodeURIComponent(ItemName)}/itemname-exists`;
+    }/item/${ItemID}/${ItemName}/itemname-exists`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -107,6 +113,8 @@ export class ItemService {
   }
 
   createItem(resourcesDetails: ItemPostRequest): Observable<Item> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     resourcesDetails.createdBy = this.UserID;
     const url = `${this.APIURL}/company/${this.CompanyID}/item/create`;
     return this.http.post<Item>(encodeURI(url), resourcesDetails, {
@@ -118,6 +126,8 @@ export class ItemService {
     ItemID: number,
     resourcesDetails: ItemPutRequest
   ): Observable<Item> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     resourcesDetails.modifiedBy = this.UserID;
     const url = `${this.APIURL}/company/${this.CompanyID}/item/update/${ItemID}`;
     return this.http.put<Item>(encodeURI(url), resourcesDetails, {
@@ -126,6 +136,8 @@ export class ItemService {
   }
 
   DeactivateItem(ItemID: number) {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${this.CompanyID}/item/${ItemID}/deactivate/${this.UserID}`;
     return this.http.put<Item>(encodeURI(url), null, {
       headers: this.headers,
@@ -133,6 +145,8 @@ export class ItemService {
   }
 
   ActivateItem(ItemID: number) {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${this.CompanyID}/item/${ItemID}/activate/${this.UserID}`;
     return this.http.put<Item>(encodeURI(url), null, {
       headers: this.headers,
@@ -140,6 +154,8 @@ export class ItemService {
   }
 
   ItemDropDown(filters: ItemFilter_DropDown) {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${this.CompanyID}/item/dropdown`;
     let params = new HttpParams()
       .set('ItemType', `${filters.ItemType}`)
@@ -188,6 +204,8 @@ export class ItemService {
   }
 
   ItemDropDownReport(filters: ItemFilter_DropDownReport) {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${this.CompanyID}/item/dropdownreport`;
     let params = new HttpParams()
       .set('ItemType', `${filters.ItemType}`)
@@ -217,6 +235,8 @@ export class ItemService {
     searchText: string,
     filter: FilterValues[]
   ): Observable<ItemOpeningResponse> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     let params = new HttpParams()
       .set('Page', `${paginationHeaders.page}`)
       .set('PageSize', `${paginationHeaders.pageSize}`)
@@ -252,6 +272,8 @@ export class ItemService {
     ItemID: number,
     resourcesDetails: OpeningItemPutRequest
   ): Observable<Item> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${this.CompanyID}/item/opening/update/${ItemID}`;
     return this.http.put<Item>(encodeURI(url), resourcesDetails, {
       headers: this.headers,
@@ -259,6 +281,8 @@ export class ItemService {
   }
 
   getItemNameFromGTMT(ItemID: number, ResponseType: string){
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${this.CompanyID}/item/${ItemID}/getgtmt/${ResponseType}`;
     return this.http
       .get<any>(encodeURI(url), {

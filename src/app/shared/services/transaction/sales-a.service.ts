@@ -30,7 +30,7 @@ export class SalesAService {
     private storage: LocalStorageService,
     private appconfig: AppConfig
   ) {
-    this.APIURL = this.appconfig.GetCoreAPIURL() + `api/v${this.version}/company/${this.CompanyID}/sales/assets`;
+    this.APIURL = this.appconfig.GetCoreAPIURL() + `api/v${this.version}`;
   }
 
   GetSalesList(
@@ -39,6 +39,8 @@ export class SalesAService {
     searchText: string,
     filter: FilterValues[]
   ): Observable<SalesAPagedResponse> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     let params = new HttpParams()
       .set('Page', `${paginationHeaders.page}`)
       .set('PageSize', `${paginationHeaders.pageSize}`)
@@ -52,7 +54,7 @@ export class SalesAService {
       });
     }
 
-    const url = `${this.APIURL}/paged`;
+    const url = `${this.APIURL}/company/${this.CompanyID}/sales/assets/paged`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -71,7 +73,9 @@ export class SalesAService {
   }
 
   GetNextBillNo(BookAccountID: number, BillDate: Date) {
-    const url = `${this.APIURL}/getnextbill/${BookAccountID}?BillDate=${BillDate}`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/sales/assets/getnextbill/${BookAccountID}?BillDate=${BillDate}`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -85,7 +89,10 @@ export class SalesAService {
   }
 
   GetSalesbyID(SalesID: number) {
-    const url = `${this.APIURL}/${SalesID}/getbyid`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/sa
+    les/assets/${SalesID}/getbyid`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -99,8 +106,10 @@ export class SalesAService {
   }
 
   createSales(resourcesDetails: SalesAPostRequest): Observable<any> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     resourcesDetails.createdBy = this.UserID;
-    const url = `${this.APIURL}/create`;
+    const url = `${this.APIURL}/company/${this.CompanyID}/sales/assets/create`;
     return this.http.post<any>(encodeURI(url), resourcesDetails, {
       headers: this.headers,
     });
@@ -110,15 +119,19 @@ export class SalesAService {
     SalesID: number,
     resourcesDetails: SalesAPutRequest
   ): Observable<any> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     resourcesDetails.modifiedBy = this.UserID;
-    const url = `${this.APIURL}/update/${SalesID}`;
+    const url = `${this.APIURL}/company/${this.CompanyID}/sales/assets/update/${SalesID}`;
     return this.http.put<any>(encodeURI(url), resourcesDetails, {
       headers: this.headers,
     });
   }
 
   deleteSales(SalesID: number) {
-    const url = `${this.APIURL}/delete/${SalesID}`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/sales/assets/delete/${SalesID}`;
     return this.http.delete<any>(encodeURI(url), {
       headers: this.headers,
     });

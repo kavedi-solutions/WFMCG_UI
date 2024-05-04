@@ -44,6 +44,8 @@ export class AccountsService {
     searchText: string,
     filter: FilterValues[]
   ): Observable<AccountsResponse> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     let params = new HttpParams()
       .set('Page', `${paginationHeaders.page}`)
       .set('PageSize', `${paginationHeaders.pageSize}`)
@@ -76,6 +78,8 @@ export class AccountsService {
   }
 
   GetAccountsbyID(AccountsID: number) {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${this.CompanyID}/accounts/${AccountsID}/getbyid`;
     return this.http
       .get<any>(encodeURI(url), {
@@ -90,11 +94,13 @@ export class AccountsService {
   }
 
   CheckAccountsNameExists(AccountsID: number, AccountsName: string) {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${
       this.CompanyID
-    }/accounts/${AccountsID}/${encodeURIComponent(
+    }/accounts/${AccountsID}/${
       AccountsName
-    )}/accountsname-exists`;
+    }/accountsname-exists`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -108,9 +114,11 @@ export class AccountsService {
   }
 
   CheckBookInitExists(AccountsID: number, BookInit: string) {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${
       this.CompanyID
-    }/accounts/${AccountsID}/${encodeURIComponent(BookInit)}/bookinit-exists`;
+    }/accounts/${AccountsID}/${BookInit}/bookinit-exists`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -124,6 +132,8 @@ export class AccountsService {
   }
 
   createAccounts(resourcesDetails: AccountsPostRequest): Observable<Accounts> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     resourcesDetails.createdBy = this.UserID;
     const url = `${this.APIURL}/company/${this.CompanyID}/accounts/create`;
     return this.http.post<Accounts>(encodeURI(url), resourcesDetails, {
@@ -135,6 +145,8 @@ export class AccountsService {
     AccountsID: number,
     resourcesDetails: AccountsPutRequest
   ): Observable<Accounts> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     resourcesDetails.modifiedBy = this.UserID;
     const url = `${this.APIURL}/company/${this.CompanyID}/accounts/update/${AccountsID}`;
     return this.http.put<Accounts>(encodeURI(url), resourcesDetails, {
@@ -143,6 +155,8 @@ export class AccountsService {
   }
 
   DeactivateAccounts(AccountsID: number) {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${this.CompanyID}/accounts/${AccountsID}/deactivate/${this.UserID}`;
     return this.http.put<Accounts>(encodeURI(url), null, {
       headers: this.headers,
@@ -150,6 +164,8 @@ export class AccountsService {
   }
 
   ActivateAccounts(AccountsID: number) {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${this.CompanyID}/accounts/${AccountsID}/activate/${this.UserID}`;
     return this.http.put<Accounts>(encodeURI(url), null, {
       headers: this.headers,
@@ -157,6 +173,8 @@ export class AccountsService {
   }
 
   AccountsDropDown(filters: AccountFilter_DropDown) {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${this.CompanyID}/accounts/dropdown`;
     let params = new HttpParams();
     if (filters.GroupID.length > 0) {
@@ -221,6 +239,8 @@ export class AccountsService {
   }
 
   GetAccountBalance() {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${this.CompanyID}/accounts/balance`;
     return this.http
       .get<any>(encodeURI(url), {
@@ -235,6 +255,8 @@ export class AccountsService {
   }
 
   GetCurrentAccountBalance(AccountID: number) {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${this.CompanyID}/accounts/currentbalance/${AccountID}`;
     return this.http
       .get<any>(encodeURI(url), {
@@ -252,6 +274,8 @@ export class AccountsService {
     AccountsID: number,
     resourcesDetails: AccountBalancePutRequest
   ): Observable<AccountBalanceResponse> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${this.CompanyID}/accounts/updatebalance/${AccountsID}`;
     return this.http.put<AccountBalanceResponse>(
       encodeURI(url),

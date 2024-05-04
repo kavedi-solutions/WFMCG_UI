@@ -32,7 +32,7 @@ export class VReceiptService {
     private storage: LocalStorageService,
     private appconfig: AppConfig
   ) {
-    this.APIURL = this.appconfig.GetCoreAPIURL() + `api/v${this.version}/company/${this.CompanyID}/voucher/receipt`;
+    this.APIURL = this.appconfig.GetCoreAPIURL() + `api/v${this.version}`;
   }
 
   GetVReceiptList(
@@ -41,6 +41,8 @@ export class VReceiptService {
     searchText: string,
     filter: FilterValues[]
   ): Observable<VReceiptPagedResponse> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     let params = new HttpParams()
       .set('Page', `${paginationHeaders.page}`)
       .set('PageSize', `${paginationHeaders.pageSize}`)
@@ -54,7 +56,7 @@ export class VReceiptService {
       });
     }
 
-    const url = `${this.APIURL}/paged`;
+    const url = `${this.APIURL}/company/${this.CompanyID}/voucher/receipt/paged`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -73,7 +75,9 @@ export class VReceiptService {
   }
 
   GetNextVoucherNo(BookAccountID: number, VoucherDate: Date) {
-    const url = `${this.APIURL}/getnextvoucher/${BookAccountID}?VoucherDate=${VoucherDate}`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/voucher/receipt/getnextvoucher/${BookAccountID}?VoucherDate=${VoucherDate}`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -87,7 +91,9 @@ export class VReceiptService {
   }
 
   GetVReceiptbyID(VReceiptID: number) {
-    const url = `${this.APIURL}/${VReceiptID}/getbyid`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/voucher/receipt/${VReceiptID}/getbyid`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -101,8 +107,10 @@ export class VReceiptService {
   }
 
   createVReceipt(resourcesDetails: VReceiptPostRequest): Observable<any> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     resourcesDetails.createdBy = this.UserID;
-    const url = `${this.APIURL}/create`;
+    const url = `${this.APIURL}/company/${this.CompanyID}/voucher/receipt/create`;
     return this.http.post<any>(encodeURI(url), resourcesDetails, {
       headers: this.headers,
     });
@@ -112,15 +120,19 @@ export class VReceiptService {
     VReceiptID: number,
     resourcesDetails: VReceiptPutRequest
   ): Observable<any> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     resourcesDetails.modifiedBy = this.UserID;
-    const url = `${this.APIURL}/update/${VReceiptID}`;
+    const url = `${this.APIURL}/company/${this.CompanyID}/voucher/receipt/update/${VReceiptID}`;
     return this.http.put<any>(encodeURI(url), resourcesDetails, {
       headers: this.headers,
     });
   }
 
   deleteVReceipt(VReceiptID: number) {
-    const url = `${this.APIURL}/delete/${VReceiptID}`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/voucher/receipt/delete/${VReceiptID}`;
     return this.http.delete<any>(encodeURI(url), {
       headers: this.headers,
     });

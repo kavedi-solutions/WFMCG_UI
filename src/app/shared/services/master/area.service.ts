@@ -40,6 +40,8 @@ export class AreaService {
     searchText: string,
     filter: FilterValues[],
   ): Observable<AreaResponse> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     let params = new HttpParams()
       .set('Page', `${paginationHeaders.page}`)
       .set('PageSize', `${paginationHeaders.pageSize}`)
@@ -75,6 +77,8 @@ export class AreaService {
   }
 
   GetAreabyID(AreaID: number) {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${this.CompanyID}/area/${AreaID}/getbyid`;
     return this.http
       .get<any>(encodeURI(url), {
@@ -89,7 +93,9 @@ export class AreaService {
   }
 
   CheckAreaNameExists(AreaID: number, AreaName: string) {
-    const url = `${this.APIURL}/company/${this.CompanyID}/area/${AreaID}/${encodeURIComponent(AreaName)}/areaname-exists`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/area/${AreaID}/${AreaName}/areaname-exists`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -103,6 +109,8 @@ export class AreaService {
   }
 
   createArea(resourcesDetails: AreaPostRequest): Observable<Area> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     resourcesDetails.createdBy = this.UserID;
     const url = `${this.APIURL}/company/${this.CompanyID}/area/create`;
     return this.http.post<Area>(encodeURI(url), resourcesDetails, {
@@ -114,6 +122,8 @@ export class AreaService {
     areaID: number,
     resourcesDetails: AreaPutRequest
   ): Observable<Area> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     resourcesDetails.modifiedBy = this.UserID;
     const url = `${this.APIURL}/company/${this.CompanyID}/area/update/${areaID}`;
     return this.http.put<Area>(encodeURI(url), resourcesDetails, {
@@ -122,6 +132,8 @@ export class AreaService {
   }
 
   DeactivateArea(AreaID: number) {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${this.CompanyID}/area/${AreaID}/deactivate/${this.UserID}`;
     return this.http.put<Area>(encodeURI(url), null, {
       headers: this.headers,
@@ -129,6 +141,8 @@ export class AreaService {
   }
 
   ActivateArea(AreaID: number) {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${this.CompanyID}/area/${AreaID}/activate/${this.UserID}`;
     return this.http.put<Area>(encodeURI(url), null, {
       headers: this.headers,
@@ -136,6 +150,8 @@ export class AreaService {
   }
 
   AreaDropDown() {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${this.CompanyID}/area/dropdown`;
     return this.http
       .get<any>(encodeURI(url), {

@@ -55,6 +55,13 @@ export class ItemAddEditComponent implements OnInit {
         Validators.pattern(/^([\s]*[a-zA-Z0-9()&-.,/]+[\s]*)+$/i),
       ],
     ],
+    DisplayItemName: [
+      '',
+      [
+        Validators.required,
+        Validators.pattern(/^([\s]*[a-zA-Z0-9()&-.,/]+[\s]*)+$/i),
+      ],
+    ],
     HSNCode: [
       '',
       [Validators.required, Validators.minLength(4), Validators.maxLength(8)],
@@ -184,6 +191,24 @@ export class ItemAddEditComponent implements OnInit {
   get ItemNameControlInvalid() {
     return (
       this.ItemNameControl.hasError('pattern') && this.ItemNameControl.touched
+    );
+  }
+
+  get DisplayItemNameControl() {
+    return this.itemForm.get('DisplayItemName') as FormControl;
+  }
+
+  get DisplayItemNameControlRequired() {
+    return (
+      this.DisplayItemNameControl.hasError('required') &&
+      this.DisplayItemNameControl.touched
+    );
+  }
+
+  get DisplayItemNameControlInvalid() {
+    return (
+      this.DisplayItemNameControl.hasError('pattern') &&
+      this.DisplayItemNameControl.touched
     );
   }
 
@@ -443,6 +468,7 @@ export class ItemAddEditComponent implements OnInit {
       this.editItem = response;
       this.itemForm.patchValue({
         ItemName: this.editItem!.itemName,
+        DisplayItemName: this.editItem!.displayItemName,
         HSNCode: this.editItem!.hsnCode,
         ItemType: this.editItem!.itemType.toString(),
         ItemGroupID: this.editItem!.itemGroupID.toString(),
@@ -512,6 +538,7 @@ export class ItemAddEditComponent implements OnInit {
   SaveItem(itemForm: FormGroup) {
     this.itemPostRequest = {
       itemName: itemForm.value.ItemName,
+      displayItemName: itemForm.value.DisplayItemName,
       hSNCode: itemForm.value.HSNCode,
       itemType: itemForm.value.ItemType,
       itemGroupID: Number(itemForm.value.ItemGroupID),
@@ -536,6 +563,7 @@ export class ItemAddEditComponent implements OnInit {
   UpdateItem(itemForm: FormGroup) {
     this.itemPutRequest = {
       itemName: itemForm.value.ItemName,
+      displayItemName: itemForm.value.DisplayItemName,
       hSNCode: itemForm.value.HSNCode,
       itemType: itemForm.value.ItemType,
       itemGroupID: Number(itemForm.value.ItemGroupID),

@@ -33,11 +33,13 @@ export class EInvoiceService {
   ) {
     this.APIURL =
       this.appconfig.GetCoreAPIURL() +
-      `api/v${this.version}/company/${this.CompanyID}`;
+      `api/v${this.version}`;
   }
 
   GetAPIBalance() {
-    const url = `${this.APIURL}/einvoice/getapibalance`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/einvoice/getapibalance`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -51,7 +53,9 @@ export class EInvoiceService {
   }
 
   GeteInvoiceData(filter: eInvoiceFilter): Observable<eInvoiceResponse[]> {
-    const url = `${this.APIURL}/einvoice/getinvoice`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/einvoice/getinvoice`;
     let params = new HttpParams()
       .set('TransactionTypeID', `${filter.transactionTypeID}`)
       .set('BookAccountID', `${filter.bookAccountID}`)
@@ -73,7 +77,9 @@ export class EInvoiceService {
   }
 
   GeteInvoiceErrorData(filter: eInvoiceFilter): Observable<eInvoiceResponse[]> {
-    const url = `${this.APIURL}/einvoice/error`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/einvoice/error`;
     let params = new HttpParams()
       .set('TransactionTypeID', `${filter.transactionTypeID}`)
       .set('BookAccountID', `${filter.bookAccountID}`)
@@ -95,7 +101,9 @@ export class EInvoiceService {
   }
 
   GetGSTDetail(GSTIN: string) {
-    const url = `${this.APIURL}/einvoice/getgstDetail/${GSTIN}`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/einvoice/getgstDetail/${GSTIN}`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -109,21 +117,27 @@ export class EInvoiceService {
   }
 
   GenerateEInvoice(request: e_InvoiceRequest) {
-    const url = `${this.APIURL}/einvoice/generate`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/einvoice/generate`;
     return this.http.post<e_InvoiceRequest>(encodeURI(url), request, {
       headers: this.headers,
     });
   }
 
   GetEInvoiceDetails(request: e_InvoiceRequest) {
-    const url = `${this.APIURL}/einvoice/getbyirn`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/einvoice/getbyirn`;
     return this.http.post<e_InvoiceRequest>(encodeURI(url), request, {
       headers: this.headers,
     });
   }
 
   CancelEIInvoice(request: eI_CancelRequest) {
-    const url = `${this.APIURL}/einvoice/cancel`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/einvoice/cancel`;
     return this.http.post<eI_CancelRequest>(encodeURI(url), request, {
       headers: this.headers,
     });

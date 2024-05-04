@@ -1,5 +1,6 @@
 export interface ItemPostRequest {
   itemName: string | null;
+  displayItemName: string;
   hSNCode: string | null;
   itemType: number;
   itemGroupID: number;

@@ -23,13 +23,13 @@ export class GstService {
     private storage: LocalStorageService,
     private appconfig: AppConfig
   ) {
-    this.APIURL =
-      this.appconfig.GetCoreAPIURL() +
-      `api/v${this.version}/company/${this.CompanyID}/reports/gst`;
+    this.APIURL = this.appconfig.GetCoreAPIURL() + `api/v${this.version}`;
   }
 
   PrintGSTR3B(filter: GSTR3BFilter) {
-    const url = `${this.APIURL}/gstr3b`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/reports/gst/gstr3b`;
     let params = new HttpParams()
       .set('FromDate', `${filter.fromDate}`)
       .set('ToDate', `${filter.toDate}`)
@@ -50,10 +50,12 @@ export class GstService {
   }
 
   PrintGSTR1(filter: GSTR1Filter) {
-    const url = `${this.APIURL}/gstr1`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/reports/gst/gstr1`;
     let params = new HttpParams()
       .set('FromDate', `${filter.fromDate}`)
-      .set('ToDate', `${filter.toDate}`)
+      .set('ToDate', `${filter.toDate}`);
 
     return this.http
       .get(encodeURI(url), {

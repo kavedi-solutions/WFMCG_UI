@@ -28,6 +28,8 @@ export class StockService {
   }
 
   GetClosingByItemID(ItemID: number, ReturnTypeID: number) {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${this.CompanyID}/stock/${ItemID}/${ReturnTypeID}/getbyid`;
     return this.http
       .get<any>(encodeURI(url), {
@@ -42,6 +44,8 @@ export class StockService {
   }
 
   SalesReturnItemStock(filters: StockFilter) {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${this.CompanyID}/stock/salesreturnitemstock`;
     let params = new HttpParams()
       .set('ReturnTypeID', `${filters.ReturnTypeID}`)
@@ -65,6 +69,8 @@ export class StockService {
   }
 
   SalesReturnInvoiceList(filters: StockFilter) {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${this.CompanyID}/stock/salesreturninvoicelist`;
     let params = new HttpParams()
       .set('ReturnTypeID', `${filters.ReturnTypeID}`)

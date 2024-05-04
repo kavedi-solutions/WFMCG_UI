@@ -33,6 +33,8 @@ export class TaxService {
     searchText: string,
     filter: FilterValues[]
   ): Observable<TaxResponse> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     let params = new HttpParams()
       .set('Page', `${paginationHeaders.page}`)
       .set('PageSize', `${paginationHeaders.pageSize}`)
@@ -65,6 +67,8 @@ export class TaxService {
   }
 
   GetTaxbyID(TaxID: number) {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${this.CompanyID}/tax/${TaxID}/getbyid`;
     return this.http
       .get<any>(encodeURI(url), {
@@ -79,7 +83,9 @@ export class TaxService {
   }
 
   CheckTaxNameExists(TaxID: number, TaxName: string) {
-    const url = `${this.APIURL}/company/${this.CompanyID}/tax/${TaxID}/${encodeURIComponent(TaxName)}/taxname-exists`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/tax/${TaxID}/${TaxName}/taxname-exists`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -93,6 +99,8 @@ export class TaxService {
   }
 
   createTax(resourcesDetails: TaxPostRequest): Observable<Tax> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     resourcesDetails.createdBy = this.UserID;
     const url = `${this.APIURL}/company/${this.CompanyID}/tax/create`;
     return this.http.post<Tax>(encodeURI(url), resourcesDetails, {
@@ -104,6 +112,8 @@ export class TaxService {
     taxID: number,
     resourcesDetails: TaxPutRequest
   ): Observable<Tax> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     resourcesDetails.modifiedBy = this.UserID;
     const url = `${this.APIURL}/company/${this.CompanyID}/tax/update/${taxID}`;
     return this.http.put<Tax>(encodeURI(url), resourcesDetails, {
@@ -112,6 +122,8 @@ export class TaxService {
   }
 
   DeactivateTax(TaxID: number) {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${this.CompanyID}/tax/${TaxID}/deactivate/${this.UserID}`;
     return this.http.put<Tax>(encodeURI(url), null, {
       headers: this.headers,
@@ -119,6 +131,8 @@ export class TaxService {
   }
 
   ActivateTax(TaxID: number) {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${this.CompanyID}/tax/${TaxID}/activate/${this.UserID}`;
     return this.http.put<Tax>(encodeURI(url), null, {
       headers: this.headers,
@@ -126,6 +140,8 @@ export class TaxService {
   }
 
   TaxDropDown() {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${this.CompanyID}/tax/dropdown`;
     return this.http
       .get<any>(encodeURI(url), {

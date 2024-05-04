@@ -43,6 +43,8 @@ export class RoleService {
     searchText: string,
     filter: FilterValues[]
   ): Observable<RoleResponse> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     let params = new HttpParams()
       .set('Page', `${paginationHeaders.page}`)
       .set('PageSize', `${paginationHeaders.pageSize}`)
@@ -78,6 +80,8 @@ export class RoleService {
   }
 
   GetDefaultPermission(Permissiontype: boolean) {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/permission/default/${Permissiontype}`;
     return this.http
       .get<any>(encodeURI(url), {
@@ -92,6 +96,8 @@ export class RoleService {
   }
 
   GetRolebyID(RoleID: number) {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${this.CompanyID}/role/${RoleID}/getbyid`;
     return this.http
       .get<any>(encodeURI(url), {
@@ -106,7 +112,9 @@ export class RoleService {
   }
 
   CheckRoleNameExists(RoleID: number, RoleName: string) {
-    const url = `${this.APIURL}/company/${this.CompanyID}/role/${RoleID}/${encodeURIComponent(RoleName)}/rolename-exists`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/role/${RoleID}/${RoleName}/rolename-exists`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -120,6 +128,8 @@ export class RoleService {
   }
 
   createRole(resourcesDetails: RolePostRequest): Observable<Role> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     resourcesDetails.createdBy = this.UserID;
     const url = `${this.APIURL}/company/${this.CompanyID}/role/create`;
     return this.http.post<Role>(encodeURI(url), resourcesDetails, {
@@ -131,6 +141,8 @@ export class RoleService {
     roleID: number,
     resourcesDetails: RolePutRequest
   ): Observable<Role> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     resourcesDetails.modifiedBy = this.UserID;
     const url = `${this.APIURL}/company/${this.CompanyID}/role/update/${roleID}`;
     return this.http.put<Role>(encodeURI(url), resourcesDetails, {
@@ -139,6 +151,8 @@ export class RoleService {
   }
 
   DeactivateRole(RoleID: number) {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${this.CompanyID}/role/${RoleID}/deactivate/${this.UserID}`;
     return this.http.put<Role>(encodeURI(url), null, {
       headers: this.headers,
@@ -146,6 +160,8 @@ export class RoleService {
   }
 
   ActivateRole(RoleID: number) {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${this.CompanyID}/role/${RoleID}/activate/${this.UserID}`;
     return this.http.put<Role>(encodeURI(url), null, {
       headers: this.headers,
@@ -153,6 +169,8 @@ export class RoleService {
   }
 
   RoleDropDown() {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${this.CompanyID}/role/dropdown`;
     return this.http
       .get<any>(encodeURI(url), {

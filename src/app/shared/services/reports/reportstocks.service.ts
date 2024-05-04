@@ -26,11 +26,13 @@ export class ReportStocksService {
   ) {
     this.APIURL =
       this.appconfig.GetCoreAPIURL() +
-      `api/v${this.version}/company/${this.CompanyID}/reports/stock`;
+      `api/v${this.version}`;
   }
 
   PrintStockStatement(filter: StockStatementFilter) {
-    const url = `${this.APIURL}/stockstatement`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/reports/stock/stockstatement`;
     let params = new HttpParams();
     params = params.append('ReturnTypeID', filter.returnTypeID);
     params = params.append('FromDate', filter.fromDate);

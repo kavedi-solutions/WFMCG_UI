@@ -32,7 +32,7 @@ export class CreditNoteService {
   ) {
     this.APIURL =
       this.appconfig.GetCoreAPIURL() +
-      `api/v${this.version}/company/${this.CompanyID}/creditnote`;
+      `api/v${this.version}`;
   }
 
   GetCreditNoteList(
@@ -41,6 +41,8 @@ export class CreditNoteService {
     searchText: string,
     filter: FilterValues[]
   ): Observable<CreditNotePagedResponse> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     let params = new HttpParams()
       .set('Page', `${paginationHeaders.page}`)
       .set('PageSize', `${paginationHeaders.pageSize}`)
@@ -54,7 +56,7 @@ export class CreditNoteService {
       });
     }
 
-    const url = `${this.APIURL}/paged`;
+    const url = `${this.APIURL}/company/${this.CompanyID}/creditnote/paged`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -73,7 +75,9 @@ export class CreditNoteService {
   }
 
   GetNextBillNo(BookAccountID: number, BillDate: Date) {
-    const url = `${this.APIURL}/getnextbill/${BookAccountID}?BillDate=${BillDate}`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/creditnote/getnextbill/${BookAccountID}?BillDate=${BillDate}`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -87,7 +91,9 @@ export class CreditNoteService {
   }
 
   GetCreditNotebyID(CreditNoteID: number) {
-    const url = `${this.APIURL}/${CreditNoteID}/getbyid`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/creditnote/${CreditNoteID}/getbyid`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -101,8 +107,10 @@ export class CreditNoteService {
   }
 
   createCreditNote(resourcesDetails: CreditNotePostRequest): Observable<any> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     resourcesDetails.createdBy = this.UserID;
-    const url = `${this.APIURL}/create`;
+    const url = `${this.APIURL}/company/${this.CompanyID}/creditnote/company/${this.CompanyID}/creditnote/create`;
     return this.http.post<any>(encodeURI(url), resourcesDetails, {
       headers: this.headers,
     });
@@ -112,15 +120,19 @@ export class CreditNoteService {
     creditnoteID: number,
     resourcesDetails: CreditNotePutRequest
   ): Observable<any> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     resourcesDetails.modifiedBy = this.UserID;
-    const url = `${this.APIURL}/update/${creditnoteID}`;
+    const url = `${this.APIURL}/company/${this.CompanyID}/creditnote/update/${creditnoteID}`;
     return this.http.put<any>(encodeURI(url), resourcesDetails, {
       headers: this.headers,
     });
   }
 
   deleteCreditNote(creditnoteID: number) {
-    const url = `${this.APIURL}/delete/${creditnoteID}`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/creditnote/delete/${creditnoteID}`;
     return this.http.delete<any>(encodeURI(url), {
       headers: this.headers,
     });
@@ -132,7 +144,9 @@ export class CreditNoteService {
     InvoiceType: string,
     InvoiceID: number
   ) {
-    const url = `${this.APIURL}/selecttype/${SelectType}/account/${AccountID}/invoiceid/${InvoiceType}/${InvoiceID}/getcndnsettlements`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/creditnote/selecttype/${SelectType}/account/${AccountID}/invoiceid/${InvoiceType}/${InvoiceID}/getcndnsettlements`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,

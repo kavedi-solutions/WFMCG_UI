@@ -37,13 +37,13 @@ export class OthersReportService {
     private storage: LocalStorageService,
     private appconfig: AppConfig
   ) {
-    this.APIURL =
-      this.appconfig.GetCoreAPIURL() +
-      `api/v${this.version}/company/${this.CompanyID}/reports/other`;
+    this.APIURL = this.appconfig.GetCoreAPIURL() + `api/v${this.version}`;
   }
 
   GetBulkPrintData(filter: BulkPrintFilter): Observable<BulkPrintResponse[]> {
-    const url = `${this.APIURL}/bulkprint/get`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/reports/other/bulkprint/get`;
     let params = new HttpParams()
       .set('TransactionTypeID', `${filter.transactionTypeID}`)
       .set('BookAccountID', `${filter.bookAccountID}`)
@@ -64,7 +64,9 @@ export class OthersReportService {
   }
 
   PrintInvoiceInventory(NoofCopy: number, InvoiceID: number[]) {
-    const url = `${this.APIURL}/invoice/inventory`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/reports/other/invoice/inventory`;
     let params = new HttpParams();
 
     if (NoofCopy != 0) {
@@ -92,7 +94,9 @@ export class OthersReportService {
   }
 
   PrintInvoiceService(NoofCopy: NumberSymbol, InvoiceID: number[]) {
-    const url = `${this.APIURL}/invoice/service`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/reports/other/invoice/service`;
     let params = new HttpParams();
 
     if (NoofCopy != 0) {
@@ -120,7 +124,9 @@ export class OthersReportService {
   }
 
   PrintInvoiceAssets(NoofCopy: NumberSymbol, InvoiceID: number[]) {
-    const url = `${this.APIURL}/invoice/assets`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/reports/other/invoice/assets`;
     let params = new HttpParams();
 
     if (NoofCopy != 0) {
@@ -148,7 +154,9 @@ export class OthersReportService {
   }
 
   PrintInvoiceSalesReturn(NoofCopy: NumberSymbol, InvoiceID: number[]) {
-    const url = `${this.APIURL}/invoice/salesreturn`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/reports/other/invoice/salesreturn`;
     let params = new HttpParams();
 
     if (NoofCopy != 0) {
@@ -176,7 +184,9 @@ export class OthersReportService {
   }
 
   PrintInvoicePurchaseReturn(NoofCopy: NumberSymbol, InvoiceID: number[]) {
-    const url = `${this.APIURL}/invoice/purchasereturn`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/reports/other/invoice/purchasereturn`;
     let params = new HttpParams();
 
     if (NoofCopy != 0) {
@@ -204,7 +214,9 @@ export class OthersReportService {
   }
 
   PrintInvoiceCreditNote(NoofCopy: NumberSymbol, InvoiceID: number[]) {
-    const url = `${this.APIURL}/invoice/creditnote`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/reports/other/invoice/creditnote`;
     let params = new HttpParams();
 
     if (NoofCopy != 0) {
@@ -232,7 +244,9 @@ export class OthersReportService {
   }
 
   PrintInvoiceDebitNote(NoofCopy: NumberSymbol, InvoiceID: number[]) {
-    const url = `${this.APIURL}/invoice/debitnote`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/reports/other/invoice/debitnote`;
     let params = new HttpParams();
 
     if (NoofCopy != 0) {
@@ -260,7 +274,9 @@ export class OthersReportService {
   }
 
   GetinvoiceidsData(filter: LoadingSlipInvoiceFilter): Observable<number[]> {
-    const url = `${this.APIURL}/invoiceids/get`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/reports/other/invoiceids/get`;
     let params = new HttpParams()
       .set('BookAccountID', `${filter.bookAccountID}`)
       .set('FromDate', `${filter.fromDate}`)
@@ -280,7 +296,9 @@ export class OthersReportService {
   }
 
   PrintLoadingSlip(filter: LodingSlipFilter) {
-    const url = `${this.APIURL}/loadingslip`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/reports/other/loadingslip`;
     return this.http
       .post(encodeURI(url), filter, {
         headers: this.headers,
@@ -297,7 +315,9 @@ export class OthersReportService {
   GetVoucherPrintData(
     filter: VoucherPrintFilter
   ): Observable<VoucherPrintResponse[]> {
-    const url = `${this.APIURL}/voucher/get`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/reports/other/voucher/get`;
     let params = new HttpParams()
       .set('VoucherType', `${filter.voucherType}`)
       .set('BookAccountID', `${filter.bookAccountID}`)
@@ -322,7 +342,9 @@ export class OthersReportService {
     NoofCopy: NumberSymbol,
     InvoiceID: number[]
   ) {
-    const url = `${this.APIURL}/voucher/print`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/reports/other/voucher/print`;
     let params = new HttpParams();
     if (VoucherType != '') {
       params = params.append('VoucherType', VoucherType);
@@ -352,7 +374,9 @@ export class OthersReportService {
   }
 
   PrintJVouchers(NoofCopy: NumberSymbol, InvoiceID: number[]) {
-    const url = `${this.APIURL}/jvoucher/print`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/reports/other/jvoucher/print`;
     let params = new HttpParams();
     if (NoofCopy != 0) {
       params = params.append('noofCopy', NoofCopy);
@@ -381,7 +405,9 @@ export class OthersReportService {
   GetsalespurchaseData(
     filter: SalesPurchaseReportFilter
   ): Observable<SalesPurchaseReportResponse[]> {
-    const url = `${this.APIURL}/salepurchasereport`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/reports/other/salepurchasereport`;
     let params = new HttpParams()
       .set('FromDate', `${filter.fromDate}`)
       .set('ToDate', `${filter.toDate}`)
@@ -477,7 +503,9 @@ export class OthersReportService {
   }
 
   ExportsalespurchaseData(filter: SalesPurchaseReportFilter) {
-    const url = `${this.APIURL}/exportsalepurchasereport`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/reports/other/exportsalepurchasereport`;
     let params = new HttpParams()
       .set('FromDate', `${filter.fromDate}`)
       .set('ToDate', `${filter.toDate}`)
@@ -576,7 +604,9 @@ export class OthersReportService {
   GetIncentiveAccountData(
     filter: IncentiveReportFilter
   ): Observable<accountsIncentiveDropDown[]> {
-    const url = `${this.APIURL}/incentive/accounts`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/reports/other/incentive/accounts`;
     let params = new HttpParams()
       .set('ReportType', `${filter.reportType}`)
       .set('ManufactureID', `${filter.manufactureID}`)
@@ -598,7 +628,9 @@ export class OthersReportService {
   }
 
   GetIncentiveReport(filter: IncentiveReportFilter) {
-    const url = `${this.APIURL}/incentive`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/reports/other/incentive`;
     let params = new HttpParams()
       .set('ReportType', `${filter.reportType}`)
       .set('ManufactureID', `${filter.manufactureID}`)
@@ -630,7 +662,9 @@ export class OthersReportService {
   }
 
   GetDailyCollectionReport(filter: DailyCollectionReportFilter) {
-    const url = `${this.APIURL}/dailycollection`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/reports/other/dailycollection`;
     let params = new HttpParams()
       .set('ReportType', `${filter.reportType}`)
       .set('transactionTypeID', `${filter.transactionTypeID}`)
@@ -668,5 +702,5 @@ export class OthersReportService {
           return response.body;
         })
       );
-  } 
+  }
 }

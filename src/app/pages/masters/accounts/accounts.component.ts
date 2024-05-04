@@ -118,6 +118,7 @@ export class AccountsComponent implements OnInit {
         this.filterValues!
       )
       .subscribe((response) => {
+        debugger;
         this.accountListData = response.body;
         this.pagination = response.headers;
       });

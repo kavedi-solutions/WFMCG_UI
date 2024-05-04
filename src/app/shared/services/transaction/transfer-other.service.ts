@@ -34,7 +34,7 @@ export class TransferOtherService {
   ) {
     this.APIURL =
       this.appconfig.GetCoreAPIURL() +
-      `api/v${this.version}/company/${this.CompanyID}/transfer/Other`;
+      `api/v${this.version}`;
   }
 
   GetTransferOtherList(
@@ -43,6 +43,8 @@ export class TransferOtherService {
     searchText: string,
     filter: FilterValues[]
   ): Observable<TransferOtherPagedResponse> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     let params = new HttpParams()
       .set('Page', `${paginationHeaders.page}`)
       .set('PageSize', `${paginationHeaders.pageSize}`)
@@ -56,7 +58,7 @@ export class TransferOtherService {
       });
     }
 
-    const url = `${this.APIURL}/paged`;
+    const url = `${this.APIURL}/company/${this.CompanyID}/transfer/Other/paged`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -75,7 +77,9 @@ export class TransferOtherService {
   }
 
   GetNextTransferNo(TransferDate: Date) {
-    const url = `${this.APIURL}/getnexttransferno?TransferDate=${TransferDate}`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/transfer/Other/getnexttransferno?TransferDate=${TransferDate}`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -89,7 +93,9 @@ export class TransferOtherService {
   }
 
   GetTransferOtherbyID(AutoID: number) {
-    const url = `${this.APIURL}/${AutoID}/getbyid`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/transfer/Other/${AutoID}/getbyid`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -105,8 +111,10 @@ export class TransferOtherService {
   createTransferOther(
     resourcesDetails: TransferOtherPostRequest
   ): Observable<any> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     resourcesDetails.createdBy = this.UserID;
-    const url = `${this.APIURL}/create`;
+    const url = `${this.APIURL}/company/${this.CompanyID}/transfer/Other/create`;
     return this.http.post<any>(encodeURI(url), resourcesDetails, {
       headers: this.headers,
     });
@@ -116,15 +124,19 @@ export class TransferOtherService {
     AutoID: number,
     resourcesDetails: TransferOtherPutRequest
   ): Observable<any> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     resourcesDetails.modifiedBy = this.UserID;
-    const url = `${this.APIURL}/update/${AutoID}`;
+    const url = `${this.APIURL}/company/${this.CompanyID}/transfer/Other/update/${AutoID}`;
     return this.http.put<any>(encodeURI(url), resourcesDetails, {
       headers: this.headers,
     });
   }
 
   deleteTransferOther(AutoID: number) {
-    const url = `${this.APIURL}/delete/${AutoID}`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/transfer/Other/delete/${AutoID}`;
     return this.http.delete<any>(encodeURI(url), {
       headers: this.headers,
     });

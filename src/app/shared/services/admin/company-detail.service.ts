@@ -26,11 +26,13 @@ export class CompanyDetailService {
   ) {
     this.APIURL =
       this.appconfig.GetCoreAPIURL() +
-      `api/v${this.version}/company/${this.CompanyID}`;
+      `api/v${this.version}`;
   }
 
   GetCompanyDetailbyID() {
-    const url = `${this.APIURL}/getbyid`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/getbyid`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -46,7 +48,9 @@ export class CompanyDetailService {
   updateCompany(
     resourcesDetails: CompanyPutRequest
   ): Observable<CompanyResponse> {
-    const url = `${this.APIURL}/update`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/update`;
     return this.http.put<CompanyResponse>(encodeURI(url), resourcesDetails, {
       headers: this.headers,
     });

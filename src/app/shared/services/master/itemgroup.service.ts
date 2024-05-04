@@ -40,6 +40,8 @@ export class ItemgroupService {
     searchText: string,
     filter: FilterValues[]
   ): Observable<ItemGroupResponse> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     let params = new HttpParams()
       .set('Page', `${paginationHeaders.page}`)
       .set('PageSize', `${paginationHeaders.pageSize}`)
@@ -72,6 +74,8 @@ export class ItemgroupService {
   }
 
   GetItemGroupbyID(ItemGroupID: number) {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${this.CompanyID}/itemgroup/${ItemGroupID}/getbyid`;
     return this.http
       .get<any>(encodeURI(url), {
@@ -86,11 +90,13 @@ export class ItemgroupService {
   }
 
   CheckItemGroupNameExists(ItemGroupID: number, ItemGroupName: string) {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${
       this.CompanyID
-    }/itemgroup/${ItemGroupID}/${encodeURIComponent(
+    }/itemgroup/${ItemGroupID}/${
       ItemGroupName
-    )}/ItemGroupname-exists`;
+    }/ItemGroupname-exists`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -106,6 +112,8 @@ export class ItemgroupService {
   createItemGroup(
     resourcesDetails: ItemGroupPostRequest
   ): Observable<ItemGroup> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     resourcesDetails.createdBy = this.UserID;
     const url = `${this.APIURL}/company/${this.CompanyID}/itemgroup/create`;
     return this.http.post<ItemGroup>(encodeURI(url), resourcesDetails, {
@@ -117,6 +125,8 @@ export class ItemgroupService {
     ItemGroupID: number,
     resourcesDetails: ItemGroupPutRequest
   ): Observable<ItemGroup> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     resourcesDetails.modifiedBy = this.UserID;
     const url = `${this.APIURL}/company/${this.CompanyID}/itemgroup/update/${ItemGroupID}`;
     return this.http.put<ItemGroup>(encodeURI(url), resourcesDetails, {
@@ -125,6 +135,8 @@ export class ItemgroupService {
   }
 
   DeactivateItemGroup(ItemGroupID: number) {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${this.CompanyID}/itemgroup/${ItemGroupID}/deactivate/${this.UserID}`;
     return this.http.put<ItemGroup>(encodeURI(url), null, {
       headers: this.headers,
@@ -132,6 +144,8 @@ export class ItemgroupService {
   }
 
   ActivateItemGroup(ItemGroupID: number) {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${this.CompanyID}/itemgroup/${ItemGroupID}/activate/${this.UserID}`;
     return this.http.put<ItemGroup>(encodeURI(url), null, {
       headers: this.headers,
@@ -139,6 +153,8 @@ export class ItemgroupService {
   }
 
   ItemGroupDropDown(ItemGroupType: string) {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${this.CompanyID}/itemgroup/dropdown/${ItemGroupType}`;
     return this.http
       .get<any>(encodeURI(url), {

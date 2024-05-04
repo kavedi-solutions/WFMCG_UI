@@ -9,6 +9,7 @@ export interface Item {
   companyID: string;
   itemID: number;
   itemName: string;
+  displayItemName: string;
   hsnCode: string;
   itemType: number;
   itemGroupID: number;
@@ -40,6 +41,7 @@ export interface ItemOpening {
   companyID: string;
   itemID: number;
   itemName: string;
+  displayItemName: string;
   accountTradeTypeID: number;
   accountTradeTypeName: string;
   returnTypeID: number;

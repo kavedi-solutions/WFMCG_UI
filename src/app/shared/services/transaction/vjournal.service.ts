@@ -32,7 +32,7 @@ export class VJournalService {
   ) {
     this.APIURL =
       this.appconfig.GetCoreAPIURL() +
-      `api/v${this.version}/company/${this.CompanyID}/voucher/journal`;
+      `api/v${this.version}`;
   }
 
   GetVJournalList(
@@ -41,6 +41,8 @@ export class VJournalService {
     searchText: string,
     filter: FilterValues[]
   ): Observable<VJournalPagedResponse> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     let params = new HttpParams()
       .set('Page', `${paginationHeaders.page}`)
       .set('PageSize', `${paginationHeaders.pageSize}`)
@@ -54,7 +56,7 @@ export class VJournalService {
       });
     }
 
-    const url = `${this.APIURL}/paged`;
+    const url = `${this.APIURL}/company/${this.CompanyID}/voucher/journal/paged`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -73,7 +75,9 @@ export class VJournalService {
   }
 
   GetNextVoucherNo(BookAccountID: number, VoucherDate: Date) {
-    const url = `${this.APIURL}/getnextvoucher/${BookAccountID}?VoucherDate=${VoucherDate}`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/voucher/journal/getnextvoucher/${BookAccountID}?VoucherDate=${VoucherDate}`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -87,7 +91,9 @@ export class VJournalService {
   }
 
   GetVJournalbyID(VJournalID: number) {
-    const url = `${this.APIURL}/${VJournalID}/getbyid`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/voucher/journal/${VJournalID}/getbyid`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -102,7 +108,9 @@ export class VJournalService {
 
   createVJournal(resourcesDetails: VJournalPostRequest): Observable<any> {
     resourcesDetails.createdBy = this.UserID;
-    const url = `${this.APIURL}/create`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/voucher/journal/create`;
     return this.http.post<any>(encodeURI(url), resourcesDetails, {
       headers: this.headers,
     });
@@ -112,15 +120,19 @@ export class VJournalService {
     VJournalID: number,
     resourcesDetails: VJournalPutRequest
   ): Observable<any> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     resourcesDetails.modifiedBy = this.UserID;
-    const url = `${this.APIURL}/update/${VJournalID}`;
+    const url = `${this.APIURL}/company/${this.CompanyID}/voucher/journal/update/${VJournalID}`;
     return this.http.put<any>(encodeURI(url), resourcesDetails, {
       headers: this.headers,
     });
   }
 
   deleteVJournal(VJournalID: number) {
-    const url = `${this.APIURL}/delete/${VJournalID}`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/voucher/journal/delete/${VJournalID}`;
     return this.http.delete<any>(encodeURI(url), {
       headers: this.headers,
     });

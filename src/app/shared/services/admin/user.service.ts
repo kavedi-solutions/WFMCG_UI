@@ -40,6 +40,8 @@ export class UserService {
     searchText: string,
     filter: FilterValues[]
   ): Observable<UserResponse> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     let params = new HttpParams()
       .set('Page', `${paginationHeaders.page}`)
       .set('PageSize', `${paginationHeaders.pageSize}`)
@@ -48,10 +50,7 @@ export class UserService {
     if (filter) {
       filter.forEach((filterValues) => {
         params = filterValues.title
-          ? params.append(
-              filterValues.title,
-              filterValues.value!.toString()
-            )
+          ? params.append(filterValues.title, filterValues.value!.toString())
           : params;
       });
     }
@@ -75,6 +74,8 @@ export class UserService {
   }
 
   GetUserbyID(UserID: string) {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${this.CompanyID}/users/${UserID}/getbyid`;
     return this.http
       .get<any>(encodeURI(url), {
@@ -89,8 +90,10 @@ export class UserService {
   }
 
   CheckUserNameExists(UserID: string, UserName: string) {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     if (UserID != '') {
-      const url = `${this.APIURL}/company/${this.CompanyID}/users/${encodeURIComponent(UserName)}/username-exists/${UserID}`;
+      const url = `${this.APIURL}/company/${this.CompanyID}/users/${UserName}/username-exists/${UserID}`;
       return this.http
         .get<any>(encodeURI(url), {
           headers: this.headers,
@@ -117,6 +120,8 @@ export class UserService {
   }
 
   createUser(resourcesDetails: UserPostRequest): Observable<User> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     resourcesDetails.createdBy = this.UserID;
     const url = `${this.APIURL}/company/${this.CompanyID}/users/create`;
     return this.http.post<User>(encodeURI(url), resourcesDetails, {
@@ -128,6 +133,8 @@ export class UserService {
     UserID: string,
     resourcesDetails: UserPutRequest
   ): Observable<User> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     resourcesDetails.modifiedBy = this.UserID;
     const url = `${this.APIURL}/company/${this.CompanyID}/users/update/${UserID}`;
     return this.http.put<User>(encodeURI(url), resourcesDetails, {
@@ -136,6 +143,8 @@ export class UserService {
   }
 
   DeactivateUser(UserID: number) {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${this.CompanyID}/users/${UserID}/deactivate/${this.UserID}`;
     return this.http.put<User>(encodeURI(url), null, {
       headers: this.headers,
@@ -143,14 +152,17 @@ export class UserService {
   }
 
   ActivateUser(UserID: number) {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${this.CompanyID}/users/${UserID}/activate/${this.UserID}`;
     return this.http.put<User>(encodeURI(url), null, {
       headers: this.headers,
     });
   }
 
-  UserDropDown()
-  {
+  UserDropDown() {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${this.CompanyID}/users/dropdown`;
     return this.http
       .get<any>(encodeURI(url), {

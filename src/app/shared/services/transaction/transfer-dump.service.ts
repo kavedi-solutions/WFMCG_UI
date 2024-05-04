@@ -32,7 +32,7 @@ export class TransferDumpService {
   ) {
     this.APIURL =
       this.appconfig.GetCoreAPIURL() +
-      `api/v${this.version}/company/${this.CompanyID}/transfer/dump`;
+      `api/v${this.version}`;
   }
 
   GetTransferDumpList(
@@ -41,6 +41,8 @@ export class TransferDumpService {
     searchText: string,
     filter: FilterValues[]
   ): Observable<TransferDumpPagedResponse> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     let params = new HttpParams()
       .set('Page', `${paginationHeaders.page}`)
       .set('PageSize', `${paginationHeaders.pageSize}`)
@@ -54,7 +56,7 @@ export class TransferDumpService {
       });
     }
 
-    const url = `${this.APIURL}/paged`;
+    const url = `${this.APIURL}/company/${this.CompanyID}/transfer/dump/paged`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -73,7 +75,9 @@ export class TransferDumpService {
   }
 
   GetNextTransferNo(TransferDate: Date) {
-    const url = `${this.APIURL}/getnexttransferno?TransferDate=${TransferDate}`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/transfer/dump/getnexttransferno?TransferDate=${TransferDate}`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -87,7 +91,9 @@ export class TransferDumpService {
   }
 
   GetTransferDumpbyID(AutoID: number) {
-    const url = `${this.APIURL}/${AutoID}/getbyid`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/transfer/dump/${AutoID}/getbyid`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -103,8 +109,10 @@ export class TransferDumpService {
   createTransferDump(
     resourcesDetails: TransferDumpPostRequest
   ): Observable<any> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     resourcesDetails.createdBy = this.UserID;
-    const url = `${this.APIURL}/create`;
+    const url = `${this.APIURL}/company/${this.CompanyID}/transfer/dump/create`;
     return this.http.post<any>(encodeURI(url), resourcesDetails, {
       headers: this.headers,
     });
@@ -114,15 +122,19 @@ export class TransferDumpService {
     AutoID: number,
     resourcesDetails: TransferDumpPutRequest
   ): Observable<any> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     resourcesDetails.modifiedBy = this.UserID;
-    const url = `${this.APIURL}/update/${AutoID}`;
+    const url = `${this.APIURL}/company/${this.CompanyID}/transfer/dump/update/${AutoID}`;
     return this.http.put<any>(encodeURI(url), resourcesDetails, {
       headers: this.headers,
     });
   }
 
   deleteTransferDump(AutoID: number) {
-    const url = `${this.APIURL}/delete/${AutoID}`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/transfer/dump/delete/${AutoID}`;
     return this.http.delete<any>(encodeURI(url), {
       headers: this.headers,
     });

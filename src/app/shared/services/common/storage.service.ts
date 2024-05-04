@@ -27,9 +27,6 @@ export class LocalStorageService {
   }
 }
 
-@Injectable({
-  providedIn: 'root'
-})
 export class MemoryStorageService {
   private store: { [k: string]: string } = {};
 

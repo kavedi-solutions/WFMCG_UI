@@ -30,7 +30,7 @@ export class PurchaseReturnService {
     private storage: LocalStorageService,
     private appconfig: AppConfig
   ) {
-    this.APIURL = this.appconfig.GetCoreAPIURL() + `api/v${this.version}/company/${this.CompanyID}/purchasereturn/inventory`;
+    this.APIURL = this.appconfig.GetCoreAPIURL() + `api/v${this.version}`;
   }
 
   GetPurchaseReturnList(
@@ -39,6 +39,8 @@ export class PurchaseReturnService {
     searchText: string,
     filter: FilterValues[]
   ): Observable<PurchaseReturnPagedResponse> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     let params = new HttpParams()
       .set('Page', `${paginationHeaders.page}`)
       .set('PageSize', `${paginationHeaders.pageSize}`)
@@ -52,7 +54,7 @@ export class PurchaseReturnService {
       });
     }
 
-    const url = `${this.APIURL}/paged`;
+    const url = `${this.APIURL}/company/${this.CompanyID}/purchasereturn/inventory/paged`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -71,7 +73,9 @@ export class PurchaseReturnService {
   }
 
   GetNextBillNo(BookAccountID: number, BillDate: Date) {
-    const url = `${this.APIURL}/getnextbill/${BookAccountID}?BillDate=${BillDate}`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/purchasereturn/inventory/getnextbill/${BookAccountID}?BillDate=${BillDate}`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -85,7 +89,9 @@ export class PurchaseReturnService {
   }
 
   GetPurchaseReturnbyID(PurchaseReturnID: number) {
-    const url = `${this.APIURL}/${PurchaseReturnID}/getbyid`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/purchasereturn/inventory/${PurchaseReturnID}/getbyid`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -99,8 +105,10 @@ export class PurchaseReturnService {
   }
 
   createPurchaseReturn(resourcesDetails: PurchaseReturnPostRequest): Observable<any> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     resourcesDetails.createdBy = this.UserID;
-    const url = `${this.APIURL}/create`;
+    const url = `${this.APIURL}/company/${this.CompanyID}/purchasereturn/inventory/create`;
     return this.http.post<any>(encodeURI(url), resourcesDetails, {
       headers: this.headers,
     });
@@ -110,15 +118,19 @@ export class PurchaseReturnService {
     PurchaseReturnID: number,
     resourcesDetails: PurchaseReturnPutRequest
   ): Observable<any> {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
     resourcesDetails.modifiedBy = this.UserID;
-    const url = `${this.APIURL}/update/${PurchaseReturnID}`;
+    const url = `${this.APIURL}/company/${this.CompanyID}/purchasereturn/inventory/update/${PurchaseReturnID}`;
     return this.http.put<any>(encodeURI(url), resourcesDetails, {
       headers: this.headers,
     });
   }
 
   deletePurchaseReturn(PurchaseReturnID: number) {
-    const url = `${this.APIURL}/delete/${PurchaseReturnID}`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/purchasereturn/inventory/delete/${PurchaseReturnID}`;
     return this.http.delete<any>(encodeURI(url), {
       headers: this.headers,
     });

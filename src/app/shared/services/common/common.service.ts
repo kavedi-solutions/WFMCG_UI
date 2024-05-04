@@ -10,8 +10,6 @@ import { LocalStorageService } from './storage.service';
 export class CommonService {
   APIURL?: string = '';
   version: string = '1';
-  CompanyID: string = this.storage.get('companyID');
-  UserID: string = this.storage.get('userID');
 
   headers = new HttpHeaders({
     'Content-Type': 'application/json',
@@ -165,5 +163,5 @@ export class CommonService {
         })
       );
   }
-  
+
 }

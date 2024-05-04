@@ -33,7 +33,26 @@
           >
         </mat-form-field>
       </div>
-      <div fxFlex="30%" fxFlex.lt-sm="100" class="matero-col">
+      <div fxFlex="40%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Display Item Name</mat-label>
+          <input
+            matInput
+            formControlName="DisplayItemName"
+            type="text"
+            placeholder="Display Item Name"
+            maxlength="50"
+            required
+          />
+          <mat-error *ngIf="DisplayItemNameControlRequired"
+            >Item name is required.</mat-error
+          >
+          <mat-error *ngIf="DisplayItemNameControlInvalid"
+            >Item name is Invalid.</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
         <mat-form-field appearance="legacy" color="primary">
           <mat-label>Item Type</mat-label>
           <mat-select formControlName="ItemType" required (valueChange)="ItemTypeSelectionChange($event)">
@@ -46,7 +65,9 @@
           >
         </mat-form-field>
       </div>
-      <div fxFlex="25%" fxFlex.lt-sm="100" class="matero-col">
+    </div>
+    <div class="matero-row m-t-16" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="20%" fxFlex.lt-sm="100" class="matero-col">
         <mat-form-field appearance="legacy" color="primary">
           <mat-label>HSN Code/SAC Code</mat-label>
           <input
@@ -70,9 +91,7 @@
           >
         </mat-form-field>
       </div>
-    </div>
-    <div class="matero-row m-t-16" fxLayout.lt-sm="column" fxLayout="row">
-      <div fxFlex="45%" fxFlex.lt-sm="100" class="matero-col">
+      <div fxFlex="35%" fxFlex.lt-sm="100" class="matero-col">
         <mat-form-field appearance="legacy" color="primary">
           <mat-label>Item Group</mat-label>
           <mat-select formControlName="ItemGroupID" required>
@@ -85,7 +104,7 @@
           </mat-select>
         </mat-form-field>
       </div>
-      <div fxFlex="45%" fxFlex.lt-sm="100" class="matero-col">
+      <div fxFlex="35%" fxFlex.lt-sm="100" class="matero-col">
         <mat-form-field appearance="legacy" color="primary">
           <mat-label>Manufacture</mat-label>
           <mat-select formControlName="ManufactureID" required>

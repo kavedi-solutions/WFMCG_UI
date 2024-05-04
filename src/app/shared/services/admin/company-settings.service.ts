@@ -26,11 +26,13 @@ export class CompanySettingsService {
   ) {
     this.APIURL =
       this.appconfig.GetCoreAPIURL() +
-      `api/v${this.version}/company/${this.CompanyID}`;
+      `api/v${this.version}`;
   }
 
   GetCompanySettingsbyID() {
-    const url = `${this.APIURL}/settings/getbyid`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/settings/getbyid`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
@@ -46,7 +48,9 @@ export class CompanySettingsService {
   updateCompanySettings(
     resourcesDetails: CompanySettingPutRequest
   ): Observable<CompanySettingResponse> {
-    const url = `${this.APIURL}/settings/update`;
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/settings/update`;
     return this.http.put<CompanySettingResponse>(encodeURI(url), resourcesDetails, {
       headers: this.headers,
     });

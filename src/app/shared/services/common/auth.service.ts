@@ -33,7 +33,6 @@ const fileHttpOptions = {
 export class AuthService {
   APIURL?: string = '';
   version: string = '1';
-  CompanyID: string = this.storage.get('companyID');
   headers = new HttpHeaders({
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
