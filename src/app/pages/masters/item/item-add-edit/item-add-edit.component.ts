@@ -64,7 +64,12 @@ export class ItemAddEditComponent implements OnInit {
     ],
     HSNCode: [
       '',
-      [Validators.required, Validators.minLength(4), Validators.maxLength(8)],
+      [
+        Validators.required,
+        Validators.minLength(6),
+        Validators.maxLength(8),
+        Validators.pattern(/^([0-9])+$/i),
+      ],
     ],
     ItemType: ['1', [Validators.required]],
     ItemGroupID: ['', [Validators.required]],

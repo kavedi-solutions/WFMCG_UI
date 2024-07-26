@@ -65,6 +65,11 @@ export * from './master/item/itemResponse.model';
 export * from './master/stock/closingStockbyItemID';
 export * from './master/stock/stockFilter.model';
 
+export  * from './master/hsncode/hsncodeDropDown.model';
+export  * from './master/hsncode/hsncodePostRequest.model';
+export  * from './master/hsncode/hsncodePutRequest.model';
+export  * from './master/hsncode/hsncodeResponse.model';
+
 export * from './transaction/purchase/purchaseResponse.model';
 export * from './transaction/purchase/purchaseitemdetail.model';
 export * from './transaction/purchase/purchasePostRequest.model';
@@ -143,8 +148,8 @@ export * from './transaction/transfergtmt/transferGtMtResponse.model';
 
 export * from './transaction/transfermtgt/transferMtGtPostRequest.model';
 export * from './transaction/transfermtgt/transferMtGtPutRequest.model';
-export * from './transaction/transfermtgt/transfermtgtItemdetail.model';
-export * from './transaction/transfermtgt/transfermtgtResponse.model';
+export * from './transaction/transfermtgt/transferMtGtPutRequest.model';
+export * from './transaction/transfermtgt/transferMtGtResponse.model';
 
 export * from './transaction/transferother/transferOtherItemdetail.model';
 export * from './transaction/transferother/transferOtherPostRequest.model';

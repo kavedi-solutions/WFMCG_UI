@@ -16,6 +16,7 @@ import { EInvoiceService } from './einvoice/e-invoice.service';
 import { AccountsService } from './master/accounts.service';
 import { AreaService } from './master/area.service';
 import { GroupService } from './master/group.service';
+import { HSNCodeService } from './master/hsncode.service';
 import { ItemgroupService } from './master/itemgroup.service';
 import { ManufactureService } from './master/manufacture.service';
 import { StockService } from './master/stock.service';
@@ -81,6 +82,7 @@ export const services: any[] = [
   EInvoiceService,
   GstService,
   UtilityService,
+  HSNCodeService
 ];
 
 export * from './admin/role.service';
@@ -105,6 +107,7 @@ export * from './master/manufacture.service';
 export * from './master/itemgroup.service';
 export * from './master/item.service';
 export * from './master/stock.service';
+export * from './master/hsncode.service';
 
 export * from './transaction/purchase.service';
 export * from './transaction/purchase-a.service';
