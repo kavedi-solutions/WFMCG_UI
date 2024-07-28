@@ -8,9 +8,9 @@ export interface HSNCodeResponse {
 export interface HSNCode {
   companyID: string;
   autoID: number;
-  hSN_SAC_Code: string;
-  hSN_SAC_Description: string ;
-  hSN_SAC_Type: string ;
+  hsN_SAC_Code: string;
+  hsN_SAC_Description: string ;
+  hsN_SAC_Type: string ;
   isActive: boolean;
   createdBy: string;
   createdDate: string;

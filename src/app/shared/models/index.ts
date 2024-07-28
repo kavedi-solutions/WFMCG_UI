@@ -146,8 +146,8 @@ export * from './transaction/transfergtmt/transferGtMtPostRequest.model';
 export * from './transaction/transfergtmt/transferGtMtPutRequest.model';
 export * from './transaction/transfergtmt/transferGtMtResponse.model';
 
+export * from './transaction/transfermtgt/transferMtGtItemdetail.model';
 export * from './transaction/transfermtgt/transferMtGtPostRequest.model';
-export * from './transaction/transfermtgt/transferMtGtPutRequest.model';
 export * from './transaction/transfermtgt/transferMtGtPutRequest.model';
 export * from './transaction/transfermtgt/transferMtGtResponse.model';
 

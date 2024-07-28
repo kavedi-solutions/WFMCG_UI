@@ -1,0 +1,115 @@
+<page-header
+  class="bg-blue-600"
+  [title]="PageTitle"
+  [addButtonToolTip]="buttonText"
+  [showBack]="true"
+  [showAdd]="false"
+  (onBackClick)="BacktoList()"
+></page-header>
+<form class="form-field-full page-detail" [formGroup]="hsnForm">
+  <mat-card>
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="40%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>HSN/SAC Code</mat-label>
+          <input
+            matInput
+            formControlName="HsnSacCode"
+            type="text"
+            placeholder="HSN/SAC Code"
+            maxlength="8"
+            minlength="4"
+            required
+            (keyup)="onHsnSacCodeKeyUp($event)"
+          />
+          <mat-hint>HSN/SAC Code must be unique.</mat-hint>
+          <mat-error *ngIf="hsnSacCodeControlRequired"
+            >HSN/SAC Code is required.</mat-error
+          >
+          <mat-error *ngIf="hsnSacCodeControlInvalid"
+            >HSN/SAC Code is Invalid.</mat-error
+          >
+          <mat-error *ngIf="getHsnSacCodeValidation()"
+            >This HSN/SAC Code is already exist.</mat-error
+          >
+          <mat-error *ngIf="hsnSacCodeControlMinLength"
+            >This HSN/SAC Code minimum 4 Chareacters.</mat-error
+          >
+          <mat-error *ngIf="hsnSacCodeControlMaxLength"
+            >This HSN/SAC Code maximul 8 Charecters.</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div fxFlex="30%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>HSN/SAC Type</mat-label>
+          <mat-select formControlName="HsnSacType">
+            <mat-option value="H">HSN Code</mat-option>
+            <mat-option value="S">Service Code</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div fxFlex="10%" fxFlex.lt-sm="100" class="matero-col m-12">
+        <mat-slide-toggle
+          color="primary"
+          class="slide_toggle_style"
+          formControlName="isActive"
+          [disabled]="true"
+        >
+          Active
+        </mat-slide-toggle>
+      </div>
+    </div>
+    <div class="matero-row m-t-16" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="100%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>HSN/SAC Description</mat-label>
+          <textarea
+            matInput
+            formControlName="HsnSacDescription"
+            type="text"
+            placeholder="HSN/SAC Description"
+            maxlength="5000"
+            rows="5"
+            required
+          ></textarea>
+          <mat-error *ngIf="hsnSacDescriptionControlRequired"
+            >HSN/SAC Description is required.</mat-error
+          >
+        </mat-form-field>
+      </div>
+    </div>
+
+    <br />
+    <mat-card-actions align="end" class="area-mat-card-actions">
+      <button
+        type="button"
+        mat-raised-button
+        (click)="BacktoList()"
+        color="accent"
+      >
+        Cancel
+      </button>
+      <button
+        type="button"
+        *ngIf="isEditMode == false"
+        [disabled]="!hsnForm.valid"
+        mat-raised-button
+        color="primary"
+        (click)="SaveUpdateHSN(hsnForm)"
+      >
+        Save
+      </button>
+      <button
+        type="button"
+        *ngIf="isEditMode == true"
+        [disabled]="!hsnForm.valid"
+        mat-raised-button
+        color="primary"
+        (click)="SaveUpdateHSN(hsnForm)"
+      >
+        Update
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</form>

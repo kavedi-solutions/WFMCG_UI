@@ -14,6 +14,8 @@ import { ItemgroupAddEditComponent } from './itemgroup/itemgroup-add-edit/itemgr
 import { ItemComponent } from './item/item.component';
 import { ItemAddEditComponent } from './item/item-add-edit/item-add-edit.component';
 import { ItemOpeningComponent } from './item/item-opening/item-opening.component';
+import { HSNSACComponent } from './hsnsac/hsnsac.component';
+import { HSNSACAddEditComponent } from './hsnsac/hsnsacadd-edit/hsnsacadd-edit.component';
 
 export const MasterPages: any[] = [
   AreaComponent,
@@ -32,6 +34,8 @@ export const MasterPages: any[] = [
   ItemComponent,
   ItemAddEditComponent,
   ItemOpeningComponent,
+  HSNSACComponent,
+  HSNSACAddEditComponent,
 ];
 export * from './accounts/accounts-add-edit/accounts-add-edit.component';
 export * from './accounts/accounts.component';
@@ -49,3 +53,5 @@ export * from './itemgroup/itemgroup-add-edit/itemgroup-add-edit.component';
 export * from './item/item.component';
 export * from './item/item-add-edit/item-add-edit.component';
 export * from './item/item-opening/item-opening.component';
+export * from './hsnsac/hsnsac.component';
+export * from './hsnsac/hsnsacadd-edit/hsnsacadd-edit.component';

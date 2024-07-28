@@ -628,6 +628,82 @@ export function GetManufactureColumns() {
   return ColumnList;
 }
 
+export function GetHSNSACColumns() {
+  let ColumnList: MtxGridColumn[] = [
+    {
+      header: 'HSN SAC ID',
+      field: 'autoID',
+      hide: true,
+    },
+    {
+      header: 'HSN/SAC Code',
+      field: 'hsN_SAC_Code',
+      sortable: true,
+      disabled: true,
+      minWidth: 300,
+      width: '300px',
+      pinned: 'left',
+    },
+    {
+      header: 'HSN/SAC Description',
+      field: 'hsN_SAC_Description',
+      sortable: true,
+      disabled: true,
+      minWidth: 500,
+      width: '500px',
+    },
+    {
+      header: 'HSN/SAC Type',
+      field: 'hsN_SAC_Type',
+      sortable: true,
+      disabled: true,
+      minWidth: 100,
+      width: '100px',
+      type: 'tag',
+      tag: {
+        'H': { text: 'HSN Code' },
+        'S': { text: 'Service Code' },
+      },
+    },
+
+    {
+      header: 'Is Active',
+      field: 'isActive',
+      sortable: true,
+      disabled: true,
+      type: 'tag',
+      tag: {
+        true: { text: 'Active', color: 'green-100' },
+        false: { text: 'In Active', color: 'red-100' },
+      },
+      minWidth: 75,
+      width: '75px',
+    },
+    {
+      header: 'Created Date',
+      field: 'createdDate',
+      sortable: true,
+      disabled: true,
+      type: 'date',
+      typeParameter: { format: 'dd-MM-yyyy HH:mm:ss' },
+      minWidth: 150,
+      width: '150px',
+    },
+    {
+      header: 'Updated Date',
+      field: 'modifiedDate',
+      sortable: true,
+      disabled: true,
+      type: 'date',
+      typeParameter: { format: 'dd-MM-yyyy HH:mm:ss' },
+      minWidth: 150,
+      width: '150px',
+    },
+  ];
+
+  return ColumnList;
+}
+
 export function GetItemGroupColumns() {
   let ColumnList: MtxGridColumn[] = [
     {

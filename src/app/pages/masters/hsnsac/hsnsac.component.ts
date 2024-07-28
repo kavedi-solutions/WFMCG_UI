@@ -1,26 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import {
-  AccessRights,
-  Accounts,
-  FilterValues,
-  PaginationHeaders,
-} from 'src/app/shared';
-import * as defaultData from '../../../data/index';
+import { MtxGridColumn } from 'src/app/extensions/grid/grid.interface';
+import { AccessRights, FilterValues, HSNCode, PaginationHeaders } from 'src/app/shared';
 import * as fromService from '../../../shared/index';
+import * as defaultData from '../../../data/index';
+import { ActivatedRoute, Router } from '@angular/router';
 import { funSortingOrder } from 'src/app/shared/functions';
 import { PageEvent } from '@angular/material/paginator';
-import { MtxGridColumn } from 'src/app/extensions/grid/grid.interface';
 
 @Component({
-  selector: 'app-accounts',
-  templateUrl: './accounts.component.html',
-  styleUrls: ['./accounts.component.scss'],
+  selector: 'app-hsnsac',
+  templateUrl: './hsnsac.component.html',
+  styleUrls: ['./hsnsac.component.scss']
 })
-export class AccountsComponent implements OnInit {
-  PageTitle: string = 'Account';
-  buttonText: string = 'Add New Account';
-  accountListData: Accounts[] = [];
+export class HSNSACComponent implements OnInit {
+  PageTitle: string = 'HSN/SAC';
+  buttonText: string = 'Add New HSN/SAC';
+  hsnCodeListData: HSNCode[] = [];
   pagination?: PaginationHeaders = defaultData.defaultPaginationHeaders;
   filterValues?: FilterValues[];
   Sort?: string;
@@ -32,21 +27,22 @@ export class AccountsComponent implements OnInit {
   pageSizeOptions = defaultData.pageSizeOptions;
 
   constructor(
-    private accountService: fromService.AccountsService,
+    private hsnCodeService: fromService.HSNCodeService,
     private router: Router,
     private route: ActivatedRoute
   ) {
     this.latestSearchText = '';
     this.accRights = this.route.snapshot.data['userRights'];
     this.setColumns();
-    this.latestSortingOrder = 'accountname';
-    this.getAccountsList();
+    this.latestSortingOrder = 'hsN_SAC_Code';
+    this.getHSNCodeList();
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 
   setColumns() {
-    this.columns = defaultData.GetAccountColumns();
+    this.columns = defaultData.GetHSNSACColumns();
     this.columns.push({
       header: 'Action',
       field: 'action',
@@ -79,7 +75,7 @@ export class AccountsComponent implements OnInit {
             okColor: 'primary',
             closeColor: 'warn',
           },
-          click: (record) => this.DeactiveAccount(record),
+          click: (record) => this.DeactiveHSNCode(record),
           iif: (record) => {
             if (this.accRights!.canDelete) return record.isActive;
             else return false;
@@ -99,7 +95,7 @@ export class AccountsComponent implements OnInit {
             okColor: 'primary',
             closeColor: 'warn',
           },
-          click: (record) => this.ActiveAccount(record),
+          click: (record) => this.ActiveHSNCode(record),
           iif: (record) => {
             if (this.accRights!.canDelete) return !record.isActive;
             else return false;
@@ -109,36 +105,38 @@ export class AccountsComponent implements OnInit {
     });
   }
 
-  getAccountsList() {
-    this.accountService
-      .GetAccountsList(
+  getHSNCodeList() {
+    this.hsnCodeService
+      .GetHSNCodeList(
         this.pagination!,
         this.latestSortingOrder!,
         this.latestSearchText!,
         this.filterValues!
       )
       .subscribe((response) => {
-        this.accountListData = response.body;
+        this.hsnCodeListData = response.body;
         this.pagination = response.headers;
       });
   }
 
   edit(value: any) {
-    this.router.navigate(['/master/accounts/edit/', value.accountID]);
+    this.router.navigate(['/master/hsnsac/edit/', value.autoID]);
   }
 
-  DeactiveAccount(value: any) {
-    this.accountService
-      .DeactivateAccounts(value.accountID)
+  DeactiveHSNCode(value: any) {
+    this.hsnCodeService
+      .DeactivateHSNCode(value.autoID)
       .subscribe((response) => {
-        this.getAccountsList();
+        this.getHSNCodeList();
       });
   }
 
-  ActiveAccount(value: any) {
-    this.accountService.ActivateAccounts(value.accountID).subscribe((response) => {
-      this.getAccountsList();
-    });
+  ActiveHSNCode(value: any) {
+    this.hsnCodeService
+      .ActivateHSNCode(value.autoID)
+      .subscribe((response) => {
+        this.getHSNCodeList();
+      });
   }
 
   changeSelect(e: any) {
@@ -149,18 +147,18 @@ export class AccountsComponent implements OnInit {
     this.latestSortingOrder = '';
     this.pagination!.page = 0;
     this.latestSortingOrder = funSortingOrder(event, this.latestSortingOrder);
-    this.getAccountsList();
+    this.getHSNCodeList();
   }
 
   getNextPage(e: PageEvent) {
     this.pagination!.page = e.pageIndex;
     this.pagination!.pageSize = e.pageSize;
     this.pagination!.recordCount = e.length;
-    this.getAccountsList();
+    this.getHSNCodeList();
   }
 
   AddnewRecord() {
-    this.router.navigate(['/master/accounts/add']);
+    this.router.navigate(['/master/hsnsac/add']);
   }
 
   onSearch($event: any) {
@@ -169,11 +167,11 @@ export class AccountsComponent implements OnInit {
       this.pagination.page = 0;
     }
     this.latestSearchText = $event.searchText;
-    this.getAccountsList();
+    this.getHSNCodeList();
   }
 
   onRefresh() {
-    this.getAccountsList();
+    this.getHSNCodeList();
   }
 
   onStatusFilter($event: any) {
@@ -184,6 +182,7 @@ export class AccountsComponent implements OnInit {
         value: $event.selectedValue,
       });
     }
-    this.getAccountsList();
+    this.getHSNCodeList();
   }
+
 }

@@ -71,6 +71,8 @@ import { JwtHelperService, JwtModule } from '@auth0/angular-jwt';
 import { registerLocaleData } from '@angular/common';
 import localeIn from '@angular/common/locales/en-IN';
 import { ExtensionsModule } from './extensions/extensions.module';
+import { HSNSACComponent } from './pages/masters/hsnsac/hsnsac.component';
+import { HSNSACAddEditComponent } from './pages/masters/hsnsac/hsnsacadd-edit/hsnsacadd-edit.component';
 
 registerLocaleData(localeIn);
 
@@ -87,6 +89,7 @@ export function tokenGetter() {
     AuthPages.AuthPages,
     Pages.Pages,
     SharedComponent.SharedComponent,
+
   ],
   imports: [
     CommonModule,

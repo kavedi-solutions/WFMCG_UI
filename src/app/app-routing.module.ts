@@ -169,7 +169,7 @@ const routes: Routes = [
             path: 'list',
             component: CommonPages.TaxComponent,
             resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
-            data: { MenuID: '105' },
+            data: { MenuID: '106' },
             canActivate: [AuthGuard],
           },
           {
@@ -191,7 +191,7 @@ const routes: Routes = [
             path: 'list',
             component: CommonPages.ManufactureComponent,
             resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
-            data: { MenuID: '106' },
+            data: { MenuID: '107' },
             canActivate: [AuthGuard],
           },
           {
@@ -207,13 +207,35 @@ const routes: Routes = [
         ],
       },
       {
+        path: 'hsnsac',
+        children: [
+          {
+            path: 'list',
+            component: CommonPages.HSNSACComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '108' },
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'add',
+            component: CommonPages.HSNSACAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'edit/:itemgroupid',
+            component: CommonPages.HSNSACAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+        ],
+      },
+      {
         path: 'itemgroup',
         children: [
           {
             path: 'list',
             component: CommonPages.ItemgroupComponent,
             resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
-            data: { MenuID: '107' },
+            data: { MenuID: '109' },
             canActivate: [AuthGuard],
           },
           {
@@ -235,7 +257,7 @@ const routes: Routes = [
             path: 'list',
             component: CommonPages.ItemComponent,
             resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
-            data: { MenuID: '108' },
+            data: { MenuID: '110' },
             canActivate: [AuthGuard],
           },
           {
