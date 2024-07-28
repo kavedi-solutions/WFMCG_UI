@@ -8,8 +8,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject } from 'rxjs';
-import { tap, debounceTime } from 'rxjs/operators';
+import { map, Observable, startWith, Subject, tap } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 import * as fromService from '../../../../shared/index';
 import {
   Item,
@@ -21,6 +21,7 @@ import {
   accountTradeTypeResponse,
   TaxDownDownResponse,
   Tax,
+  HSNCodeDropDownResponse,
 } from '../../../../shared/index';
 
 @Component({
@@ -40,6 +41,8 @@ export class ItemAddEditComponent implements OnInit {
   unitDropDown: DD_UnitResponse[] = [];
   accountTradeTypeDropDown: accountTradeTypeResponse[] = [];
   taxDropDown: TaxDownDownResponse[] = [];
+  hsncodeDropDown: HSNCodeDropDownResponse[] = [];
+  filteredhsncodeDropDown?: Observable<HSNCodeDropDownResponse[]>;
   editItem?: Item;
   isItemNameValid: boolean = false;
   ItemName: string = '';
@@ -62,15 +65,14 @@ export class ItemAddEditComponent implements OnInit {
         Validators.pattern(/^([\s]*[a-zA-Z0-9()&-.,/]+[\s]*)+$/i),
       ],
     ],
-    HSNCode: [
-      '',
-      [
-        Validators.required,
-        Validators.minLength(6),
-        Validators.maxLength(8),
-        Validators.pattern(/^([0-9])+$/i),
-      ],
-    ],
+    HSNCodeId: [''],
+    // ,
+    //   [
+    //     Validators.required,
+    //     Validators.minLength(6),
+    //     Validators.maxLength(8),
+    //     Validators.pattern(/^([0-9])+$/i),
+    //   ],
     ItemType: ['1', [Validators.required]],
     ItemGroupID: ['', [Validators.required]],
     ManufactureID: ['', [Validators.required]],
@@ -139,6 +141,7 @@ export class ItemAddEditComponent implements OnInit {
     private manufactureService: fromService.ManufactureService,
     private commonService: fromService.CommonService,
     private taxService: fromService.TaxService,
+    private hsnCodeService: fromService.HSNCodeService,
     private fb: FormBuilder
   ) {
     this.isEditMode = false;
@@ -152,6 +155,7 @@ export class ItemAddEditComponent implements OnInit {
     this.FillManufacture();
     this.FillUnitsDropDown();
     this.FillTaxDropDown();
+    this.FillHSNCodeDropDown('A');
     this.FillAccountTradeTypeDropDown('2');
   }
 
@@ -179,6 +183,29 @@ export class ItemAddEditComponent implements OnInit {
     this.ItemNameExists.pipe(debounceTime(300)).subscribe(() => {
       this.CheckItemNameExists(this.ItemName);
     });
+
+    this.filteredhsncodeDropDown = this.HSNCodeIdControl.valueChanges.pipe(
+      startWith(''),
+      map((value) => {
+        debugger;
+        const name = typeof value === 'string' ? value : value?.hsN_SAC_Code;
+        return name
+          ? this._filterHSN(name as string)
+          : this.hsncodeDropDown.slice();
+      })
+    );
+  }
+
+  private _filterHSN(name: string): HSNCodeDropDownResponse[] {
+    const filterValue = name.toLowerCase();
+
+    return this.hsncodeDropDown.filter((option) =>
+      option.hsN_SAC_Code.toLowerCase().includes(filterValue)
+    );
+  }
+
+  DisplayHSNCode(items: HSNCodeDropDownResponse) {
+    return items && items.hsN_SAC_Code ? items.hsN_SAC_Code : '';
   }
 
   //Controls
@@ -227,27 +254,27 @@ export class ItemAddEditComponent implements OnInit {
     );
   }
 
-  get HSNCodeControl() {
-    return this.itemForm.get('HSNCode') as FormControl;
+  get HSNCodeIdControl() {
+    return this.itemForm.get('HSNCodeId') as FormControl;
   }
 
-  get HSNCodeControlRequired() {
-    return (
-      this.HSNCodeControl.hasError('required') && this.HSNCodeControl.touched
-    );
-  }
+  // get HSNCodeControlRequired() {
+  //   return (
+  //     this.HSNCodeControl.hasError('required') && this.HSNCodeControl.touched
+  //   );
+  // }
 
-  get HSNCodeControlMin() {
-    return (
-      this.HSNCodeControl.hasError('minlength') && this.HSNCodeControl.touched
-    );
-  }
+  // get HSNCodeControlMin() {
+  //   return (
+  //     this.HSNCodeControl.hasError('minlength') && this.HSNCodeControl.touched
+  //   );
+  // }
 
-  get HSNCodeControlMax() {
-    return (
-      this.HSNCodeControl.hasError('maxlength') && this.HSNCodeControl.touched
-    );
-  }
+  // get HSNCodeControlMax() {
+  //   return (
+  //     this.HSNCodeControl.hasError('maxlength') && this.HSNCodeControl.touched
+  //   );
+  // }
 
   get ItemGroupIDControl() {
     return this.itemForm.get('ItemGroupID') as FormControl;
@@ -471,10 +498,15 @@ export class ItemAddEditComponent implements OnInit {
   getItemByID() {
     this.itemService.GetItembyID(this.selectedItemId).subscribe((response) => {
       this.editItem = response;
+      debugger;
+      let SeletedHSN: HSNCodeDropDownResponse;
+      SeletedHSN = this.hsncodeDropDown.filter(
+        (a) => a.autoID == this.editItem?.hsnCodeID
+      )[0];
+
       this.itemForm.patchValue({
         ItemName: this.editItem!.itemName,
         DisplayItemName: this.editItem!.displayItemName,
-        HSNCode: this.editItem!.hsnCode,
         ItemType: this.editItem!.itemType.toString(),
         ItemGroupID: this.editItem!.itemGroupID.toString(),
         ManufactureID: this.editItem!.manufactureID.toString(),
@@ -490,6 +522,7 @@ export class ItemAddEditComponent implements OnInit {
         Margin: this.editItem!.margin.toString(),
         isActive: this.editItem!.isActive,
       });
+      this.HSNCodeIdControl.setValue(SeletedHSN);
       this.GSTTaxIDSelectionChange(this.editItem!.gstTaxID.toString());
       this.ItemTypeSelectionChange(this.editItem!.itemType.toString());
     });
@@ -506,7 +539,7 @@ export class ItemAddEditComponent implements OnInit {
   ResetItemForm(form: FormGroup) {
     form.reset({
       ItemName: '',
-      HSNCode: '',
+      HSNCodeId: '',
       ItemType: 1,
       ItemGroupID: '',
       ManufactureID: '',
@@ -544,7 +577,7 @@ export class ItemAddEditComponent implements OnInit {
     this.itemPostRequest = {
       itemName: itemForm.value.ItemName,
       displayItemName: itemForm.value.DisplayItemName,
-      hSNCode: itemForm.value.HSNCode,
+      hsnCodeId: itemForm.value.HSNCodeId,
       itemType: itemForm.value.ItemType,
       itemGroupID: Number(itemForm.value.ItemGroupID),
       manufactureID: Number(itemForm.value.ManufactureID),
@@ -569,7 +602,7 @@ export class ItemAddEditComponent implements OnInit {
     this.itemPutRequest = {
       itemName: itemForm.value.ItemName,
       displayItemName: itemForm.value.DisplayItemName,
-      hSNCode: itemForm.value.HSNCode,
+      hsnCodeId: itemForm.value.HSNCodeID,
       itemType: itemForm.value.ItemType,
       itemGroupID: Number(itemForm.value.ItemGroupID),
       manufactureID: Number(itemForm.value.ManufactureID),
@@ -590,6 +623,14 @@ export class ItemAddEditComponent implements OnInit {
       .subscribe((response) => {
         this.BacktoList();
       });
+  }
+
+  FillHSNCodeDropDown(HSNSACType: string) {
+    this.hsnCodeService.HSNCodeDropDown(HSNSACType).subscribe((response) => {
+      debugger;
+      this.hsncodeDropDown = response;
+      this.HSNCodeIdControl.setValue('');
+    });
   }
 
   FillChildItemGroup() {
@@ -687,8 +728,11 @@ export class ItemAddEditComponent implements OnInit {
   }
 
   ItemTypeSelectionChange(event: any) {
-    if (event == '1') this.FillAccountTradeTypeDropDown('2');
-    else this.FillAccountTradeTypeDropDown('1');
+    if (event == '1') {
+      this.FillAccountTradeTypeDropDown('2');
+    } else {
+      this.FillAccountTradeTypeDropDown('1');
+    }
   }
 
   CalculateRates() {

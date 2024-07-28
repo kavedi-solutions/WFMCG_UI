@@ -1,7 +1,7 @@
 export interface ItemPostRequest {
-  itemName: string | null;
+  itemName: string;
   displayItemName: string;
-  hSNCode: string | null;
+  hsnCodeId: number;
   itemType: number;
   itemGroupID: number;
   manufactureID: number;

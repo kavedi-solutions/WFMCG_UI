@@ -1,15 +1,15 @@
 export interface GstDetails {
-  Gstin: string | null;
-  TradeName: string | null;
-  LegalName: string | null;
-  AddrBnm: string | null;
-  AddrBno: string | null;
-  AddrFlno: string | null;
-  AddrSt: string | null;
-  AddrLoc: string | null;
+  Gstin: string;
+  TradeName: string;
+  LegalName: string;
+  AddrBnm: string;
+  AddrBno: string;
+  AddrFlno: string;
+  AddrSt: string;
+  AddrLoc: string;
   StateCode: number;
   AddrPncd: number;
-  Status: string | null;
-  DtReg: string | null;
-  DtDReg: string | null;
+  Status: string;
+  DtReg: string;
+  DtDReg: string;
 }

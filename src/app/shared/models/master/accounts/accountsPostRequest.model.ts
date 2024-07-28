@@ -20,7 +20,7 @@ export interface AccountsPostRequest {
   invoiceLimit: number;
   isActive: boolean;
   createdBy?: string;
-  gstDetails: AccountGSTPostRequest[] | null;
+  gstDetails?: AccountGSTPostRequest[];
 }
 
 export interface AccountGSTPostRequest {

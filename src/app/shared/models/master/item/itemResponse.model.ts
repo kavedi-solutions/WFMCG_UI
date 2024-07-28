@@ -10,7 +10,7 @@ export interface Item {
   itemID: number;
   itemName: string;
   displayItemName: string;
-  hsnCode: string;
+  hsnCodeID: number;
   itemType: number;
   itemGroupID: number;
   manufactureID: number;

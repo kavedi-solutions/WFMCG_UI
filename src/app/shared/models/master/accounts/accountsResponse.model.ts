@@ -32,7 +32,7 @@ export interface Accounts {
   createdDate: string;
   modifiedBy: string;
   modifiedDate: string;
-  gstDetails: AccountGSTResponse[] | null;
+  gstDetails?: AccountGSTResponse[];
 }
 
 export interface AccountGSTResponse {

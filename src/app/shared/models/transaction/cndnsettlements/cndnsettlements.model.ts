@@ -1,10 +1,10 @@
 export interface CNDNSettlementResponse {
   autoID: number;
   companyID: string;
-  cnDnType: string | null;
-  cnDnTypeName: string | null;
+  cnDnType: string;
+  cnDnTypeName: string;
   cnDnID: number;
-  refNo: string | null;
+  refNo: string;
   billDate: string;
   accountID: number;
   amount: number;

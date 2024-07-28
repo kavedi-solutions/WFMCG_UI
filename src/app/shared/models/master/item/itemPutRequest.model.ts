@@ -1,7 +1,7 @@
 export interface ItemPutRequest {
   itemName: string;
   displayItemName: string;
-  hSNCode: string;
+  hsnCodeId: number;
   itemType: number;
   itemGroupID: number;
   manufactureID: number;

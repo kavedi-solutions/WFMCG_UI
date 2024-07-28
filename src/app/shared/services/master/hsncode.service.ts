@@ -149,7 +149,7 @@ export class HSNCodeService {
   HSNCodeDropDown(HSNSACType: string) {
     this.CompanyID = this.storage.get('companyID');
     this.UserID = this.storage.get('userID');
-    const url = `${this.APIURL}/company/${this.CompanyID}/itemgroup/dropdown/${HSNSACType}`;
+    const url = `${this.APIURL}/company/${this.CompanyID}/itemhsn/dropdown/${HSNSACType}`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,

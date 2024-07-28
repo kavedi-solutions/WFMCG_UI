@@ -1,7 +1,7 @@
 export interface CreditNotePostRequest {
   bookAccountID: number;
   billNo: number;
-  refNo: string | null;
+  refNo: string;
   billDate: string;
   accountID: number;
   accountTradeTypeID: number;
@@ -14,7 +14,7 @@ export interface CreditNotePostRequest {
   totalNetAmount: number;
   roundOffAmount: number;
   netAmount: number;
-  details: CreditNoteItemPostRequest[] | null;
+  details: CreditNoteItemPostRequest[];
   isActive: boolean;
   createdBy?: string;
 }
