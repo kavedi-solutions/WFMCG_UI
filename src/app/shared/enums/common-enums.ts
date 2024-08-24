@@ -51,6 +51,7 @@ export enum TransactionTypeMaster {
   TransferStockMTtoGT = 41,
   TransferStockGTtoMT = 42,
   TransferStocktoOther = 43,
+  TransferStocktoDump = 44,
 }
 
 export enum ReturnType {

@@ -11,6 +11,7 @@ import { IncentiveReportComponent } from './others/incentive-report/incentive-re
 import { LoadingSlipComponent } from './others/loading-slip/loading-slip.component';
 import { SalesPurchaseReportComponent } from './others/sales-purchase-report/sales-purchase-report.component';
 import { VoucherPrintComponent } from './others/voucher-print/voucher-print.component';
+import { StockLedgerComponent } from './stock/stock-ledger/stock-ledger.component';
 import { StockStatementComponent } from './stock/stock-statement/stock-statement.component';
 
 export const ReportPages: any[] = [
@@ -27,7 +28,8 @@ export const ReportPages: any[] = [
   VoucherPrintComponent,
   SalesPurchaseReportComponent,
   IncentiveReportComponent,
-  DailyCollectionReportComponent
+  DailyCollectionReportComponent,
+  StockLedgerComponent
 ];
 
 export * from './others/bulk-print/bulk-print.component';
@@ -44,3 +46,4 @@ export * from './others/voucher-print/voucher-print.component';
 export * from './others/sales-purchase-report/sales-purchase-report.component';
 export * from './others/incentive-report/incentive-report.component';
 export * from './others/daily-collection-report/daily-collection-report.component';
+export * from './stock/stock-ledger/stock-ledger.component';

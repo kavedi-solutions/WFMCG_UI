@@ -747,11 +747,13 @@ export class SalesReturnAddEditComponent implements OnInit {
   }
 
   editItem(record: SalesReturnItemDetail) {
+    debugger;
     let SeletedItem: itemsDropDownResponse;
     SeletedItem = this.itemsDropDown.filter(
       (a) => a.item_Id == record.ItemID.toString()
     )[0];
     this.ItemEdit = record;
+    this.SelectedSalesInvoiceID = record.InvoiceID;
     this.ItemsControl.patchValue({
       I_ItemID: SeletedItem,
       I_InvoiceID: record.InvoiceID,

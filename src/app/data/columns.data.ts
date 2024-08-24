@@ -2797,6 +2797,11 @@ export function GetSalesReturnItemDetailColumns() {
       hide: true,
     },
     {
+      header: 'InvoiceID',
+      field: 'InvoiceID',
+      hide: true,
+    },
+    {
       header: 'Invoice No',
       field: 'InvoiceRefNo',
       sortable: false,
@@ -4223,6 +4228,70 @@ export function GetTransferDumpColumns() {
   return ColumnList;
 }
 
+export function GetTransferDumpDetailColumns() {
+  let ColumnList: MtxGridColumn[] = [
+    {
+      header: 'Auto ID',
+      field: 'autoID',
+      hide: true,
+    },
+    {
+      header: 'Sr#',
+      field: 'SrNo',
+      sortable: false,
+      disabled: true,
+      minWidth: 50,
+      width: '50px',
+      pinned: 'left',
+    },
+    {
+      header: 'ItemID',
+      field: 'ItemID',
+      hide: true,
+    },
+    {
+      header: 'Item Name',
+      field: 'ItemName',
+      sortable: false,
+      disabled: true,
+      minWidth: 250,
+      width: '250px',
+      pinned: 'left',
+    },    
+    {
+      header: 'Crt',
+      field: 'Crt',
+      sortable: false,
+      disabled: true,
+      minWidth: 60,
+      width: '60px',
+      type: 'number',
+      typeParameter: { digitsInfo: '0.0-0', locale: 'en-IN' },
+      class: 'right-mat-header-cell right-mat-cell',
+      pinned: 'left',
+    },
+    {
+      header: 'Pcs',
+      field: 'Pcs',
+      sortable: false,
+      disabled: true,
+      minWidth: 60,
+      width: '60px',
+      type: 'number',
+      typeParameter: { digitsInfo: '0.0-0', locale: 'en-IN' },
+      class: 'right-mat-header-cell right-mat-cell',
+      pinned: 'left',
+    },
+    {
+      header: 'Qty',
+      field: 'qty',
+      hide: true,
+    },
+  ];
+
+  return ColumnList;
+}
+
 export function GetTransferOtherColumns() {
   let ColumnList: MtxGridColumn[] = [
     {
@@ -4282,5 +4351,69 @@ export function GetTransferOtherColumns() {
       width: '150px',
     },
   ];
+  return ColumnList;
+}
+
+export function GetTransferOtherDetailColumns() {
+  let ColumnList: MtxGridColumn[] = [
+    {
+      header: 'Auto ID',
+      field: 'autoID',
+      hide: true,
+    },
+    {
+      header: 'Sr#',
+      field: 'SrNo',
+      sortable: false,
+      disabled: true,
+      minWidth: 50,
+      width: '50px',
+      pinned: 'left',
+    },
+    {
+      header: 'ItemID',
+      field: 'ItemID',
+      hide: true,
+    },
+    {
+      header: 'Item Name',
+      field: 'ItemName',
+      sortable: false,
+      disabled: true,
+      minWidth: 250,
+      width: '250px',
+      pinned: 'left',
+    },    
+    {
+      header: 'Crt',
+      field: 'Crt',
+      sortable: false,
+      disabled: true,
+      minWidth: 60,
+      width: '60px',
+      type: 'number',
+      typeParameter: { digitsInfo: '0.0-0', locale: 'en-IN' },
+      class: 'right-mat-header-cell right-mat-cell',
+      pinned: 'left',
+    },
+    {
+      header: 'Pcs',
+      field: 'Pcs',
+      sortable: false,
+      disabled: true,
+      minWidth: 60,
+      width: '60px',
+      type: 'number',
+      typeParameter: { digitsInfo: '0.0-0', locale: 'en-IN' },
+      class: 'right-mat-header-cell right-mat-cell',
+      pinned: 'left',
+    },
+    {
+      header: 'Qty',
+      field: 'qty',
+      hide: true,
+    },
+  ];
+
   return ColumnList;
 }

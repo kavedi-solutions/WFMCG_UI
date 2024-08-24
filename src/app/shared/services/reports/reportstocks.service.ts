@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { AppConfig } from 'src/app/app.config';
 import { LocalStorageService } from '../common/storage.service';
 import { map, Observable } from 'rxjs';
-import { StockStatementFilter } from '../../models';
+import { StockLedgerFilter, StockStatementFilter } from '../../models';
 
 @Injectable({
   providedIn: 'root',
@@ -48,6 +48,30 @@ export class ReportStocksService {
         params = params.append('ItemGroups', element);
       });
     }
+
+    return this.http
+      .get(encodeURI(url), {
+        headers: this.headers,
+        observe: 'response',
+        responseType: 'blob',
+        params,
+      })
+      .pipe(
+        map((response) => {
+          return response.body;
+        })
+      );
+  }
+
+  PrintStockLedger(filter: StockLedgerFilter) {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/reports/stock/stockledger`;
+    let params = new HttpParams();
+    params = params.append('ReturnTypeID', filter.returnTypeID);
+    params = params.append('FromDate', filter.fromDate);
+    params = params.append('ToDate', filter.toDate);
+    params = params.append('ItemID', filter.itemID);
 
     return this.http
       .get(encodeURI(url), {

@@ -752,6 +752,13 @@ const routes: Routes = [
             data: { MenuID: '601' },
             canActivate: [AuthGuard],
           },
+          {
+            path: 'stockledger',
+            component: CommonPages.StockLedgerComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '602' },
+            canActivate: [AuthGuard],
+          },
         ],
       },
       {

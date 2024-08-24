@@ -54,7 +54,7 @@ export class SalesReturnService {
       });
     }
 
-    const url = `${this.APIURL}/paged`;
+    const url = `${this.APIURL}/company/${this.CompanyID}/salesreturn/inventory/paged`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,

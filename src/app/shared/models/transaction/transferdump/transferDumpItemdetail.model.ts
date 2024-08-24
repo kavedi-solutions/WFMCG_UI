@@ -5,6 +5,7 @@ export interface TransferDumpItemDetail {
   ItemName: string;
   Crt: number;
   Pcs: number;
+  Qty: number;
   IsAdd: boolean;
   IsModified: boolean;
   IsDeleted: boolean;
