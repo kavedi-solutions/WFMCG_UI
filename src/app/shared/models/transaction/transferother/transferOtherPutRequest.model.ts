@@ -1,6 +1,7 @@
 export interface TransferOtherPutRequest {
   transferNo: number;
   transferDate: string;
+  returnTypeID: number;
   details: TransferOtherItemPutRequest[] | null;
   isActive: boolean;
   modifiedBy?: string;

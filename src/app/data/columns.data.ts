@@ -4257,7 +4257,7 @@ export function GetTransferDumpDetailColumns() {
       minWidth: 250,
       width: '250px',
       pinned: 'left',
-    },    
+    },
     {
       header: 'Crt',
       field: 'Crt',
@@ -4316,6 +4316,14 @@ export function GetTransferOtherColumns() {
       typeParameter: { format: 'dd-MM-yyyy' },
       minWidth: 100,
       width: '100px',
+    },
+    {
+      header: 'Return Type',
+      field: 'returnTypeName',
+      sortable: true,
+      disabled: true,
+      minWidth: 60,
+      width: '60px',
     },
     {
       header: 'Is Active',
@@ -4383,7 +4391,7 @@ export function GetTransferOtherDetailColumns() {
       minWidth: 250,
       width: '250px',
       pinned: 'left',
-    },    
+    },
     {
       header: 'Crt',
       field: 'Crt',

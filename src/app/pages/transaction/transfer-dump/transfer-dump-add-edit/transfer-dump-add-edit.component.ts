@@ -92,7 +92,7 @@ export class TransferDumpAddEditComponent implements OnInit {
     this.setColumns();
     this.selectedTransferId = 0;
     this.SetMinMaxBillDate();
-    this.FillItemDropDown(2);
+    this.FillItemDropDown();
   }
 
   ngOnInit(): void {
@@ -122,10 +122,10 @@ export class TransferDumpAddEditComponent implements OnInit {
     }
   }
 
-  FillItemDropDown(AccountTradeTypeID: number) {
+  FillItemDropDown() {
     let filters: ItemFilter_DropDown = {
       ItemType: 1,
-      AccountTradeTypeID: AccountTradeTypeID,
+      AccountTradeTypeID: 0,
       TransactionTypeID: TransactionTypeMaster.TransferStocktoDump,
       InvoiceID: this.TransferID,
       ReturnTypeID: 2,

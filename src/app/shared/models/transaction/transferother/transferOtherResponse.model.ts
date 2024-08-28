@@ -10,6 +10,8 @@ export interface TransferOther {
   autoID: number;
   transferNo: number;
   transferDate: string;
+  returnTypeID: number;
+  returnTypeName: string;
   isActive: boolean;
   createdBy: string;
   createdDate: string;
@@ -21,6 +23,7 @@ export interface TransferOtherResponse {
   autoID: number;
   transferNo: number;
   transferDate: string;
+  returnTypeID: number;
   details: TransferOtherItemResponse[];
   isActive: boolean;
   createdDate: string;

@@ -1,6 +1,7 @@
 export interface TransferOtherPostRequest {
   transferNo: number;
   transferDate: string;
+  returnTypeID: number;
   details: TransferOtherItemPostRequest[] | null;
   isActive: boolean;
   createdBy?: string;
