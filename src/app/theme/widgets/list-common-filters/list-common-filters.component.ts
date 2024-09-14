@@ -19,6 +19,7 @@ export class ListCommonFiltersComponent implements OnInit {
     selectedValue: string;
   }>();
   @Input() latestSearchText?: string;
+  @Input() ShowStatusFilter: boolean = true;
   constructor() {}
 
   ngOnInit(): void {
@@ -46,6 +47,9 @@ export class ListCommonFiltersComponent implements OnInit {
       this.SelectedFilter = 'In Active';
       SelectedValue = 'false';
     }
-    this.onStatusFilter.emit({ title: 'IsActive', selectedValue: SelectedValue });
+    this.onStatusFilter.emit({
+      title: 'IsActive',
+      selectedValue: SelectedValue,
+    });
   }
 }

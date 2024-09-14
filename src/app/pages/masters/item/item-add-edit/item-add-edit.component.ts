@@ -187,7 +187,6 @@ export class ItemAddEditComponent implements OnInit {
     this.filteredhsncodeDropDown = this.HSNCodeIdControl.valueChanges.pipe(
       startWith(''),
       map((value) => {
-        debugger;
         const name = typeof value === 'string' ? value : value?.hsN_SAC_Code;
         return name
           ? this._filterHSN(name as string)
@@ -498,7 +497,6 @@ export class ItemAddEditComponent implements OnInit {
   getItemByID() {
     this.itemService.GetItembyID(this.selectedItemId).subscribe((response) => {
       this.editItem = response;
-      debugger;
       let SeletedHSN: HSNCodeDropDownResponse;
       SeletedHSN = this.hsncodeDropDown.filter(
         (a) => a.autoID == this.editItem?.hsnCodeID
@@ -627,7 +625,6 @@ export class ItemAddEditComponent implements OnInit {
 
   FillHSNCodeDropDown(HSNSACType: string) {
     this.hsnCodeService.HSNCodeDropDown(HSNSACType).subscribe((response) => {
-      debugger;
       this.hsncodeDropDown = response;
       this.HSNCodeIdControl.setValue('');
     });

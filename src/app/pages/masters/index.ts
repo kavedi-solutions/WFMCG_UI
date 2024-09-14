@@ -16,6 +16,8 @@ import { ItemAddEditComponent } from './item/item-add-edit/item-add-edit.compone
 import { ItemOpeningComponent } from './item/item-opening/item-opening.component';
 import { HSNSACComponent } from './hsnsac/hsnsac.component';
 import { HSNSACAddEditComponent } from './hsnsac/hsnsacadd-edit/hsnsacadd-edit.component';
+import { GTMTItemMappingComponent } from './gtmtitem-mapping/gtmtitem-mapping.component';
+import { GTMTItemMappingAddEditComponent } from './gtmtitem-mapping/gtmtitem-mapping-add-edit/gtmtitem-mapping-add-edit.component';
 
 export const MasterPages: any[] = [
   AreaComponent,
@@ -36,6 +38,8 @@ export const MasterPages: any[] = [
   ItemOpeningComponent,
   HSNSACComponent,
   HSNSACAddEditComponent,
+  GTMTItemMappingComponent,
+  GTMTItemMappingAddEditComponent
 ];
 export * from './accounts/accounts-add-edit/accounts-add-edit.component';
 export * from './accounts/accounts.component';
@@ -55,3 +59,6 @@ export * from './item/item-add-edit/item-add-edit.component';
 export * from './item/item-opening/item-opening.component';
 export * from './hsnsac/hsnsac.component';
 export * from './hsnsac/hsnsacadd-edit/hsnsacadd-edit.component';
+export * from './gtmtitem-mapping/gtmtitem-mapping.component';
+export * from './gtmtitem-mapping/gtmtitem-mapping-add-edit/gtmtitem-mapping-add-edit.component';
+

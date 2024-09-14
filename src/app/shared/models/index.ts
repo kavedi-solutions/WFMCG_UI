@@ -182,3 +182,8 @@ export * from './einvoice/einvoiceAPIResponse.model';
 
 export * from './utility/BackupLocationResponse.model';
 export * from './utility/BackupLocationFilter.model';
+
+export * from './master/gtmtitemmapping/gtmtitemmapDropDown.model';
+export * from './master/gtmtitemmapping/gtmtitemmapPostRequest.model';
+export * from './master/gtmtitemmapping/gtmtitemmapPutRequest.model';
+export * from './master/gtmtitemmapping/gtmtitemmapresponse.model';

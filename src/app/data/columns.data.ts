@@ -877,6 +877,44 @@ export function GetItemColumns() {
   return ColumnList;
 }
 
+export function GetGTMTMappingItemColumns() {
+  let ColumnList: MtxGridColumn[] = [
+    {
+      header: 'Auto ID',
+      field: 'autoID',
+      hide: true,
+    },
+    {
+      header: 'GT Item ID',
+      field: 'gtItemID',
+      hide: true,
+    },
+    {
+      header: 'GT Item Name',
+      field: 'gtItemName',
+      sortable: true,
+      disabled: true,
+      minWidth: 400,
+      width: '400px',
+    },
+    {
+      header: 'MT Item ID',
+      field: 'mtItemID',
+      hide: true,
+    },
+    {
+      header: 'MT Item Name',
+      field: 'mtItemName',
+      sortable: true,
+      disabled: true,
+      minWidth: 400,
+      width: '400px',
+    },
+  ];
+
+  return ColumnList;
+}
+
 export function GetItemOpeningColumns() {
   let ColumnList: MtxGridColumn[] = [
     {

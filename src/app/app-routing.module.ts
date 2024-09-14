@@ -274,7 +274,29 @@ const routes: Routes = [
             path: 'opening',
             component: CommonPages.ItemOpeningComponent,
             resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
-            data: { MenuID: '109' },
+            data: { MenuID: '111' },
+            canActivate: [AuthGuard],
+          },
+        ],
+      },
+      {
+        path: 'gtmtmapping',
+        children: [
+          {
+            path: 'list',
+            component: CommonPages.GTMTItemMappingComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '112' },
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'add',
+            component: CommonPages.GTMTItemMappingAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'edit/:autoid',
+            component: CommonPages.GTMTItemMappingAddEditComponent,
             canActivate: [AuthGuard],
           },
         ],

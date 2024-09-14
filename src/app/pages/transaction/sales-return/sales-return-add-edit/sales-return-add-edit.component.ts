@@ -747,7 +747,6 @@ export class SalesReturnAddEditComponent implements OnInit {
   }
 
   editItem(record: SalesReturnItemDetail) {
-    debugger;
     let SeletedItem: itemsDropDownResponse;
     SeletedItem = this.itemsDropDown.filter(
       (a) => a.item_Id == record.ItemID.toString()

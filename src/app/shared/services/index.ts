@@ -140,3 +140,5 @@ export * from './reports/gst.service';
 export * from './einvoice/e-invoice.service';
 
 export * from './utility/utility.service';
+
+export * from './master/gtmtmap-item.service';

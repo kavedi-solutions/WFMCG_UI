@@ -1,0 +1,91 @@
+<page-header
+  class="bg-blue-600"
+  [title]="PageTitle"
+  [addButtonToolTip]="buttonText"
+  [showBack]="!isFromQuickMenu"
+  [showAdd]="false"
+  (onBackClick)="BacktoList()"
+></page-header>
+
+<form class="form-field-full page-detail" [formGroup]="mappingForm">
+  <mat-card>
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Select GT Item</mat-label>
+          <input
+            matInput
+            id="GTItemName"
+            [matAutocomplete]="GTItemID"
+            formControlName="GTItemID"
+            (blur)="OnGTItemblur()"
+          />
+          <mat-autocomplete
+            #GTItemID="matAutocomplete"
+            [displayWith]="DisplayGTItemName"
+            (optionSelected)="SelectedGTItem($event)"
+          >
+            <mat-option
+              *ngFor="let add of filteredgtItemsDropDown | async"
+              [value]="add"
+            >
+              {{ add.item_Name }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+      <div fxFlex="50%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Select MT Item</mat-label>
+          <input
+            matInput
+            id="MTItemName"
+            [matAutocomplete]="MTItemID"
+            formControlName="MTItemID"
+          />
+          <mat-autocomplete
+            #MTItemID="matAutocomplete"
+            [displayWith]="DisplayMTItemName"
+          >
+            <mat-option
+              *ngFor="let add of filteredmtItemsDropDown | async"
+              [value]="add"
+            >
+              {{ add.item_Name }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+    </div>
+    <mat-card-actions align="end" class="area-mat-card-actions">
+      <button
+        type="button"
+        mat-raised-button
+        (click)="BacktoList()"
+        color="accent"
+      >
+        Cancel
+      </button>
+      <button
+        type="button"
+        *ngIf="isEditMode == false"
+        [disabled]="!mappingForm.valid"
+        mat-raised-button
+        color="primary"
+        (click)="SaveUpdateMapping(mappingForm)"
+      >
+        Save
+      </button>
+      <button
+        type="button"
+        *ngIf="isEditMode == true"
+        [disabled]="!mappingForm.valid"
+        mat-raised-button
+        color="primary"
+        (click)="SaveUpdateMapping(mappingForm)"
+      >
+        Update
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</form>

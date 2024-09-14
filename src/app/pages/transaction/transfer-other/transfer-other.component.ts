@@ -129,7 +129,6 @@ export class TransferOtherComponent implements OnInit {
       )
       .subscribe((response) => {
         this.transferListData = response.body;
-        debugger;
         this.pagination = response.headers;
       });
   }

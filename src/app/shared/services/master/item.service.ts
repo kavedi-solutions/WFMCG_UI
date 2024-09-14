@@ -13,7 +13,6 @@ import {
   OpeningItemPutRequest,
   ItemFilter_DropDown,
   ItemFilter_DropDownReport,
-  GTMTItemResponse,
 } from '../../models';
 import { LocalStorageService } from '../common/storage.service';
 
