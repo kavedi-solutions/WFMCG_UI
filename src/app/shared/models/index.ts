@@ -172,6 +172,7 @@ export * from './report/financial/purchaseregister.model';
 export * from './report/financial/salesregister.model';
 export * from './report/gst/gstr3b.model';
 export * from './report/gst/gstr1.model';
+export * from './report/gst/gstr2.model';
 
 //
 export * from './transaction/cndnsettlements/cndnsettlements.model';

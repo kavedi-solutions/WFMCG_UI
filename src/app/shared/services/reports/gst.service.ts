@@ -2,7 +2,7 @@ import { HttpHeaders, HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs';
 import { AppConfig } from 'src/app/app.config';
-import { GSTR1Filter, GSTR3BFilter } from '../../models';
+import { GSTR1Filter, GSTR2Filter, GSTR3BFilter } from '../../models';
 import { LocalStorageService } from '../common/storage.service';
 
 @Injectable({
@@ -53,6 +53,28 @@ export class GstService {
     this.CompanyID = this.storage.get('companyID');
     this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${this.CompanyID}/reports/gst/gstr1`;
+    let params = new HttpParams()
+      .set('FromDate', `${filter.fromDate}`)
+      .set('ToDate', `${filter.toDate}`);
+
+    return this.http
+      .get(encodeURI(url), {
+        headers: this.headers,
+        observe: 'response',
+        responseType: 'blob',
+        params,
+      })
+      .pipe(
+        map((response) => {
+          return response.body;
+        })
+      );
+  }
+
+  PrintGSTR2(filter: GSTR2Filter) {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/reports/gst/gstr2`;
     let params = new HttpParams()
       .set('FromDate', `${filter.fromDate}`)
       .set('ToDate', `${filter.toDate}`);
