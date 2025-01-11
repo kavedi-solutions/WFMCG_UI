@@ -96,14 +96,16 @@
             matInput
             id="AccountName"
             [matAutocomplete]="AutoAccountID"
-            formControlName="AccountID"            
-            [readonly]="isEditMode"            
+            formControlName="AccountID"
+            [readonly]="isEditMode"
             (blur)="OnAccountBlur()"
           />
+          <!-- (keyup)="SelectFirstOptions($event)" -->
           <mat-autocomplete
             #AutoAccountID="matAutocomplete"
             [displayWith]="DisplayAccountName"
             (optionSelected)="SelectedAccount($event)"
+            autoActiveFirstOption="true"
           >
             <mat-option
               *ngFor="let add of filteredaccountsDropDown | async"
@@ -154,7 +156,7 @@
             <mat-option value="99">Others</mat-option>
           </mat-select>
         </mat-form-field>
-      </div>       
+      </div>
       <div fxFlex="20%" fxFlex.lt-sm="100" class="matero-col">
         <mat-form-field appearance="legacy" color="primary">
           <mat-label>Transaction No</mat-label>

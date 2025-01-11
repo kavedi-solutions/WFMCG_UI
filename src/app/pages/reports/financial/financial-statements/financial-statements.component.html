@@ -1,0 +1,119 @@
+<page-header
+  class="bg-blue-600"
+  [title]="PageTitle"
+  [showBack]="false"
+  [showAdd]="false"
+></page-header>
+<form class="form-field-full page-detail" [formGroup]="finStatementForm">
+  <mat-card>
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <input
+            matInput
+            [matDatepicker]="AsOnDate"
+            placeholder="As on Date"
+            formControlName="AsOnDate"
+            [min]="AsOnDateMinDate"
+            [max]="AsOnDateMaxDate"
+          />
+          <mat-datepicker-toggle matSuffix [for]="AsOnDate" [tabIndex]="-1"
+            ><mat-icon matDatepickerToggleIcon
+              >keyboard_arrow_down</mat-icon
+            ></mat-datepicker-toggle
+          >
+          <mat-datepicker #AsOnDate></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+      <div
+        fxFlex="30%"
+        fxFlex.lt-sm="100"
+        class="matero-col m-b-12 m-t-16 b-8 p-t-12"
+      >
+        <mat-label class="f-s-18 f-w-700">Report Type : </mat-label>
+        <mat-radio-group
+          aria-label="Report Type "
+          formControlName="ReportType"
+          class="radio-group"
+        >
+          <mat-radio-button class="radio-button" value="TB"
+            >Trail Balance Sheet</mat-radio-button
+          >
+          <mat-radio-button class="radio-button" value="TA"
+            >Trading Account</mat-radio-button
+          >
+          <mat-radio-button class="radio-button" value="PL"
+            >Profit & Loss Account</mat-radio-button
+          >
+          <mat-radio-button class="radio-button" value="BS"
+            >Balance Sheet</mat-radio-button
+          >
+        </mat-radio-group>
+      </div>
+      <div
+        fxFlex="5%"
+        fxFlex.lt-sm="100"
+        class="matero-col m-b-12 m-t-16"
+      ></div>
+      <div
+        fxFlex="30%"
+        fxFlex.lt-sm="100"
+        class="matero-col m-b-12 m-t-16 b-8 p-t-12"
+      >
+        <mat-label class="f-s-18 f-w-700">Report Style : </mat-label>
+        <mat-radio-group
+          aria-label="Report Style "
+          formControlName="ReportStyle"
+          class="radio-group"
+        >
+          <mat-radio-button class="radio-button" value="G"
+            >Group Only</mat-radio-button
+          >
+          <mat-radio-button class="radio-button" value="A"
+            >Accounts Only</mat-radio-button
+          >
+          <mat-radio-button class="radio-button" value="B"
+            >Both</mat-radio-button
+          >
+        </mat-radio-group>
+      </div>
+      <div
+        fxFlex="5%"
+        fxFlex.lt-sm="100"
+        class="matero-col m-b-12 m-t-16"
+      ></div>
+      <div
+        fxFlex="30%"
+        fxFlex.lt-sm="100"
+        class="matero-col m-b-12 m-t-16 b-8 p-t-12"
+      >
+        <mat-label class="f-s-18 f-w-700">Output Type : </mat-label>
+        <mat-radio-group
+          aria-label="Output Type"
+          formControlName="OutputType"
+          class="radio-group"
+        >
+          <mat-radio-button class="radio-button" value="L"
+            >Ledger Format</mat-radio-button
+          >
+          <mat-radio-button class="radio-button" value="T"
+            >T Format</mat-radio-button
+          >
+        </mat-radio-group>
+      </div>
+    </div>
+    <mat-card-actions align="end" class="area-mat-card-actions m-r-0">
+      <button
+        type="button"
+        mat-raised-button
+        color="primary"
+        [disabled]="!finStatementForm.valid"
+        (click)="GenerateStatement()"
+      >
+        Generate (Print)
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</form>

@@ -793,6 +793,13 @@ const routes: Routes = [
             data: { MenuID: '404' },
             canActivate: [AuthGuard],
           },
+          {
+            path: 'financialstatement',
+            component:CommonPages.FinancialStatementsComponent,
+            resolve:{ userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '405' },
+            canActivate: [AuthGuard],
+          },
         ],
       },
       {
@@ -918,7 +925,7 @@ const routes: Routes = [
         path: 'diskcleanup',
         component: CommonPages.DiskCleanupComponent,
         canActivate: [AuthGuard],
-      }
+      },
     ],
   },
   {

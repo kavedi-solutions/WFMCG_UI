@@ -106,10 +106,10 @@ export class VReceiptB2BService {
       );
   }
 
-  GetPendingBills(AccountID: number, VReceiptB2BID: number) {
+  GetPendingBills(AccountID: number, VReceiptB2BID: number, VoucherDate: Date) {
     this.CompanyID = this.storage.get('companyID');
     this.UserID = this.storage.get('userID');
-    const url = `${this.APIURL}/company/${this.CompanyID}/voucher/receipt/b2b/${AccountID}/voucher/${VReceiptB2BID}/getpendingbills`;
+    const url = `${this.APIURL}/company/${this.CompanyID}/voucher/receipt/b2b/${AccountID}/voucher/${VReceiptB2BID}/getpendingbills?VoucherDate=${VoucherDate}`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,

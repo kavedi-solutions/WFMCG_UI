@@ -1272,7 +1272,8 @@ export class SalesAddEditComponent implements OnInit {
       NetAmount = 0;
 
     Rate = CheckIsNumber(this.I_RateControl.value);
-    RatePerPcs = Rate / Number(this.CurrentItem?.packing);
+    debugger;
+    RatePerPcs = RoundOffAmount(Rate / Number(this.CurrentItem?.packing), 2);
     Qty =
       Number(this.I_CrtControl.value) * Number(this.CurrentItem?.packing) +
       Number(this.I_PcsControl.value);

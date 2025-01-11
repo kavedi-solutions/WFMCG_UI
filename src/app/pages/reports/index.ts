@@ -1,4 +1,5 @@
 import { AccountLedgerComponent } from './financial/account-ledger/account-ledger.component';
+import { FinancialStatementsComponent } from './financial/financial-statements/financial-statements.component';
 import { OutstandingRegisterComponent } from './financial/outstanding-register/outstanding-register.component';
 import { PurchaseRegisterComponent } from './financial/purchase-register/purchase-register.component';
 import { SalesRegisterComponent } from './financial/sales-register/sales-register.component';
@@ -29,7 +30,8 @@ export const ReportPages: any[] = [
   SalesPurchaseReportComponent,
   IncentiveReportComponent,
   DailyCollectionReportComponent,
-  StockLedgerComponent
+  StockLedgerComponent,
+  FinancialStatementsComponent
 ];
 
 export * from './others/bulk-print/bulk-print.component';
@@ -47,3 +49,4 @@ export * from './others/sales-purchase-report/sales-purchase-report.component';
 export * from './others/incentive-report/incentive-report.component';
 export * from './others/daily-collection-report/daily-collection-report.component';
 export * from './stock/stock-ledger/stock-ledger.component';
+export * from './financial/financial-statements/financial-statements.component';

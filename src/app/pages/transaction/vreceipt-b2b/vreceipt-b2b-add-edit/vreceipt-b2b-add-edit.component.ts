@@ -15,6 +15,7 @@ import {
   accountsDropDownResponse,
   AccountTypeMaster,
   CurrentAccountBalanceResponse,
+  NotificationComponent,
   TableColumns,
   TransactionTypeMaster,
   VReceiptB2BPendingBillsPostRequest,
@@ -87,7 +88,8 @@ export class VReceiptB2BAddEditComponent implements OnInit {
     private voucherService: fromService.VReceiptB2BService,
     private accountService: fromService.AccountsService,
     private fb: FormBuilder,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    public notification: NotificationComponent
   ) {
     this.isEditMode = false;
     this.selectedVoucherId = 0;
@@ -159,9 +161,7 @@ export class VReceiptB2BAddEditComponent implements OnInit {
           (a) => a.account_Id == this.BookAccountIDControl.value
         )!.transactionTypeID;
 
-        this.VoucherDateControl.setValue(
-          moment(this.editVoucher?.voucherDate)
-        );
+        this.VoucherDateControl.setValue(moment(this.editVoucher?.voucherDate));
         this.AccountIDControl.setValue(SeletedAccount);
         this.GetCurrentAccountBalance(
           Number(this.editVoucher?.bookAccountID),
@@ -357,7 +357,10 @@ export class VReceiptB2BAddEditComponent implements OnInit {
     ) {
       this.renderer.selectRootElement('#AccountName', true).focus();
     }
-    if (this.AccountIDControl.value != '') {
+    if (
+      this.AccountIDControl.value != '' &&
+      this.AccountIDControl.value.account_Id != undefined
+    ) {
       this.GetPendingBills(
         Number(this.AccountIDControl.value.account_Id),
         this.selectedVoucherId
@@ -366,12 +369,18 @@ export class VReceiptB2BAddEditComponent implements OnInit {
         Number(this.AccountIDControl.value.account_Id),
         2
       );
+    } else {
+      this.notification.openSnackBar(
+        'Account Not Found. Please Select Account!',
+        'Close',
+        'red-snackbar'
+      );
     }
   }
 
   GetNewVoucherNo() {
     let BookId = this.BookAccountIDControl.value;
-    if (this.isEditMode == false && BookId != "") {
+    if (this.isEditMode == false && BookId != '') {
       let BookInit = this.booksDropDown.find(
         (a) => a.account_Id == BookId
       )?.bookInit;
@@ -412,10 +421,11 @@ export class VReceiptB2BAddEditComponent implements OnInit {
 
   GetPendingBills(AccountID: number, VoucherID: number) {
     this.pendingBills = [];
-    this.ReceivedBills.clear()
+    this.ReceivedBills.clear();
+    let VoucherDate = this.VoucherDateControl.value.format('YYYY-MM-DD');
     if (AccountID != 0) {
       this.voucherService
-        .GetPendingBills(AccountID, VoucherID)
+        .GetPendingBills(AccountID, VoucherID, VoucherDate)
         .subscribe((response: VReceiptB2BPendingBillsResponse[]) => {
           this.pendingBills = response;
           this.pendingBills.forEach((element) => {
@@ -507,8 +517,7 @@ export class VReceiptB2BAddEditComponent implements OnInit {
 
   get NarrationControlInvalid() {
     return (
-      this.NarrationControl.hasError('pattern') &&
-      this.NarrationControl.touched
+      this.NarrationControl.hasError('pattern') && this.NarrationControl.touched
     );
   }
 

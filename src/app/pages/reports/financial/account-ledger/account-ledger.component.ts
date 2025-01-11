@@ -21,7 +21,7 @@ import { debounceTime, map, startWith, Subject } from 'rxjs';
   styleUrls: ['./account-ledger.component.scss'],
 })
 export class AccountLedgerComponent implements OnInit {
-  PageTitle: string = 'Sales Register';
+  PageTitle: string = 'Account Ledger';
   columns: MtxGridColumn[] = [];
   accountsData: accountsDropDownResponse[] = [];
   filteraccountsData: accountsDropDownResponse[] = [];
