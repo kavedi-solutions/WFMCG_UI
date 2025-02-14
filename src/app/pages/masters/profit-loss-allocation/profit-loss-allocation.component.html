@@ -1,0 +1,30 @@
+<page-header
+  class="bg-blue-600"
+  [title]="PageTitle"
+  [addButtonToolTip]="buttonText"
+  [showBack]="false"
+  [showAdd]="accRights!.canAdd"
+  (onAddClick)="AddnewRecord()"
+></page-header>
+
+<mtx-grid
+  class="table-main-wrapper page-detail"
+  [data]="allocationListData"
+  [columns]="columns"
+  [columnResizable]="false"
+  [multiSelectable]="false"
+  [rowSelectable]="true"
+  [hideRowSelectionCheckbox]="true"
+  [rowHover]="true"
+  [rowStriped]="false"
+  [toolbarTitle]="'Group List'"
+  [columnHideable]="false"
+  [columnSortable]="true"
+  [columnPinnable]="true"
+  [expandable]="false"
+  [pageOnFront]="false"
+  [showPaginator]="false"
+  [showToolbar]="false"
+  [showColumnMenuButton]="false"
+>
+</mtx-grid>

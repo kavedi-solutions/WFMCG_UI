@@ -301,6 +301,28 @@ const routes: Routes = [
           },
         ],
       },
+      {
+        path:'plallocation',
+        children:[
+          {
+            path: 'list',
+            component: CommonPages.ProfitLossAllocationComponent,
+            resolve: { userRights: fromResolvers.GetUserAccessRightsResolver },
+            data: { MenuID: '113' },
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'add',
+            component: CommonPages.ProfitLossAllocationAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'edit/:autoid',
+            component: CommonPages.ProfitLossAllocationAddEditComponent,
+            canActivate: [AuthGuard],
+          },
+        ]
+      }
     ],
   },
   {

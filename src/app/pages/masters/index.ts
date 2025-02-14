@@ -18,6 +18,8 @@ import { HSNSACComponent } from './hsnsac/hsnsac.component';
 import { HSNSACAddEditComponent } from './hsnsac/hsnsacadd-edit/hsnsacadd-edit.component';
 import { GTMTItemMappingComponent } from './gtmtitem-mapping/gtmtitem-mapping.component';
 import { GTMTItemMappingAddEditComponent } from './gtmtitem-mapping/gtmtitem-mapping-add-edit/gtmtitem-mapping-add-edit.component';
+import { ProfitLossAllocationComponent } from './profit-loss-allocation/profit-loss-allocation.component';
+import { ProfitLossAllocationAddEditComponent } from './profit-loss-allocation/profit-loss-allocation-add-edit/profit-loss-allocation-add-edit.component';
 
 export const MasterPages: any[] = [
   AreaComponent,
@@ -39,7 +41,9 @@ export const MasterPages: any[] = [
   HSNSACComponent,
   HSNSACAddEditComponent,
   GTMTItemMappingComponent,
-  GTMTItemMappingAddEditComponent
+  GTMTItemMappingAddEditComponent,
+  ProfitLossAllocationComponent,
+  ProfitLossAllocationAddEditComponent,
 ];
 export * from './accounts/accounts-add-edit/accounts-add-edit.component';
 export * from './accounts/accounts.component';
@@ -61,4 +65,5 @@ export * from './hsnsac/hsnsac.component';
 export * from './hsnsac/hsnsacadd-edit/hsnsacadd-edit.component';
 export * from './gtmtitem-mapping/gtmtitem-mapping.component';
 export * from './gtmtitem-mapping/gtmtitem-mapping-add-edit/gtmtitem-mapping-add-edit.component';
-
+export * from './profit-loss-allocation/profit-loss-allocation.component';
+export * from './profit-loss-allocation/profit-loss-allocation-add-edit/profit-loss-allocation-add-edit.component';

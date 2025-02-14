@@ -4463,3 +4463,59 @@ export function GetTransferOtherDetailColumns() {
 
   return ColumnList;
 }
+
+
+export function GetPLAllocationColumns() {
+  let ColumnList: MtxGridColumn[] = [
+    {
+      header: 'AutoID',
+      field: 'autoID',
+      hide: true,
+    },
+    {
+      header: 'Change Date',
+      field: 'changeDate',
+      sortable: false,
+      disabled: true,
+      minWidth: 150,
+      width: '150px',
+      type: 'date',
+      typeParameter: { format: 'dd-MM-yyyy' },
+    },
+    {
+      header: 'Status',
+      field: 'isActive',
+      sortable: false,
+      disabled: true,
+      type: 'tag',
+      tag: {
+        true: { text: 'Active', color: 'green-100' },
+        false: { text: 'In Active', color: 'red-100' },
+      },
+      minWidth: 75,
+      width: '75px',
+    },
+    {
+      header: 'Created Date',
+      field: 'createdDate',
+      sortable: false,
+      disabled: true,
+      type: 'date',
+      typeParameter: { format: 'dd-MM-yyyy HH:mm:ss' },
+      minWidth: 150,
+      width: '150px',
+    },
+    {
+      header: 'Updated Date',
+      field: 'modifiedDate',
+      sortable: false,
+      disabled: true,
+      type: 'date',
+      typeParameter: { format: 'dd-MM-yyyy HH:mm:ss' },
+      minWidth: 150,
+      width: '150px',
+    },
+  ];
+
+  return ColumnList;
+}
