@@ -55,14 +55,14 @@ export class ItemAddEditComponent implements OnInit {
       '',
       [
         Validators.required,
-        Validators.pattern(/^([\s]*[a-zA-Z0-9()&-.,/]+[\s]*)+$/i),
+        Validators.pattern(/^([\s]*[a-zA-Z0-9()&-.,/%]+[\s]*)+$/i),
       ],
     ],
     DisplayItemName: [
       '',
       [
         Validators.required,
-        Validators.pattern(/^([\s]*[a-zA-Z0-9()&-.,/]+[\s]*)+$/i),
+        Validators.pattern(/^([\s]*[a-zA-Z0-9()&-.,/%]+[\s]*)+$/i),
       ],
     ],
     HSNCodeId: [''],
@@ -575,7 +575,7 @@ export class ItemAddEditComponent implements OnInit {
     this.itemPostRequest = {
       itemName: itemForm.value.ItemName,
       displayItemName: itemForm.value.DisplayItemName,
-      hsnCodeId: itemForm.value.HSNCodeId,
+      hsnCodeId: itemForm.value.HSNCodeId.autoID,
       itemType: itemForm.value.ItemType,
       itemGroupID: Number(itemForm.value.ItemGroupID),
       manufactureID: Number(itemForm.value.ManufactureID),
@@ -597,10 +597,11 @@ export class ItemAddEditComponent implements OnInit {
   }
 
   UpdateItem(itemForm: FormGroup) {
+    debugger;
     this.itemPutRequest = {
       itemName: itemForm.value.ItemName,
       displayItemName: itemForm.value.DisplayItemName,
-      hsnCodeId: itemForm.value.HSNCodeID,
+      hsnCodeId: itemForm.value.HSNCodeId.autoID,
       itemType: itemForm.value.ItemType,
       itemGroupID: Number(itemForm.value.ItemGroupID),
       manufactureID: Number(itemForm.value.ManufactureID),

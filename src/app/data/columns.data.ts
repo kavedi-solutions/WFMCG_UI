@@ -877,6 +877,69 @@ export function GetItemColumns() {
   return ColumnList;
 }
 
+export function GetItemTaxMappingColumns()
+{
+  let ColumnList: MtxGridColumn[] = [
+    {
+      header: 'Auto ID',
+      field: 'autoID',
+      hide: true,
+    },
+    {
+      header: 'GST Tax',
+      field: 'gstTax',
+      sortable: true,
+      disabled: true,
+      minWidth: 300,
+      width: '300px',
+    },
+    {
+      header: 'Applicable Date',
+      field: 'applicableDate',
+      sortable: false,
+      disabled: true,
+      minWidth: 150,
+      width: '150px',
+      type: 'date',
+      typeParameter: { format: 'dd-MM-yyyy' },
+    },
+    {
+      header: 'Purchase Rate',
+      field: 'purchaseRate',
+      sortable: false,
+      disabled: true,
+      minWidth: 100,
+      width: '100px',
+      type: 'number',
+      typeParameter: { digitsInfo: '0.2-2', locale: 'en-IN' },
+      class: 'right-mat-header-cell right-mat-cell',
+    },
+    {
+      header: 'Sales Rate',
+      field: 'salesRate',
+      sortable: false,
+      disabled: true,
+      minWidth: 100,
+      width: '100px',
+      type: 'number',
+      typeParameter: { digitsInfo: '0.2-2', locale: 'en-IN' },
+      class: 'right-mat-header-cell right-mat-cell',
+    },
+    {
+      header: 'Margin',
+      field: 'margin',
+      sortable: false,
+      disabled: true,
+      minWidth: 100,
+      width: '100px',
+      typeParameter: { digitsInfo: '0.2-2', locale: 'en-IN' },
+      class: 'right-mat-header-cell right-mat-cell',
+    },
+  ];
+
+  return ColumnList;
+}
+
 export function GetGTMTMappingItemColumns() {
   let ColumnList: MtxGridColumn[] = [
     {
