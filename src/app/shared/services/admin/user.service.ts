@@ -93,7 +93,7 @@ export class UserService {
     this.CompanyID = this.storage.get('companyID');
     this.UserID = this.storage.get('userID');
     if (UserID != '') {
-      const url = `${this.APIURL}/company/${this.CompanyID}/users/${UserName}/username-exists/${UserID}`;
+      const url = `${this.APIURL}/company/${this.CompanyID}/users/${encodeURIComponent(UserName)}/username-exists/${UserID}`;
       return this.http
         .get<any>(encodeURI(url), {
           headers: this.headers,
@@ -105,7 +105,7 @@ export class UserService {
           })
         );
     } else {
-      const url = `${this.APIURL}/company/${this.CompanyID}/users/${UserName}/username-exists`;
+      const url = `${this.APIURL}/company/${this.CompanyID}/users/${encodeURIComponent(UserName)}/username-exists`;
       return this.http
         .get<any>(encodeURI(url), {
           headers: this.headers,

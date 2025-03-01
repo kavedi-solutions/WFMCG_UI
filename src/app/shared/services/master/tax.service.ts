@@ -85,7 +85,7 @@ export class TaxService {
   CheckTaxNameExists(TaxID: number, TaxName: string) {
     this.CompanyID = this.storage.get('companyID');
     this.UserID = this.storage.get('userID');
-    const url = `${this.APIURL}/company/${this.CompanyID}/tax/${TaxID}/${TaxName}/taxname-exists`;
+    const url = `${this.APIURL}/company/${this.CompanyID}/tax/${TaxID}/${encodeURIComponent(TaxName)}/taxname-exists`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,

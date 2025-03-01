@@ -98,7 +98,7 @@ export class ItemService {
     this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${
       this.CompanyID
-    }/item/${ItemID}/${ItemName}/itemname-exists`;
+    }/item/${ItemID}/${encodeURIComponent(ItemName)}/itemname-exists`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,

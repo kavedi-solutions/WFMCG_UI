@@ -95,7 +95,7 @@ export class ItemgroupService {
     const url = `${this.APIURL}/company/${
       this.CompanyID
     }/itemgroup/${ItemGroupID}/${
-      ItemGroupName
+      encodeURIComponent(ItemGroupName)
     }/ItemGroupname-exists`;
     return this.http
       .get<any>(encodeURI(url), {

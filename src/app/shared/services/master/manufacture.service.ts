@@ -93,7 +93,7 @@ export class ManufactureService {
     this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${
       this.CompanyID
-    }/manufacture/${ManufactureID}/${ManufactureName}/manufacturename-exists`;
+    }/manufacture/${ManufactureID}/${encodeURIComponent(ManufactureName)}/manufacturename-exists`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,

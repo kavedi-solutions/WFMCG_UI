@@ -66,8 +66,8 @@ export class TaxAddEditComponent implements OnInit {
         Validators.pattern(/^([0-9,-/+])+$/i),
       ],
     ],
-    CessInputPostingAc: ['', [Validators.required]],
-    CessOutputPostingAc: ['', [Validators.required]],
+    CessInputPostingAc: [''],
+    CessOutputPostingAc: [''],
     TotalTaxRate: [0],
     isActive: [true],
   });
@@ -334,17 +334,23 @@ export class TaxAddEditComponent implements OnInit {
     this.taxPostRequest = {
       taxName: taxForm.value.TaxName.toString(),
       igstRate: taxForm.value.IGSTRate,
-      igstInputPostingAc: taxForm.value.IGSTInputPostingAc,
-      igstOutputPostingAc: taxForm.value.IGSTOutputPostingAc,
+      igstInputPostingAc: parseInt(taxForm.value.IGSTInputPostingAc),
+      igstOutputPostingAc: parseInt(taxForm.value.IGSTOutputPostingAc),
       cgstRate: taxForm.value.CGSTRate,
-      cgstInputPostingAc: taxForm.value.CGSTInputPostingAc,
-      cgstOutputPostingAc: taxForm.value.CGSTOutputPostingAc,
+      cgstInputPostingAc: parseInt(taxForm.value.CGSTInputPostingAc),
+      cgstOutputPostingAc: parseInt(taxForm.value.CGSTOutputPostingAc),
       sgstRate: taxForm.value.SGSTRate,
-      sgstInputPostingAc: taxForm.value.SGSTInputPostingAc,
-      sgstOutputPostingAc: taxForm.value.SGSTOutputPostingAc,
+      sgstInputPostingAc: parseInt(taxForm.value.SGSTInputPostingAc),
+      sgstOutputPostingAc: parseInt(taxForm.value.SGSTOutputPostingAc),
       cessRate: taxForm.value.CessRate,
-      cessInputPostingAc: taxForm.value.CessInputPostingAc,
-      cessOutputPostingAc: taxForm.value.CessOutputPostingAc,
+      cessInputPostingAc:
+        taxForm.value.CessInputPostingAc == ''
+          ? 0
+          : parseInt(taxForm.value.CessInputPostingAc),
+      cessOutputPostingAc:
+        taxForm.value.CessOutputPostingAc == ''
+          ? 0
+          : parseInt(taxForm.value.CessOutputPostingAc),
       totalTaxRate: taxForm.value.TotalTaxRate,
       isActive: taxForm.value.isActive,
     };

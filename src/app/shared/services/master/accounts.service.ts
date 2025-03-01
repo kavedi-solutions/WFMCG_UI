@@ -99,7 +99,7 @@ export class AccountsService {
     const url = `${this.APIURL}/company/${
       this.CompanyID
     }/accounts/${AccountsID}/${
-      AccountsName
+      encodeURIComponent(AccountsName)
     }/accountsname-exists`;
     return this.http
       .get<any>(encodeURI(url), {
@@ -118,7 +118,7 @@ export class AccountsService {
     this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${
       this.CompanyID
-    }/accounts/${AccountsID}/${BookInit}/bookinit-exists`;
+    }/accounts/${AccountsID}/${encodeURIComponent(BookInit)}/bookinit-exists`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,

@@ -114,7 +114,7 @@ export class RoleService {
   CheckRoleNameExists(RoleID: number, RoleName: string) {
     this.CompanyID = this.storage.get('companyID');
     this.UserID = this.storage.get('userID');
-    const url = `${this.APIURL}/company/${this.CompanyID}/role/${RoleID}/${RoleName}/rolename-exists`;
+    const url = `${this.APIURL}/company/${this.CompanyID}/role/${RoleID}/${encodeURIComponent(RoleName)}/rolename-exists`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,

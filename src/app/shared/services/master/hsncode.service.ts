@@ -92,7 +92,7 @@ export class HSNCodeService {
   CheckHSNCodeExists(HSNCodeID: number, HSNCode: string) {
     this.CompanyID = this.storage.get('companyID');
     this.UserID = this.storage.get('userID');
-    const url = `${this.APIURL}/company/${this.CompanyID}/itemhsn/${HSNCodeID}/${HSNCode}/hsncode-exists`;
+    const url = `${this.APIURL}/company/${this.CompanyID}/itemhsn/${HSNCodeID}/${encodeURIComponent(HSNCode)}/hsncode-exists`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,
