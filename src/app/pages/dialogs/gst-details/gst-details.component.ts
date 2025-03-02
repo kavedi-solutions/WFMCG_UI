@@ -12,7 +12,7 @@ import * as fromService from '../../../shared/index';
 export class GstDetailsComponent implements OnInit {
   DialogTitle: string = '';
   GSTDetails!: AccountGSTDetails;
-  RGSTDetails!: AccountGSTDetails;
+  //RGSTDetails!: AccountGSTDetails;
   Type: string = '';
   DataResponse!: GstDetails;
 
@@ -20,6 +20,7 @@ export class GstDetailsComponent implements OnInit {
     GSTNo: [
       '',
       [
+        Validators.required,
         Validators.pattern(
           /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/i
         ),
@@ -104,6 +105,12 @@ export class GstDetailsComponent implements OnInit {
 
   get GSTNoControlChanged() {
     return this.GSTNoControl.dirty;
+  }
+
+  get GSTNoControlRequired() {
+    return (
+      this.GSTNoControl.hasError('required') && this.GSTNoControl.touched
+    );
   }
 
   get GSTNoControlInvalid() {

@@ -14,23 +14,31 @@
             placeholder="GST No"
             maxlength="15"
           />
+          <mat-error *ngIf="GSTNoControlRequired"
+            >GST number is required.</mat-error
+          >
+          <mat-error *ngIf="GSTNoControlInvalid"
+            >GST number is Invalid.</mat-error
+          >
         </mat-form-field>
-        <mat-error *ngIf="GSTNoControlInvalid"
-          >GST number is Invalid.</mat-error
-        >
       </div>
       <div fxFlex="20%" fxFlex.lt-sm="100" class="matero-col p-t-4 text-center">
         <button
           type="button"
           mat-stroked-button
-          (click)="VerifyGSTNo()"          
+          (click)="VerifyGSTNo()"
+          [disabled]="!GSTNoControl.valid"
           color="accent"
         >
           Verify GST
         </button>
       </div>
     </div>
-    <div class="matero-row rowclass m-b-12" fxLayout.lt-sm="column" fxLayout="row">
+    <div
+      class="matero-row rowclass m-b-12"
+      fxLayout.lt-sm="column"
+      fxLayout="row"
+    >
       <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col columnclass">
         Status
       </div>
@@ -60,7 +68,7 @@
           [disabled]="!gstForm.valid"
         >
           {{ Type == "New" ? "Save" : "Update" }}
-        </button>        
+        </button>
         <button
           mat-raised-button
           mat-dialog-close="Cancel"

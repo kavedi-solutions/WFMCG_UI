@@ -619,13 +619,14 @@ export class PurchaseAddEditComponent implements OnInit {
         this.CurrentItem = response;
         this.GetCurrentStock(Number(this.CurrentItem?.itemID));
         if (FoundItem == -1) {
-          this.I_RateControl.setValue(
-            SetFormatCurrency(this.CurrentItem?.purchaseRate)
-          );
-          this.I_GSTTaxIDControl.setValue(
-            this.CurrentItem?.gstTaxID.toString()
-          );
-          this.GetCurrentTax(Number(this.CurrentItem?.gstTaxID), false);
+          // Item Effects
+          // this.I_RateControl.setValue(
+          //   SetFormatCurrency(this.CurrentItem?.purchaseRate)
+          // );
+          // this.I_GSTTaxIDControl.setValue(
+          //   this.CurrentItem?.gstTaxID.toString()
+          // );
+          // this.GetCurrentTax(Number(this.CurrentItem?.gstTaxID), false);
         } else {
           this.ItemEdit = this.purchaseItemDetailsList[FoundItem];
           let ItemDetail: PurchaseItemDetail =
@@ -775,9 +776,10 @@ export class PurchaseAddEditComponent implements OnInit {
     this.itemService.GetItembyID(record.ItemID).subscribe((response) => {
       this.CurrentItem = response;
       this.GetCurrentStock(Number(this.CurrentItem?.itemID));
-      this.I_RateControl.setValue(
-        SetFormatCurrency(this.CurrentItem?.purchaseRate)
-      );
+      // Item Effects
+      // this.I_RateControl.setValue(
+      //   SetFormatCurrency(this.CurrentItem?.purchaseRate)
+      // );
       this.GetCurrentTax(Number(record.GSTTaxID), false);
     });
   }

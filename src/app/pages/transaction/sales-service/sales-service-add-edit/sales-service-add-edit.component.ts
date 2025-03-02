@@ -497,7 +497,7 @@ export class SalesServiceAddEditComponent implements OnInit {
         : 'CGST/SGST Invoice';
     this.IsIGSTInvoice =
       this.AccountStateID != this.CompanyStateID ? true : false;
-  }  
+  }
 
   SelectedItem(event: any) {
     //check item exitst in item Detail
@@ -510,10 +510,11 @@ export class SalesServiceAddEditComponent implements OnInit {
       .subscribe((response) => {
         this.CurrentItem = response;
         if (FoundItem == -1) {
-          this.I_GSTTaxIDControl.setValue(
-            this.CurrentItem?.gstTaxID.toString()
-          );
-          this.GetCurrentTax(Number(this.CurrentItem?.gstTaxID), false);
+          // Item Effects
+          // this.I_GSTTaxIDControl.setValue(
+          //   this.CurrentItem?.gstTaxID.toString()
+          // );
+          // this.GetCurrentTax(Number(this.CurrentItem?.gstTaxID), false);
         } else {
           this.ItemEdit = this.salesItemDetailsList[FoundItem];
           let ItemDetail: SalesSItemDetail = this.salesItemDetailsList.filter(

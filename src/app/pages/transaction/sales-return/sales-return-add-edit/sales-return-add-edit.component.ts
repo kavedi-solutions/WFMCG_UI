@@ -603,13 +603,14 @@ export class SalesReturnAddEditComponent implements OnInit {
         this.GetInvoiceList(Number(this.CurrentItem?.itemID));
         //this.GetCurrentStock(Number(this.CurrentItem?.itemID));
         if (FoundItem == -1) {
-          this.I_RateControl.setValue(
-            SetFormatCurrency(this.CurrentItem?.salesRate)
-          );
-          this.I_GSTTaxIDControl.setValue(
-            this.CurrentItem?.gstTaxID.toString()
-          );
-          this.GetCurrentTax(Number(this.CurrentItem?.gstTaxID), false);
+          // Item Effects
+          // this.I_RateControl.setValue(
+          //   SetFormatCurrency(this.CurrentItem?.salesRate)
+          // );
+          // this.I_GSTTaxIDControl.setValue(
+          //   this.CurrentItem?.gstTaxID.toString()
+          // );
+          // this.GetCurrentTax(Number(this.CurrentItem?.gstTaxID), false);
         } else {
           this.ItemEdit = this.salesReturnItemDetailsList[FoundItem];
           let ItemDetail: SalesReturnItemDetail =
@@ -775,9 +776,10 @@ export class SalesReturnAddEditComponent implements OnInit {
       this.CurrentItem = response;
       this.GetInvoiceList(Number(this.CurrentItem?.itemID));
       this.GetCurrentStock(Number(this.CurrentItem?.itemID));
-      this.I_RateControl.setValue(
-        SetFormatCurrency(this.CurrentItem?.salesRate)
-      );
+      // Item Effects
+      // this.I_RateControl.setValue(
+      //   SetFormatCurrency(this.CurrentItem?.salesRate)
+      // );
       this.GetCurrentTax(Number(record.GSTTaxID), false);
     });
   }

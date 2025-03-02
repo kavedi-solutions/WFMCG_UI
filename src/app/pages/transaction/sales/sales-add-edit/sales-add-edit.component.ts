@@ -731,13 +731,14 @@ export class SalesAddEditComponent implements OnInit {
 
         if (FoundItem == -1) {
           this.GetCurrentStock(Number(this.CurrentItem?.itemID), 0);
-          this.I_RateControl.setValue(
-            SetFormatCurrency(this.CurrentItem?.salesRate)
-          );
-          this.I_GSTTaxIDControl.setValue(
-            this.CurrentItem?.gstTaxID.toString()
-          );
-          this.GetCurrentTax(Number(this.CurrentItem?.gstTaxID), false);
+          // Item Effects
+          // this.I_RateControl.setValue(
+          //   SetFormatCurrency(this.CurrentItem?.salesRate)
+          // );
+          // this.I_GSTTaxIDControl.setValue(
+          //   this.CurrentItem?.gstTaxID.toString()
+          // );
+          // this.GetCurrentTax(Number(this.CurrentItem?.gstTaxID), false);
         } else {
           this.ItemEdit = this.salesItemDetailsList[FoundItem];
           let ItemDetail: SalesItemDetail = this.salesItemDetailsList.filter(
@@ -902,9 +903,10 @@ export class SalesAddEditComponent implements OnInit {
     this.itemService.GetItembyID(record.ItemID).subscribe((response) => {
       this.CurrentItem = response;
       this.GetCurrentStock(Number(this.CurrentItem?.itemID), record.TQty);
-      this.I_RateControl.setValue(
-        SetFormatCurrency(this.CurrentItem?.salesRate)
-      );
+      // Item Effects
+      // this.I_RateControl.setValue(
+      //   SetFormatCurrency(this.CurrentItem?.salesRate)
+      // );
       this.GetCurrentTax(Number(record.GSTTaxID), false);
     });
   }
@@ -1272,7 +1274,6 @@ export class SalesAddEditComponent implements OnInit {
       NetAmount = 0;
 
     Rate = CheckIsNumber(this.I_RateControl.value);
-    debugger;
     RatePerPcs = RoundOffAmount(Rate / Number(this.CurrentItem?.packing), 2);
     Qty =
       Number(this.I_CrtControl.value) * Number(this.CurrentItem?.packing) +

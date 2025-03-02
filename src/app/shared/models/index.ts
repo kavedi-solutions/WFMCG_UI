@@ -58,6 +58,7 @@ export * from './master/itemgroup/itemgroupResponse.model';
 
 export * from './master/item/itemDropDownFilter.model';
 export * from './master/item/itemDropDown.model';
+export * from './master/item/itemGSTDetails.model';
 export * from './master/item/itemPostRequest.model';
 export * from './master/item/itemPutRequest.model';
 export * from './master/item/itemResponse.model';

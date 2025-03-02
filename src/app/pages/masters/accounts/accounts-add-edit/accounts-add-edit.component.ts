@@ -210,6 +210,7 @@ export class AccountsAddEditComponent implements OnInit {
       maxHeight: '60vh',
       panelClass: 'dialog-container',
       autoFocus: true,
+      hasBackdrop: true,
       data: { objGSTDetails: obj, objType: Type },
     });
 

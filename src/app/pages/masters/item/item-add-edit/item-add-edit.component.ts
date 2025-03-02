@@ -14,6 +14,7 @@ import * as fromService from '../../../../shared/index';
 import {
   Item,
   ItemPostRequest,
+  ItemGSTPostRequest,
   ItemPutRequest,
   ItemGroupDownDownResponse,
   ManufactureDownDownResponse,
@@ -22,7 +23,13 @@ import {
   TaxDownDownResponse,
   Tax,
   HSNCodeDropDownResponse,
+  ItemGSTDetails,
+  ItemGSTPutRequest,
 } from '../../../../shared/index';
+import { MtxGridColumn } from 'src/app/extensions/grid/grid.interface';
+import * as defaultData from '../../../../data/index';
+import { MatDialog } from '@angular/material/dialog';
+import { ItemTaxMappingComponent } from 'src/app/pages/dialogs';
 
 @Component({
   selector: 'app-item-add-edit',
@@ -40,16 +47,20 @@ export class ItemAddEditComponent implements OnInit {
   manufactureDropDown: ManufactureDownDownResponse[] = [];
   unitDropDown: DD_UnitResponse[] = [];
   accountTradeTypeDropDown: accountTradeTypeResponse[] = [];
-  taxDropDown: TaxDownDownResponse[] = [];
   hsncodeDropDown: HSNCodeDropDownResponse[] = [];
   filteredhsncodeDropDown?: Observable<HSNCodeDropDownResponse[]>;
   editItem?: Item;
   isItemNameValid: boolean = false;
   ItemName: string = '';
   ItemNameExists: Subject<any> = new Subject();
-  TaxDetails?: Tax;
   isFromQuickMenu: boolean = false;
   IsInventoryDisable: boolean = false;
+
+  columns: MtxGridColumn[] = [];
+  itemGSTDetailsList: ItemGSTDetails[] = [];
+  itemGSTDetailsListData: ItemGSTDetails[] = [];
+  dialogRef: any;
+
   itemForm = this.fb.group({
     ItemName: [
       '',
@@ -66,13 +77,6 @@ export class ItemAddEditComponent implements OnInit {
       ],
     ],
     HSNCodeId: [''],
-    // ,
-    //   [
-    //     Validators.required,
-    //     Validators.minLength(6),
-    //     Validators.maxLength(8),
-    //     Validators.pattern(/^([0-9])+$/i),
-    //   ],
     ItemType: ['1', [Validators.required]],
     ItemGroupID: ['', [Validators.required]],
     ManufactureID: ['', [Validators.required]],
@@ -94,35 +98,8 @@ export class ItemAddEditComponent implements OnInit {
     ],
     MainUnit: ['', [Validators.required]],
     SubUnit: ['', [Validators.required]],
-    GSTTaxID: ['', [Validators.required]],
     AccountTradeTypeID: ['', [Validators.required]],
     MRP: [
-      '',
-      [
-        Validators.required,
-        Validators.min(0.01),
-        Validators.pattern(/^([0-9.,])+$/i),
-      ],
-    ],
-    PurchaseRate: [
-      '',
-      [
-        Validators.required,
-        Validators.min(0.01),
-        Validators.pattern(/^([0-9.,])+$/i),
-      ],
-    ],
-    PurchaseRateWT: [''],
-    SalesRate: [
-      '',
-      [
-        Validators.required,
-        Validators.min(0.01),
-        Validators.pattern(/^([0-9.,])+$/i),
-      ],
-    ],
-    SalesRateWT: [''],
-    Margin: [
       '',
       [
         Validators.required,
@@ -142,7 +119,8 @@ export class ItemAddEditComponent implements OnInit {
     private commonService: fromService.CommonService,
     private taxService: fromService.TaxService,
     private hsnCodeService: fromService.HSNCodeService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private dialog: MatDialog
   ) {
     this.isEditMode = false;
     this.selectedItemId = 0;
@@ -150,13 +128,12 @@ export class ItemAddEditComponent implements OnInit {
     this.manufactureDropDown = [];
     this.unitDropDown = [];
     this.accountTradeTypeDropDown = [];
-    this.taxDropDown = [];
     this.FillChildItemGroup();
     this.FillManufacture();
     this.FillUnitsDropDown();
-    this.FillTaxDropDown();
     this.FillHSNCodeDropDown('A');
     this.FillAccountTradeTypeDropDown('2');
+    this.setColumns();
   }
 
   ngOnInit(): void {
@@ -205,6 +182,80 @@ export class ItemAddEditComponent implements OnInit {
 
   DisplayHSNCode(items: HSNCodeDropDownResponse) {
     return items && items.hsN_SAC_Code ? items.hsN_SAC_Code : '';
+  }
+
+  setColumns() {
+    this.columns = defaultData.GetItemTaxMappingColumns();
+    this.columns.push({
+      header: 'Action',
+      field: 'action',
+      minWidth: 50,
+      width: '90px',
+      pinned: 'right',
+      type: 'button',
+      buttons: [
+        {
+          type: 'icon',
+          icon: 'edit',
+          tooltip: 'Edit Record',
+          buttontype: 'button',
+          iif: (record) => {
+            if (record.status != 'CNL') return true;
+            else return false;
+          },
+          click: (record) => this.EditGSTDetails(record),
+        },
+      ],
+    });
+  }
+
+  AddGSTDetails() {
+    let obj: ItemGSTDetails = {
+      autoID: 0,
+      applicableDate: '',
+      gstTaxID: 0,
+      taxName: '',
+      totalTaxRate: 0,
+      purchaseRate: 0,
+      purchaseRateWT: 0,
+      salesRate: 0,
+      salesRateWT: 0,
+      margin: 0,
+      isAdd: true,
+      isModified: false,
+    };
+    this.OpenGSTDialog(obj, 'New');
+  }
+
+  EditGSTDetails(event: ItemGSTDetails) {
+    this.OpenGSTDialog(event, 'Update');
+  }
+
+  OpenGSTDialog(obj: ItemGSTDetails, Type: string) {
+    this.dialogRef = this.dialog.open(ItemTaxMappingComponent, {
+      minWidth: '60vw',
+      minHeight: '60vh',
+      maxWidth: '60vw',
+      maxHeight: '60vh',
+      panelClass: 'dialog-container',
+      autoFocus: true,
+      hasBackdrop: true,
+      disableClose: true,
+      data: { objGSTDetails: obj, objType: Type },
+    });
+    this.dialogRef.afterClosed().subscribe((result: any) => {
+      if (result.CloseStatus == true) {
+        if (result.RGSTDetails.isAdd == true) {
+          this.itemGSTDetailsList.push(result.RGSTDetails);
+        } else if (result.RGSTDetails.isModified == true) {
+          let index = this.itemGSTDetailsList.findIndex(
+            (a) => a.autoID == result.RGSTDetails.autoID
+          );
+          this.itemGSTDetailsList[index] = result.RGSTDetails;
+        }
+        this.itemGSTDetailsListData = [...this.itemGSTDetailsList];
+      }
+    });
   }
 
   //Controls
@@ -256,24 +307,6 @@ export class ItemAddEditComponent implements OnInit {
   get HSNCodeIdControl() {
     return this.itemForm.get('HSNCodeId') as FormControl;
   }
-
-  // get HSNCodeControlRequired() {
-  //   return (
-  //     this.HSNCodeControl.hasError('required') && this.HSNCodeControl.touched
-  //   );
-  // }
-
-  // get HSNCodeControlMin() {
-  //   return (
-  //     this.HSNCodeControl.hasError('minlength') && this.HSNCodeControl.touched
-  //   );
-  // }
-
-  // get HSNCodeControlMax() {
-  //   return (
-  //     this.HSNCodeControl.hasError('maxlength') && this.HSNCodeControl.touched
-  //   );
-  // }
 
   get ItemGroupIDControl() {
     return this.itemForm.get('ItemGroupID') as FormControl;
@@ -355,16 +388,6 @@ export class ItemAddEditComponent implements OnInit {
     );
   }
 
-  get GSTTaxIDControl() {
-    return this.itemForm.get('GSTTaxID') as FormControl;
-  }
-
-  get GSTTaxIDControlRequired() {
-    return (
-      this.GSTTaxIDControl.hasError('required') && this.GSTTaxIDControl.touched
-    );
-  }
-
   get AccountTradeTypeIDControl() {
     return this.itemForm.get('AccountTradeTypeID') as FormControl;
   }
@@ -390,80 +413,6 @@ export class ItemAddEditComponent implements OnInit {
 
   get MRPControlMin() {
     return this.MRPControl.hasError('min') && this.MRPControl.touched;
-  }
-
-  get PurchaseRateControl() {
-    return this.itemForm.get('PurchaseRate') as FormControl;
-  }
-
-  get PurchaseRateControlRequired() {
-    return (
-      this.PurchaseRateControl.hasError('required') &&
-      this.PurchaseRateControl.touched
-    );
-  }
-
-  get PurchaseRateControlInvalid() {
-    return (
-      this.PurchaseRateControl.hasError('pattern') &&
-      this.PurchaseRateControl.touched
-    );
-  }
-
-  get PurchaseRateControlMin() {
-    return (
-      this.PurchaseRateControl.hasError('min') &&
-      this.PurchaseRateControl.touched
-    );
-  }
-
-  get PurchaseRateWTControl() {
-    return this.itemForm.get('PurchaseRateWT') as FormControl;
-  }
-
-  get SalesRateControl() {
-    return this.itemForm.get('SalesRate') as FormControl;
-  }
-
-  get SalesRateControlRequired() {
-    return (
-      this.SalesRateControl.hasError('required') &&
-      this.SalesRateControl.touched
-    );
-  }
-
-  get SalesRateControlInvalid() {
-    return (
-      this.SalesRateControl.hasError('pattern') && this.SalesRateControl.touched
-    );
-  }
-
-  get SalesRateControlMin() {
-    return (
-      this.SalesRateControl.hasError('min') && this.SalesRateControl.touched
-    );
-  }
-
-  get SalesRateWTControl() {
-    return this.itemForm.get('SalesRateWT') as FormControl;
-  }
-
-  get MarginControl() {
-    return this.itemForm.get('Margin') as FormControl;
-  }
-
-  get MarginControlRequired() {
-    return (
-      this.MarginControl.hasError('required') && this.MarginControl.touched
-    );
-  }
-
-  get MarginControlInvalid() {
-    return this.MarginControl.hasError('pattern') && this.MarginControl.touched;
-  }
-
-  get MarginControlMin() {
-    return this.MarginControl.hasError('min') && this.MarginControl.touched;
   }
 
   //Controls
@@ -512,17 +461,32 @@ export class ItemAddEditComponent implements OnInit {
         Weight: this.editItem!.weight.toString(),
         MainUnit: this.editItem!.mainUnit.toString(),
         SubUnit: this.editItem!.subUnit.toString(),
-        GSTTaxID: this.editItem!.gstTaxID.toString(),
         AccountTradeTypeID: this.editItem!.accountTradeTypeID.toString(),
         MRP: this.editItem!.mrp.toString(),
-        PurchaseRate: this.editItem!.purchaseRate.toString(),
-        SalesRate: this.editItem!.salesRate.toString(),
-        Margin: this.editItem!.margin.toString(),
         isActive: this.editItem!.isActive,
       });
       this.HSNCodeIdControl.setValue(SeletedHSN);
-      this.GSTTaxIDSelectionChange(this.editItem!.gstTaxID.toString());
       this.ItemTypeSelectionChange(this.editItem!.itemType.toString());
+
+      this.editItem?.gstDetails?.forEach((element) => {
+        let GSTDetails: ItemGSTDetails = {
+          autoID: element.autoID,
+          applicableDate: element.applicableDate,
+          gstTaxID: element.gstTaxID,
+          taxName: element.taxName,
+          totalTaxRate: element.totalTaxRate,
+          purchaseRate: element.purchaseRate,
+          purchaseRateWT: element.purchaseRateWT,
+          salesRate: element.salesRate,
+          salesRateWT: element.salesRateWT,
+          margin: element.margin,
+          isAdd: false,
+          isModified: false,
+        };
+        this.itemGSTDetailsList.push(GSTDetails);
+      });
+
+      this.itemGSTDetailsListData = [...this.itemGSTDetailsList];
     });
   }
 
@@ -545,14 +509,8 @@ export class ItemAddEditComponent implements OnInit {
       Weight: '',
       MainUnit: '',
       SubUnit: '',
-      GSTTaxID: '',
       AccountTradeTypeID: '',
       MRP: '',
-      PurchaseRate: '',
-      PurchaseRateWT: '',
-      SalesRate: '',
-      SalesRateWT: '',
-      Margin: '',
       isActive: true,
     });
     let control: AbstractControl;
@@ -561,6 +519,8 @@ export class ItemAddEditComponent implements OnInit {
       control = form.controls[name];
       control.setErrors(null);
     });
+
+    this.itemGSTDetailsListData = [...this.itemGSTDetailsList];
   }
 
   SaveUpdateItem(itemForm: FormGroup) {
@@ -572,6 +532,21 @@ export class ItemAddEditComponent implements OnInit {
   }
 
   SaveItem(itemForm: FormGroup) {
+    let PostRequestDetail: ItemGSTPostRequest[] = [];
+    if (this.itemGSTDetailsList.length > 0) {
+      this.itemGSTDetailsList.forEach((element) => {
+        PostRequestDetail.push({
+          applicableDate: element.applicableDate,
+          gstTaxID: element.gstTaxID,
+          purchaseRate: element.purchaseRate,
+          salesRate: element.salesRate,
+          margin: element.margin,
+          isAdd: element.isAdd,
+          isModified: element.isModified,
+        });
+      });
+    }
+
     this.itemPostRequest = {
       itemName: itemForm.value.ItemName,
       displayItemName: itemForm.value.DisplayItemName,
@@ -583,13 +558,10 @@ export class ItemAddEditComponent implements OnInit {
       weight: Number(itemForm.value.Weight.replace(/,/g, '')),
       mainUnit: Number(itemForm.value.MainUnit),
       subUnit: Number(itemForm.value.SubUnit),
-      gSTTaxID: Number(itemForm.value.GSTTaxID),
       accountTradeTypeID: Number(itemForm.value.AccountTradeTypeID),
       mRP: Number(itemForm.value.MRP.replace(/,/g, '')),
-      purchaseRate: Number(itemForm.value.PurchaseRate.replace(/,/g, '')),
-      salesRate: Number(itemForm.value.SalesRate.replace(/,/g, '')),
-      margin: Number(itemForm.value.Margin.replace(/,/g, '')),
       isActive: itemForm.value.isActive,
+      gstDetails: PostRequestDetail,
     };
     this.itemService.createItem(this.itemPostRequest).subscribe((response) => {
       this.BacktoList();
@@ -597,7 +569,22 @@ export class ItemAddEditComponent implements OnInit {
   }
 
   UpdateItem(itemForm: FormGroup) {
-    debugger;
+    let PutRequestDetail: ItemGSTPutRequest[] = [];
+    if (this.itemGSTDetailsList.length > 0) {
+      this.itemGSTDetailsList.forEach((element) => {
+        PutRequestDetail.push({
+          autoID: element.autoID,
+          applicableDate: element.applicableDate,
+          gstTaxID: element.gstTaxID,
+          purchaseRate: element.purchaseRate,
+          salesRate: element.salesRate,
+          margin: element.margin,
+          isAdd: element.isAdd,
+          isModified: element.isModified,
+        });
+      });
+    }
+
     this.itemPutRequest = {
       itemName: itemForm.value.ItemName,
       displayItemName: itemForm.value.DisplayItemName,
@@ -609,13 +596,10 @@ export class ItemAddEditComponent implements OnInit {
       weight: Number(itemForm.value.Weight.replace(/,/g, '')),
       mainUnit: Number(itemForm.value.MainUnit),
       subUnit: Number(itemForm.value.SubUnit),
-      gSTTaxID: Number(itemForm.value.GSTTaxID),
       accountTradeTypeID: Number(itemForm.value.AccountTradeTypeID),
       mRP: Number(itemForm.value.MRP.replace(/,/g, '')),
-      purchaseRate: Number(itemForm.value.PurchaseRate.replace(/,/g, '')),
-      salesRate: Number(itemForm.value.SalesRate.replace(/,/g, '')),
-      margin: Number(itemForm.value.Margin.replace(/,/g, '')),
       isActive: itemForm.value.isActive,
+      gstDetails: PutRequestDetail,
     };
     this.itemService
       .updateItem(this.selectedItemId, this.itemPutRequest!)
@@ -660,24 +644,6 @@ export class ItemAddEditComponent implements OnInit {
       });
   }
 
-  FillTaxDropDown() {
-    this.taxService.TaxDropDown().subscribe((response) => {
-      this.taxDropDown = response;
-    });
-  }
-
-  // ChangeServiceItem(event: any) {
-  //   if (event.checked == true) {
-  //     this.IsInventoryDisable = true;
-  //     this.IsInventoryControl.setValue(false);
-  //     this.FillAccountTradeTypeDropDown('1');
-  //   } else {
-  //     this.IsInventoryDisable = false;
-  //     this.IsInventoryControl.setValue(true);
-  //     this.FillAccountTradeTypeDropDown('2');
-  //   }
-  // }
-
   onBlurWeight() {
     let Value = this.WeightControl.value;
     this.WeightControl.setValue(formatNumber(Value, 'en-IN', '0.3-3'));
@@ -698,55 +664,11 @@ export class ItemAddEditComponent implements OnInit {
     this.MRPControl.setValue(Value > 0 ? Value : '');
   }
 
-  onBlurPurchaseRate() {
-    let Value = this.PurchaseRateControl.value;
-    this.PurchaseRateControl.setValue(formatNumber(Value, 'en-IN', '0.2-2'));
-  }
-
-  onFocusPurchaseRate() {
-    let Value = Number(this.PurchaseRateControl.value.replace(/,/g, ''));
-    this.PurchaseRateControl.setValue(Value > 0 ? Value : '');
-  }
-
-  onBlurSalesRate() {
-    let Value = this.SalesRateControl.value;
-    this.SalesRateControl.setValue(formatNumber(Value, 'en-IN', '0.2-2'));
-  }
-
-  onFocusSalesRate() {
-    let Value = Number(this.SalesRateControl.value.replace(/,/g, ''));
-    this.SalesRateControl.setValue(Value > 0 ? Value : '');
-  }
-
-  GSTTaxIDSelectionChange(event: any) {
-    this.taxService.GetTaxbyID(Number(event)).subscribe((response) => {
-      this.TaxDetails = response;
-      this.CalculateRates();
-    });
-  }
-
   ItemTypeSelectionChange(event: any) {
     if (event == '1') {
       this.FillAccountTradeTypeDropDown('2');
     } else {
       this.FillAccountTradeTypeDropDown('1');
     }
-  }
-
-  CalculateRates() {
-    let PurchaseRate = Number(this.PurchaseRateControl.value.replace(/,/g, ''));
-    let SalesRate = Number(this.SalesRateControl.value.replace(/,/g, ''));
-    let TotalTaxRate = this.TaxDetails!.totalTaxRate;
-    let PurchaseRateWT = PurchaseRate + PurchaseRate * (TotalTaxRate / 100);
-    let SalesRateWT = SalesRate + SalesRate * (TotalTaxRate / 100);
-    this.PurchaseRateWTControl.setValue(
-      formatNumber(PurchaseRateWT, 'en-IN', '0.2-2')
-    );
-    this.SalesRateWTControl.setValue(
-      formatNumber(SalesRateWT, 'en-IN', '0.2-2')
-    );
-    let Profit = SalesRate - PurchaseRate;
-    let margin = (Profit / PurchaseRate) * 100;
-    this.MarginControl.setValue(formatNumber(margin, 'en-IN', '0.2-2'));
   }
 }

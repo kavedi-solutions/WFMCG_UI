@@ -3,9 +3,18 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+
+
 import * as Layouts from './layouts';
 import * as AuthPages from './auth-pages';
 import * as Pages from './pages';
+import * as fromService from './shared/services/index';
+import * as fromResolvers from './shared/resolver/index';
+import * as fromThemes from './theme/index';
+import * as fromDirective from './shared/directives/index';
+import * as SharedComponent from './shared/index';
+
+
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
 import { MatMenuModule } from '@angular/material/menu';
@@ -61,16 +70,15 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { NotificationInterceptor, SpinnerInterceptor } from './shared';
 import { AppConfig } from './app.config';
-import * as fromService from './shared/services/index';
-import * as fromResolvers from './shared/resolver/index';
-import * as fromThemes from './theme/index';
-import * as fromDirective from './shared/directives/index';
-import * as SharedComponent from './shared/index';
-import { CommonModule } from '@angular/common';
+
+import { CommonModule, DatePipe } from '@angular/common';
 import { JwtHelperService, JwtModule } from '@auth0/angular-jwt';
 import { registerLocaleData } from '@angular/common';
-import localeIn from '@angular/common/locales/en-IN';
+
 import { ExtensionsModule } from './extensions/extensions.module';
+
+
+import localeIn from '@angular/common/locales/en-IN';
 
 registerLocaleData(localeIn);
 
@@ -146,6 +154,7 @@ export function tokenGetter() {
     ...fromService.services,
     ...fromResolvers.resolvers,
     JwtHelperService,
+    DatePipe,
     AppConfig,
     {
       provide: HTTP_INTERCEPTORS,
@@ -196,6 +205,7 @@ export function tokenGetter() {
     Pages.CanceleInvoiceComponent,
     Pages.CommonDialogComponent,
     Pages.SPReportSelectionsComponent,
+    Pages.ItemTaxMappingComponent
   ],
   bootstrap: [AppComponent],
 })

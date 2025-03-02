@@ -9,14 +9,21 @@ export interface ItemPutRequest {
   weight: number;
   mainUnit: number;
   subUnit: number;
-  gSTTaxID: number;
   accountTradeTypeID: number;
   mRP: number;
+  isActive: boolean;
+  modifiedBy?: string;
+  gstDetails?: ItemGSTPutRequest[];
+}
+export interface ItemGSTPutRequest {
+  autoID: number;
+  applicableDate: string;
+  gstTaxID: number;
   purchaseRate: number;
   salesRate: number;
   margin: number;
-  isActive: boolean;
-  modifiedBy?: string;
+  isAdd: boolean;
+  isModified: boolean;
 }
 
 export interface OpeningItemPutRequest {

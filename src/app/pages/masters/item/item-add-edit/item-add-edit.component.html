@@ -67,7 +67,7 @@
       </div>
     </div>
     <div class="matero-row m-t-16" fxLayout.lt-sm="column" fxLayout="row">
-      <div fxFlex="20%" fxFlex.lt-sm="100" class="matero-col">
+      <div fxFlex="30%" fxFlex.lt-sm="100" class="matero-col">
         <mat-form-field appearance="legacy" color="primary">
           <mat-label>Select HSN/SAC Code</mat-label>
           <input
@@ -88,28 +88,6 @@
             </mat-option>
           </mat-autocomplete>
         </mat-form-field>
-        <!-- <mat-form-field appearance="legacy" color="primary">
-          <mat-label>HSN Code/SAC Code</mat-label>
-          <input
-            matInput
-            formControlName="HSNCode"
-            type="text"
-            placeholder="HSN Code/SAC Code"
-            maxlength="11"
-            required
-          />
-          <mat-error *ngIf="HSNCodeControlRequired"
-            >HSN Code/SAC Code is required.</mat-error
-          >
-          <mat-error *ngIf="HSNCodeControlMin"
-            >HSN Code/SAC Code must be a minimum length of 4
-            Characters.</mat-error
-          >
-          <mat-error *ngIf="HSNCodeControlMax"
-            >HSN Code/SAC Code must be maximum length of 8
-            Characters.</mat-error
-          >
-        </mat-form-field> -->
       </div>
       <div fxFlex="35%" fxFlex.lt-sm="100" class="matero-col">
         <mat-form-field appearance="legacy" color="primary">
@@ -137,7 +115,10 @@
           </mat-select>
         </mat-form-field>
       </div>
-      <div fxFlex="10%" fxFlex.lt-sm="100" class="matero-col">
+
+    </div>
+    <div class="matero-row m-t-16" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
         <mat-form-field appearance="legacy" color="primary">
           <mat-label>Trade Type</mat-label>
           <mat-select formControlName="AccountTradeTypeID" required>
@@ -153,8 +134,27 @@
           >
         </mat-form-field>
       </div>
-    </div>
-    <div class="matero-row m-t-16" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>MRP</mat-label>
+          <input
+            matInput
+            class="input-right-align"
+            formControlName="MRP"
+            type="text"
+            placeholder="MRP"
+            maxlength="9"
+            (blur)="onBlurMRP()"
+            (focus)="onFocusMRP()"
+            required
+          />
+          <mat-error *ngIf="MRPControlRequired">MRP is required.</mat-error>
+          <mat-error *ngIf="MRPControlInvalid">MRP is Invalid.</mat-error>
+          <mat-error *ngIf="MRPControlMin"
+            >Minimum value of MRP is 0.01</mat-error
+          >
+        </mat-form-field>
+      </div>
       <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
         <mat-form-field appearance="legacy" color="primary">
           <mat-label>Packing</mat-label>
@@ -201,7 +201,7 @@
           >
         </mat-form-field>
       </div>
-      <div fxFlex="20%" fxFlex.lt-sm="100" class="matero-col">
+      <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
         <mat-form-field appearance="legacy" color="primary">
           <mat-label>Main Unit</mat-label>
           <mat-select formControlName="MainUnit" required>
@@ -214,7 +214,7 @@
           >
         </mat-form-field>
       </div>
-      <div fxFlex="20%" fxFlex.lt-sm="100" class="matero-col">
+      <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col">
         <mat-form-field appearance="legacy" color="primary">
           <mat-label>Sub Unit</mat-label>
           <mat-select formControlName="SubUnit" required>
@@ -227,145 +227,31 @@
           >
         </mat-form-field>
       </div>
-      <div fxFlex="30%" fxFlex.lt-sm="100" class="matero-col">
-        <mat-form-field appearance="legacy" color="primary">
-          <mat-label>GST Tax</mat-label>
-          <mat-select
-            formControlName="GSTTaxID"
-            required
-            (valueChange)="GSTTaxIDSelectionChange($event)"
-          >
-            <mat-option *ngFor="let tdd of taxDropDown" [value]="tdd.tax_Id">
-              {{ tdd.tax_Name }}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="GSTTaxIDControlRequired"
-            >GST Tax is required.</mat-error
-          >
-        </mat-form-field>
+    </div>
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="80%" fxFlex.lt-sm="100" class="matero-col"></div>
+      <div fxFlex="20%" fxFlex.lt-sm="100" class="matero-col p-b-8 text-right">
+        <button
+          type="button"
+          mat-raised-button
+          color="primary"
+          (click)="AddGSTDetails()"
+        >
+          Add New GST Tax
+        </button>
       </div>
     </div>
-    <div class="matero-row m-t-16" fxLayout.lt-sm="column" fxLayout="row">
-      <div fxFlex="16.67%" fxFlex.lt-sm="100" class="matero-col">
-        <mat-form-field appearance="legacy" color="primary">
-          <mat-label>MRP</mat-label>
-          <input
-            matInput
-            class="input-right-align"
-            formControlName="MRP"
-            type="text"
-            placeholder="MRP"
-            maxlength="9"
-            (blur)="onBlurMRP()"
-            (focus)="onFocusMRP()"
-            required
-          />
-          <mat-error *ngIf="MRPControlRequired">MRP is required.</mat-error>
-          <mat-error *ngIf="MRPControlInvalid">MRP is Invalid.</mat-error>
-          <mat-error *ngIf="MRPControlMin"
-            >Minimum value of MRP is 0.01</mat-error
-          >
-        </mat-form-field>
-      </div>
-      <div fxFlex="16.67%" fxFlex.lt-sm="100" class="matero-col">
-        <mat-form-field appearance="legacy" color="primary">
-          <mat-label>Purchase Rate</mat-label>
-          <input
-            matInput
-            class="input-right-align"
-            formControlName="PurchaseRate"
-            type="text"
-            placeholder="PurchaseRate"
-            maxlength="9"
-            (blur)="onBlurPurchaseRate()"
-            (focus)="onFocusPurchaseRate()"
-            (change)="CalculateRates()"
-            required
-          />
-          <mat-error *ngIf="PurchaseRateControlRequired"
-            >Purchase Rate is required.</mat-error
-          >
-          <mat-error *ngIf="PurchaseRateControlInvalid"
-            >Purchase Rate is Invalid.</mat-error
-          >
-          <mat-error *ngIf="PurchaseRateControlMin"
-            >Minimum value of Purchase Rate is 0.01</mat-error
-          >
-        </mat-form-field>
-      </div>
-      <div fxFlex="16.67%" fxFlex.lt-sm="100" class="matero-col">
-        <mat-form-field appearance="legacy" color="primary">
-          <mat-label>Purchase Rate With Tax</mat-label>
-          <input
-            matInput
-            class="input-right-align"
-            formControlName="PurchaseRateWT"
-            type="text"
-            placeholder="PurchaseRateWT"
-            maxlength="9"
-            readonly
-          />
-        </mat-form-field>
-      </div>
-      <div fxFlex="16.67%" fxFlex.lt-sm="100" class="matero-col">
-        <mat-form-field appearance="legacy" color="primary">
-          <mat-label>Sales Rate</mat-label>
-          <input
-            matInput
-            class="input-right-align"
-            formControlName="SalesRate"
-            type="text"
-            placeholder="SalesRate"
-            maxlength="9"
-            required
-            (blur)="onBlurSalesRate()"
-            (focus)="onFocusSalesRate()"
-            (change)="CalculateRates()"
-          />
-          <mat-error *ngIf="SalesRateControlRequired"
-            >Sales Rate is required.</mat-error
-          >
-          <mat-error *ngIf="SalesRateControlInvalid"
-            >Sales Rate is Invalid.</mat-error
-          >
-          <mat-error *ngIf="SalesRateControlMin"
-            >Minimum value of Sales Rate Rate is 0.01</mat-error
-          >
-        </mat-form-field>
-      </div>
-      <div fxFlex="16.67%" fxFlex.lt-sm="100" class="matero-col">
-        <mat-form-field appearance="legacy" color="primary">
-          <mat-label>Sales Rate With Tax</mat-label>
-          <input
-            matInput
-            class="input-right-align"
-            formControlName="SalesRateWT"
-            type="text"
-            placeholder="SalesRateWT"
-            maxlength="9"
-            readonly
-          />
-        </mat-form-field>
-      </div>
-      <div fxFlex="16.65%" fxFlex.lt-sm="100" class="matero-col">
-        <mat-form-field appearance="legacy" color="primary">
-          <mat-label>Margin</mat-label>
-          <input
-            matInput
-            class="input-right-align"
-            formControlName="Margin"
-            type="text"
-            placeholder="Margin"
-            maxlength="9"
-            required
-            readonly
-          />
-          <mat-error *ngIf="MarginControlRequired"
-            >Margin is required.</mat-error
-          >
-          <mat-error *ngIf="MarginControlInvalid">Margin is Invalid.</mat-error>
-        </mat-form-field>
-      </div>
+    <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+      <mtx-grid
+        [data]="itemGSTDetailsListData"
+        [columns]="columns"
+        [pageOnFront]="false"
+        [showPaginator]="false"
+        [showToolbar]="false"
+        [showSummary]="false"
+        [showColumnMenuButton]="false"
+      >
+      </mtx-grid>
     </div>
     <br />
     <mat-card-actions align="end" class="area-mat-card-actions">

@@ -9,12 +9,20 @@ export interface ItemPostRequest {
   weight: number;
   mainUnit: number;
   subUnit: number;
-  gSTTaxID: number;
   accountTradeTypeID: number;
   mRP: number;
+  isActive: boolean;
+  createdBy?: string;
+  gstDetails?: ItemGSTPostRequest[];
+}
+
+
+export interface ItemGSTPostRequest {
+  applicableDate: string;
+  gstTaxID: number;
   purchaseRate: number;
   salesRate: number;
   margin: number;
-  isActive: boolean;
-  createdBy?: string;
+  isAdd: boolean;
+  isModified: boolean;
 }

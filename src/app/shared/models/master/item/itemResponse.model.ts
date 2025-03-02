@@ -18,18 +18,29 @@ export interface Item {
   weight: number;
   mainUnit: number;
   subUnit: number;
-  gstTaxID: number;
   accountTradeTypeID: number;
   accountTradeTypeName: string;
   mrp: number;
-  purchaseRate: number;
-  salesRate: number;
-  margin: number;
   isActive: boolean;
   createdBy: string;
   createdDate: string;
   modifiedBy: string;
   modifiedDate: string;
+  gstDetails?: ItemGSTResponse[];
+}
+
+export interface ItemGSTResponse {
+  autoID: number;
+  itemID: number;
+  applicableDate: string;
+  gstTaxID: number;
+  taxName: string;
+  totalTaxRate: number;
+  purchaseRate: number;
+  purchaseRateWT: number;
+  salesRate: number;
+  salesRateWT: number;
+  margin: number;
 }
 
 export interface ItemOpeningResponse {
@@ -54,7 +65,6 @@ export interface ItemOpening {
   openingSpoiledCrt: number;
   openingSpoiledPcs: number;
 }
-
 export interface GTMTItemResponse {
   companyID: string;
   gtItemID: number;
