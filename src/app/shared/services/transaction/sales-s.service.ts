@@ -91,7 +91,7 @@ export class SalesSService {
   GetSalesbyID(SalesID: number) {
     this.CompanyID = this.storage.get('companyID');
     this.UserID = this.storage.get('userID');
-    const url = `${this.APIURL}/${SalesID}/company/${this.CompanyID}/sales/service/getbyid`;
+    const url = `${this.APIURL}/company/${this.CompanyID}/sales/service/${SalesID}/getbyid`;
     return this.http
       .get<any>(encodeURI(url), {
         headers: this.headers,

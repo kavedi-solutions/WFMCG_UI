@@ -62,6 +62,7 @@ export * from './master/item/itemGSTDetails.model';
 export * from './master/item/itemPostRequest.model';
 export * from './master/item/itemPutRequest.model';
 export * from './master/item/itemResponse.model';
+export * from './master/item/itemTransaction.model';
 
 export * from './master/stock/closingStockbyItemID';
 export * from './master/stock/stockFilter.model';

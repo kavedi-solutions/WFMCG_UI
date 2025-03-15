@@ -435,7 +435,10 @@ export class TransferMTGTAddEditComponent implements OnInit {
     );
 
     this.itemService
-      .GetItembyID(event.option.value.item_Id)
+      .GetItemTransactionByID(
+        event.option.value.item_Id,
+        this.TransferDateControl.value.format('YYYY-MM-DD')
+      )
       .subscribe((response) => {
         this.CurrentFromItem = response;
         this.GetToItem(this.CurrentFromItem!.itemID);
@@ -507,11 +510,15 @@ export class TransferMTGTAddEditComponent implements OnInit {
     this.IsItemEditMode = true;
     this.GetToItem(record.FromItemID);
     this.renderer.selectRootElement('#FromItemName', true).focus();
-    this.itemService.GetItembyID(record.FromItemID).subscribe((response) => {
-      this.CurrentFromItem = response;
-      this.GetCurrentStock(Number(this.CurrentFromItem?.itemID), record.Qty);
-    });
-
+    this.itemService
+      .GetItemTransactionByID(
+        record.FromItemID,
+        this.TransferDateControl.value.format('YYYY-MM-DD')
+      )
+      .subscribe((response) => {
+        this.CurrentFromItem = response;
+        this.GetCurrentStock(Number(this.CurrentFromItem?.itemID), record.Qty);
+      });
   }
 
   deleteItem(record: TransferMTGTItemDetail) {

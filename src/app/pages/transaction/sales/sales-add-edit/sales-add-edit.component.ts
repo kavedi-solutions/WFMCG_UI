@@ -21,6 +21,7 @@ import {
   ItemFilter_DropDown,
   ItemGroupDownDownResponse,
   itemsDropDownResponse,
+  ItemTransaction,
   NotificationComponent,
   SalesItemDetail,
   SalesItemPostRequest,
@@ -73,7 +74,7 @@ export class SalesAddEditComponent implements OnInit {
   filtereditemsDropDown?: Observable<itemsDropDownResponse[]>;
   salesItemDetailsList: SalesItemDetail[] = [];
   salesItemDetailsListData: SalesItemDetail[] = [];
-  CurrentItem?: Item;
+  CurrentItem?: ItemTransaction;
   CurrentTax?: Tax;
   CurrentStock?: ClosingStockbyItemID;
   BillMinDate?: Date;
@@ -725,20 +726,23 @@ export class SalesAddEditComponent implements OnInit {
       (a) => a.ItemID == event.option.value.item_Id
     );
     this.itemService
-      .GetItembyID(event.option.value.item_Id)
+      .GetItemTransactionByID(
+        event.option.value.item_Id,
+        this.BillDateControl.value.format('YYYY-MM-DD')
+      )
       .subscribe((response) => {
         this.CurrentItem = response;
 
         if (FoundItem == -1) {
           this.GetCurrentStock(Number(this.CurrentItem?.itemID), 0);
           // Item Effects
-          // this.I_RateControl.setValue(
-          //   SetFormatCurrency(this.CurrentItem?.salesRate)
-          // );
-          // this.I_GSTTaxIDControl.setValue(
-          //   this.CurrentItem?.gstTaxID.toString()
-          // );
-          // this.GetCurrentTax(Number(this.CurrentItem?.gstTaxID), false);
+          this.I_RateControl.setValue(
+            SetFormatCurrency(this.CurrentItem?.salesRate)
+          );
+          this.I_GSTTaxIDControl.setValue(
+            this.CurrentItem?.gstTaxID.toString()
+          );
+          this.GetCurrentTax(Number(this.CurrentItem?.gstTaxID), false);
         } else {
           this.ItemEdit = this.salesItemDetailsList[FoundItem];
           let ItemDetail: SalesItemDetail = this.salesItemDetailsList.filter(
@@ -900,15 +904,18 @@ export class SalesAddEditComponent implements OnInit {
     });
     this.IsItemEditMode = true;
     this.renderer.selectRootElement('#ItemName', true).focus();
-    this.itemService.GetItembyID(record.ItemID).subscribe((response) => {
-      this.CurrentItem = response;
-      this.GetCurrentStock(Number(this.CurrentItem?.itemID), record.TQty);
-      // Item Effects
-      // this.I_RateControl.setValue(
-      //   SetFormatCurrency(this.CurrentItem?.salesRate)
-      // );
-      this.GetCurrentTax(Number(record.GSTTaxID), false);
-    });
+    this.itemService
+      .GetItemTransactionByID(
+        record.ItemID,
+        this.BillDateControl.value.format('YYYY-MM-DD')
+      )
+      .subscribe((response) => {
+        this.CurrentItem = response;
+        this.GetCurrentStock(Number(this.CurrentItem?.itemID), record.TQty);
+        // Item Effects
+        this.I_RateControl.setValue(SetFormatCurrency(record.Rate));
+        this.GetCurrentTax(Number(record.GSTTaxID), false);
+      });
   }
 
   deleteItem(record: SalesItemDetail) {

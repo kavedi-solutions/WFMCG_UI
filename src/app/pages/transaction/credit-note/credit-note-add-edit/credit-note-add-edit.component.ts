@@ -27,8 +27,13 @@ import {
   Tax,
   TaxDownDownResponse,
   TransactionTypeMaster,
+  ItemTransaction,
 } from '../../../../shared/index';
-import { CheckIsNumber, RoundOffAmount, SetFormatCurrency } from 'src/app/shared/functions';
+import {
+  CheckIsNumber,
+  RoundOffAmount,
+  SetFormatCurrency,
+} from 'src/app/shared/functions';
 import { MatAutocomplete } from '@angular/material/autocomplete';
 import { MtxGridColumn } from 'src/app/extensions/grid/grid.interface';
 
@@ -57,7 +62,7 @@ export class CreditNoteAddEditComponent implements OnInit {
   filtereditemsDropDown?: Observable<itemsDropDownResponse[]>;
   creditNoteItemDetailsList: CreditNoteItemDetail[] = [];
   creditNoteItemDetailsListData: CreditNoteItemDetail[] = [];
-  CurrentItem?: Item;
+  CurrentItem?: ItemTransaction;
   CurrentTax?: Tax;
   BillMinDate?: Date;
   BillMaxDate?: Date;
@@ -247,9 +252,15 @@ export class CreditNoteAddEditComponent implements OnInit {
           TotalCessAmount: SetFormatCurrency(
             this.editCreditNote?.totalCessAmount
           ),
-          TotalTaxAmount: SetFormatCurrency(this.editCreditNote?.totalTaxAmount),
-          TotalNetAmount: SetFormatCurrency(this.editCreditNote?.totalNetAmount),
-          RoundOffAmount: SetFormatCurrency(this.editCreditNote?.roundOffAmount),
+          TotalTaxAmount: SetFormatCurrency(
+            this.editCreditNote?.totalTaxAmount
+          ),
+          TotalNetAmount: SetFormatCurrency(
+            this.editCreditNote?.totalNetAmount
+          ),
+          RoundOffAmount: SetFormatCurrency(
+            this.editCreditNote?.roundOffAmount
+          ),
           NetAmount: SetFormatCurrency(this.editCreditNote?.netAmount),
         });
 
@@ -484,15 +495,18 @@ export class CreditNoteAddEditComponent implements OnInit {
       (a) => a.ItemID == event.option.value.item_Id
     );
     this.itemService
-      .GetItembyID(event.option.value.item_Id)
+      .GetItemTransactionByID(
+        event.option.value.item_Id,
+        this.BillDateControl.value.format('YYYY-MM-DD')
+      )
       .subscribe((response) => {
         this.CurrentItem = response;
         if (FoundItem == -1) {
           // Item Effects
-          // this.I_GSTTaxIDControl.setValue(
-          //   this.CurrentItem?.gstTaxID.toString()
-          // );
-          // this.GetCurrentTax(Number(this.CurrentItem?.gstTaxID), false);
+          this.I_GSTTaxIDControl.setValue(
+            this.CurrentItem?.gstTaxID.toString()
+          );
+          this.GetCurrentTax(Number(this.CurrentItem?.gstTaxID), false);
         } else {
           this.ItemEdit = this.creditNoteItemDetailsList[FoundItem];
           let ItemDetail: CreditNoteItemDetail =
@@ -590,10 +604,15 @@ export class CreditNoteAddEditComponent implements OnInit {
     });
     this.IsItemEditMode = true;
     this.renderer.selectRootElement('#ItemName', true).focus();
-    this.itemService.GetItembyID(record.ItemID).subscribe((response) => {
-      this.CurrentItem = response;
-      this.GetCurrentTax(Number(record.GSTTaxID), false);
-    });
+    this.itemService
+      .GetItemTransactionByID(
+        record.ItemID,
+        this.BillDateControl.value.format('YYYY-MM-DD')
+      )
+      .subscribe((response) => {
+        this.CurrentItem = response;
+        this.GetCurrentTax(Number(record.GSTTaxID), false);
+      });
   }
 
   deleteItem(record: CreditNoteItemDetail) {

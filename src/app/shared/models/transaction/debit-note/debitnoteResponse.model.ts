@@ -55,9 +55,7 @@ export interface DebitNoteItemResponse {
   parentAutoID: number;
   srNo: number;
   itemID: number;
-  itemName: string;
-  accountTradeTypeID: number;
-  rate: number;
+  itemName: string;    
   amount: number;
   gstTaxID: number;
   gstTaxName: string;

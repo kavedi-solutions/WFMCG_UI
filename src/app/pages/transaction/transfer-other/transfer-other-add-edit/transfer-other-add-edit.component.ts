@@ -14,6 +14,7 @@ import {
   Item,
   ItemFilter_DropDown,
   itemsDropDownResponse,
+  ItemTransaction,
   NotificationComponent,
   returnTypeResponse,
   Tax,
@@ -49,7 +50,7 @@ export class TransferOtherAddEditComponent implements OnInit {
   transferPostRequest?: TransferOtherPostRequest;
   transferPutRequest?: TransferOtherPutRequest;
 
-  CurrentItem?: Item;
+  CurrentItem?: ItemTransaction;
   CurrentTax?: Tax;
   CurrentStock?: ClosingStockbyItemID;
 
@@ -92,7 +93,7 @@ export class TransferOtherAddEditComponent implements OnInit {
     private itemService: fromService.ItemService,
     private stockService: fromService.StockService,
     public notification: NotificationComponent,
-    private commonService: fromService.CommonService,
+    private commonService: fromService.CommonService
   ) {
     this.isEditMode = false;
     this.setColumns();
@@ -445,7 +446,10 @@ export class TransferOtherAddEditComponent implements OnInit {
     );
 
     this.itemService
-      .GetItembyID(event.option.value.item_Id)
+      .GetItemTransactionByID(
+        event.option.value.item_Id,
+        this.TransferDateControl.value.format('YYYY-MM-DD')
+      )
       .subscribe((response) => {
         this.CurrentItem = response;
         if (FoundItem == -1) {
@@ -473,22 +477,24 @@ export class TransferOtherAddEditComponent implements OnInit {
 
   GetCurrentStock(ItemID: number, EditQty: number) {
     //stockService
-    this.stockService.GetClosingByItemID(ItemID, this.ReturnTypeID).subscribe((response) => {
-      this.CurrentStock = response;
-      if (EditQty > 0 && this.isEditMode == true) {
-        this.CurrentStock!.closing =
-          this.CurrentStock!.closing + Number(EditQty);
-        this.CurrentStock!.closingCrt = GetCrt(
-          this.CurrentStock!.closing,
-          this.CurrentStock!.packing
-        );
-        this.CurrentStock!.closingPcs = GetPcs(
-          this.CurrentStock!.closing,
-          this.CurrentStock!.packing
-        );
-      }
-      this.CalculateTotals();
-    });
+    this.stockService
+      .GetClosingByItemID(ItemID, this.ReturnTypeID)
+      .subscribe((response) => {
+        this.CurrentStock = response;
+        if (EditQty > 0 && this.isEditMode == true) {
+          this.CurrentStock!.closing =
+            this.CurrentStock!.closing + Number(EditQty);
+          this.CurrentStock!.closingCrt = GetCrt(
+            this.CurrentStock!.closing,
+            this.CurrentStock!.packing
+          );
+          this.CurrentStock!.closingPcs = GetPcs(
+            this.CurrentStock!.closing,
+            this.CurrentStock!.packing
+          );
+        }
+        this.CalculateTotals();
+      });
   }
 
   editItem(record: TransferOtherItemDetail) {
@@ -505,10 +511,15 @@ export class TransferOtherAddEditComponent implements OnInit {
     });
     this.IsItemEditMode = true;
     this.renderer.selectRootElement('#ItemName', true).focus();
-    this.itemService.GetItembyID(record.ItemID).subscribe((response) => {
-      this.CurrentItem = response;
-      this.GetCurrentStock(Number(this.CurrentItem?.itemID), record.Qty);
-    });
+    this.itemService
+      .GetItemTransactionByID(
+        record.ItemID,
+        this.TransferDateControl.value.format('YYYY-MM-DD')
+      )
+      .subscribe((response) => {
+        this.CurrentItem = response;
+        this.GetCurrentStock(Number(this.CurrentItem?.itemID), record.Qty);
+      });
   }
 
   deleteItem(record: TransferOtherItemDetail) {

@@ -279,7 +279,7 @@ export class ItemService {
     });
   }
 
-  getItemNameFromGTMT(ItemID: number, ResponseType: string){
+  getItemNameFromGTMT(ItemID: number, ResponseType: string) {
     this.CompanyID = this.storage.get('companyID');
     this.UserID = this.storage.get('userID');
     const url = `${this.APIURL}/company/${this.CompanyID}/item/${ItemID}/getgtmt/${ResponseType}`;
@@ -287,6 +287,29 @@ export class ItemService {
       .get<any>(encodeURI(url), {
         headers: this.headers,
         observe: 'response',
+      })
+      .pipe(
+        map((response) => {
+          return response.body;
+        })
+      );
+  }
+
+  GetItemTransactionByID(ItemID: number, BillDate: string) {
+    this.CompanyID = this.storage.get('companyID');
+    this.UserID = this.storage.get('userID');
+    const url = `${this.APIURL}/company/${this.CompanyID}/item/${ItemID}/getitemtransactionbyid`;
+
+    let params = new HttpParams().set(
+      'BillDate',
+      `${BillDate != undefined ? BillDate : ''}`
+    );
+
+    return this.http
+      .get<any>(encodeURI(url), {
+        headers: this.headers,
+        observe: 'response',
+        params
       })
       .pipe(
         map((response) => {

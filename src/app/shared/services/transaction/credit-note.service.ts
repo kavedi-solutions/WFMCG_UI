@@ -110,7 +110,7 @@ export class CreditNoteService {
     this.CompanyID = this.storage.get('companyID');
     this.UserID = this.storage.get('userID');
     resourcesDetails.createdBy = this.UserID;
-    const url = `${this.APIURL}/company/${this.CompanyID}/creditnote/company/${this.CompanyID}/creditnote/create`;
+    const url = `${this.APIURL}/company/${this.CompanyID}/creditnote/create`;
     return this.http.post<any>(encodeURI(url), resourcesDetails, {
       headers: this.headers,
     });

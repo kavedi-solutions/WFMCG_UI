@@ -14,6 +14,7 @@ import {
   Item,
   ItemFilter_DropDown,
   itemsDropDownResponse,
+  ItemTransaction,
   NotificationComponent,
   Tax,
   TransactionTypeMaster,
@@ -47,7 +48,7 @@ export class TransferDumpAddEditComponent implements OnInit {
   transferPostRequest?: TransferDumpPostRequest;
   transferPutRequest?: TransferDumpPutRequest;
 
-  CurrentItem?: Item;
+  CurrentItem?: ItemTransaction;
   CurrentTax?: Tax;
   CurrentStock?: ClosingStockbyItemID;
 
@@ -416,7 +417,10 @@ export class TransferDumpAddEditComponent implements OnInit {
     );
 
     this.itemService
-      .GetItembyID(event.option.value.item_Id)
+      .GetItemTransactionByID(
+        event.option.value.item_Id,
+        this.TransferDateControl.value.format('YYYY-MM-DD')
+      )
       .subscribe((response) => {
         this.CurrentItem = response;
         if (FoundItem == -1) {
@@ -476,10 +480,15 @@ export class TransferDumpAddEditComponent implements OnInit {
     });
     this.IsItemEditMode = true;
     this.renderer.selectRootElement('#ItemName', true).focus();
-    this.itemService.GetItembyID(record.ItemID).subscribe((response) => {
-      this.CurrentItem = response;
-      this.GetCurrentStock(Number(this.CurrentItem?.itemID), record.Qty);
-    });
+    this.itemService
+      .GetItemTransactionByID(
+        record.ItemID,
+        this.TransferDateControl.value.format('YYYY-MM-DD')
+      )
+      .subscribe((response) => {
+        this.CurrentItem = response;
+        this.GetCurrentStock(Number(this.CurrentItem?.itemID), record.Qty);
+      });
   }
 
   deleteItem(record: TransferDumpItemDetail) {

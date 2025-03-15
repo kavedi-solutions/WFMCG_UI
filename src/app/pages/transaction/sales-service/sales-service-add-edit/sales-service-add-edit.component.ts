@@ -17,6 +17,7 @@ import {
   ItemFilter_DropDown,
   ItemGroupDownDownResponse,
   itemsDropDownResponse,
+  ItemTransaction,
   SalesSItemDetail,
   SalesSItemPostRequest,
   SalesSItemPutRequest,
@@ -61,7 +62,7 @@ export class SalesServiceAddEditComponent implements OnInit {
   filtereditemsDropDown?: Observable<itemsDropDownResponse[]>;
   salesItemDetailsList: SalesSItemDetail[] = [];
   salesItemDetailsListData: SalesSItemDetail[] = [];
-  CurrentItem?: Item;
+  CurrentItem?: ItemTransaction;
   CurrentTax?: Tax;
   BillMinDate?: Date;
   BillMaxDate?: Date;
@@ -506,15 +507,18 @@ export class SalesServiceAddEditComponent implements OnInit {
       (a) => a.ItemID == event.option.value.item_Id
     );
     this.itemService
-      .GetItembyID(event.option.value.item_Id)
+      .GetItemTransactionByID(
+        event.option.value.item_Id,
+        this.BillDateControl.value.format('YYYY-MM-DD')
+      )
       .subscribe((response) => {
         this.CurrentItem = response;
         if (FoundItem == -1) {
           // Item Effects
-          // this.I_GSTTaxIDControl.setValue(
-          //   this.CurrentItem?.gstTaxID.toString()
-          // );
-          // this.GetCurrentTax(Number(this.CurrentItem?.gstTaxID), false);
+          this.I_GSTTaxIDControl.setValue(
+            this.CurrentItem?.gstTaxID.toString()
+          );
+          this.GetCurrentTax(Number(this.CurrentItem?.gstTaxID), false);
         } else {
           this.ItemEdit = this.salesItemDetailsList[FoundItem];
           let ItemDetail: SalesSItemDetail = this.salesItemDetailsList.filter(
@@ -620,10 +624,15 @@ export class SalesServiceAddEditComponent implements OnInit {
     });
     this.IsItemEditMode = true;
     this.renderer.selectRootElement('#ItemName', true).focus();
-    this.itemService.GetItembyID(record.ItemID).subscribe((response) => {
-      this.CurrentItem = response;
-      this.GetCurrentTax(Number(record.GSTTaxID), false);
-    });
+    this.itemService
+      .GetItemTransactionByID(
+        record.ItemID,
+        this.BillDateControl.value.format('YYYY-MM-DD')
+      )
+      .subscribe((response) => {
+        this.CurrentItem = response;
+        this.GetCurrentTax(Number(record.GSTTaxID), false);
+      });
   }
 
   deleteItem(record: SalesSItemDetail) {

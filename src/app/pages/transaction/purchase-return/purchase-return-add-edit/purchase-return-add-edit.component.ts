@@ -19,6 +19,7 @@ import {
   ItemFilter_DropDown,
   ItemGroupDownDownResponse,
   itemsDropDownResponse,
+  ItemTransaction,
   PurchaseReturnItemDetail,
   PurchaseReturnItemPostRequest,
   PurchaseReturnItemPutRequest,
@@ -69,7 +70,7 @@ export class PurchaseReturnAddEditComponent implements OnInit {
   filtereditemsDropDown?: Observable<itemsDropDownResponse[]>;
   purchaseReturnItemDetailsList: PurchaseReturnItemDetail[] = [];
   purchaseReturnItemDetailsListData: PurchaseReturnItemDetail[] = [];
-  CurrentItem?: Item;
+  CurrentItem?: ItemTransaction;
   CurrentTax?: Tax;
   CurrentStock?: ClosingStockbyItemID;
   BillMinDate?: Date;
@@ -581,19 +582,22 @@ export class PurchaseReturnAddEditComponent implements OnInit {
       (a) => a.ItemID == event.option.value.item_Id
     );
     this.itemService
-      .GetItembyID(event.option.value.item_Id)
+      .GetItemTransactionByID(
+        event.option.value.item_Id,
+        this.BillDateControl.value.format('YYYY-MM-DD')
+      )
       .subscribe((response) => {
         this.CurrentItem = response;
         this.GetCurrentStock(Number(this.CurrentItem?.itemID));
         if (FoundItem == -1) {
           // Item Effects
-          // this.I_RateControl.setValue(
-          //   SetFormatCurrency(this.CurrentItem?.purchaseRate)
-          // );
-          // this.I_GSTTaxIDControl.setValue(
-          //   this.CurrentItem?.gstTaxID.toString()
-          // );
-          // this.GetCurrentTax(Number(this.CurrentItem?.gstTaxID), false);
+          this.I_RateControl.setValue(
+            SetFormatCurrency(this.CurrentItem?.purchaseRate)
+          );
+          this.I_GSTTaxIDControl.setValue(
+            this.CurrentItem?.gstTaxID.toString()
+          );
+          this.GetCurrentTax(Number(this.CurrentItem?.gstTaxID), false);
         } else {
           this.ItemEdit = this.purchaseReturnItemDetailsList[FoundItem];
           let ItemDetail: PurchaseReturnItemDetail =
@@ -715,15 +719,20 @@ export class PurchaseReturnAddEditComponent implements OnInit {
     });
     this.IsItemEditMode = true;
     this.renderer.selectRootElement('#ItemName', true).focus();
-    this.itemService.GetItembyID(record.ItemID).subscribe((response) => {
-      this.CurrentItem = response;
-      this.GetCurrentStock(Number(this.CurrentItem?.itemID));
-      // Item Effects
-      // this.I_RateControl.setValue(
-      //   SetFormatCurrency(this.CurrentItem?.purchaseRate)
-      // );
-      this.GetCurrentTax(Number(record.GSTTaxID), false);
-    });
+    this.itemService
+      .GetItemTransactionByID(
+        record.ItemID,
+        this.BillDateControl.value.format('YYYY-MM-DD')
+      )
+      .subscribe((response) => {
+        this.CurrentItem = response;
+        this.GetCurrentStock(Number(this.CurrentItem?.itemID));
+        // Item Effects
+        this.I_RateControl.setValue(
+          SetFormatCurrency(record.Rate)
+        );
+        this.GetCurrentTax(Number(record.GSTTaxID), false);
+      });
   }
 
   deleteItem(record: PurchaseReturnItemDetail) {
