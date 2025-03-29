@@ -1,4 +1,10 @@
-import { Component, OnInit, Renderer2, ViewChild } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  OnInit,
+  Renderer2,
+  ViewChild,
+} from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -14,6 +20,7 @@ import {
   accountsDropDownResponse,
   accountTradeTypeResponse,
   AccountTypeMaster,
+  areaDownDownResponse,
   ClosingStockbyItemID,
   CNDNSettlementResponse,
   CreditNoteSettlementRequest,
@@ -46,6 +53,7 @@ import { MtxGridColumn } from 'src/app/extensions/grid/grid.interface';
 import { ConfirmDialogComponent } from 'src/app/theme';
 import { MatDialog } from '@angular/material/dialog';
 import { CnDnSettlementComponent } from 'src/app/pages/dialogs';
+import { KeyCode } from '@ng-select/ng-select/lib/ng-select.types';
 
 @Component({
   selector: 'app-sales-add-edit',
@@ -64,6 +72,7 @@ export class SalesAddEditComponent implements OnInit {
   salesPutRequest?: SalesPutRequest;
   editSales?: SalesResponse;
 
+  areaDropDown: areaDownDownResponse[] = [];
   accountTradeTypeDropDown: accountTradeTypeResponse[] = [];
   taxDropDown: TaxDownDownResponse[] = [];
   booksDropDown: accountsDropDownResponse[] = [];
@@ -99,6 +108,7 @@ export class SalesAddEditComponent implements OnInit {
     BillDate: ['', [Validators.required]],
     BillNo: ['', [Validators.required]],
     RefNo: ['', [Validators.required]],
+    AreaID: [''],
     AccountID: ['', [Validators.required]],
     AccountTradeTypeID: ['', [Validators.required]],
     TotalAmount: ['0'],
@@ -165,6 +175,7 @@ export class SalesAddEditComponent implements OnInit {
     private commonService: fromService.CommonService,
     private taxService: fromService.TaxService,
     private stockService: fromService.StockService,
+    private areaService: fromService.AreaService,
     private cndnSettlementService: fromService.CreditNoteService,
     private fb: FormBuilder,
     private renderer: Renderer2,
@@ -178,6 +189,7 @@ export class SalesAddEditComponent implements OnInit {
     this.selectedSalesId = 0;
     this.accountTradeTypeDropDown = [];
     this.taxDropDown = [];
+    this.FillAreaDropDown();
     this.FillTaxDropDown();
     this.FillAccountTradeTypeDropDown('2');
     this.FillBooksDropDown();
@@ -294,6 +306,7 @@ export class SalesAddEditComponent implements OnInit {
           BookAccountID: this.editSales?.bookAccountID.toString(),
           BillNo: this.editSales?.billNo.toString(),
           RefNo: this.editSales?.refNo,
+          AreaID: this.editSales?.areaID.toString(),
           AccountTradeTypeID: this.editSales?.accountTradeTypeID.toString(),
           TotalAmount: SetFormatCurrency(this.editSales?.totalAmount),
           TotalDiscAmount: SetFormatCurrency(this.editSales?.totalDiscAmount),
@@ -431,6 +444,7 @@ export class SalesAddEditComponent implements OnInit {
       billNo: Number(salesForm.value.BillNo),
       refNo: salesForm.value.RefNo,
       billDate: salesForm.value.BillDate.format('YYYY-MM-DD'),
+      areaID: Number(salesForm.value.AreaID),
       accountID: Number(salesForm.value.AccountID.account_Id),
       accountTradeTypeID: Number(salesForm.value.AccountTradeTypeID),
       totalAmount: CheckIsNumber(salesForm.value.TotalAmount),
@@ -514,6 +528,7 @@ export class SalesAddEditComponent implements OnInit {
       billNo: Number(salesForm.value.BillNo),
       refNo: salesForm.value.RefNo,
       billDate: salesForm.value.BillDate.format('YYYY-MM-DD'),
+      areaID: Number(salesForm.value.AreaID),
       accountID: Number(salesForm.value.AccountID.account_Id),
       accountTradeTypeID: Number(salesForm.value.AccountTradeTypeID),
       totalAmount: CheckIsNumber(salesForm.value.TotalAmount),
@@ -553,6 +568,14 @@ export class SalesAddEditComponent implements OnInit {
   }
 
   //DropDowns
+
+  FillAreaDropDown() {
+    this.areaDropDown = [];
+    this.areaService.AreaDropDown().subscribe((response) => {
+      this.areaDropDown = response;
+    });
+  }
+
   FillTaxDropDown() {
     this.taxService.TaxDropDown().subscribe((response) => {
       this.taxDropDown = response;
@@ -592,6 +615,11 @@ export class SalesAddEditComponent implements OnInit {
   }
 
   FillAccountDropDown() {
+    let AreaID: any[] = [];
+
+    if (this.AreaIDControl.value != '') {
+      AreaID = [this.AreaIDControl.value];
+    }
     let filters = {
       GroupID: [],
       BalanceTransferToID: [],
@@ -599,7 +627,7 @@ export class SalesAddEditComponent implements OnInit {
       TransactionTypeID: [],
       SalesTypeID: [],
       AccountTradeTypeID: [],
-      AreaID: [],
+      AreaID: AreaID,
       HeadBookId: this.booksIdList,
     };
     this.accountService.AccountsDropDown(filters).subscribe((response) => {
@@ -947,6 +975,7 @@ export class SalesAddEditComponent implements OnInit {
       BillDate: '',
       BillNo: '',
       RefNo: '',
+      AreaID: '',
       AccountID: '',
       AccountTradeTypeID: '',
       TotalAmount: 0,
@@ -992,18 +1021,20 @@ export class SalesAddEditComponent implements OnInit {
         I_NetAmount: 0,
       },
     });
-    form.markAsUntouched();
+
     Object.keys(form.controls).forEach((name) => {
       control = form.controls[name];
       control.setErrors(null);
     });
     this.salesItemDetailsList = [];
     this.salesItemDetailsListData = [...this.salesItemDetailsList];
+    this.ItemCount = this.salesItemDetailsListData.length;
     this.InvoiceType = '';
     this.I_ItemIDControl.setValue('');
     this.DisableAddItemBtn = true;
     this.SetMinMaxBillDate();
     this.IsItemEditMode = false;
+    form.markAsUntouched();
     this.renderer.selectRootElement('#BookAccountName', true).focus();
   }
 
@@ -1039,6 +1070,7 @@ export class SalesAddEditComponent implements OnInit {
     this.CurrentStock = undefined;
     this.CurrentTax = undefined;
     this.IsItemEditMode = false;
+    this.DisableAddItemBtn = true;
   }
 
   OnAccountBlur() {
@@ -1085,6 +1117,10 @@ export class SalesAddEditComponent implements OnInit {
 
   get RefNoControl() {
     return this.salesForm.get('RefNo') as FormControl;
+  }
+
+  get AreaIDControl() {
+    return this.salesForm.get('AreaID') as FormControl;
   }
 
   get AccountIDControl() {
@@ -1547,5 +1583,12 @@ export class SalesAddEditComponent implements OnInit {
     return this.itemsDropDown.filter((option) =>
       option.item_Name.toLowerCase().includes(filterValue)
     );
+  }
+
+  //Event Host Listener
+  @HostListener('keydown', ['$event'])
+  onkeydown(event: KeyboardEvent) {
+    if (event.altKey == true && event.code == 'KeyA')
+      if (this.DisableAddItemBtn == false) this.AddItemToList();
   }
 }

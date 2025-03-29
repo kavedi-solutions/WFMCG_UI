@@ -93,6 +93,24 @@
       </div>
     </div>
     <div class="matero-row" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="30%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Area</mat-label>
+          <mat-select
+            formControlName="AreaID"
+            (selectionChange)="FillBooksDropDown()"
+          >
+            <mat-option value="">---None---</mat-option>
+            <mat-option
+              *ngFor="let sbdd of areaDropDown"
+              [value]="sbdd.area_Id"
+            >
+              {{ sbdd.area_Name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
       <div fxFlex="40%" fxFlex.lt-sm="100" class="matero-col">
         <mat-form-field appearance="legacy" color="primary">
           <mat-label>Select Account</mat-label>
@@ -120,7 +138,6 @@
       <div fxFlex="15%" fxFlex.lt-sm="100" class="matero-col invoiceType">
         <span>{{ InvoiceType }}</span>
       </div>
-      <div fxFlex="35%" fxFlex.lt-sm="100" class="matero-col"></div>
       <div
         fxFlex="10%"
         fxFlex.lt-sm="100"
@@ -248,6 +265,7 @@
               formControlName="I_Amount"
               maxlength="15"
               class="input-right-align"
+              readonly
             />
           </mat-form-field>
         </div>
@@ -686,14 +704,6 @@
     <mat-card-actions align="end" class="area-mat-card-actions">
       <button
         type="button"
-        mat-raised-button
-        (click)="BacktoList()"
-        color="accent"
-      >
-        Cancel
-      </button>
-      <button
-        type="button"
         *ngIf="isEditMode == false"
         [disabled]="!salesForm.valid || ItemCount == 0"
         mat-raised-button
@@ -711,6 +721,14 @@
         (click)="SaveUpdateSales(salesForm)"
       >
         Update
+      </button>
+      <button
+        type="button"
+        mat-raised-button
+        (click)="BacktoList()"
+        color="accent"
+      >
+        Cancel
       </button>
     </mat-card-actions>
   </mat-card>

@@ -35,6 +35,7 @@ export interface SalesResponse {
   billNo: number;
   refNo: string | null;
   billDate: string;
+  areaID: number;
   accountID: number;
   accountTradeTypeID: number;
   totalAmount: number;
