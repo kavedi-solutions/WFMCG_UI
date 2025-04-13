@@ -27,6 +27,7 @@ export interface Item {
   modifiedBy: string;
   modifiedDate: string;
   gstDetails?: ItemGSTResponse[];
+  softwareDetails?: ItemSoftwareResponse[];
 }
 
 export interface ItemGSTResponse {
@@ -41,6 +42,15 @@ export interface ItemGSTResponse {
   salesRate: number;
   salesRateWT: number;
   margin: number;
+}
+
+export interface ItemSoftwareResponse {
+  autoID: number;
+  companyID: string;
+  itemID: number;
+  softwareID: number;
+  softwareInit: string;
+  itemName: string;
 }
 
 export interface ItemOpeningResponse {

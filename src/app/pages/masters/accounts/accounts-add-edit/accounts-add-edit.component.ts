@@ -15,6 +15,9 @@ import {
   AccountGSTPutRequest,
   Accounts,
   accountsDropDownResponse,
+  AccountSoftwareDetails,
+  AccountSoftwarePostRequest,
+  AccountSoftwarePutRequest,
   AccountsPostRequest,
   AccountsPutRequest,
   accountTradeTypeResponse,
@@ -31,7 +34,10 @@ import * as fromService from '../../../../shared/index';
 import { tap, debounceTime } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { MtxGridColumn } from 'src/app/extensions/grid/grid.interface';
-import { GstDetailsComponent } from 'src/app/pages/dialogs';
+import {
+  GstDetailsComponent,
+  SoftwareDetailsComponent,
+} from 'src/app/pages/dialogs';
 
 @Component({
   selector: 'app-accounts-add-edit',
@@ -66,6 +72,10 @@ export class AccountsAddEditComponent implements OnInit {
   accountGSTDetailsList: AccountGSTDetails[] = [];
   accountGSTDetailsListData: AccountGSTDetails[] = [];
   columns: MtxGridColumn[] = [];
+
+  accountSoftwareDetailsList: AccountSoftwareDetails[] = [];
+  accountSoftwareDetailsListData: AccountSoftwareDetails[] = [];
+  softwareColumns: MtxGridColumn[] = [];
 
   disableBookType: boolean = true;
   disableSaleBookType: boolean = true;
@@ -128,6 +138,7 @@ export class AccountsAddEditComponent implements OnInit {
     this.FillStateDropDown();
     this.FillAreaDropDown();
     this.setColumns();
+    this.setSoftwareColumns();
   }
 
   ngOnInit(): void {
@@ -185,6 +196,31 @@ export class AccountsAddEditComponent implements OnInit {
     });
   }
 
+  setSoftwareColumns() {
+    this.softwareColumns = defaultData.GetAccountSoftwareColumns();
+    this.softwareColumns.push({
+      header: 'Action',
+      field: 'action',
+      minWidth: 50,
+      width: '90px',
+      pinned: 'right',
+      type: 'button',
+      buttons: [
+        {
+          type: 'icon',
+          icon: 'edit',
+          tooltip: 'Edit Record',
+          buttontype: 'button',
+          iif: (record) => {
+            if (record.status != 'CNL') return true;
+            else return false;
+          },
+          click: (record) => this.EditSoftwareDetails(record),
+        },
+      ],
+    });
+  }
+
   AddGSTDetails() {
     let obj: AccountGSTDetails = {
       autoID: 0,
@@ -225,6 +261,52 @@ export class AccountsAddEditComponent implements OnInit {
           this.accountGSTDetailsList[index] = result.RGSTDetails;
         }
         this.accountGSTDetailsListData = [...this.accountGSTDetailsList];
+      }
+    });
+  }
+
+  AddSoftwareDetails() {
+    let obj: AccountSoftwareDetails = {
+      autoID: 0,
+      softwareID: 0,
+      softwareInit: '',
+      accountName: '',
+      isAdd: true,
+      isModified: false,
+      isDeleted: false,
+    };
+    this.OpenSoftwareDialog(obj, 'New');
+  }
+
+  EditSoftwareDetails(event: AccountSoftwareDetails) {
+    this.OpenSoftwareDialog(event, 'Update');
+  }
+
+  OpenSoftwareDialog(obj: AccountSoftwareDetails, Type: string) {
+    this.dialogRef = this.dialog.open(SoftwareDetailsComponent, {
+      minWidth: '40vw',
+      minHeight: '60vh',
+      maxWidth: '40vw',
+      maxHeight: '60vh',
+      panelClass: 'dialog-container',
+      autoFocus: true,
+      hasBackdrop: true,
+      data: { SoftwareDetails: obj, objType: Type },
+    });
+
+    this.dialogRef.afterClosed().subscribe((result: any) => {
+      if (result.CloseStatus == true) {
+        if (result.SoftwareDetails.isAdd == true) {
+          this.accountSoftwareDetailsList.push(result.SoftwareDetails);
+        } else if (result.SoftwareDetails.isModified == true) {
+          let index = this.accountSoftwareDetailsList.findIndex(
+            (a) => a.autoID == result.SoftwareDetails.autoID
+          );
+          this.accountSoftwareDetailsList[index] = result.SoftwareDetails;
+        }
+        this.accountSoftwareDetailsListData = [
+          ...this.accountSoftwareDetailsList,
+        ];
       }
     });
   }
@@ -499,6 +581,8 @@ export class AccountsAddEditComponent implements OnInit {
     });
 
     this.accountGSTDetailsListData = [...this.accountGSTDetailsList];
+
+    this.accountSoftwareDetailsListData = [...this.accountSoftwareDetailsList];
   }
 
   onAccountNameKeyUp($event: any) {
@@ -600,6 +684,23 @@ export class AccountsAddEditComponent implements OnInit {
         });
 
         this.accountGSTDetailsListData = [...this.accountGSTDetailsList];
+
+        this.editAccount?.softwareDetails?.forEach((element) => {
+          let SoftwareDetails: AccountSoftwareDetails = {
+            autoID: element.autoID,
+            softwareID: element.softwareID,
+            softwareInit: element.softwareInit,
+            accountName: element.accountName,
+            isAdd: false,
+            isModified: false,
+            isDeleted: false,
+          };
+          this.accountSoftwareDetailsList.push(SoftwareDetails);
+        });
+
+        this.accountSoftwareDetailsListData = [
+          ...this.accountSoftwareDetailsList,
+        ];
       });
   }
 
@@ -613,6 +714,7 @@ export class AccountsAddEditComponent implements OnInit {
 
   SaveAccount(accountForm: FormGroup) {
     let PostRequestDetail: AccountGSTPostRequest[] = [];
+    let PostSoftwareRequestDetail: AccountSoftwarePostRequest[] = [];
     if (this.accountGSTDetailsList.length > 0) {
       this.accountGSTDetailsList.forEach((element) => {
         PostRequestDetail.push({
@@ -622,6 +724,18 @@ export class AccountsAddEditComponent implements OnInit {
           dtDReg: element.dtDReg,
           isAdd: element.isAdd,
           isModified: element.isModified,
+        });
+      });
+    }
+    //softwareDetails
+    if (this.accountSoftwareDetailsList.length > 0) {
+      this.accountSoftwareDetailsList.forEach((element) => {
+        PostSoftwareRequestDetail.push({
+          softwareID: element.softwareID,
+          accountName: element.accountName,
+          isAdd: element.isAdd,
+          isModified: element.isModified,
+          isDeleted: element.isDeleted,
         });
       });
     }
@@ -648,6 +762,7 @@ export class AccountsAddEditComponent implements OnInit {
       invoiceLimit: accountForm.value.InvoiceLimit,
       isActive: accountForm.value.isActive,
       gstDetails: PostRequestDetail,
+      softwareDetails: PostSoftwareRequestDetail,
     };
     this.accountService
       .createAccounts(this.accountPostRequest)
@@ -658,6 +773,7 @@ export class AccountsAddEditComponent implements OnInit {
 
   UpdateAccount(accountForm: FormGroup) {
     let PutRequestDetail: AccountGSTPutRequest[] = [];
+    let PutSoftwareRequestDetail: AccountSoftwarePutRequest[] = [];
     if (this.accountGSTDetailsList.length > 0) {
       this.accountGSTDetailsList.forEach((element) => {
         PutRequestDetail.push({
@@ -668,6 +784,19 @@ export class AccountsAddEditComponent implements OnInit {
           dtDReg: element.dtDReg,
           isAdd: element.isAdd,
           isModified: element.isModified,
+        });
+      });
+    }
+
+    if (this.accountSoftwareDetailsList.length > 0) {
+      this.accountSoftwareDetailsList.forEach((element) => {
+        PutSoftwareRequestDetail.push({
+          autoID: element.autoID,
+          softwareID: element.softwareID,
+          accountName: element.accountName,
+          isAdd: element.isAdd,
+          isModified: element.isModified,
+          isDeleted: element.isDeleted,
         });
       });
     }
@@ -694,6 +823,7 @@ export class AccountsAddEditComponent implements OnInit {
       invoiceLimit: accountForm.value.InvoiceLimit,
       isActive: accountForm.value.isActive,
       gstDetails: PutRequestDetail,
+      softwareDetails: PutSoftwareRequestDetail,
     };
     this.accountService
       .updateAccounts(this.selectedAccountId, this.accountPutRequest!)

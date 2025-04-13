@@ -33,6 +33,7 @@ export interface Accounts {
   modifiedBy: string;
   modifiedDate: string;
   gstDetails?: AccountGSTResponse[];
+  softwareDetails?: AccountSoftwareResponse[];
 }
 
 export interface AccountGSTResponse {
@@ -44,6 +45,15 @@ export interface AccountGSTResponse {
   dtDReg: string;
 }
 
+export interface AccountSoftwareResponse {
+  autoID: number;
+  companyID: string;
+  accountID: number;
+  softwareID: number;
+  softwareInit: string;
+  accountName: string;
+}
+
 export interface AccountBalanceResponse {
   companyID: string;
   accountID: number;
@@ -51,8 +61,6 @@ export interface AccountBalanceResponse {
   creditBalance: number;
   debitBalance: number;
 }
-
-
 
 export interface CurrentAccountBalanceResponse {
   companyID: string;

@@ -25,11 +25,14 @@ import {
   HSNCodeDropDownResponse,
   ItemGSTDetails,
   ItemGSTPutRequest,
+  ItemSoftwareDetails,
+  ItemSoftwarePostRequest,
+  ItemSoftwarePutRequest,
 } from '../../../../shared/index';
 import { MtxGridColumn } from 'src/app/extensions/grid/grid.interface';
 import * as defaultData from '../../../../data/index';
 import { MatDialog } from '@angular/material/dialog';
-import { ItemTaxMappingComponent } from 'src/app/pages/dialogs';
+import { ItemSoftwareDetailsComponent, ItemTaxMappingComponent } from 'src/app/pages/dialogs';
 
 @Component({
   selector: 'app-item-add-edit',
@@ -59,6 +62,11 @@ export class ItemAddEditComponent implements OnInit {
   columns: MtxGridColumn[] = [];
   itemGSTDetailsList: ItemGSTDetails[] = [];
   itemGSTDetailsListData: ItemGSTDetails[] = [];
+
+  itemSoftwareDetailsList: ItemSoftwareDetails[] = [];
+  itemSoftwareDetailsListData: ItemSoftwareDetails[] = [];
+  softwareColumns: MtxGridColumn[] = [];
+
   dialogRef: any;
 
   itemForm = this.fb.group({
@@ -134,6 +142,7 @@ export class ItemAddEditComponent implements OnInit {
     this.FillHSNCodeDropDown('A');
     this.FillAccountTradeTypeDropDown('2');
     this.setColumns();
+    this.setSoftwareColumns();
   }
 
   ngOnInit(): void {
@@ -209,6 +218,31 @@ export class ItemAddEditComponent implements OnInit {
     });
   }
 
+  setSoftwareColumns() {
+    this.softwareColumns = defaultData.GetItemSoftwareColumns();
+    this.softwareColumns.push({
+      header: 'Action',
+      field: 'action',
+      minWidth: 50,
+      width: '90px',
+      pinned: 'right',
+      type: 'button',
+      buttons: [
+        {
+          type: 'icon',
+          icon: 'edit',
+          tooltip: 'Edit Record',
+          buttontype: 'button',
+          iif: (record) => {
+            if (record.status != 'CNL') return true;
+            else return false;
+          },
+          click: (record) => this.EditSoftwareDetails(record),
+        },
+      ],
+    });
+  }
+
   AddGSTDetails() {
     let obj: ItemGSTDetails = {
       autoID: 0,
@@ -254,6 +288,52 @@ export class ItemAddEditComponent implements OnInit {
           this.itemGSTDetailsList[index] = result.RGSTDetails;
         }
         this.itemGSTDetailsListData = [...this.itemGSTDetailsList];
+      }
+    });
+  }
+
+  AddSoftwareDetails() {
+    let obj: ItemSoftwareDetails = {
+      autoID: 0,
+      softwareID: 0,
+      softwareInit: '',
+      itemName: '',
+      isAdd: true,
+      isModified: false,
+      isDeleted: false,
+    };
+    this.OpenSoftwareDialog(obj, 'New');
+  }
+
+  EditSoftwareDetails(event: ItemSoftwareDetails) {
+    this.OpenSoftwareDialog(event, 'Update');
+  }
+
+  OpenSoftwareDialog(obj: ItemSoftwareDetails, Type: string) {
+    this.dialogRef = this.dialog.open(ItemSoftwareDetailsComponent, {
+      minWidth: '40vw',
+      minHeight: '60vh',
+      maxWidth: '40vw',
+      maxHeight: '60vh',
+      panelClass: 'dialog-container',
+      autoFocus: true,
+      hasBackdrop: true,
+      data: { SoftwareDetails: obj, objType: Type },
+    });
+
+    this.dialogRef.afterClosed().subscribe((result: any) => {
+      if (result.CloseStatus == true) {
+        if (result.SoftwareDetails.isAdd == true) {
+          this.itemSoftwareDetailsList.push(result.SoftwareDetails);
+        } else if (result.SoftwareDetails.isModified == true) {
+          let index = this.itemSoftwareDetailsList.findIndex(
+            (a) => a.autoID == result.SoftwareDetails.autoID
+          );
+          this.itemSoftwareDetailsList[index] = result.SoftwareDetails;
+        }
+        this.itemSoftwareDetailsListData = [
+          ...this.itemSoftwareDetailsList,
+        ];
       }
     });
   }
@@ -487,6 +567,23 @@ export class ItemAddEditComponent implements OnInit {
       });
 
       this.itemGSTDetailsListData = [...this.itemGSTDetailsList];
+
+      this.editItem?.softwareDetails?.forEach((element) => {
+        let SoftwareDetails: ItemSoftwareDetails = {
+          autoID: element.autoID,
+          softwareID: element.softwareID,
+          softwareInit: element.softwareInit,
+          itemName: element.itemName,
+          isAdd: false,
+          isModified: false,
+          isDeleted: false,
+        };
+        this.itemSoftwareDetailsList.push(SoftwareDetails);
+      });
+
+      this.itemSoftwareDetailsListData = [
+        ...this.itemSoftwareDetailsList,
+      ];
     });
   }
 
@@ -521,6 +618,8 @@ export class ItemAddEditComponent implements OnInit {
     });
 
     this.itemGSTDetailsListData = [...this.itemGSTDetailsList];
+
+    this.itemSoftwareDetailsListData = [...this.itemSoftwareDetailsList];
   }
 
   SaveUpdateItem(itemForm: FormGroup) {
@@ -533,6 +632,7 @@ export class ItemAddEditComponent implements OnInit {
 
   SaveItem(itemForm: FormGroup) {
     let PostRequestDetail: ItemGSTPostRequest[] = [];
+    let PostSoftwareRequestDetail: ItemSoftwarePostRequest[] = [];
     if (this.itemGSTDetailsList.length > 0) {
       this.itemGSTDetailsList.forEach((element) => {
         PostRequestDetail.push({
@@ -543,6 +643,19 @@ export class ItemAddEditComponent implements OnInit {
           margin: element.margin,
           isAdd: element.isAdd,
           isModified: element.isModified,
+        });
+      });
+    }
+
+    //softwareDetails
+    if (this.itemSoftwareDetailsList.length > 0) {
+      this.itemSoftwareDetailsList.forEach((element) => {
+        PostSoftwareRequestDetail.push({
+          softwareID: element.softwareID,
+          itemName: element.itemName,
+          isAdd: element.isAdd,
+          isModified: element.isModified,
+          isDeleted: element.isDeleted,
         });
       });
     }
@@ -562,6 +675,7 @@ export class ItemAddEditComponent implements OnInit {
       mRP: Number(itemForm.value.MRP.replace(/,/g, '')),
       isActive: itemForm.value.isActive,
       gstDetails: PostRequestDetail,
+      softwareDetails: PostSoftwareRequestDetail,
     };
     this.itemService.createItem(this.itemPostRequest).subscribe((response) => {
       this.BacktoList();
@@ -570,6 +684,7 @@ export class ItemAddEditComponent implements OnInit {
 
   UpdateItem(itemForm: FormGroup) {
     let PutRequestDetail: ItemGSTPutRequest[] = [];
+    let PutSoftwareRequestDetail: ItemSoftwarePutRequest[] = [];
     if (this.itemGSTDetailsList.length > 0) {
       this.itemGSTDetailsList.forEach((element) => {
         PutRequestDetail.push({
@@ -581,6 +696,19 @@ export class ItemAddEditComponent implements OnInit {
           margin: element.margin,
           isAdd: element.isAdd,
           isModified: element.isModified,
+        });
+      });
+    }
+
+    if (this.itemSoftwareDetailsList.length > 0) {
+      this.itemSoftwareDetailsList.forEach((element) => {
+        PutSoftwareRequestDetail.push({
+          autoID: element.autoID,
+          softwareID: element.softwareID,
+          itemName: element.itemName,
+          isAdd: element.isAdd,
+          isModified: element.isModified,
+          isDeleted: element.isDeleted,
         });
       });
     }
@@ -600,6 +728,7 @@ export class ItemAddEditComponent implements OnInit {
       mRP: Number(itemForm.value.MRP.replace(/,/g, '')),
       isActive: itemForm.value.isActive,
       gstDetails: PutRequestDetail,
+      softwareDetails: PutSoftwareRequestDetail,
     };
     this.itemService
       .updateItem(this.selectedItemId, this.itemPutRequest!)

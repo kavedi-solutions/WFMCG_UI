@@ -35,6 +35,7 @@ export * from './master/group/groupPutRequest.model';
 export * from './master/group/groupResponse.model';
 
 export * from './master/accounts/accountGSTDetails.model';
+export * from './master/accounts/accountSoftwareDetails.model';
 export * from './master/accounts/accountsDropDownFilter.model';
 export * from './master/accounts/accountsDropDown.model';
 export * from './master/accounts/accountsPostRequest.model';
@@ -63,6 +64,7 @@ export * from './master/item/itemPostRequest.model';
 export * from './master/item/itemPutRequest.model';
 export * from './master/item/itemResponse.model';
 export * from './master/item/itemTransaction.model';
+export * from './master/item/itemSoftwareDetails.model';
 
 export * from './master/stock/closingStockbyItemID';
 export * from './master/stock/stockFilter.model';

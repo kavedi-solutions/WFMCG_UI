@@ -21,6 +21,7 @@ export interface AccountsPutRequest {
   isActive: boolean;
   modifiedBy?: string;
   gstDetails?: AccountGSTPutRequest[];
+  softwareDetails?: AccountSoftwarePutRequest[];
 }
 
 export interface AccountGSTPutRequest {
@@ -32,6 +33,16 @@ export interface AccountGSTPutRequest {
   isAdd: boolean;
   isModified: boolean;
 }
+
+export interface AccountSoftwarePutRequest {
+  autoID: number;
+  softwareID: number;
+  accountName: string;
+  isAdd: boolean;
+  isModified: boolean;
+  isDeleted: boolean;
+}
+
 
 export interface AccountBalancePutRequest {
   balance: number;

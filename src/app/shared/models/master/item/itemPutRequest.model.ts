@@ -14,6 +14,7 @@ export interface ItemPutRequest {
   isActive: boolean;
   modifiedBy?: string;
   gstDetails?: ItemGSTPutRequest[];
+  softwareDetails?: ItemSoftwarePutRequest[];
 }
 export interface ItemGSTPutRequest {
   autoID: number;
@@ -24,6 +25,15 @@ export interface ItemGSTPutRequest {
   margin: number;
   isAdd: boolean;
   isModified: boolean;
+}
+
+export interface ItemSoftwarePutRequest {
+  autoID: number;
+  softwareID: number;
+  itemName: string;
+  isAdd: boolean;
+  isModified: boolean;
+  isDeleted: boolean;
 }
 
 export interface OpeningItemPutRequest {

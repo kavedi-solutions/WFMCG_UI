@@ -14,8 +14,8 @@ export interface ItemPostRequest {
   isActive: boolean;
   createdBy?: string;
   gstDetails?: ItemGSTPostRequest[];
+  softwareDetails?: ItemSoftwarePostRequest[];
 }
-
 
 export interface ItemGSTPostRequest {
   applicableDate: string;
@@ -25,4 +25,12 @@ export interface ItemGSTPostRequest {
   margin: number;
   isAdd: boolean;
   isModified: boolean;
+}
+
+export interface ItemSoftwarePostRequest {
+  softwareID: number;
+  itemName: string;
+  isAdd: boolean;
+  isModified: boolean;
+  isDeleted: boolean;
 }

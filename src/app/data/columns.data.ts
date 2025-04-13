@@ -424,6 +424,39 @@ export function GetAccountGSTColumns() {
   return ColumnList;
 }
 
+export function GetAccountSoftwareColumns() {
+  let ColumnList: MtxGridColumn[] = [
+    {
+      header: 'AccountID',
+      field: 'accountID',
+      hide: true,
+    },
+    {
+      header: 'AutoID',
+      field: 'autoID',
+      hide: true,
+    },
+    {
+      header: 'Software Init',
+      field: 'softwareInit',
+      sortable: false,
+      disabled: false,
+      minWidth: 250,
+      width: '250px',
+    },
+    {
+      header: 'Account Name',
+      field: 'accountName',
+      sortable: false,
+      disabled: false,
+      minWidth: 600,
+      width: '600px',
+    },
+  ];
+
+  return ColumnList;
+}
+
 export function GetAccountBalanceColumns() {
   let ColumnList: MtxGridColumn[] = [
     {
@@ -967,6 +1000,39 @@ export function GetItemTaxMappingColumns()
       width: '100px',
       typeParameter: { digitsInfo: '0.2-2', locale: 'en-IN' },
       class: 'right-mat-header-cell right-mat-cell',
+    },
+  ];
+
+  return ColumnList;
+}
+
+export function GetItemSoftwareColumns() {
+  let ColumnList: MtxGridColumn[] = [
+    {
+      header: 'ItemID',
+      field: 'itemID',
+      hide: true,
+    },
+    {
+      header: 'AutoID',
+      field: 'autoID',
+      hide: true,
+    },
+    {
+      header: 'Software Init',
+      field: 'softwareInit',
+      sortable: false,
+      disabled: false,
+      minWidth: 250,
+      width: '250px',
+    },
+    {
+      header: 'Item Name',
+      field: 'itemName',
+      sortable: false,
+      disabled: false,
+      minWidth: 600,
+      width: '600px',
     },
   ];
 

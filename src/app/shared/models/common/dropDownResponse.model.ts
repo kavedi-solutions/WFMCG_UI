@@ -56,3 +56,8 @@ export interface returnTypeResponse {
   returnTypeID: string;
   returnTypeName: string;
 }
+
+export interface accountSoftwareResponse {
+  softwareID: string;
+  softwareInit: string;
+}

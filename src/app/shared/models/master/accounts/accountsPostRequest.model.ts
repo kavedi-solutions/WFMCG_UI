@@ -21,6 +21,7 @@ export interface AccountsPostRequest {
   isActive: boolean;
   createdBy?: string;
   gstDetails?: AccountGSTPostRequest[];
+  softwareDetails?: AccountSoftwarePostRequest[];
 }
 
 export interface AccountGSTPostRequest {
@@ -30,4 +31,12 @@ export interface AccountGSTPostRequest {
   dtDReg: string;
   isAdd: boolean;
   isModified: boolean;
+}
+
+export interface AccountSoftwarePostRequest {
+  softwareID: number;
+  accountName: string;
+  isAdd: boolean;
+  isModified: boolean;
+  isDeleted: boolean;
 }

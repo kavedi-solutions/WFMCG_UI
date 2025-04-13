@@ -77,7 +77,6 @@ import { registerLocaleData } from '@angular/common';
 
 import { ExtensionsModule } from './extensions/extensions.module';
 
-
 import localeIn from '@angular/common/locales/en-IN';
 
 registerLocaleData(localeIn);
@@ -205,7 +204,9 @@ export function tokenGetter() {
     Pages.CanceleInvoiceComponent,
     Pages.CommonDialogComponent,
     Pages.SPReportSelectionsComponent,
-    Pages.ItemTaxMappingComponent
+    Pages.ItemTaxMappingComponent,
+    Pages.SoftwareDetailsComponent,
+    Pages.ItemSoftwareDetailsComponent
   ],
   bootstrap: [AppComponent],
 })

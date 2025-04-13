@@ -1,0 +1,68 @@
+<h1 class="dialog-title dialog-title-info">
+  {{ Type == "New" ? "Add" : "Update" }} Software Details
+</h1>
+<div class="dialog-content">
+  <form class="form-field-full" [formGroup]="softwareForm">
+    <div class="matero-row rowclass" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="100%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Software Init</mat-label>
+          <mat-select formControlName="SoftwareID">
+            <mat-option
+              *ngFor="let sdd of softwareDropDown"
+              [value]="sdd.softwareID.toString()"
+            >
+              {{ sdd.softwareInit }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="softwareIDControlRequired"
+            >Software Init is required.</mat-error
+          >
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="matero-row rowclass" fxLayout.lt-sm="column" fxLayout="row">
+      <div fxFlex="100%" fxFlex.lt-sm="100" class="matero-col">
+        <mat-form-field appearance="legacy" color="primary">
+          <mat-label>Account Name</mat-label>
+          <input
+            id="AccountName"
+            matInput
+            formControlName="AccountName"
+            type="text"
+            placeholder="Account Name"
+            maxlength="100"
+            required
+          />
+          <mat-error *ngIf="accountNameControlRequired"
+            >Account name is required.</mat-error
+          >
+          <mat-error *ngIf="accountNameControlInvalid"
+            >Account name is Invalid.</mat-error
+          >
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="dialog-actions">
+      <ng-container>
+        <button
+          mat-raised-button
+          cdkFocusInitial
+          (click)="onClickOk()"
+          color="primary"
+          [disabled]="!softwareForm.valid"
+        >
+          {{ Type == "New" ? "Save" : "Update" }}
+        </button>
+        <button
+          mat-raised-button
+          mat-dialog-close="Cancel"
+          color="warn"
+          (click)="onClickClose()"
+        >
+          Close
+        </button>
+      </ng-container>
+    </div>
+  </form>
+</div>
